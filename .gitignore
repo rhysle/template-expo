@@ -39,15 +39,34 @@ yarn-error.*
 app-example
 
 # Native folders
-android/
-ios/
+/android/
+/ios/
 
 # IDE
+.vscode/
 .idea/
 *.code-workspace
 
 # Firebase
 firebase-debug.log
+/GoogleService-Info.plist
+/google-services.json
 
 # Claude
 .claude/
+.env.local
+
+# Misc
+.superpowers/
+
+# Git worktrees
+.worktrees/
+
+# Fastlane
+fastlane/.private/
+fastlane/.tmp/
+fastlane/report.xml
+fastlane/README.md
+fastlane/ios/metadata/review_information/*
+!fastlane/ios/metadata/review_information/notes.txt
+.env.fastlane.local
