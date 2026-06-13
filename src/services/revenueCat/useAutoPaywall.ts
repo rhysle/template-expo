@@ -1,5 +1,5 @@
 import { useFocusEffect, useRouter } from 'expo-router'
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useEffectEvent, useRef } from 'react'
 import type { AppStateStatus } from 'react-native'
 import { AppState } from 'react-native'
 
@@ -22,7 +22,7 @@ export const useAutoPaywall = () => {
   } = usePaywallState()
   const isShowingRef = useRef(false)
 
-  const maybeShowPaywall = () => {
+  const maybeShowPaywall = useEffectEvent(() => {
     if (isShowingRef.current) return
     if (!revenueCatReady) return
     if (isSubscribed) return
@@ -40,22 +40,18 @@ export const useAutoPaywall = () => {
       recordAutoPaywallShown()
       router.push('/paywall')
     }
-  }
-
-  // Always keep ref pointing at the latest closure so both effects
-  // can call the current version without listing it in their dep arrays.
-  const maybeShowPaywallRef = useRef(maybeShowPaywall)
+  })
 
   // Run on mount (cold launch) and when RevenueCat finishes its first status check.
   // The mount effect fires before RC is ready; the revenueCatReady effect catches
   // the transition so cold-launch triggering still works when RC is slow to init.
   useEffect(() => {
-    maybeShowPaywallRef.current()
+    maybeShowPaywall()
   }, [])
 
   useEffect(() => {
     if (revenueCatReady) {
-      maybeShowPaywallRef.current()
+      maybeShowPaywall()
     }
   }, [revenueCatReady])
 
@@ -63,7 +59,7 @@ export const useAutoPaywall = () => {
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (nextState: AppStateStatus) => {
       if (nextState === 'active') {
-        maybeShowPaywallRef.current()
+        maybeShowPaywall()
       }
     })
     return () => subscription.remove()
