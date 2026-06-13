@@ -47,7 +47,7 @@ export const OnboardingPage = ({
 
 const styles = StyleSheet.create({
   page: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     justifyContent: 'center',
     alignItems: 'center',
   },
