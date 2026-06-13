@@ -45,7 +45,6 @@ export const useAutoPaywall = () => {
   // Always keep ref pointing at the latest closure so both effects
   // can call the current version without listing it in their dep arrays.
   const maybeShowPaywallRef = useRef(maybeShowPaywall)
-  maybeShowPaywallRef.current = maybeShowPaywall
 
   // Run on mount (cold launch) and when RevenueCat finishes its first status check.
   // The mount effect fires before RC is ready; the revenueCatReady effect catches
