@@ -5,12 +5,10 @@ import * as WebBrowser from 'expo-web-browser'
 import {
   ArrowSquareOutIcon,
   BugIcon,
-  ChartLineIcon,
   CopyIcon,
   DiamondsFourIcon,
   EnvelopeIcon,
   FileTextIcon,
-  LightbulbIcon,
   LockIcon,
   ShareNetworkIcon,
   ShieldCheckIcon,
@@ -26,21 +24,18 @@ import {
   CollapsingHeader,
   Pressable,
   PromoBanner,
-  SelectListItem,
   Text,
-  ToggleListItem,
   useCollapsingHeader,
   useTabBarHeight,
 } from '@/components/base'
 import { ScreenHeader } from '@/components/ScreenHeader'
 import { AppConfig } from '@/configs'
 import { AdsConsent, isAdsEnabled } from '@/services/ads'
-import { AnalyticsEvents, AppAnalyticsEvents, trackEvent } from '@/services/firebase/analytics'
+import { AnalyticsEvents, trackEvent } from '@/services/firebase/analytics'
 import { getCurrentUpdateId } from '@/services/otaUpdate'
 import { recordError } from '@/services/sentry'
 import { openWriteReview } from '@/services/storeReview'
 import { useAdsState } from '@/stores/features/ads'
-import { usePreferencesState } from '@/stores/features/preferences'
 import { useSnackbarState } from '@/stores/features/snackbar'
 import { useSubscriptionState } from '@/stores/features/subscription'
 import { useUserIdentityState } from '@/stores/features/userIdentity'
@@ -61,8 +56,6 @@ export default function SettingsScreen() {
     headerHeight: collapsingHeaderHeight,
   } = useCollapsingHeader()
   const router = useRouter()
-  const { currencySuggestion, decimalDigits, setCurrencySuggestion, setDecimalDigits } =
-    usePreferencesState()
   const { isSubscribed } = useSubscriptionState()
   const { userId } = useUserIdentityState()
   const { privacyOptionsRequired } = useAdsState()
@@ -129,26 +122,8 @@ export default function SettingsScreen() {
               {t('settings.preferences')}
             </Text>
             <Card padding="none">
-              <ToggleListItem
-                icon={LightbulbIcon}
-                title={t('settings.currencySuggestion')}
-                value={currencySuggestion}
-                onValueChange={(value) => {
-                  trackEvent(AppAnalyticsEvents.SETTINGS_PREFERENCE_CHANGED, {
-                    preference: 'currency_suggestion',
-                    enabled: value ? 1 : 0,
-                  })
-                  setCurrencySuggestion(value)
-                }}
-              />
-              <SelectListItem
-                icon={ChartLineIcon}
-                title={t('settings.decimalDigits')}
-                value={decimalDigits}
-                options={[1, 2, 3, 4]}
-                onChange={setDecimalDigits}
-                sheetTitle={t('settings.decimalDigits')}
-              />
+              {/* Example preference items - replace with your actual settings */}
+              <View />
             </Card>
           </View>
 
