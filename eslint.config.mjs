@@ -45,6 +45,8 @@ export default defineConfig([
     rules: {
       'import/no-deprecated': 'error',
       'import/no-duplicates': 'error',
+      'react-hooks/immutability': 'off',
+      'react-hooks/set-state-in-effect': 'off',
       'no-restricted-imports': [
         'error',
         {
