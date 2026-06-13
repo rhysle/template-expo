@@ -1,7 +1,3 @@
-import { useTranslation } from 'react-i18next'
-
-import { usePreferencesState } from '@/stores/features/preferences'
-
 interface FormatNumberOptions {
   decimals?: number
   minDecimals?: number
@@ -38,31 +34,6 @@ export const getDecimalSeparator = (locale: string): string => {
   const formatted = new Intl.NumberFormat(locale).format(1.1)
   // The formatted string for 1.1 is e.g. "1.1" or "1,1" - grab the non-digit char
   return formatted.replace(/\d/g, '') || '.'
-}
-
-/**
- * Hook that returns locale-bound number formatters based on the current
- * i18n language.
- */
-export const useNumberFormat = () => {
-  const { i18n } = useTranslation()
-  const locale: string = i18n.language
-  const { decimalDigits } = usePreferencesState()
-
-  return {
-    /** Format a converted amount using the user's configured decimal digits preference. */
-    formatAmount: (value: number) => formatNumber(value, locale, { decimals: decimalDigits }),
-
-    /** Format an exchange rate (up to 4 decimal places). */
-    formatRate: (value: number | null) =>
-      value !== null ? formatNumber(value, locale, { decimals: 4 }) : '--',
-
-    /** The locale-specific decimal separator character (e.g. `'.'` or `','`). */
-    decimalSeparator: getDecimalSeparator(locale),
-
-    /** The raw locale string for passing to utility functions. */
-    locale,
-  }
 }
 
 /**
