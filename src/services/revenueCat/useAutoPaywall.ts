@@ -43,16 +43,8 @@ export const useAutoPaywall = () => {
   })
 
   // Run on mount (cold launch) and when RevenueCat finishes its first status check.
-  // The mount effect fires before RC is ready; the revenueCatReady effect catches
-  // the transition so cold-launch triggering still works when RC is slow to init.
   useEffect(() => {
     maybeShowPaywall()
-  }, [])
-
-  useEffect(() => {
-    if (revenueCatReady) {
-      maybeShowPaywall()
-    }
   }, [revenueCatReady])
 
   // Run on foreground resume
