@@ -1,0 +1,86 @@
+# When present, this file REPLACES .gitignore for EAS build archives.
+# It exists so that `eas build --local` (and any other EAS build flow that
+# bundles the project tree) can ship three gitignored files that the build
+# needs but that we do not want in version control:
+#
+#   - .env.local                   (used by Metro/Expo to load SENTRY_AUTH_TOKEN
+#                                   so Sentry source maps upload during builds)
+#   - google-services.json         (Firebase Android config required by prebuild)
+#   - GoogleService-Info.plist     (Firebase iOS config required by prebuild)
+#
+# Background: EAS local builds tarball the project respecting .gitignore;
+# secret-visibility EAS env vars are NOT injected into local builds. Combined,
+# those two facts mean the only way local builds see these files is to let them
+# ride along in the archive — which is exactly what this file enables.
+#
+# IMPORTANT: keep this file in sync with .gitignore. If you add a new exclusion
+# to .gitignore, mirror it here too — otherwise the file will leak into EAS
+# build archives.
+
+# dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Native
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Metro
+.metro-health-check*
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
+.DS_Store
+*.pem
+
+# typescript
+*.tsbuildinfo
+
+app-example
+
+# Native folders
+/android/
+/ios/
+
+# IDE
+.vscode/
+.idea/
+*.code-workspace
+
+# Firebase
+firebase-debug.log
+# NOTE: /GoogleService-Info.plist and /google-services.json intentionally NOT
+# excluded here — they need to ship to EAS builds. They remain gitignored.
+
+# Claude
+.claude/
+# NOTE: .env.local intentionally NOT excluded here — see header comment.
+
+# Misc
+.superpowers/
+
+# Git worktrees
+.worktrees/
+
+# Fastlane
+fastlane/.private/
+fastlane/.tmp/
+fastlane/report.xml
+fastlane/README.md
+fastlane/ios/metadata/review_information/*
+!fastlane/ios/metadata/review_information/notes.txt
+.env.fastlane.local

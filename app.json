@@ -38,7 +38,16 @@
         }
       ],
       "expo-localization",
-      "expo-font"
+      "expo-font",
+      "@sentry/react-native",
+      "expo-build-properties",
+      "expo-secure-store",
+      "expo-tracking-transparency",
+      "react-native-google-mobile-ads",
+      "expo-image",
+      "expo-status-bar",
+      "expo-web-browser",
+      "@react-native-firebase/app"
     ],
     "experiments": {
       "typedRoutes": true,
