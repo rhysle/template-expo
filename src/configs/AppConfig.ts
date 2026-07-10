@@ -21,7 +21,7 @@ export const AppConfig = {
     minDaysBetweenRequests: 30,
   },
   autoPaywall: {
-    intervalDays: 3,
+    intervalDays: 7,
   },
   revenueCat: {
     iosApiKey: '',
