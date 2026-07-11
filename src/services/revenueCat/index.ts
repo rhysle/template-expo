@@ -5,6 +5,7 @@ export {
   getActiveEntitlementId,
   getCustomerInfo,
   initRevenueCat,
+  isBillingUnavailableError,
   purchasePackage,
   restorePurchases,
 } from './revenueCatService'

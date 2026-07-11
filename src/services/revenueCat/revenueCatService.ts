@@ -23,6 +23,19 @@ export const fetchOfferings = async () => {
   return offerings.current?.availablePackages ?? []
 }
 
+export const isBillingUnavailableError = (error: unknown): boolean => {
+  if (error === null || typeof error !== 'object') return false
+
+  const { message, underlyingErrorMessage } = error as {
+    message?: unknown
+    underlyingErrorMessage?: unknown
+  }
+
+  return [message, underlyingErrorMessage].some(
+    (value) => typeof value === 'string' && /\bBILLING_UNAVAILABLE\b/i.test(value)
+  )
+}
+
 export const purchasePackage = async (
   pkg: PurchasesPackage
 ): Promise<{ success: boolean; customerInfo: CustomerInfo | null }> => {

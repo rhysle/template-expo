@@ -31,7 +31,7 @@ export const trackEvent = (
  */
 export const trackScreenView = (screenName: string): void => {
   analytics()
-    .logEvent('screen_view', { screen_name: screenName, screen_class: screenName })
+    .logScreenView({ screen_name: screenName, screen_class: screenName })
     .catch((error: unknown) => {
       if (__DEV__) {
         console.warn(`[Analytics] Failed to log screen_view "${screenName}":`, error)

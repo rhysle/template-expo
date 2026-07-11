@@ -6,6 +6,7 @@ import { scheduleOnRN } from 'react-native-worklets'
 import { Snackbar } from '@/components/base'
 import type { SnackbarState } from '@/stores/features/snackbar'
 import { useSnackbarState } from '@/stores/features/snackbar'
+import { useTheme } from '@/theme'
 
 const APPEAR_CONFIG = { duration: 220, easing: Easing.out(Easing.ease) }
 const DISMISS_CONFIG = { duration: 160, easing: Easing.in(Easing.quad) }
@@ -20,6 +21,8 @@ export const SnackbarHost = () => {
   // useEffect runs after render, so the first paint would always show an empty title.
   const [lastSnackbar, setLastSnackbar] = useState<SnackbarState | null>(null)
   const hideTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const { spacing } = useTheme()
 
   // Update synchronously during render when a new snackbar arrives.
   // React re-renders immediately before painting when setState is called during render.
@@ -84,7 +87,7 @@ export const SnackbarHost = () => {
         action={lastSnackbar?.action}
         onAction={handleAction}
         onDismiss={triggerDismiss}
-        bottomOffset={lastSnackbar?.bottomOffset}
+        bottomOffset={spacing.lg}
         showAccent={lastSnackbar?.showAccent ?? false}
         showShadow={lastSnackbar?.showShadow ?? true}
         blur={lastSnackbar?.blur ?? true}

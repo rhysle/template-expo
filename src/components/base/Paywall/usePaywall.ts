@@ -2,7 +2,12 @@ import { useEffect, useState } from 'react'
 import type { PurchasesPackage } from 'react-native-purchases'
 
 import { AnalyticsEvents, trackEvent } from '@/services/firebase/analytics'
-import { fetchOfferings, purchasePackage, restorePurchases } from '@/services/revenueCat'
+import {
+  fetchOfferings,
+  isBillingUnavailableError,
+  purchasePackage,
+  restorePurchases,
+} from '@/services/revenueCat'
 import { recordError } from '@/services/sentry'
 
 import type { PaywallCallbacks } from './types'
@@ -35,7 +40,7 @@ export const usePaywall = ({
       } catch (error) {
         // Offerings may not be available during development.
         // In production, log so SDK/network failures are visible.
-        if (!__DEV__) {
+        if (!__DEV__ && !isBillingUnavailableError(error)) {
           recordError(error, 'usePaywall.loadOfferings')
         }
       } finally {

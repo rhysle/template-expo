@@ -47,7 +47,22 @@ export const downloadUpdate = async (): Promise<boolean> => {
 export const reloadApp = (): Promise<void> => Updates.reloadAsync()
 
 /**
- * Returns the UUID of the currently-running OTA update, or null if the app
- * is running its embedded (build-time) bundle.
+ * Returns the UUID of the currently-running Expo update, whether it was
+ * downloaded via EAS Update or embedded in the native build.
  */
 export const getCurrentUpdateId = (): string | null => Updates.updateId ?? null
+
+/**
+ * Returns true when the app launched the update embedded in the native build.
+ */
+export const isEmbeddedLaunch = (): boolean => Updates.isEmbeddedLaunch
+
+/**
+ * Returns the UUID of the currently-running downloaded OTA update, or null
+ * when the app is running its embedded build-time bundle.
+ */
+export const getCurrentOtaUpdateId = (): string | null => {
+  const updateId = getCurrentUpdateId()
+  if (updateId === null || isEmbeddedLaunch()) return null
+  return updateId
+}

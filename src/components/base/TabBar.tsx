@@ -12,6 +12,7 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
 
@@ -173,9 +174,13 @@ export const TabBar = ({
 }: TabBarProps) => {
   const styles = useThemedStyles(createStyles)
   const { spacing } = useTheme()
+  const insets = useSafeAreaInsets()
   const { width } = useWindowDimensions()
   const paddingOffset = spacing.lg
   const tabWidth = (width - paddingOffset * 2) / state.routes.length
+
+  // Using bottom insets for iOS would cause the gap too big so we use a fixed padding for iOS and insets for Android.
+  const safeAreaStyle = { paddingBottom: Platform.OS === 'ios' ? spacing.md : insets.bottom }
 
   // Single shared value propagated to all items - one UI-thread update drives every tab animation
   const activeIndex = useSharedValue(state.index)
@@ -225,26 +230,27 @@ export const TabBar = ({
 
   if (Platform.OS === 'ios' && blur) {
     return (
-      <BlurView intensity={blurIntensity} tint="dark" style={styles.tabContainerBlur}>
+      <BlurView
+        intensity={blurIntensity}
+        tint="dark"
+        style={[styles.tabContainerBlur, safeAreaStyle]}>
         {tabBarContent}
       </BlurView>
     )
   }
 
-  return <View style={styles.tabContainer}>{tabBarContent}</View>
+  return <View style={[styles.tabContainer, safeAreaStyle]}>{tabBarContent}</View>
 }
 
 const createStyles = createThemedStyles((t) => ({
   tabContainer: {
     backgroundColor: t.colors.background.card,
     paddingHorizontal: t.spacing.lg,
-    paddingBottom: t.spacing.lg,
     overflow: 'hidden',
     position: 'relative',
   },
   tabContainerBlur: {
     paddingHorizontal: t.spacing.lg,
-    paddingBottom: t.spacing.lg,
     overflow: 'hidden',
   },
   tabButton: {

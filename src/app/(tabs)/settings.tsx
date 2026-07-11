@@ -32,7 +32,7 @@ import { ScreenHeader } from '@/components/ScreenHeader'
 import { AppConfig } from '@/configs'
 import { AdsConsent, isAdsEnabled } from '@/services/ads'
 import { AnalyticsEvents, trackEvent } from '@/services/firebase/analytics'
-import { getCurrentUpdateId } from '@/services/otaUpdate'
+import { getCurrentOtaUpdateId } from '@/services/otaUpdate'
 import { recordError } from '@/services/sentry'
 import { openWriteReview } from '@/services/storeReview'
 import { useAdsState } from '@/stores/features/ads'
@@ -61,7 +61,7 @@ export default function SettingsScreen() {
   const { privacyOptionsRequired } = useAdsState()
   const { showSnackbar } = useSnackbarState()
   const showPrivacyConsentItem = isAdsEnabled() && !isSubscribed && privacyOptionsRequired
-  const currentUpdateId = getCurrentUpdateId()
+  const currentOtaUpdateId = getCurrentOtaUpdateId()
 
   const onContactSupportPress = useContactSupport()
   const onSharePress = useShareApp()
@@ -188,9 +188,9 @@ export default function SettingsScreen() {
               <Text variant="body" tone="secondary" style={styles.appVersion}>
                 {t('settings.version', { version: Constants.expoConfig?.version ?? '1.0.0' })}
               </Text>
-              {currentUpdateId !== null && (
+              {currentOtaUpdateId !== null && (
                 <Text variant="caption" tone="muted" style={styles.otaUpdateId}>
-                  {t('settings.otaUpdateId', { updateId: currentUpdateId.slice(0, 8) })}
+                  {t('settings.otaUpdateId', { updateId: currentOtaUpdateId.slice(0, 8) })}
                 </Text>
               )}
               <Pressable onPress={handleCopyUserId} style={styles.userIdRow}>

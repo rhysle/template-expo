@@ -1,14 +1,28 @@
 import { useReactQueryDevTools } from '@dev-plugins/react-query'
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
-import { defaultShouldDehydrateQuery, QueryClient } from '@tanstack/react-query'
+import { defaultShouldDehydrateQuery, onlineManager, QueryClient } from '@tanstack/react-query'
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
+import * as Network from 'expo-network'
 import { ReactNode } from 'react'
 
 import { AppConfig } from '@/configs'
 import { queryStorage } from '@/storage'
+import { isNetworkOnline } from '@/utils/network'
 import { OfflineError } from '@/utils/OfflineError'
 
 const QUERY_CACHE_MAX_AGE = 1000 * 60 * 60 * 24
+
+onlineManager.setEventListener((setOnline) => {
+  void Network.getNetworkStateAsync()
+    .then((state) => setOnline(isNetworkOnline(state)))
+    .catch(() => setOnline(true))
+
+  const subscription = Network.addNetworkStateListener((state) => {
+    setOnline(isNetworkOnline(state))
+  })
+
+  return () => subscription.remove()
+})
 
 const queryClient = new QueryClient({
   defaultOptions: {

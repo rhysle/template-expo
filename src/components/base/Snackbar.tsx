@@ -10,7 +10,6 @@ import {
 import { Platform, View } from 'react-native'
 import type { SharedValue } from 'react-native-reanimated'
 import Animated, { interpolate, useAnimatedStyle } from 'react-native-reanimated'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import type { SnackbarAction, SnackbarVariant } from '@/stores/features/snackbar'
 import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
@@ -60,7 +59,6 @@ export const Snackbar = ({
   blurIntensity = 60,
 }: SnackbarProps) => {
   const { colors } = useTheme()
-  const insets = useSafeAreaInsets()
   const styles = useThemedStyles(createStyles)
   const tabBarHeight = useTabBarHeight()
 
@@ -69,7 +67,7 @@ export const Snackbar = ({
     transform: [{ translateY: interpolate(progress.value, [0, 1], [20, 0]) }],
   }))
 
-  const bottom = tabBarHeight + insets.bottom + bottomOffset
+  const bottom = tabBarHeight + bottomOffset
 
   // Resolve which icon to render:
   // null  → no icon (explicit override)

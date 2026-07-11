@@ -11,7 +11,33 @@ import { useSnackbarState } from '@/stores/features/snackbar'
 import { assertOnline } from '@/utils/network'
 import { OfflineError } from '@/utils/OfflineError'
 
-import { checkForUpdate, downloadUpdate, getCurrentUpdateId, reloadApp } from './otaUpdateService'
+import {
+  checkForUpdate,
+  downloadUpdate,
+  getCurrentOtaUpdateId,
+  reloadApp,
+} from './otaUpdateService'
+
+const EXPECTED_UPDATE_CHECK_ERROR_PATTERNS = [
+  /OTA update check timed out/i,
+  /Call to function 'ExpoUpdates\.checkForUpdateAsync' has been rejected/i,
+  /Failed to check for update/i,
+]
+
+const getErrorMessage = (error: unknown): string => {
+  if (error instanceof Error) return error.message
+  if (typeof error === 'string') return error
+  if (error !== null && typeof error === 'object' && 'message' in error) {
+    const { message } = error as { message?: unknown }
+    if (typeof message === 'string') return message
+  }
+  return String(error)
+}
+
+const isExpectedUpdateCheckError = (error: unknown): boolean => {
+  const message = getErrorMessage(error)
+  return EXPECTED_UPDATE_CHECK_ERROR_PATTERNS.some((pattern) => pattern.test(message))
+}
 
 /**
  * One-time OTA update lifecycle hook. Call once inside RootLayoutContent
@@ -45,18 +71,19 @@ export const useOtaUpdateInit = () => {
   useEffect(() => {
     if (__DEV__ || !AppConfig.otaUpdate.enabled) return
 
-    const currentUpdateId = getCurrentUpdateId()
+    const currentOtaUpdateId = getCurrentOtaUpdateId()
 
-    // Tag every Sentry error with the running OTA update ID for filtering
-    if (currentUpdateId) {
-      setSentryTag('ota_update_id', currentUpdateId)
-      setAnalyticsUserProperties({ ota_update_id: currentUpdateId })
+    // Tag only downloaded OTA launches. Embedded build IDs are not traceable
+    // in EAS Update and should not be reported as OTA update IDs.
+    if (currentOtaUpdateId) {
+      setSentryTag('ota_update_id', currentOtaUpdateId)
+      setAnalyticsUserProperties({ ota_update_id: currentOtaUpdateId })
     }
 
     // A new OTA was applied if the current ID differs from what we persisted last session
-    if (currentUpdateId && currentUpdateId !== initialUpdateIdRef.current) {
-      setLastAppliedUpdateId(currentUpdateId)
-      trackEvent(AnalyticsEvents.OTA_UPDATE_APPLIED, { update_id: currentUpdateId })
+    if (currentOtaUpdateId && currentOtaUpdateId !== initialUpdateIdRef.current) {
+      setLastAppliedUpdateId(currentOtaUpdateId)
+      trackEvent(AnalyticsEvents.OTA_UPDATE_APPLIED, { update_id: currentOtaUpdateId })
     }
   }, [setLastAppliedUpdateId])
 
@@ -69,6 +96,8 @@ export const useOtaUpdateInit = () => {
       if (isCheckingRef.current || hasDownloadedRef.current) return
       isCheckingRef.current = true
 
+      let didCompleteUpdateCheck = false
+
       try {
         // Skip the round-trip entirely when there is no internet. Without this
         // guard, every cold start / foreground in airplane mode would surface
@@ -76,6 +105,7 @@ export const useOtaUpdateInit = () => {
         await assertOnline()
 
         const isAvailable = await checkForUpdate()
+        didCompleteUpdateCheck = true
         if (isAvailable) {
           trackEvent(AnalyticsEvents.OTA_UPDATE_AVAILABLE)
 
@@ -108,9 +138,14 @@ export const useOtaUpdateInit = () => {
         }
       } catch (error) {
         // Offline is an expected state, not a bug - swallow silently rather
-        // than burning Sentry quota on it. All other failures are non-fatal
-        // but still worth recording for diagnostics.
-        if (!(error instanceof OfflineError)) {
+        // than burning Sentry quota on it. Expo's checkForUpdateAsync can also
+        // reject or hang when connectivity changes after assertOnline(); that
+        // is expected for an opportunistic background check. Download/reload
+        // failures remain reportable because an update was already found.
+        if (
+          !(error instanceof OfflineError) &&
+          (didCompleteUpdateCheck || !isExpectedUpdateCheckError(error))
+        ) {
           recordError(error, 'useOtaUpdateInit performCheck')
         }
       } finally {
