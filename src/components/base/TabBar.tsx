@@ -1,5 +1,5 @@
-import type { BottomTabBarProps } from '@react-navigation/bottom-tabs'
 import { BlurView } from 'expo-blur'
+import type { BottomTabBarProps } from 'expo-router/js-tabs'
 import { useEffect, useRef } from 'react'
 import { Platform, useWindowDimensions, View } from 'react-native'
 import type { SharedValue } from 'react-native-reanimated'
