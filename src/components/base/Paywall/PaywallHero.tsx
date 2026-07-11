@@ -2,7 +2,7 @@ import { Image } from 'react-native'
 
 import { createThemedStyles, useThemedStyles } from '@/theme'
 
-const icon = require('@/assets/images/appIcons/icon.png')
+const icon = require('@/assets/images/icon.png')
 
 export const PaywallHero = () => {
   const styles = useThemedStyles(createStyles)

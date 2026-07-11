@@ -10,7 +10,8 @@
     "ios": {
       "icon": "./assets/expo.icon",
       "supportsTablet": true,
-      "bundleIdentifier": "com.rhysle.expo"
+      "bundleIdentifier": "com.rhysle.expo",
+      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
       "adaptiveIcon": {
@@ -20,7 +21,8 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.rhysle.expo"
+      "package": "com.rhysle.expo",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "output": "static",
@@ -40,7 +42,16 @@
       "expo-localization",
       "expo-font",
       "@sentry/react-native",
-      "expo-build-properties",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static",
+            "forceStaticLinking": ["RNFBApp", "RNFBAnalytics"]
+          }
+        }
+      ],
+      "./plugins/withRNFirebaseStaticFramework",
       "expo-secure-store",
       "expo-tracking-transparency",
       "react-native-google-mobile-ads",
