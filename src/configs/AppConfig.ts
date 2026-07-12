@@ -28,7 +28,7 @@ export const AppConfig = {
     entitlementId: 'premium',
   },
   sentry: {
-    dsn: '',
+    dsn: 'https://824c1df7aa59cca914eb2a983313744f@o4511059508461568.ingest.us.sentry.io/4511722544431104',
   },
   ads: {
     /**

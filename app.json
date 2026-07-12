@@ -11,7 +11,10 @@
       "icon": "./assets/expo.icon",
       "supportsTablet": true,
       "bundleIdentifier": "com.rhysle.expo",
-      "googleServicesFile": "./GoogleService-Info.plist"
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -22,7 +25,12 @@
       },
       "predictiveBackGestureEnabled": false,
       "package": "com.rhysle.expo",
-      "googleServicesFile": "./google-services.json"
+      "googleServicesFile": "./google-services.json",
+      "blockedPermissions": [
+        "android.permission.SYSTEM_ALERT_WINDOW",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE"
+      ]
     },
     "web": {
       "output": "static",
@@ -39,30 +47,107 @@
           "backgroundColor": "#208AEF"
         }
       ],
-      "expo-localization",
+      [
+        "expo-localization",
+        {
+          "supportsRTL": true,
+          "supportedLocales": [
+            "ar",
+            "bn",
+            "cs",
+            "da",
+            "de",
+            "el",
+            "en",
+            "es",
+            "fi",
+            "fr",
+            "he",
+            "hi",
+            "hr",
+            "hu",
+            "id",
+            "it",
+            "ja",
+            "ko",
+            "ms",
+            "nb",
+            "nl",
+            "pl",
+            "pt",
+            "pt-BR",
+            "ro",
+            "ru",
+            "sv",
+            "th",
+            "tr",
+            "uk",
+            "vi",
+            "zh-Hans",
+            "zh-Hant"
+          ]
+        }
+      ],
       "expo-font",
       "@sentry/react-native",
       [
+        "@sentry/react-native/expo",
+        {
+          "url": "https://sentry.io/",
+          "project": "template-expo",
+          "organization": "rhysle"
+        }
+      ],
+      [
         "expo-build-properties",
         {
+          "android": {
+            "extraProguardRules": "-keep class com.google.android.gms.internal.consent_sdk.** { *; }"
+          },
           "ios": {
             "useFrameworks": "static",
             "forceStaticLinking": ["RNFBApp", "RNFBAnalytics"]
           }
         }
       ],
-      "./plugins/withRNFirebaseStaticFramework",
       "expo-secure-store",
-      "expo-tracking-transparency",
-      "react-native-google-mobile-ads",
+      "expo-updates",
+      [
+        "react-native-google-mobile-ads",
+        {
+          "androidAppId": "",
+          "iosAppId": "",
+          "delayAppMeasurementInit": true
+        }
+      ],
+      [
+        "expo-tracking-transparency",
+        {
+          "userTrackingPermission": "This identifier will be used to deliver personalized ads to you."
+        }
+      ],
       "expo-image",
       "expo-status-bar",
       "expo-web-browser",
-      "@react-native-firebase/app"
+      "@react-native-firebase/app",
+      "./plugins/withRNFirebaseStaticFramework.js",
+      "./plugins/withGradleJvmArgs.js"
     ],
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "6399fac2-52c4-4cde-81f1-14c928819922"
+      }
+    },
+    "updates": {
+      "url": "https://u.expo.dev/6399fac2-52c4-4cde-81f1-14c928819922"
     }
   }
 }
