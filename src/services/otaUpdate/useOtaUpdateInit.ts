@@ -4,7 +4,7 @@ import { AppState } from 'react-native'
 
 import { AppConfig } from '@/configs'
 import { setAnalyticsUserProperties, trackEvent } from '@/services/firebase/analytics'
-import { AnalyticsEvents } from '@/services/firebase/analytics/analyticsEvents'
+import { AnalyticsGeneralEvents } from '@/services/firebase/analytics/analyticsGeneralEvents'
 import { recordError, setSentryTag } from '@/services/sentry'
 import { useOtaUpdateState } from '@/stores/features/otaUpdate'
 import { useSnackbarState } from '@/stores/features/snackbar'
@@ -83,7 +83,7 @@ export const useOtaUpdateInit = () => {
     // A new OTA was applied if the current ID differs from what we persisted last session
     if (currentOtaUpdateId && currentOtaUpdateId !== initialUpdateIdRef.current) {
       setLastAppliedUpdateId(currentOtaUpdateId)
-      trackEvent(AnalyticsEvents.OTA_UPDATE_APPLIED, { update_id: currentOtaUpdateId })
+      trackEvent(AnalyticsGeneralEvents.OTA_UPDATE_APPLIED, { update_id: currentOtaUpdateId })
     }
   }, [setLastAppliedUpdateId])
 
@@ -107,12 +107,12 @@ export const useOtaUpdateInit = () => {
         const isAvailable = await checkForUpdate()
         didCompleteUpdateCheck = true
         if (isAvailable) {
-          trackEvent(AnalyticsEvents.OTA_UPDATE_AVAILABLE)
+          trackEvent(AnalyticsGeneralEvents.OTA_UPDATE_AVAILABLE)
 
           const isNew = await downloadUpdate()
           if (isNew) {
             hasDownloadedRef.current = true
-            trackEvent(AnalyticsEvents.OTA_UPDATE_DOWNLOADED)
+            trackEvent(AnalyticsGeneralEvents.OTA_UPDATE_DOWNLOADED)
 
             showSnackbar({
               title: t('otaUpdate.updateReady'),
@@ -126,7 +126,7 @@ export const useOtaUpdateInit = () => {
                   // the analytics event twice and skew funnel metrics.
                   if (hasTappedRestartRef.current) return
                   hasTappedRestartRef.current = true
-                  trackEvent(AnalyticsEvents.OTA_UPDATE_RESTART_TAPPED)
+                  trackEvent(AnalyticsGeneralEvents.OTA_UPDATE_RESTART)
                   void reloadApp().catch((error) => {
                     hasTappedRestartRef.current = false
                     recordError(error, 'useOtaUpdateInit reloadApp')

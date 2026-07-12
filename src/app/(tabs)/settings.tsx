@@ -31,7 +31,7 @@ import {
 import { ScreenHeader } from '@/components/ScreenHeader'
 import { AppConfig } from '@/configs'
 import { AdsConsent, isAdsEnabled } from '@/services/ads'
-import { AnalyticsEvents, trackEvent } from '@/services/firebase/analytics'
+import { AnalyticsGeneralEvents, trackEvent } from '@/services/firebase/analytics'
 import { getCurrentOtaUpdateId } from '@/services/otaUpdate'
 import { recordError } from '@/services/sentry'
 import { openWriteReview } from '@/services/storeReview'
@@ -67,7 +67,7 @@ export default function SettingsScreen() {
   const onSharePress = useShareApp()
 
   const onRateAppPress = () => {
-    trackEvent(AnalyticsEvents.RATE_APP)
+    trackEvent(AnalyticsGeneralEvents.RATE_APP)
     void openWriteReview()
   }
 

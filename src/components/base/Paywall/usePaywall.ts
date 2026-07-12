@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import type { PurchasesPackage } from 'react-native-purchases'
 
-import { AnalyticsEvents, trackEvent } from '@/services/firebase/analytics'
+import { AnalyticsGeneralEvents, trackEvent } from '@/services/firebase/analytics'
 import {
   fetchOfferings,
   isBillingUnavailableError,
@@ -54,28 +54,28 @@ export const usePaywall = ({
   const handleSubscribe = async () => {
     if (!selectedPackage) return
 
-    trackEvent(AnalyticsEvents.PAYWALL_SUBSCRIBE_TAPPED, {
+    trackEvent(AnalyticsGeneralEvents.PAYWALL_SUBSCRIBE, {
       package_id: selectedPackage.identifier,
     })
     setPurchasing(true)
     try {
       const result = await purchasePackage(selectedPackage)
       if (result.success) {
-        trackEvent(AnalyticsEvents.PAYWALL_SUBSCRIBE_SUCCESS, {
+        trackEvent(AnalyticsGeneralEvents.PAYWALL_SUBSCRIBE_SUCCESS, {
           package_id: selectedPackage.identifier,
         })
         onSubscribeSuccess?.()
         onComplete()
       } else if (result.customerInfo) {
         // Purchase completed but entitlement not found
-        trackEvent(AnalyticsEvents.PAYWALL_SUBSCRIBE_ERROR, {
+        trackEvent(AnalyticsGeneralEvents.PAYWALL_SUBSCRIBE_ERROR, {
           package_id: selectedPackage.identifier,
         })
         onSubscribeError?.(new Error('Entitlement not found after purchase'))
       }
       // customerInfo is null when user cancelled - stay silent
     } catch (error: unknown) {
-      trackEvent(AnalyticsEvents.PAYWALL_SUBSCRIBE_ERROR, {
+      trackEvent(AnalyticsGeneralEvents.PAYWALL_SUBSCRIBE_ERROR, {
         package_id: selectedPackage.identifier,
       })
       onSubscribeError?.(error)
@@ -85,19 +85,19 @@ export const usePaywall = ({
   }
 
   const handleRestore = async () => {
-    trackEvent(AnalyticsEvents.PAYWALL_RESTORE_TAPPED)
+    trackEvent(AnalyticsGeneralEvents.PAYWALL_RESTORE)
     setPurchasing(true)
     try {
       const result = await restorePurchases()
       if (result.success) {
-        trackEvent(AnalyticsEvents.PAYWALL_RESTORE_SUCCESS)
+        trackEvent(AnalyticsGeneralEvents.PAYWALL_RESTORE_SUCCESS)
         onRestoreSuccess?.()
         onComplete()
       } else {
         onRestoreNoSubscription?.()
       }
     } catch (error: unknown) {
-      trackEvent(AnalyticsEvents.PAYWALL_RESTORE_ERROR)
+      trackEvent(AnalyticsGeneralEvents.PAYWALL_RESTORE_ERROR)
       onRestoreError?.(error)
     } finally {
       setPurchasing(false)

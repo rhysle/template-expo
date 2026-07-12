@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Linking, Platform } from 'react-native'
 
 import { AppConfig } from '@/configs'
-import { AnalyticsEvents, trackEvent } from '@/services/firebase/analytics'
+import { AnalyticsGeneralEvents, trackEvent } from '@/services/firebase/analytics'
 import { getCurrentOtaUpdateId } from '@/services/otaUpdate'
 import { useSnackbarState } from '@/stores/features/snackbar'
 import { useUserIdentityState } from '@/stores/features/userIdentity'
@@ -16,7 +16,7 @@ export const useContactSupport = () => {
   const currentOtaUpdateId = getCurrentOtaUpdateId()
 
   return async (): Promise<void> => {
-    trackEvent(AnalyticsEvents.CONTACT_SUPPORT)
+    trackEvent(AnalyticsGeneralEvents.CONTACT_SUPPORT)
     const appName = Constants.expoConfig?.name ?? 'Unknown App'
     const appVersion = Constants.expoConfig?.version ?? 'Unknown'
     const osName = Platform.OS === 'ios' ? 'iOS' : 'Android'

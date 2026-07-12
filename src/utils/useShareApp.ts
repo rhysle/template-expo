@@ -3,14 +3,14 @@ import { useTranslation } from 'react-i18next'
 import { Platform, Share } from 'react-native'
 
 import { AppConfig } from '@/configs'
-import { AnalyticsEvents, trackEvent } from '@/services/firebase/analytics'
+import { AnalyticsGeneralEvents, trackEvent } from '@/services/firebase/analytics'
 import { recordError } from '@/services/sentry'
 
 export const useShareApp = () => {
   const { t } = useTranslation()
 
   return async (): Promise<void> => {
-    trackEvent(AnalyticsEvents.SHARE_APP)
+    trackEvent(AnalyticsGeneralEvents.SHARE_APP)
     const appName = Constants.expoConfig?.name ?? 'App'
 
     let storeUrl: string | undefined

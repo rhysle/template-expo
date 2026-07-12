@@ -7,7 +7,7 @@ import type { AnalyticsEventName } from './types'
 /**
  * Track a typed analytics event.
  * Param values must be `string | number` - Firebase Analytics requirement.
- * Import `AnalyticsEvents` for generic events or `AppAnalyticsEvents` for
+ * Import `AnalyticsGeneralEvents` for generic events or `AnalyticsAppEvents` for
  * app-specific ones; both satisfy `AnalyticsEventName`.
  */
 export const trackEvent = (

@@ -4,7 +4,7 @@ import type { AppStateStatus } from 'react-native'
 import { AppState } from 'react-native'
 
 import { AppConfig } from '@/configs'
-import { AnalyticsEvents, trackEvent } from '@/services/firebase/analytics'
+import { AnalyticsGeneralEvents, trackEvent } from '@/services/firebase/analytics'
 import { usePaywallState } from '@/stores/features/paywall'
 import { useSubscriptionState } from '@/stores/features/subscription'
 
@@ -36,7 +36,7 @@ export const useAutoPaywall = () => {
     if (Date.now() - baseline >= INTERVAL_MS) {
       isShowingRef.current = true
       setAutoPaywallShowing(true)
-      trackEvent(AnalyticsEvents.AUTO_PAYWALL_TRIGGERED)
+      trackEvent(AnalyticsGeneralEvents.AUTO_PAYWALL_TRIGGERED)
       recordAutoPaywallShown()
       router.push('/paywall')
     }

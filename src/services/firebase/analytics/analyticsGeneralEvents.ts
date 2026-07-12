@@ -1,7 +1,7 @@
-// Generic analytics events - reusable across all apps built from this template.
+// General analytics events - reusable across all apps built from this template.
 // These map to template-level flows: onboarding, paywall, and system errors.
 // Do NOT add app-specific events here - put them in analyticsAppEvents.ts instead.
-export const AnalyticsEvents = {
+export const AnalyticsGeneralEvents = {
   // Onboarding
   ONBOARDING_STARTED: 'onboarding_started',
   ONBOARDING_COMPLETED: 'onboarding_completed',
@@ -10,10 +10,10 @@ export const AnalyticsEvents = {
 
   // Paywall
   PAYWALL_VIEWED: 'paywall_viewed',
-  PAYWALL_SUBSCRIBE_TAPPED: 'paywall_subscribe_tapped',
+  PAYWALL_SUBSCRIBE: 'paywall_subscribe',
   PAYWALL_SUBSCRIBE_SUCCESS: 'paywall_subscribe_success',
   PAYWALL_SUBSCRIBE_ERROR: 'paywall_subscribe_error',
-  PAYWALL_RESTORE_TAPPED: 'paywall_restore_tapped',
+  PAYWALL_RESTORE: 'paywall_restore',
   PAYWALL_RESTORE_SUCCESS: 'paywall_restore_success',
   PAYWALL_RESTORE_ERROR: 'paywall_restore_error',
   PAYWALL_DISMISSED: 'paywall_dismissed',
@@ -45,5 +45,5 @@ export const AnalyticsEvents = {
   OTA_UPDATE_APPLIED: 'ota_update_applied',
   OTA_UPDATE_AVAILABLE: 'ota_update_available',
   OTA_UPDATE_DOWNLOADED: 'ota_update_downloaded',
-  OTA_UPDATE_RESTART_TAPPED: 'ota_update_restart_tapped',
+  OTA_UPDATE_RESTART: 'ota_update_restart',
 } as const

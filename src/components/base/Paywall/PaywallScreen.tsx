@@ -11,7 +11,7 @@ import { FadeScrollView } from '@/components/base/FadeScrollView'
 import { SpinArcLoader } from '@/components/base/Loader'
 import { Text } from '@/components/base/Text'
 import { AppConfig } from '@/configs'
-import { AnalyticsEvents, trackEvent } from '@/services/firebase/analytics'
+import { AnalyticsGeneralEvents, trackEvent } from '@/services/firebase/analytics'
 import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
 
 import { PackageOption } from './PackageOption'
@@ -57,7 +57,7 @@ export const PaywallScreen = ({
   const hasFreeTrialSelected = selectedPackage?.product.introPrice?.price === 0
 
   useEffect(() => {
-    trackEvent(AnalyticsEvents.PAYWALL_VIEWED)
+    trackEvent(AnalyticsGeneralEvents.PAYWALL_VIEWED)
   }, [])
 
   if (loading) {
@@ -73,7 +73,7 @@ export const PaywallScreen = ({
       <Pressable
         style={[styles.closeButton, { top: insets.top + 8 }]}
         onPress={() => {
-          trackEvent(AnalyticsEvents.PAYWALL_DISMISSED)
+          trackEvent(AnalyticsGeneralEvents.PAYWALL_DISMISSED)
           onDismiss?.()
         }}
         disabled={purchasing}

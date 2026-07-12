@@ -1,5 +1,5 @@
-export { AppAnalyticsEvents } from './analyticsAppEvents'
-export { AnalyticsEvents } from './analyticsEvents'
+export { AnalyticsAppEvents } from './analyticsAppEvents'
+export { AnalyticsGeneralEvents } from './analyticsGeneralEvents'
 export {
   setAnalyticsUserId,
   setAnalyticsUserProperties,

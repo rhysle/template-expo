@@ -6,7 +6,7 @@ import { OnboardingFlow } from '@/components/base/Onboarding'
 import { PaywallScreen } from '@/components/base/Paywall'
 import { useOnboardingPages } from '@/components/onboarding/onboardingPages'
 import { usePaywallFeatures } from '@/components/paywall/usePaywallFeatures'
-import { AnalyticsEvents, trackEvent } from '@/services/firebase/analytics'
+import { AnalyticsGeneralEvents, trackEvent } from '@/services/firebase/analytics'
 import { useOnboardingState } from '@/stores/features/onboarding'
 import { useSnackbarState } from '@/stores/features/snackbar'
 import { useSubscriptionState } from '@/stores/features/subscription'
@@ -23,14 +23,14 @@ export default function OnboardingScreen() {
   const features = usePaywallFeatures()
 
   useEffect(() => {
-    trackEvent(AnalyticsEvents.ONBOARDING_STARTED)
+    trackEvent(AnalyticsGeneralEvents.ONBOARDING_STARTED)
   }, [])
 
   const handleOnboardingComplete = (skippingOnboarding = false) => {
     if (skippingOnboarding) {
-      trackEvent(AnalyticsEvents.ONBOARDING_SKIPPED)
+      trackEvent(AnalyticsGeneralEvents.ONBOARDING_SKIPPED)
     } else {
-      trackEvent(AnalyticsEvents.ONBOARDING_COMPLETED)
+      trackEvent(AnalyticsGeneralEvents.ONBOARDING_COMPLETED)
     }
     if (isSubscribed) {
       handlePaywallDone()
@@ -82,7 +82,7 @@ export default function OnboardingScreen() {
       onComplete={handleOnboardingComplete}
       onSkip={() => handleOnboardingComplete(true)}
       onPageChange={(pageIndex, pageKey) => {
-        trackEvent(AnalyticsEvents.ONBOARDING_PAGE_VIEWED, {
+        trackEvent(AnalyticsGeneralEvents.ONBOARDING_PAGE_VIEWED, {
           page_index: pageIndex,
           page_key: pageKey,
         })

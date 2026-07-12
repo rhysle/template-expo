@@ -405,7 +405,7 @@ Service layer: `src/services/firebase/` — follows the same pattern as `revenue
 | File                              | Purpose                                                                                     |
 | --------------------------------- | ------------------------------------------------------------------------------------------- |
 | `analytics/analyticsService.ts`   | `trackEvent`, `trackScreenView`, `setAnalyticsUserId`, `setAnalyticsUserProperties`         |
-| `analytics/analyticsEvents.ts`    | Generic template events (onboarding, paywall, errors) — do not add app-specific events here |
+| `analytics/analyticsGeneralEvents.ts` | Generic template events (onboarding, paywall, errors) — do not add app-specific events here |
 | `analytics/analyticsAppEvents.ts` | App-specific events — replace entirely when forking for a new project                       |
 | `analytics/types.ts`              | `AnalyticsEventName` union type                                                             |
 | `analytics/useScreenTracker.ts`   | Auto screen tracking hook                                                                   |
@@ -413,13 +413,13 @@ Service layer: `src/services/firebase/` — follows the same pattern as `revenue
 ```ts
 import {
   trackEvent,
-  AnalyticsEvents,
-  AppAnalyticsEvents,
+  AnalyticsGeneralEvents,
+  AnalyticsAppEvents,
   setAnalyticsUserProperties,
 } from '@/services/firebase/analytics'
 
-trackEvent(AnalyticsEvents.PAYWALL_VIEWED)
-trackEvent(AppAnalyticsEvents.CURRENCY_ADDED, { code: 'USD' })
+trackEvent(AnalyticsGeneralEvents.PAYWALL_VIEWED)
+trackEvent(AnalyticsAppEvents.CURRENCY_ADDED, { code: 'USD' })
 setAnalyticsUserProperties({ app_version: '1.0.0' }) // string values only
 ```
 

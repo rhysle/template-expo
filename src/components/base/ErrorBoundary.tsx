@@ -2,7 +2,7 @@ import { Component, type ErrorInfo, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
 
-import { AnalyticsEvents, trackEvent } from '@/services/firebase/analytics'
+import { AnalyticsGeneralEvents, trackEvent } from '@/services/firebase/analytics'
 import { recordError } from '@/services/sentry'
 import { createThemedStyles, useThemedStyles } from '@/theme'
 
@@ -61,7 +61,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
   componentDidCatch(error: Error, info: ErrorInfo): void {
     recordError(error, `componentStack: ${info.componentStack?.slice(0, 300) ?? ''}`)
-    trackEvent(AnalyticsEvents.ERROR_BOUNDARY_TRIGGERED, {
+    trackEvent(AnalyticsGeneralEvents.ERROR_BOUNDARY_TRIGGERED, {
       error_message: error.message.slice(0, 100),
     })
   }

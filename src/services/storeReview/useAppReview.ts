@@ -1,6 +1,6 @@
 import { AppConfig } from '@/configs'
 import { trackEvent } from '@/services/firebase/analytics'
-import { AnalyticsEvents } from '@/services/firebase/analytics/analyticsEvents'
+import { AnalyticsGeneralEvents } from '@/services/firebase/analytics/analyticsGeneralEvents'
 import { recordError } from '@/services/sentry'
 import { useAppReviewState } from '@/stores/features/appReview'
 
@@ -33,7 +33,7 @@ export const useAppReview = () => {
     try {
       await requestStoreReview()
       recordReviewRequested()
-      trackEvent(AnalyticsEvents.APP_REVIEW_REQUESTED)
+      trackEvent(AnalyticsGeneralEvents.APP_REVIEW_REQUESTED)
     } catch (error) {
       recordError(error)
     }

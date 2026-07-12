@@ -366,7 +366,7 @@ A component that combines `BannerAd` + `TabBar` into an absolute-positioned over
 **Key files:**
 
 - `analytics/analyticsService.ts` — `trackEvent`, `trackScreenView`, `setAnalyticsUserId`, `setAnalyticsUserProperties`
-- `analytics/analyticsEvents.ts` — **generic events** (onboarding, paywall, error boundary) — template-ready, do not add app-specific events here
+- `analytics/analyticsGeneralEvents.ts` — **generic events** (onboarding, paywall, error boundary) — template-ready, do not add app-specific events here
 - `analytics/analyticsAppEvents.ts` — **app-specific events** — replace this file entirely when forking the template for a new project
 - `analytics/types.ts` — `AnalyticsEventName` union type (imported by `analyticsService.ts` to avoid circular deps)
 - `analytics/useScreenTracker.ts` — auto screen tracking hook
@@ -376,9 +376,9 @@ A component that combines `BannerAd` + `TabBar` into an absolute-positioned over
 **Tracking events** — import from the analytics subfolder:
 
 ```ts
-import { trackEvent, AnalyticsEvents, AppAnalyticsEvents } from '@/services/firebase/analytics'
-trackEvent(AnalyticsEvents.PAYWALL_VIEWED) // generic
-trackEvent(AppAnalyticsEvents.CURRENCY_ADDED, { code: 'USD' }) // app-specific
+import { trackEvent, AnalyticsAppEvents, AnalyticsGeneralEvents } from '@/services/firebase/analytics'
+trackEvent(AnalyticsGeneralEvents.PAYWALL_VIEWED) // generic
+trackEvent(AnalyticsAppEvents.CURRENCY_ADDED, { code: 'USD' }) // app-specific
 ```
 
 **User properties** — `setAnalyticsUserProperties(properties: Record<string, string>)` sets Firebase Analytics user properties (string values only). Called at module level in `_layout.tsx` to set `app_version` on every cold start. Values persist across sessions until overwritten.
