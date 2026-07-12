@@ -1,5 +1,4 @@
 export const AppConfig = {
-  queryRateStaleTime: 5 * 60, // Stale time in seconds, default to 5 minutes
   iosAppStoreId: '', // Set your iOS App Store ID here (e.g., '1234567890')
   support: {
     email: 'support@rhysle.com',

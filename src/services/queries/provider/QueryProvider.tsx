@@ -5,12 +5,16 @@ import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client
 import * as Network from 'expo-network'
 import { ReactNode } from 'react'
 
-import { AppConfig } from '@/configs'
 import { queryStorage } from '@/storage'
 import { isNetworkOnline } from '@/utils/network'
 import { OfflineError } from '@/utils/OfflineError'
 
-const QUERY_CACHE_MAX_AGE = 1000 * 60 * 60 * 24
+// `staleTime` keeps fetched data fresh before it can be refetched in the background.
+const QUERY_CACHE_STALE_TIME = 5 * 60 * 1000 // 5 minutes
+
+// `gcTime` keeps data cached for 60 minutes after its last `useQuery`/observer unmounts,
+// then TanStack Query removes it from memory.
+const QUERY_CACHE_GC_TIME = 60 * 60 * 1000 // 60 minutes
 
 onlineManager.setEventListener((setOnline) => {
   void Network.getNetworkStateAsync()
@@ -27,14 +31,14 @@ onlineManager.setEventListener((setOnline) => {
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: AppConfig.queryRateStaleTime * 1000,
+      staleTime: QUERY_CACHE_STALE_TIME,
       retry: (failureCount, error) => {
         if (error instanceof OfflineError) return false
         if (error instanceof Error && /HTTP error! status: 4\d\d/.test(error.message)) return false
         return failureCount < 3
       },
       networkMode: 'online',
-      gcTime: QUERY_CACHE_MAX_AGE,
+      gcTime: QUERY_CACHE_GC_TIME,
     },
   },
 })
