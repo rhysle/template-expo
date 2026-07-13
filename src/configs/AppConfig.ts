@@ -23,8 +23,8 @@ export const AppConfig = {
     intervalDays: 7,
   },
   revenueCat: {
-    iosApiKey: '',
-    androidApiKey: '',
+    iosApiKey: 'test_gnTMNDOnGFGsGAETdCbmbZggLTD',
+    androidApiKey: 'test_gnTMNDOnGFGsGAETdCbmbZggLTD',
     entitlementId: 'premium',
   },
   sentry: {
