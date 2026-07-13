@@ -45,7 +45,6 @@
     "setup:i18n": "npx tsx scripts/setup-i18n.ts",
     "setup:ads": "npx tsx scripts/setup-ads.ts",
     "setup:font": "npx tsx scripts/setup-font.ts",
-    "generate:currencies": "npx tsx scripts/generate-currency-names.ts",
     "fastlane:ios:init": "fastlane ios init_metadata",
     "fastlane:ios:metadata": "fastlane ios metadata",
     "fastlane:ios:metadata:globals": "fastlane ios metadata globals:true",
