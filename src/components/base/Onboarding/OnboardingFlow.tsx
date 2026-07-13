@@ -36,6 +36,10 @@ export const OnboardingFlow = ({
   const currentIndex = useSharedValue(0)
   const scrollPosition = useSharedValue(0)
   const activeIndexRef = useSharedValue(0)
+  // Gesture worklets can only capture serializable values. `pages` also contains React nodes,
+  // so keep a separate array of keys for worklet callbacks.
+  const pageCount = pages.length
+  const pageKeys = pages.map((page) => page.key)
 
   const [activeIndex, setActiveIndex] = useState(0)
 
@@ -44,7 +48,7 @@ export const OnboardingFlow = ({
     onPageChange?.(index, pageKey)
   }
 
-  const isLastPage = activeIndex === pages.length - 1
+  const isLastPage = activeIndex === pageCount - 1
 
   const paginationIndex = useDerivedValue(() =>
     animationType === 'slide' ? scrollPosition.value / screenWidth : currentIndex.value
@@ -58,7 +62,7 @@ export const OnboardingFlow = ({
     } else {
       currentIndex.value = withTiming(index, { duration: ANIMATION_DURATION })
     }
-    scheduleOnRN(handlePageChanged, index, pages[index]?.key ?? '')
+    scheduleOnRN(handlePageChanged, index, pageKeys[index] ?? '')
   }
 
   const handleNext = () => {
@@ -81,13 +85,13 @@ export const OnboardingFlow = ({
       if (animationType !== 'slide') return
       const basePosition = activeIndexRef.value * screenWidth
       const rawPosition = basePosition - event.translationX
-      scrollPosition.value = Math.min(Math.max(rawPosition, 0), (pages.length - 1) * screenWidth)
+      scrollPosition.value = Math.min(Math.max(rawPosition, 0), (pageCount - 1) * screenWidth)
     })
     .onEnd((event) => {
       const swipeThreshold = screenWidth * SWIPE_THRESHOLD_RATIO
       const shouldGoNext =
         (event.translationX < -swipeThreshold || event.velocityX < -500) &&
-        activeIndexRef.value < pages.length - 1
+        activeIndexRef.value < pageCount - 1
       const shouldGoPrev =
         (event.translationX > swipeThreshold || event.velocityX > 500) && activeIndexRef.value > 0
 
