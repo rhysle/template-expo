@@ -14,15 +14,72 @@ This repository intentionally contains sample screens and app-specific placehold
 - Reanimated, Gesture Handler, and Skia for interaction and motion
 - RevenueCat, AdMob, Firebase Analytics, Sentry, and EAS integrations
 
-## Start a New App
+## New Project Setup
 
-1. Install dependencies with `npm install`.
-2. Update the identity, package identifiers, icons, splash assets, and build configuration in `app.json`, `eas.json`, and `assets/images/`.
-3. Replace placeholder values in `src/configs/AppConfig.ts`, including support contact details, legal links, store ID, RevenueCat keys, Sentry DSN, and ad unit IDs.
-4. Replace the product-specific examples: `src/app/(tabs)/index.tsx`, tab metadata in `src/app/(tabs)/_layout.tsx`, settings preferences, `src/components/onboarding/`, and `src/components/paywall/usePaywallFeatures.ts`.
-5. Update `src/services/firebase/analytics/analyticsAppEvents.ts` with product events, then add any product API/query modules under `src/services/queries/`.
-6. Review every locale file in `src/i18n/locales/`; the template ships with translated sample copy that should be adapted to the new product.
-7. Run `npm run check` before starting app work.
+Use this checklist when turning the template into a new app. The template includes working-looking sample values, so do not ship until every applicable item has been reviewed.
+
+### 1. Create the app identity and EAS project
+
+1. Fork or copy this repository, rename the package in `package.json`, and run `npm install`.
+2. Choose final, globally unique iOS and Android identifiers. Update `expo.name`, `expo.slug`, `expo.scheme`, `expo.ios.bundleIdentifier`, and `expo.android.package` in `app.json`.
+3. Sign in to the intended Expo account and create/link a new EAS project (for example, run `eas init`). Replace `expo.extra.eas.projectId` with the new project ID and set `expo.updates.url` to `https://u.expo.dev/<new-project-id>`. Do not reuse the template's project ID or update URL.
+4. Replace icons, adaptive-icon layers, splash art, and favicon under `assets/images/`, then update their references and colors in `app.json`.
+
+### 2. Configure app-facing settings
+
+Replace every product value in `src/configs/AppConfig.ts`:
+
+- The iOS App Store ID once the App Store Connect record exists.
+- RevenueCat API keys and entitlement ID, if the app sells subscriptions or purchases.
+- Sentry DSN.
+- AdMob app and ad-unit IDs, only if the app uses ads.
+
+Also update the Sentry Expo plugin in `app.json`: its organization and project must belong to the new Sentry project. Store the Sentry authentication token used for EAS source-map uploads as an EAS secret; never commit it.
+
+### 3. Set up Firebase Analytics
+
+1. Create a Firebase project and register both an iOS app and an Android app using the exact bundle ID/package name from `app.json`.
+2. Download `GoogleService-Info.plist` for iOS and `google-services.json` for Android. Place them at the repository root using exactly those names; `app.json` already references them.
+3. The files are intentionally Git-ignored. Provide them securely to local developers and your build environment rather than committing them.
+4. Replace the sample events in `src/services/firebase/analytics/analyticsAppEvents.ts`. Keep generic lifecycle events in `analyticsGeneralEvents.ts`.
+
+### 4. Configure only the optional services the product needs
+
+- **RevenueCat:** Create the app in RevenueCat, connect its App Store Connect and/or Google Play products, create the entitlement named in `AppConfig.revenueCat.entitlementId`, then add the platform API keys. Replace `src/components/paywall/usePaywallFeatures.ts` and confirm the paywall and automatic-presentation behavior fit the product.
+- **AdMob:** Decide whether ads are enabled with `AppConfig.ads.enabled`. After changing it, run `npm run setup:ads`; if enabled, enter the platform app IDs and ad-unit IDs and retain the ads initialization hooks in the root and tabs layouts. Run a clean prebuild afterwards.
+- **Fonts:** Change `FONT_NAME` in `src/configs/fonts.ts`, run `npm run setup:font`, then run a clean prebuild so the selected font is embedded in release builds.
+- **OTA updates:** Keep `AppConfig.otaUpdate.enabled` only when the new EAS project and update channels are ready. OTA builds and updates must share the same EAS project and runtime-version policy.
+
+### 5. Replace the template product shell
+
+Replace the sample tabs, routes, settings preferences, onboarding pages, paywall content, analytics events, and API/query modules:
+
+- `src/app/(tabs)/` and the tab metadata in `src/app/(tabs)/_layout.tsx`
+- `src/components/onboarding/`
+- `src/components/paywall/usePaywallFeatures.ts`
+- `src/services/firebase/analytics/analyticsAppEvents.ts`
+- Product data modules under `src/services/queries/`
+
+Review all locale files in `src/i18n/locales/`; the shipped translations describe the sample app. Update every locale for the product, or remove locales the app will not support and run `npm run setup:i18n`.
+
+### 6. Prepare store delivery
+
+Create the App Store Connect and Google Play app records using the same identifiers as `app.json`. Then replace the template identifiers, URLs, metadata, screenshots, reviewer details, and credentials in `fastlane/` before using a `fastlane:*` command. Keep API keys, service-account JSON, signing credentials, and review credentials outside Git.
+
+### 7. Regenerate and verify
+
+Native configuration changes—including `app.json`, Firebase files, fonts, ads, or config plugins—require regeneration because `ios/` and `android/` are generated directories:
+
+```bash
+npm run prebuild:clean
+npm run ios        # test iOS changes
+npm run android    # test Android changes
+npm run check
+npm run check:i18n # after changing translations
+npm run release:verify-config
+```
+
+Before a production build, confirm the app uses the new EAS project, Firebase configuration, Sentry project, store identifiers, support/legal URLs, and any enabled RevenueCat or AdMob credentials.
 
 ## Common Commands
 
