@@ -132,8 +132,7 @@
       "expo-status-bar",
       "expo-web-browser",
       "@react-native-firebase/app",
-      "./plugins/withRNFirebaseStaticFramework.js",
-      "./plugins/withGradleJvmArgs.js"
+      "./plugins/withRNFirebaseStaticFramework.js"
     ],
     "runtimeVersion": {
       "policy": "appVersion"
