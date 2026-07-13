@@ -106,7 +106,10 @@
           },
           "ios": {
             "useFrameworks": "static",
-            "forceStaticLinking": ["RNFBApp", "RNFBAnalytics"]
+            "forceStaticLinking": [
+              "RNFBApp",
+              "RNFBAnalytics"
+            ]
           }
         }
       ],
@@ -115,8 +118,8 @@
       [
         "react-native-google-mobile-ads",
         {
-          "androidAppId": "",
-          "iosAppId": "",
+          "androidAppId": "ca-app-pub-4662625232077043~8614004722",
+          "iosAppId": "ca-app-pub-4662625232077043~6949204305",
           "delayAppMeasurementInit": true
         }
       ],

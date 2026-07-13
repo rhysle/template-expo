@@ -130,5 +130,15 @@
     "typescript-eslint": "^8.60.0",
     "zod-validation-error": "^4.0.2"
   },
-  "private": true
+  "private": true,
+  "expo": {
+    "autolinking": {
+      "ios": {
+        "exclude": []
+      },
+      "android": {
+        "exclude": []
+      }
+    }
+  }
 }

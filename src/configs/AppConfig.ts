@@ -40,12 +40,12 @@ export const AppConfig = {
      */
     enabled: true,
     ios: {
-      appId: '',
+      appId: 'ca-app-pub-4662625232077043~6949204305',
       bannerAdUnitId: '',
       interstitialAdUnitId: '',
     },
     android: {
-      appId: '',
+      appId: 'ca-app-pub-4662625232077043~8614004722',
       bannerAdUnitId: '',
       interstitialAdUnitId: '',
     },
