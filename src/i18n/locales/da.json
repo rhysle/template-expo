@@ -1,0 +1,118 @@
+{
+  "common": {
+    "button": {
+      "retry": "Prøv igen"
+    }
+  },
+  "tabs": {
+    "convert": "Konverter",
+    "settings": "Indstillinger"
+  },
+  "settings": {
+    "title": "Indstillinger",
+    "subtitle": "Tilpas din valutaomregner",
+    "preferences": "Præferencer",
+    "support": "Support",
+    "contactSupport": "Kontakt support",
+    "contactSupportSubtitle": "Vi er her for at hjælpe",
+    "contactSupportError": "Kunne ikke åbne e-mailklient",
+    "rateApp": "Bedøm os",
+    "rateAppSubtitle": "Nyder du appen? Efterlad en anmeldelse",
+    "shareApp": "Del",
+    "shareAppSubtitle": "Fortæl det til venner og familie",
+    "shareMessage": "Tjek {{appName}}!",
+    "shareMessageWithUrl": "Tjek {{appName}}! Download den her: {{url}}",
+    "userId": "Bruger-ID",
+    "userIdCopied": "Bruger-ID kopieret",
+    "legalSection": "Juridisk",
+    "privacyConsent": "Privatliv og samtykke",
+    "appName": "Currency Converter",
+    "version": "Version {{version}}",
+    "otaUpdateId": "Opdatering: {{updateId}}",
+    "upgradeBanner": {
+      "title": "Opgrader til Premium",
+      "subtitle": "Hyppige kursopdateringer, ingen annoncer og fuld grafadgang"
+    }
+  },
+  "paywall": {
+    "title": "Lås op for Premium",
+    "subtitle": "Få det meste ud af Currency Converter",
+    "cta": "Fortsæt",
+    "ctaFreeTrial": "Prøv gratis",
+    "restore": "Gendan køb",
+    "terms": "Servicevilkår",
+    "privacy": "Privatlivspolitik",
+    "then": "derefter",
+    "trial": "{{count}}-{{unit}} gratis prøveperiode",
+    "save": "Spar {{percent}} %",
+    "trialUnit": {
+      "day": "dag",
+      "week": "uge",
+      "month": "måned",
+      "year": "år"
+    },
+    "period": {
+      "day": "pr. dag",
+      "week": "pr. uge",
+      "month": "pr. måned",
+      "year": "pr. år",
+      "lifetime": "Engangskøb"
+    },
+    "features": {
+      "liveRates": {
+        "title": "Altid friske kurser",
+        "description": "Kurser opdateres næsten i realtid, uden forsinkelse."
+      },
+      "unlimited": {
+        "title": "Alle 150+ valutaer, ingen begrænsning",
+        "description": "Tilføj enhver valuta du har brug for, uden begrænsninger."
+      },
+      "charts": {
+        "title": "Komplet kurshistorik",
+        "description": "Interaktive grafer til at finde det bedste tidspunkt at konvertere."
+      },
+      "adFree": {
+        "title": "Nul afbrydelser",
+        "description": "Ingen annoncer. Bare ren, fokuseret konvertering."
+      }
+    },
+    "feedback": {
+      "subscribeSuccess": "Velkommen! Dit abonnement er aktivt.",
+      "subscribeError": "Noget gik galt. Prøv venligst igen.",
+      "restoreSuccess": "Abonnement genoprettet!",
+      "restoreNotFound": "Intet aktivt abonnement fundet.",
+      "restoreError": "Kunne ikke gendanne køb. Prøv venligst igen."
+    },
+    "packageTitle": {
+      "day": "Dagligt",
+      "week": "Ugentligt",
+      "month": "Månedligt",
+      "year": "Årligt",
+      "lifetime": "Livstid"
+    }
+  },
+  "otaUpdate": {
+    "updateReady": "En ny opdatering er klar - genstart for at anvende",
+    "restart": "Genstart"
+  },
+  "errorBoundary": {
+    "title": "Noget gik galt",
+    "message": "Der opstod en uventet fejl. Prøv venligst igen."
+  },
+  "onboarding": {
+    "next": "Næste",
+    "done": "Kom i gang",
+    "welcome": {
+      "title": "Ét beløb\nAlle dine valutaer",
+      "description": "Indtast et beløb én gang og se hver valuta opdatere øjeblikkeligt."
+    },
+    "features": {
+      "title": "Altid den rigtige kurs, overalt",
+      "description": "150+ valutaer, næsten realtidskurser og fuldt offline-klar."
+    },
+    "getStarted": {
+      "title": "Kurshistorik på ét blik",
+      "description": "Tryk på en valuta for at udforske dens kurshistorik over uger, måneder eller det seneste år."
+    }
+  }
+}

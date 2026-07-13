@@ -1,0 +1,118 @@
+{
+  "common": {
+    "button": {
+      "retry": "Zkusit znovu"
+    }
+  },
+  "tabs": {
+    "convert": "Převod",
+    "settings": "Nastavení"
+  },
+  "settings": {
+    "title": "Nastavení",
+    "subtitle": "Přizpůsobte si převodník měn",
+    "preferences": "Předvolby",
+    "support": "Podpora",
+    "contactSupport": "Kontaktovat podporu",
+    "contactSupportSubtitle": "Jsme tu, abychom pomohli",
+    "contactSupportError": "Nepodařilo se otevřít e-mailového klienta",
+    "rateApp": "Ohodnotit nás",
+    "rateAppSubtitle": "Líbí se vám aplikace? Zanechte recenzi",
+    "shareApp": "Sdílet",
+    "shareAppSubtitle": "Řekněte o ní přátelům a rodině",
+    "shareMessage": "Podívejte se na {{appName}}!",
+    "shareMessageWithUrl": "Podívejte se na {{appName}}! Stáhněte zde: {{url}}",
+    "userId": "ID uživatele",
+    "userIdCopied": "ID uživatele zkopírováno",
+    "legalSection": "Právní",
+    "privacyConsent": "Soukromí a souhlas",
+    "appName": "Currency Converter",
+    "version": "Verze {{version}}",
+    "otaUpdateId": "Aktualizace: {{updateId}}",
+    "upgradeBanner": {
+      "title": "Upgradovat na Premium",
+      "subtitle": "Časté aktualizace kurzů, žádné reklamy a plný přístup ke grafům"
+    }
+  },
+  "paywall": {
+    "title": "Odemknout Premium",
+    "subtitle": "Získejte z Currency Converteru maximum",
+    "cta": "Pokračovat",
+    "ctaFreeTrial": "Vyzkoušet zdarma",
+    "restore": "Obnovit nákupy",
+    "terms": "Podmínky služby",
+    "privacy": "Zásady ochrany osobních údajů",
+    "then": "poté",
+    "trial": "Bezplatná zkušební verze {{count}}-{{unit}}",
+    "save": "Ušetřete {{percent}} %",
+    "trialUnit": {
+      "day": "den",
+      "week": "týden",
+      "month": "měsíc",
+      "year": "rok"
+    },
+    "period": {
+      "day": "za den",
+      "week": "za týden",
+      "month": "za měsíc",
+      "year": "za rok",
+      "lifetime": "Jednorázový nákup"
+    },
+    "features": {
+      "liveRates": {
+        "title": "Vždy aktuální kurzy",
+        "description": "Kurzy se obnovují téměř v reálném čase, bez zpoždění."
+      },
+      "unlimited": {
+        "title": "Všech 150+ měn, bez omezení",
+        "description": "Přidejte libovolnou měnu, bez omezení."
+      },
+      "charts": {
+        "title": "Kompletní historie kurzů",
+        "description": "Interaktivní grafy pro nalezení nejlepšího času převodu."
+      },
+      "adFree": {
+        "title": "Žádná přerušení",
+        "description": "Bez reklam. Jen čistý, soustředěný převod."
+      }
+    },
+    "feedback": {
+      "subscribeSuccess": "Vítejte! Vaše předplatné je aktivní.",
+      "subscribeError": "Něco se pokazilo. Zkuste to prosím znovu.",
+      "restoreSuccess": "Předplatné úspěšně obnoveno!",
+      "restoreNotFound": "Nebylo nalezeno žádné aktivní předplatné.",
+      "restoreError": "Nepodařilo se obnovit nákupy. Zkuste to prosím znovu."
+    },
+    "packageTitle": {
+      "day": "Denně",
+      "week": "Týdně",
+      "month": "Měsíčně",
+      "year": "Ročně",
+      "lifetime": "Doživotně"
+    }
+  },
+  "otaUpdate": {
+    "updateReady": "Nová aktualizace je připravena - restartujte pro použití",
+    "restart": "Restartovat"
+  },
+  "errorBoundary": {
+    "title": "Něco se pokazilo",
+    "message": "Došlo k neočekávané chybě. Zkuste to prosím znovu."
+  },
+  "onboarding": {
+    "next": "Další",
+    "done": "Začít",
+    "welcome": {
+      "title": "Jedna částka\nVšechny vaše měny",
+      "description": "Zadejte částku jednou a sledujte, jak se každá měna okamžitě aktualizuje."
+    },
+    "features": {
+      "title": "Vždy správný kurz, kdekoli",
+      "description": "150+ měn, kurzy téměř v reálném čase, a plně offline."
+    },
+    "getStarted": {
+      "title": "Historie kurzů na první pohled",
+      "description": "Klepnutím na libovolnou měnu prozkoumáte historii jejích kurzů za týdny, měsíce nebo poslední rok."
+    }
+  }
+}

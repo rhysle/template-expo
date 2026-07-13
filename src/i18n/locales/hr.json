@@ -1,0 +1,118 @@
+{
+  "common": {
+    "button": {
+      "retry": "Pokušaj ponovo"
+    }
+  },
+  "tabs": {
+    "convert": "Pretvori",
+    "settings": "Postavke"
+  },
+  "settings": {
+    "title": "Postavke",
+    "subtitle": "Prilagodite pretvarač valuta",
+    "preferences": "Postavke",
+    "support": "Podrška",
+    "contactSupport": "Kontaktiraj podršku",
+    "contactSupportSubtitle": "Ovdje smo da pomognemo",
+    "contactSupportError": "Nije moguće otvoriti klijent e-pošte",
+    "rateApp": "Ocijeni nas",
+    "rateAppSubtitle": "Sviđa vam se aplikacija? Ostavite recenziju",
+    "shareApp": "Podijeli",
+    "shareAppSubtitle": "Preporučite prijateljima i obitelji",
+    "shareMessage": "Pogledajte {{appName}}!",
+    "shareMessageWithUrl": "Pogledajte {{appName}}! Preuzmite ovdje: {{url}}",
+    "userId": "Korisnički ID",
+    "userIdCopied": "Korisnički ID kopiran",
+    "legalSection": "Pravno",
+    "privacyConsent": "Privatnost i suglasnost",
+    "appName": "Currency Converter",
+    "version": "Verzija {{version}}",
+    "otaUpdateId": "Ažuriranje: {{updateId}}",
+    "upgradeBanner": {
+      "title": "Nadogradi na Premium",
+      "subtitle": "Česta ažuriranja tečajeva, bez reklama i potpuni pristup grafovima"
+    }
+  },
+  "paywall": {
+    "title": "Otključaj Premium",
+    "subtitle": "Iskoristite sve mogućnosti Currency Convertera",
+    "cta": "Nastavi",
+    "ctaFreeTrial": "Isprobaj besplatno",
+    "restore": "Obnovi kupnje",
+    "terms": "Uvjeti usluge",
+    "privacy": "Pravila o privatnosti",
+    "then": "zatim",
+    "trial": "{{count}}-{{unit}} besplatno probno razdoblje",
+    "save": "Uštedite {{percent}} %",
+    "trialUnit": {
+      "day": "dan",
+      "week": "tjedan",
+      "month": "mjesec",
+      "year": "godina"
+    },
+    "period": {
+      "day": "dnevno",
+      "week": "tjedno",
+      "month": "mjesečno",
+      "year": "godišnje",
+      "lifetime": "Jednokratna kupnja"
+    },
+    "features": {
+      "liveRates": {
+        "title": "Uvijek svježi tečajevi",
+        "description": "Tečajevi se osvježavaju gotovo u stvarnom vremenu, bez kašnjenja."
+      },
+      "unlimited": {
+        "title": "Svih 150+ valuta, bez ograničenja",
+        "description": "Dodajte bilo koju valutu, bez ograničenja."
+      },
+      "charts": {
+        "title": "Kompletna povijest tečajeva",
+        "description": "Interaktivni grafovi za pronalaženje najboljeg vremena za konverziju."
+      },
+      "adFree": {
+        "title": "Nula prekida",
+        "description": "Bez reklama. Samo čista, fokusirana konverzija."
+      }
+    },
+    "feedback": {
+      "subscribeSuccess": "Dobrodošli! Vaša pretplata je aktivna.",
+      "subscribeError": "Nešto je pošlo po krivu. Molimo pokušajte ponovo.",
+      "restoreSuccess": "Pretplata uspješno obnovljena!",
+      "restoreNotFound": "Nije pronađena aktivna pretplata.",
+      "restoreError": "Nije moguće obnoviti kupnje. Molimo pokušajte ponovo."
+    },
+    "packageTitle": {
+      "day": "Dnevno",
+      "week": "Tjedno",
+      "month": "Mjesečno",
+      "year": "Godišnje",
+      "lifetime": "Doživotno"
+    }
+  },
+  "otaUpdate": {
+    "updateReady": "Novo ažuriranje je spremno - ponovo pokrenite za primjenu",
+    "restart": "Ponovo pokreni"
+  },
+  "errorBoundary": {
+    "title": "Nešto je pošlo po krivu",
+    "message": "Došlo je do neočekivane pogreške. Molimo pokušajte ponovo."
+  },
+  "onboarding": {
+    "next": "Dalje",
+    "done": "Počni",
+    "welcome": {
+      "title": "Jedan iznos\nSve vaše valute",
+      "description": "Unesite iznos jednom i gledajte kako se svaka valuta trenutno ažurira."
+    },
+    "features": {
+      "title": "Uvijek pravi tečaj, bilo gdje",
+      "description": "150+ valuta, gotovo tečajevi u stvarnom vremenu i potpuno offline."
+    },
+    "getStarted": {
+      "title": "Povijest tečajeva na prvi pogled",
+      "description": "Dodirnite bilo koju valutu za istraživanje povijesti tečajeva kroz tjedne, mjesece ili prošlu godinu."
+    }
+  }
+}

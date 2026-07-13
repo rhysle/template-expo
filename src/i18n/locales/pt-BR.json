@@ -1,0 +1,118 @@
+{
+  "common": {
+    "button": {
+      "retry": "Tentar novamente"
+    }
+  },
+  "tabs": {
+    "convert": "Converter",
+    "settings": "Configurações"
+  },
+  "settings": {
+    "title": "Configurações",
+    "subtitle": "Personalize seu conversor de moedas",
+    "preferences": "Preferências",
+    "support": "Suporte",
+    "contactSupport": "Contatar suporte",
+    "contactSupportSubtitle": "Estamos aqui para ajudar",
+    "contactSupportError": "Não foi possível abrir o cliente de e-mail",
+    "rateApp": "Avalie-nos",
+    "rateAppSubtitle": "Gostou do app? Deixe uma avaliação",
+    "shareApp": "Compartilhar",
+    "shareAppSubtitle": "Indique para amigos e família",
+    "shareMessage": "Conheça o {{appName}}!",
+    "shareMessageWithUrl": "Conheça o {{appName}}! Baixe aqui: {{url}}",
+    "userId": "ID do usuário",
+    "userIdCopied": "ID do usuário copiado",
+    "legalSection": "Legal",
+    "privacyConsent": "Privacidade e consentimento",
+    "appName": "Conversor de Moedas",
+    "version": "Versão {{version}}",
+    "otaUpdateId": "Atualização: {{updateId}}",
+    "upgradeBanner": {
+      "title": "Upgrade para Premium",
+      "subtitle": "Atualizações frequentes de taxas, sem anúncios e acesso completo a gráficos"
+    }
+  },
+  "paywall": {
+    "title": "Desbloquear Premium",
+    "subtitle": "Aproveite ao máximo o Conversor de Moedas",
+    "cta": "Continuar",
+    "ctaFreeTrial": "Experimentar grátis",
+    "restore": "Restaurar compras",
+    "terms": "Termos de serviço",
+    "privacy": "Política de privacidade",
+    "then": "depois",
+    "trial": "{{count}} {{unit}} de teste grátis",
+    "save": "Economize {{percent}}%",
+    "trialUnit": {
+      "day": "dia",
+      "week": "semana",
+      "month": "mês",
+      "year": "ano"
+    },
+    "period": {
+      "day": "por dia",
+      "week": "por semana",
+      "month": "por mês",
+      "year": "por ano",
+      "lifetime": "Compra única"
+    },
+    "features": {
+      "liveRates": {
+        "title": "Taxas sempre atualizadas",
+        "description": "Taxas atualizadas em tempo quase real, sem atrasos."
+      },
+      "unlimited": {
+        "title": "Mais de 150 moedas, sem limites",
+        "description": "Adicione todas as moedas que precisar, sem restrições."
+      },
+      "charts": {
+        "title": "Histórico completo de taxas",
+        "description": "Gráficos interativos para encontrar o melhor momento para converter."
+      },
+      "adFree": {
+        "title": "Zero interrupções",
+        "description": "Sem anúncios. Só conversão limpa e focada."
+      }
+    },
+    "feedback": {
+      "subscribeSuccess": "Bem-vindo! Sua assinatura está ativa.",
+      "subscribeError": "Algo deu errado. Por favor, tente novamente.",
+      "restoreSuccess": "Assinatura restaurada com sucesso!",
+      "restoreNotFound": "Nenhuma assinatura ativa encontrada.",
+      "restoreError": "Não foi possível restaurar as compras. Por favor, tente novamente."
+    },
+    "packageTitle": {
+      "day": "Diário",
+      "week": "Semanal",
+      "month": "Mensal",
+      "year": "Anual",
+      "lifetime": "Vitalício"
+    }
+  },
+  "otaUpdate": {
+    "updateReady": "Uma nova atualização está pronta - reinicie para aplicar",
+    "restart": "Reiniciar"
+  },
+  "errorBoundary": {
+    "title": "Algo deu errado",
+    "message": "Ocorreu um erro inesperado. Por favor, tente novamente."
+  },
+  "onboarding": {
+    "next": "Próximo",
+    "done": "Começar",
+    "welcome": {
+      "title": "Um valor\nTodas as suas moedas",
+      "description": "Digite um valor uma vez e veja todas as moedas atualizarem instantaneamente."
+    },
+    "features": {
+      "title": "Sempre a taxa certa, em qualquer lugar",
+      "description": "Mais de 150 moedas, taxas em tempo quase real e totalmente disponível offline."
+    },
+    "getStarted": {
+      "title": "Histórico de taxas de relance",
+      "description": "Toque em qualquer moeda para explorar seu histórico de taxas por semanas, meses ou o último ano."
+    }
+  }
+}

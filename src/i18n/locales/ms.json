@@ -1,0 +1,118 @@
+{
+  "common": {
+    "button": {
+      "retry": "Cuba lagi"
+    }
+  },
+  "tabs": {
+    "convert": "Tukar",
+    "settings": "Tetapan"
+  },
+  "settings": {
+    "title": "Tetapan",
+    "subtitle": "Sesuaikan penukar mata wang anda",
+    "preferences": "Keutamaan",
+    "support": "Sokongan",
+    "contactSupport": "Hubungi Sokongan",
+    "contactSupportSubtitle": "Kami sedia membantu",
+    "contactSupportError": "Tidak dapat membuka klien e-mel",
+    "rateApp": "Nilaikan Kami",
+    "rateAppSubtitle": "Menikmati apl? Tinggalkan ulasan",
+    "shareApp": "Kongsi",
+    "shareAppSubtitle": "Beritahu rakan dan keluarga",
+    "shareMessage": "Lihat {{appName}}!",
+    "shareMessageWithUrl": "Lihat {{appName}}! Muat turun di sini: {{url}}",
+    "userId": "ID Pengguna",
+    "userIdCopied": "ID Pengguna disalin",
+    "legalSection": "Undang-undang",
+    "privacyConsent": "Privasi & Persetujuan",
+    "appName": "Currency Converter",
+    "version": "Versi {{version}}",
+    "otaUpdateId": "Kemas kini: {{updateId}}",
+    "upgradeBanner": {
+      "title": "Naik Taraf ke Premium",
+      "subtitle": "Kemas kini kadar yang kerap, tiada iklan & akses carta penuh"
+    }
+  },
+  "paywall": {
+    "title": "Buka Kunci Premium",
+    "subtitle": "Dapatkan manfaat maksimum daripada Currency Converter",
+    "cta": "Teruskan",
+    "ctaFreeTrial": "Cuba Percuma",
+    "restore": "Pulihkan Pembelian",
+    "terms": "Syarat Perkhidmatan",
+    "privacy": "Dasar Privasi",
+    "then": "kemudian",
+    "trial": "Percubaan percuma {{count}}-{{unit}}",
+    "save": "Jimat {{percent}}%",
+    "trialUnit": {
+      "day": "hari",
+      "week": "minggu",
+      "month": "bulan",
+      "year": "tahun"
+    },
+    "period": {
+      "day": "sehari",
+      "week": "seminggu",
+      "month": "sebulan",
+      "year": "setahun",
+      "lifetime": "Pembelian sekali sahaja"
+    },
+    "features": {
+      "liveRates": {
+        "title": "Kadar Sentiasa Segar",
+        "description": "Kadar dimuat semula hampir masa nyata, tanpa kelewatan."
+      },
+      "unlimited": {
+        "title": "Semua 150+ Mata Wang, Tanpa Had",
+        "description": "Tambah sebarang mata wang yang anda perlukan, tanpa had."
+      },
+      "charts": {
+        "title": "Sejarah Kadar Penuh",
+        "description": "Carta interaktif untuk mencari masa terbaik untuk menukar."
+      },
+      "adFree": {
+        "title": "Sifar Gangguan",
+        "description": "Tiada iklan. Sekadar penukaran yang bersih dan fokus."
+      }
+    },
+    "feedback": {
+      "subscribeSuccess": "Selamat datang! Langganan anda aktif.",
+      "subscribeError": "Ada yang tidak kena. Sila cuba lagi.",
+      "restoreSuccess": "Langganan berjaya dipulihkan!",
+      "restoreNotFound": "Tiada langganan aktif ditemui.",
+      "restoreError": "Tidak dapat memulihkan pembelian. Sila cuba lagi."
+    },
+    "packageTitle": {
+      "day": "Harian",
+      "week": "Mingguan",
+      "month": "Bulanan",
+      "year": "Tahunan",
+      "lifetime": "Seumur Hidup"
+    }
+  },
+  "otaUpdate": {
+    "updateReady": "Kemas kini baharu sedia - mulakan semula untuk menerapkan",
+    "restart": "Mulakan Semula"
+  },
+  "errorBoundary": {
+    "title": "Ada yang tidak kena",
+    "message": "Ralat yang tidak dijangka berlaku. Sila cuba lagi."
+  },
+  "onboarding": {
+    "next": "Seterusnya",
+    "done": "Mulakan",
+    "welcome": {
+      "title": "Satu Jumlah\nSemua Mata Wang Anda",
+      "description": "Masukkan jumlah sekali dan lihat setiap mata wang dikemas kini serta-merta."
+    },
+    "features": {
+      "title": "Sentiasa Kadar Tepat, Di Mana-mana",
+      "description": "150+ mata wang, kadar hampir masa nyata, dan sedia sepenuhnya luar talian."
+    },
+    "getStarted": {
+      "title": "Sejarah Kadar Sekilas Pandang",
+      "description": "Ketik mana-mana mata wang untuk meneroka sejarah kadarnya selama berminggu, berbulan atau tahun lepas."
+    }
+  }
+}

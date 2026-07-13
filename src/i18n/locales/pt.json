@@ -1,0 +1,118 @@
+{
+  "common": {
+    "button": {
+      "retry": "Tentar novamente"
+    }
+  },
+  "tabs": {
+    "convert": "Converter",
+    "settings": "Definições"
+  },
+  "settings": {
+    "title": "Definições",
+    "subtitle": "Personalize o seu conversor de moedas",
+    "preferences": "Preferências",
+    "support": "Suporte",
+    "contactSupport": "Contactar suporte",
+    "contactSupportSubtitle": "Estamos aqui para ajudar",
+    "contactSupportError": "Não foi possível abrir o cliente de e-mail",
+    "rateApp": "Avaliar",
+    "rateAppSubtitle": "Gosta da aplicação? Deixe uma avaliação",
+    "shareApp": "Partilhar",
+    "shareAppSubtitle": "Diga aos seus amigos e família",
+    "shareMessage": "Experimenta o {{appName}}!",
+    "shareMessageWithUrl": "Experimenta o {{appName}}! Descarrega aqui: {{url}}",
+    "userId": "ID de utilizador",
+    "userIdCopied": "ID de utilizador copiado",
+    "legalSection": "Legal",
+    "privacyConsent": "Privacidade e consentimento",
+    "appName": "Currency Converter",
+    "version": "Versão {{version}}",
+    "otaUpdateId": "Atualização: {{updateId}}",
+    "upgradeBanner": {
+      "title": "Atualizar para Premium",
+      "subtitle": "Atualizações frequentes de taxas, sem anúncios e acesso completo aos gráficos"
+    }
+  },
+  "paywall": {
+    "title": "Desbloquear Premium",
+    "subtitle": "Tire o máximo partido do Currency Converter",
+    "cta": "Continuar",
+    "ctaFreeTrial": "Experimentar gratuitamente",
+    "restore": "Restaurar compras",
+    "terms": "Termos de serviço",
+    "privacy": "Política de privacidade",
+    "then": "depois",
+    "trial": "{{count}}-{{unit}} de experimentação gratuita",
+    "save": "Poupe {{percent}} %",
+    "trialUnit": {
+      "day": "dia",
+      "week": "semana",
+      "month": "mês",
+      "year": "ano"
+    },
+    "period": {
+      "day": "por dia",
+      "week": "por semana",
+      "month": "por mês",
+      "year": "por ano",
+      "lifetime": "Compra única"
+    },
+    "features": {
+      "liveRates": {
+        "title": "Taxas sempre atualizadas",
+        "description": "As taxas atualizam-se quase em tempo real, sem atrasos."
+      },
+      "unlimited": {
+        "title": "Mais de 150 moedas, sem limites",
+        "description": "Adicione todas as moedas que precisar, sem restrições."
+      },
+      "charts": {
+        "title": "Histórico completo de taxas",
+        "description": "Gráficos interativos para encontrar o melhor momento para converter."
+      },
+      "adFree": {
+        "title": "Zero interrupções",
+        "description": "Sem anúncios. Apenas conversão limpa e focada."
+      }
+    },
+    "feedback": {
+      "subscribeSuccess": "Bem-vindo! A sua subscrição está ativa.",
+      "subscribeError": "Ocorreu um erro. Por favor, tente novamente.",
+      "restoreSuccess": "Subscrição restaurada com sucesso!",
+      "restoreNotFound": "Nenhuma subscrição ativa encontrada.",
+      "restoreError": "Não foi possível restaurar as compras. Por favor, tente novamente."
+    },
+    "packageTitle": {
+      "day": "Diário",
+      "week": "Semanal",
+      "month": "Mensal",
+      "year": "Anual",
+      "lifetime": "Vitalício"
+    }
+  },
+  "otaUpdate": {
+    "updateReady": "Uma nova atualização está disponível - reinicie para aplicar",
+    "restart": "Reiniciar"
+  },
+  "errorBoundary": {
+    "title": "Ocorreu um erro",
+    "message": "Ocorreu um erro inesperado. Por favor, tente novamente."
+  },
+  "onboarding": {
+    "next": "Seguinte",
+    "done": "Começar",
+    "welcome": {
+      "title": "Um valor\nTodas as suas moedas",
+      "description": "Introduza um valor uma vez e veja todas as moedas atualizarem instantaneamente."
+    },
+    "features": {
+      "title": "Sempre a taxa certa, em qualquer lugar",
+      "description": "Mais de 150 moedas, taxas quase em tempo real e totalmente preparado para offline."
+    },
+    "getStarted": {
+      "title": "Histórico de taxas num relance",
+      "description": "Toque em qualquer moeda para explorar o histórico de taxas ao longo de semanas, meses ou do último ano."
+    }
+  }
+}

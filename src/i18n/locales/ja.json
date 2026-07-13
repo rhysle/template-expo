@@ -1,0 +1,118 @@
+{
+  "common": {
+    "button": {
+      "retry": "再試行"
+    }
+  },
+  "tabs": {
+    "convert": "換算",
+    "settings": "設定"
+  },
+  "settings": {
+    "title": "設定",
+    "subtitle": "通貨換算アプリをカスタマイズ",
+    "preferences": "設定",
+    "support": "サポート",
+    "contactSupport": "サポートに連絡",
+    "contactSupportSubtitle": "お気軽にどうぞ",
+    "contactSupportError": "メールクライアントを開けませんでした",
+    "rateApp": "評価する",
+    "rateAppSubtitle": "アプリを気に入っていただけましたか？レビューをお願いします",
+    "shareApp": "共有",
+    "shareAppSubtitle": "友達・家族に紹介",
+    "shareMessage": "{{appName}}をチェック！",
+    "shareMessageWithUrl": "{{appName}}をチェック！こちらからダウンロード: {{url}}",
+    "userId": "ユーザーID",
+    "userIdCopied": "ユーザーIDをコピーしました",
+    "legalSection": "法的情報",
+    "privacyConsent": "プライバシーと同意",
+    "appName": "通貨換算",
+    "version": "バージョン {{version}}",
+    "otaUpdateId": "更新: {{updateId}}",
+    "upgradeBanner": {
+      "title": "プレミアムにアップグレード",
+      "subtitle": "頻繁なレート更新、広告なし、フルチャートアクセス"
+    }
+  },
+  "paywall": {
+    "title": "プレミアムを解除",
+    "subtitle": "通貨換算をフル活用",
+    "cta": "続ける",
+    "ctaFreeTrial": "無料で試す",
+    "restore": "購入を復元",
+    "terms": "利用規約",
+    "privacy": "プライバシーポリシー",
+    "then": "その後",
+    "trial": "{{count}}{{unit}}無料トライアル",
+    "save": "{{percent}}％お得",
+    "trialUnit": {
+      "day": "日",
+      "week": "週",
+      "month": "ヶ月",
+      "year": "年"
+    },
+    "period": {
+      "day": "1日あたり",
+      "week": "1週間あたり",
+      "month": "1ヶ月あたり",
+      "year": "1年あたり",
+      "lifetime": "買い切り"
+    },
+    "features": {
+      "liveRates": {
+        "title": "常に最新のレート",
+        "description": "レートはリアルタイムに近い形で更新され、遅延なし。"
+      },
+      "unlimited": {
+        "title": "150以上の通貨、制限なし",
+        "description": "必要なすべての通貨を追加、制限なし。"
+      },
+      "charts": {
+        "title": "全レート履歴",
+        "description": "最適な換算タイミングを見つけるためのインタラクティブチャート。"
+      },
+      "adFree": {
+        "title": "中断なし",
+        "description": "広告なし。クリーンで集中した換算体験。"
+      }
+    },
+    "feedback": {
+      "subscribeSuccess": "ようこそ！サブスクリプションが有効です。",
+      "subscribeError": "エラーが発生しました。もう一度お試しください。",
+      "restoreSuccess": "サブスクリプションを復元しました！",
+      "restoreNotFound": "有効なサブスクリプションが見つかりませんでした。",
+      "restoreError": "購入を復元できませんでした。もう一度お試しください。"
+    },
+    "packageTitle": {
+      "day": "毎日",
+      "week": "毎週",
+      "month": "毎月",
+      "year": "毎年",
+      "lifetime": "永久"
+    }
+  },
+  "otaUpdate": {
+    "updateReady": "新しいアップデートが準備できました - 適用するには再起動",
+    "restart": "再起動"
+  },
+  "errorBoundary": {
+    "title": "エラーが発生しました",
+    "message": "予期しないエラーが発生しました。もう一度お試しください。"
+  },
+  "onboarding": {
+    "next": "次へ",
+    "done": "始める",
+    "welcome": {
+      "title": "1つの金額\nすべての通貨",
+      "description": "金額を1回入力するだけで、すべての通貨がリアルタイムに更新されます。"
+    },
+    "features": {
+      "title": "どこでも正確なレート",
+      "description": "150以上の通貨、リアルタイムに近いレート、完全オフライン対応。"
+    },
+    "getStarted": {
+      "title": "レート履歴を一目で",
+      "description": "通貨をタップして、週・月・過去1年のレート履歴を確認。"
+    }
+  }
+}

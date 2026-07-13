@@ -1,0 +1,118 @@
+{
+  "common": {
+    "button": {
+      "retry": "Opnieuw proberen"
+    }
+  },
+  "tabs": {
+    "convert": "Omrekenen",
+    "settings": "Instellingen"
+  },
+  "settings": {
+    "title": "Instellingen",
+    "subtitle": "Uw valutaomrekener aanpassen",
+    "preferences": "Voorkeuren",
+    "support": "Ondersteuning",
+    "contactSupport": "Contact opnemen",
+    "contactSupportSubtitle": "We helpen u graag",
+    "contactSupportError": "E-mailclient kon niet worden geopend",
+    "rateApp": "Beoordeel ons",
+    "rateAppSubtitle": "Geniet u van de app? Laat een recensie achter",
+    "shareApp": "Delen",
+    "shareAppSubtitle": "Vertel het aan vrienden en familie",
+    "shareMessage": "Bekijk {{appName}}!",
+    "shareMessageWithUrl": "Bekijk {{appName}}! Download hier: {{url}}",
+    "userId": "Gebruikers-ID",
+    "userIdCopied": "Gebruikers-ID gekopieerd",
+    "legalSection": "Juridisch",
+    "privacyConsent": "Privacy en toestemming",
+    "appName": "Currency Converter",
+    "version": "Versie {{version}}",
+    "otaUpdateId": "Update: {{updateId}}",
+    "upgradeBanner": {
+      "title": "Upgrade naar Premium",
+      "subtitle": "Frequente koersupdates, geen advertenties en volledige grafiekinzage"
+    }
+  },
+  "paywall": {
+    "title": "Premium ontgrendelen",
+    "subtitle": "Haal het maximale uit Currency Converter",
+    "cta": "Doorgaan",
+    "ctaFreeTrial": "Gratis proberen",
+    "restore": "Aankopen herstellen",
+    "terms": "Servicevoorwaarden",
+    "privacy": "Privacybeleid",
+    "then": "dan",
+    "trial": "{{count}}-{{unit}} gratis proberen",
+    "save": "Bespaar {{percent}}%",
+    "trialUnit": {
+      "day": "dag",
+      "week": "week",
+      "month": "maand",
+      "year": "jaar"
+    },
+    "period": {
+      "day": "per dag",
+      "week": "per week",
+      "month": "per maand",
+      "year": "per jaar",
+      "lifetime": "Eenmalige aankoop"
+    },
+    "features": {
+      "liveRates": {
+        "title": "Altijd verse koersen",
+        "description": "Koersen worden bijna in realtime vernieuwd, zonder vertraging."
+      },
+      "unlimited": {
+        "title": "Alle 150+ valuta's, geen limiet",
+        "description": "Voeg elke valuta toe die u nodig hebt, zonder beperkingen."
+      },
+      "charts": {
+        "title": "Volledige koershistorie",
+        "description": "Interactieve grafieken om het beste conversiemoment te vinden."
+      },
+      "adFree": {
+        "title": "Nul onderbrekingen",
+        "description": "Geen advertenties. Gewoon clean, gefocust omrekenen."
+      }
+    },
+    "feedback": {
+      "subscribeSuccess": "Welkom! Uw abonnement is actief.",
+      "subscribeError": "Er ging iets fout. Probeer het opnieuw.",
+      "restoreSuccess": "Abonnement succesvol hersteld!",
+      "restoreNotFound": "Geen actief abonnement gevonden.",
+      "restoreError": "Aankopen konden niet worden hersteld. Probeer het opnieuw."
+    },
+    "packageTitle": {
+      "day": "Dagelijks",
+      "week": "Wekelijks",
+      "month": "Maandelijks",
+      "year": "Jaarlijks",
+      "lifetime": "Levenslang"
+    }
+  },
+  "otaUpdate": {
+    "updateReady": "Een nieuwe update is gereed - herstart om toe te passen",
+    "restart": "Herstart"
+  },
+  "errorBoundary": {
+    "title": "Er ging iets fout",
+    "message": "Er is een onverwachte fout opgetreden. Probeer het opnieuw."
+  },
+  "onboarding": {
+    "next": "Volgende",
+    "done": "Aan de slag",
+    "welcome": {
+      "title": "Één bedrag\nAl uw valuta's",
+      "description": "Voer één keer een bedrag in en zie elke valuta direct updaten."
+    },
+    "features": {
+      "title": "Altijd de juiste koers, overal",
+      "description": "150+ valuta's, bijna realtime koersen en volledig offline-klaar."
+    },
+    "getStarted": {
+      "title": "Koershistorie in één oogopslag",
+      "description": "Tik op een valuta om de koershistorie over weken, maanden of het afgelopen jaar te bekijken."
+    }
+  }
+}

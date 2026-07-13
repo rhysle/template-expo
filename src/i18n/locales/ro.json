@@ -1,0 +1,118 @@
+{
+  "common": {
+    "button": {
+      "retry": "Încearcă din nou"
+    }
+  },
+  "tabs": {
+    "convert": "Convertește",
+    "settings": "Setări"
+  },
+  "settings": {
+    "title": "Setări",
+    "subtitle": "Personalizează convertorul tău de valute",
+    "preferences": "Preferințe",
+    "support": "Suport",
+    "contactSupport": "Contactează suportul",
+    "contactSupportSubtitle": "Suntem aici să ajutăm",
+    "contactSupportError": "Nu s-a putut deschide clientul de e-mail",
+    "rateApp": "Evaluează-ne",
+    "rateAppSubtitle": "Îți place aplicația? Lasă o recenzie",
+    "shareApp": "Distribuie",
+    "shareAppSubtitle": "Spune prietenilor și familiei",
+    "shareMessage": "Încearcă {{appName}}!",
+    "shareMessageWithUrl": "Încearcă {{appName}}! Descarcă-l aici: {{url}}",
+    "userId": "ID utilizator",
+    "userIdCopied": "ID utilizator copiat",
+    "legalSection": "Legal",
+    "privacyConsent": "Confidențialitate și consimțământ",
+    "appName": "Currency Converter",
+    "version": "Versiunea {{version}}",
+    "otaUpdateId": "Actualizare: {{updateId}}",
+    "upgradeBanner": {
+      "title": "Fă upgrade la Premium",
+      "subtitle": "Actualizări frecvente ale cursurilor, fără reclame și acces complet la grafice"
+    }
+  },
+  "paywall": {
+    "title": "Deblochează Premium",
+    "subtitle": "Profită la maximum de Currency Converter",
+    "cta": "Continuă",
+    "ctaFreeTrial": "Încearcă gratuit",
+    "restore": "Restaurează achizițiile",
+    "terms": "Termeni de serviciu",
+    "privacy": "Politică de confidențialitate",
+    "then": "apoi",
+    "trial": "Perioadă de probă gratuită {{count}}-{{unit}}",
+    "save": "Economisește {{percent}} %",
+    "trialUnit": {
+      "day": "zi",
+      "week": "săptămână",
+      "month": "lună",
+      "year": "an"
+    },
+    "period": {
+      "day": "pe zi",
+      "week": "pe săptămână",
+      "month": "pe lună",
+      "year": "pe an",
+      "lifetime": "Achiziție unică"
+    },
+    "features": {
+      "liveRates": {
+        "title": "Cursuri întotdeauna proaspete",
+        "description": "Cursurile se actualizează aproape în timp real, fără întârziere."
+      },
+      "unlimited": {
+        "title": "Toate cele 150+ valute, fără limită",
+        "description": "Adaugă orice valută ai nevoie, fără restricții."
+      },
+      "charts": {
+        "title": "Istoricul complet al cursurilor",
+        "description": "Grafice interactive pentru a găsi cel mai bun moment de conversie."
+      },
+      "adFree": {
+        "title": "Zero întreruperi",
+        "description": "Fără reclame. Doar conversie curată și concentrată."
+      }
+    },
+    "feedback": {
+      "subscribeSuccess": "Bun venit! Abonamentul tău este activ.",
+      "subscribeError": "Ceva a mers greșit. Te rugăm să încerci din nou.",
+      "restoreSuccess": "Abonament restaurat cu succes!",
+      "restoreNotFound": "Nu s-a găsit niciun abonament activ.",
+      "restoreError": "Nu s-au putut restaura achizițiile. Te rugăm să încerci din nou."
+    },
+    "packageTitle": {
+      "day": "Zilnic",
+      "week": "Săptămânal",
+      "month": "Lunar",
+      "year": "Anual",
+      "lifetime": "Pe viață"
+    }
+  },
+  "otaUpdate": {
+    "updateReady": "O nouă actualizare este gata - repornește pentru a o aplica",
+    "restart": "Repornește"
+  },
+  "errorBoundary": {
+    "title": "Ceva a mers greșit",
+    "message": "A apărut o eroare neașteptată. Te rugăm să încerci din nou."
+  },
+  "onboarding": {
+    "next": "Înainte",
+    "done": "Începe",
+    "welcome": {
+      "title": "O sumă\nToate valutele tale",
+      "description": "Introduce o sumă o singură dată și urmărește actualizarea imediată a fiecărei valute."
+    },
+    "features": {
+      "title": "Întotdeauna cursul corect, oriunde",
+      "description": "150+ valute, cursuri aproape în timp real și complet pregătit offline."
+    },
+    "getStarted": {
+      "title": "Istoricul cursurilor dintr-o privire",
+      "description": "Atinge orice valută pentru a explora istoricul cursurilor pe săptămâni, luni sau ultimul an."
+    }
+  }
+}

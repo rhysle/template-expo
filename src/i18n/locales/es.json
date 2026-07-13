@@ -1,0 +1,118 @@
+{
+  "common": {
+    "button": {
+      "retry": "Reintentar"
+    }
+  },
+  "tabs": {
+    "convert": "Convertir",
+    "settings": "Ajustes"
+  },
+  "settings": {
+    "title": "Ajustes",
+    "subtitle": "Personaliza tu conversor de divisas",
+    "preferences": "Preferencias",
+    "support": "Soporte",
+    "contactSupport": "Contactar soporte",
+    "contactSupportSubtitle": "Estamos aquí para ayudar",
+    "contactSupportError": "No se pudo abrir el cliente de correo",
+    "rateApp": "Califícanos",
+    "rateAppSubtitle": "¿Te gusta la app? Déjanos una reseña",
+    "shareApp": "Compartir",
+    "shareAppSubtitle": "Recomiéndanos a amigos y familia",
+    "shareMessage": "¡Prueba {{appName}}!",
+    "shareMessageWithUrl": "¡Prueba {{appName}}! Descárgala aquí: {{url}}",
+    "userId": "ID de usuario",
+    "userIdCopied": "ID de usuario copiado",
+    "legalSection": "Legal",
+    "privacyConsent": "Privacidad y consentimiento",
+    "appName": "Conversor de divisas",
+    "version": "Versión {{version}}",
+    "otaUpdateId": "Actualización: {{updateId}}",
+    "upgradeBanner": {
+      "title": "Mejorar a Premium",
+      "subtitle": "Actualizaciones de tasas frecuentes, sin anuncios y acceso completo a gráficos"
+    }
+  },
+  "paywall": {
+    "title": "Desbloquear Premium",
+    "subtitle": "Saca el máximo partido al Conversor de divisas",
+    "cta": "Continuar",
+    "ctaFreeTrial": "Probar gratis",
+    "restore": "Restaurar compras",
+    "terms": "Términos de servicio",
+    "privacy": "Política de privacidad",
+    "then": "luego",
+    "trial": "{{count}} {{unit}} de prueba gratuita",
+    "save": "Ahorra un {{percent}} %",
+    "trialUnit": {
+      "day": "día",
+      "week": "semana",
+      "month": "mes",
+      "year": "año"
+    },
+    "period": {
+      "day": "por día",
+      "week": "por semana",
+      "month": "por mes",
+      "year": "por año",
+      "lifetime": "Compra única"
+    },
+    "features": {
+      "liveRates": {
+        "title": "Tasas siempre actualizadas",
+        "description": "Las tasas se actualizan en tiempo casi real, sin retrasos."
+      },
+      "unlimited": {
+        "title": "Más de 150 divisas, sin límite",
+        "description": "Agrega todas las divisas que necesites, sin restricciones."
+      },
+      "charts": {
+        "title": "Historial completo de tasas",
+        "description": "Gráficos interactivos para encontrar el mejor momento para convertir."
+      },
+      "adFree": {
+        "title": "Cero interrupciones",
+        "description": "Sin anuncios. Solo conversión limpia y enfocada."
+      }
+    },
+    "feedback": {
+      "subscribeSuccess": "¡Bienvenido! Tu suscripción está activa.",
+      "subscribeError": "Algo salió mal. Por favor, inténtalo de nuevo.",
+      "restoreSuccess": "¡Suscripción restaurada con éxito!",
+      "restoreNotFound": "No se encontró ninguna suscripción activa.",
+      "restoreError": "No se pudieron restaurar las compras. Por favor, inténtalo de nuevo."
+    },
+    "packageTitle": {
+      "day": "Diario",
+      "week": "Semanal",
+      "month": "Mensual",
+      "year": "Anual",
+      "lifetime": "De por vida"
+    }
+  },
+  "otaUpdate": {
+    "updateReady": "Una nueva actualización está lista - reinicia para aplicar",
+    "restart": "Reiniciar"
+  },
+  "errorBoundary": {
+    "title": "Algo salió mal",
+    "message": "Se produjo un error inesperado. Por favor, inténtalo de nuevo."
+  },
+  "onboarding": {
+    "next": "Siguiente",
+    "done": "Comenzar",
+    "welcome": {
+      "title": "Una cantidad\nTodas tus divisas",
+      "description": "Ingresa una cantidad una vez y ve todas las divisas actualizarse al instante."
+    },
+    "features": {
+      "title": "Siempre la tasa correcta, en cualquier lugar",
+      "description": "Más de 150 divisas, tasas en tiempo casi real y completamente disponible sin conexión."
+    },
+    "getStarted": {
+      "title": "Historial de tasas de un vistazo",
+      "description": "Toca cualquier divisa para explorar su historial de tasas durante semanas, meses o el último año."
+    }
+  }
+}

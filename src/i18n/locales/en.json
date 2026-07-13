@@ -1,0 +1,118 @@
+{
+  "common": {
+    "button": {
+      "retry": "Retry"
+    }
+  },
+  "tabs": {
+    "convert": "Convert",
+    "settings": "Settings"
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Customize your currency converter",
+    "preferences": "Preferences",
+    "support": "Support",
+    "contactSupport": "Contact Support",
+    "contactSupportSubtitle": "We're here to help",
+    "contactSupportError": "Could not open email client",
+    "rateApp": "Rate Us",
+    "rateAppSubtitle": "Enjoying the app? Leave us a review",
+    "shareApp": "Share",
+    "shareAppSubtitle": "Spread the word to friends & family",
+    "shareMessage": "Check out {{appName}}!",
+    "shareMessageWithUrl": "Check out {{appName}}! Download it here: {{url}}",
+    "userId": "User ID",
+    "userIdCopied": "User ID copied",
+    "legalSection": "Legal",
+    "privacyConsent": "Privacy & Consent",
+    "appName": "Currency Converter",
+    "version": "Version {{version}}",
+    "otaUpdateId": "Update: {{updateId}}",
+    "upgradeBanner": {
+      "title": "Upgrade to Premium",
+      "subtitle": "Frequent rate updates, no ads & full chart access"
+    }
+  },
+  "paywall": {
+    "title": "Unlock Premium",
+    "subtitle": "Get the most out of Currency Converter",
+    "cta": "Continue",
+    "ctaFreeTrial": "Try for Free",
+    "restore": "Restore Purchases",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "then": "then",
+    "trial": "{{count}}-{{unit}} free trial",
+    "save": "Save {{percent}}%",
+    "trialUnit": {
+      "day": "day",
+      "week": "week",
+      "month": "month",
+      "year": "year"
+    },
+    "period": {
+      "day": "per day",
+      "week": "per week",
+      "month": "per month",
+      "year": "per year",
+      "lifetime": "One-time purchase"
+    },
+    "features": {
+      "liveRates": {
+        "title": "Always-Fresh Rates",
+        "description": "Rates refresh in near real-time, not delayed."
+      },
+      "unlimited": {
+        "title": "All 150+ Currencies, No Cap",
+        "description": "Add every currency you need, no limits."
+      },
+      "charts": {
+        "title": "Full Rate History",
+        "description": "Interactive charts to find the best time to convert."
+      },
+      "adFree": {
+        "title": "Zero Interruptions",
+        "description": "No ads. Just clean, focused converting."
+      }
+    },
+    "feedback": {
+      "subscribeSuccess": "Welcome! Your subscription is active.",
+      "subscribeError": "Something went wrong. Please try again.",
+      "restoreSuccess": "Subscription restored successfully!",
+      "restoreNotFound": "No active subscription found.",
+      "restoreError": "Could not restore purchases. Please try again."
+    },
+    "packageTitle": {
+      "day": "Daily",
+      "week": "Weekly",
+      "month": "Monthly",
+      "year": "Yearly",
+      "lifetime": "Lifetime"
+    }
+  },
+  "otaUpdate": {
+    "updateReady": "A new update is ready - restart to apply",
+    "restart": "Restart"
+  },
+  "errorBoundary": {
+    "title": "Something went wrong",
+    "message": "An unexpected error occurred. Please try again."
+  },
+  "onboarding": {
+    "next": "Next",
+    "done": "Get Started",
+    "welcome": {
+      "title": "One Amount\nAll Your Currencies",
+      "description": "Enter an amount once and see every currency update instantly."
+    },
+    "features": {
+      "title": "Always the Right Rate, Anywhere",
+      "description": "150+ currencies, near real-time rates, and fully offline-ready."
+    },
+    "getStarted": {
+      "title": "Rate History at a Glance",
+      "description": "Tap any currency to explore its rate history over weeks, months, or the past year."
+    }
+  }
+}

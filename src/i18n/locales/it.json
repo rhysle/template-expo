@@ -1,0 +1,118 @@
+{
+  "common": {
+    "button": {
+      "retry": "Riprova"
+    }
+  },
+  "tabs": {
+    "convert": "Converti",
+    "settings": "Impostazioni"
+  },
+  "settings": {
+    "title": "Impostazioni",
+    "subtitle": "Personalizza il tuo convertitore di valute",
+    "preferences": "Preferenze",
+    "support": "Supporto",
+    "contactSupport": "Contatta il supporto",
+    "contactSupportSubtitle": "Siamo qui per aiutarti",
+    "contactSupportError": "Impossibile aprire il client di posta",
+    "rateApp": "Valutaci",
+    "rateAppSubtitle": "Ti piace l'app? Lascia una recensione",
+    "shareApp": "Condividi",
+    "shareAppSubtitle": "Consigliaci ad amici e famiglia",
+    "shareMessage": "Prova {{appName}}!",
+    "shareMessageWithUrl": "Prova {{appName}}! Scaricala qui: {{url}}",
+    "userId": "ID utente",
+    "userIdCopied": "ID utente copiato",
+    "legalSection": "Legale",
+    "privacyConsent": "Privacy e consenso",
+    "appName": "Convertitore di valute",
+    "version": "Versione {{version}}",
+    "otaUpdateId": "Aggiornamento: {{updateId}}",
+    "upgradeBanner": {
+      "title": "Passa a Premium",
+      "subtitle": "Aggiornamenti frequenti dei tassi, niente pubblicità e accesso completo ai grafici"
+    }
+  },
+  "paywall": {
+    "title": "Sblocca Premium",
+    "subtitle": "Sfrutta al massimo il Convertitore di valute",
+    "cta": "Continua",
+    "ctaFreeTrial": "Prova gratis",
+    "restore": "Ripristina acquisti",
+    "terms": "Termini di servizio",
+    "privacy": "Informativa sulla privacy",
+    "then": "poi",
+    "trial": "{{count}} {{unit}} di prova gratuita",
+    "save": "Risparmia il {{percent}} %",
+    "trialUnit": {
+      "day": "giorno",
+      "week": "settimana",
+      "month": "mese",
+      "year": "anno"
+    },
+    "period": {
+      "day": "al giorno",
+      "week": "alla settimana",
+      "month": "al mese",
+      "year": "all'anno",
+      "lifetime": "Acquisto una tantum"
+    },
+    "features": {
+      "liveRates": {
+        "title": "Tassi sempre aggiornati",
+        "description": "I tassi si aggiornano in tempo quasi reale, senza ritardi."
+      },
+      "unlimited": {
+        "title": "Oltre 150 valute, senza limiti",
+        "description": "Aggiungi tutte le valute di cui hai bisogno, senza restrizioni."
+      },
+      "charts": {
+        "title": "Storico completo dei tassi",
+        "description": "Grafici interattivi per trovare il momento migliore per convertire."
+      },
+      "adFree": {
+        "title": "Zero interruzioni",
+        "description": "Nessuna pubblicità. Solo conversione pulita e mirata."
+      }
+    },
+    "feedback": {
+      "subscribeSuccess": "Benvenuto! Il tuo abbonamento è attivo.",
+      "subscribeError": "Qualcosa è andato storto. Riprova.",
+      "restoreSuccess": "Abbonamento ripristinato con successo!",
+      "restoreNotFound": "Nessun abbonamento attivo trovato.",
+      "restoreError": "Impossibile ripristinare gli acquisti. Riprova."
+    },
+    "packageTitle": {
+      "day": "Giornaliero",
+      "week": "Settimanale",
+      "month": "Mensile",
+      "year": "Annuale",
+      "lifetime": "A vita"
+    }
+  },
+  "otaUpdate": {
+    "updateReady": "Un nuovo aggiornamento è pronto - riavvia per applicarlo",
+    "restart": "Riavvia"
+  },
+  "errorBoundary": {
+    "title": "Qualcosa è andato storto",
+    "message": "Si è verificato un errore imprevisto. Riprova."
+  },
+  "onboarding": {
+    "next": "Avanti",
+    "done": "Inizia",
+    "welcome": {
+      "title": "Un importo\nTutte le tue valute",
+      "description": "Inserisci un importo una volta e guarda tutte le valute aggiornarsi istantaneamente."
+    },
+    "features": {
+      "title": "Sempre il tasso giusto, ovunque",
+      "description": "Oltre 150 valute, tassi in tempo quasi reale e completamente disponibile offline."
+    },
+    "getStarted": {
+      "title": "Storico dei tassi a colpo d'occhio",
+      "description": "Tocca una valuta per esplorare il suo storico dei tassi su settimane, mesi o l'anno passato."
+    }
+  }
+}

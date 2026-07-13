@@ -1,0 +1,118 @@
+{
+  "common": {
+    "button": {
+      "retry": "Tekrar dene"
+    }
+  },
+  "tabs": {
+    "convert": "Çevir",
+    "settings": "Ayarlar"
+  },
+  "settings": {
+    "title": "Ayarlar",
+    "subtitle": "Döviz çeviricinizi özelleştirin",
+    "preferences": "Tercihler",
+    "support": "Destek",
+    "contactSupport": "Destekle İletişime Geç",
+    "contactSupportSubtitle": "Yardım etmek için buradayız",
+    "contactSupportError": "E-posta istemcisi açılamadı",
+    "rateApp": "Bizi Değerlendirin",
+    "rateAppSubtitle": "Uygulamayı beğendiniz mi? Yorum bırakın",
+    "shareApp": "Paylaş",
+    "shareAppSubtitle": "Arkadaşlarınıza ve ailenize önerin",
+    "shareMessage": "{{appName}}'ı deneyin!",
+    "shareMessageWithUrl": "{{appName}}'ı deneyin! Buradan indirin: {{url}}",
+    "userId": "Kullanıcı Kimliği",
+    "userIdCopied": "Kullanıcı Kimliği kopyalandı",
+    "legalSection": "Yasal",
+    "privacyConsent": "Gizlilik ve Onay",
+    "appName": "Döviz Çevirici",
+    "version": "Sürüm {{version}}",
+    "otaUpdateId": "Güncelleme: {{updateId}}",
+    "upgradeBanner": {
+      "title": "Premium'a Yükselt",
+      "subtitle": "Sık kur güncellemeleri, reklamsız & tam grafik erişimi"
+    }
+  },
+  "paywall": {
+    "title": "Premium'u Aç",
+    "subtitle": "Döviz Çeviriciden en iyi şekilde yararlanın",
+    "cta": "Devam Et",
+    "ctaFreeTrial": "Ücretsiz Dene",
+    "restore": "Satın Almaları Geri Yükle",
+    "terms": "Hizmet Koşulları",
+    "privacy": "Gizlilik Politikası",
+    "then": "sonra",
+    "trial": "{{count}} {{unit}} ücretsiz deneme",
+    "save": "%{{percent}} tasarruf",
+    "trialUnit": {
+      "day": "gün",
+      "week": "hafta",
+      "month": "ay",
+      "year": "yıl"
+    },
+    "period": {
+      "day": "günlük",
+      "week": "haftalık",
+      "month": "aylık",
+      "year": "yıllık",
+      "lifetime": "Tek seferlik satın alma"
+    },
+    "features": {
+      "liveRates": {
+        "title": "Her Zaman Taze Kurlar",
+        "description": "Kurlar gerçek zamanlıya yakın güncellenir, gecikmesiz."
+      },
+      "unlimited": {
+        "title": "Tüm 150+ Döviz, Sınır Yok",
+        "description": "İhtiyacınız olan her dövizi ekleyin, sınırsız."
+      },
+      "charts": {
+        "title": "Tam Kur Geçmişi",
+        "description": "Dönüştürmek için en iyi zamanı bulmak üzere etkileşimli grafikler."
+      },
+      "adFree": {
+        "title": "Sıfır Kesinti",
+        "description": "Reklam yok. Sadece temiz, odaklanmış dönüştürme."
+      }
+    },
+    "feedback": {
+      "subscribeSuccess": "Hoş geldiniz! Aboneliğiniz aktif.",
+      "subscribeError": "Bir şeyler ters gitti. Lütfen tekrar deneyin.",
+      "restoreSuccess": "Abonelik başarıyla geri yüklendi!",
+      "restoreNotFound": "Aktif abonelik bulunamadı.",
+      "restoreError": "Satın almalar geri yüklenemedi. Lütfen tekrar deneyin."
+    },
+    "packageTitle": {
+      "day": "Günlük",
+      "week": "Haftalık",
+      "month": "Aylık",
+      "year": "Yıllık",
+      "lifetime": "Ömür Boyu"
+    }
+  },
+  "otaUpdate": {
+    "updateReady": "Yeni bir güncelleme hazır - uygulamak için yeniden başlatın",
+    "restart": "Yeniden Başlat"
+  },
+  "errorBoundary": {
+    "title": "Bir şeyler ters gitti",
+    "message": "Beklenmeyen bir hata oluştu. Lütfen tekrar deneyin."
+  },
+  "onboarding": {
+    "next": "İleri",
+    "done": "Başla",
+    "welcome": {
+      "title": "Bir Miktar\nTüm Dövizleriniz",
+      "description": "Bir kez miktar girin ve tüm dövizlerin anında güncellendiğini görün."
+    },
+    "features": {
+      "title": "Her Zaman Doğru Kur, Her Yerde",
+      "description": "150'den fazla döviz, gerçek zamanlıya yakın kurlar ve tamamen çevrimdışı kullanıma hazır."
+    },
+    "getStarted": {
+      "title": "Kur Geçmişi Bir Bakışta",
+      "description": "Haftalar, aylar veya geçen yıl boyunca kur geçmişini keşfetmek için herhangi bir dövize dokunun."
+    }
+  }
+}

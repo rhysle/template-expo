@@ -1,0 +1,118 @@
+{
+  "common": {
+    "button": {
+      "retry": "Spróbuj ponownie"
+    }
+  },
+  "tabs": {
+    "convert": "Przelicz",
+    "settings": "Ustawienia"
+  },
+  "settings": {
+    "title": "Ustawienia",
+    "subtitle": "Dostosuj swój przelicznik walut",
+    "preferences": "Preferencje",
+    "support": "Wsparcie",
+    "contactSupport": "Skontaktuj się z pomocą",
+    "contactSupportSubtitle": "Jesteśmy tu, aby pomóc",
+    "contactSupportError": "Nie można otworzyć klienta e-mail",
+    "rateApp": "Oceń nas",
+    "rateAppSubtitle": "Podoba Ci się aplikacja? Zostaw opinię",
+    "shareApp": "Udostępnij",
+    "shareAppSubtitle": "Powiedz znajomym i rodzinie",
+    "shareMessage": "Sprawdź {{appName}}!",
+    "shareMessageWithUrl": "Sprawdź {{appName}}! Pobierz tutaj: {{url}}",
+    "userId": "Identyfikator użytkownika",
+    "userIdCopied": "Identyfikator skopiowany",
+    "legalSection": "Prawne",
+    "privacyConsent": "Prywatność i zgoda",
+    "appName": "Currency Converter",
+    "version": "Wersja {{version}}",
+    "otaUpdateId": "Aktualizacja: {{updateId}}",
+    "upgradeBanner": {
+      "title": "Ulepsz do Premium",
+      "subtitle": "Częste aktualizacje kursów, brak reklam i pełny dostęp do wykresów"
+    }
+  },
+  "paywall": {
+    "title": "Odblokuj Premium",
+    "subtitle": "Uzyskaj maksimum z Currency Converter",
+    "cta": "Kontynuuj",
+    "ctaFreeTrial": "Wypróbuj za darmo",
+    "restore": "Przywróć zakupy",
+    "terms": "Warunki korzystania",
+    "privacy": "Polityka prywatności",
+    "then": "następnie",
+    "trial": "Bezpłatny okres próbny {{count}}-{{unit}}",
+    "save": "Oszczędź {{percent}}%",
+    "trialUnit": {
+      "day": "dzień",
+      "week": "tydzień",
+      "month": "miesiąc",
+      "year": "rok"
+    },
+    "period": {
+      "day": "dziennie",
+      "week": "tygodniowo",
+      "month": "miesięcznie",
+      "year": "rocznie",
+      "lifetime": "Zakup jednorazowy"
+    },
+    "features": {
+      "liveRates": {
+        "title": "Zawsze świeże kursy",
+        "description": "Kursy odświeżają się prawie w czasie rzeczywistym, bez opóźnień."
+      },
+      "unlimited": {
+        "title": "Wszystkie 150+ walut, bez limitu",
+        "description": "Dodaj dowolną potrzebną walutę, bez ograniczeń."
+      },
+      "charts": {
+        "title": "Pełna historia kursów",
+        "description": "Interaktywne wykresy do znalezienia najlepszego czasu na wymianę."
+      },
+      "adFree": {
+        "title": "Zero przerw",
+        "description": "Żadnych reklam. Tylko czyste, skoncentrowane przeliczanie."
+      }
+    },
+    "feedback": {
+      "subscribeSuccess": "Witamy! Twoja subskrypcja jest aktywna.",
+      "subscribeError": "Coś poszło nie tak. Spróbuj ponownie.",
+      "restoreSuccess": "Subskrypcja przywrócona pomyślnie!",
+      "restoreNotFound": "Nie znaleziono aktywnej subskrypcji.",
+      "restoreError": "Nie udało się przywrócić zakupów. Spróbuj ponownie."
+    },
+    "packageTitle": {
+      "day": "Dziennie",
+      "week": "Tygodniowo",
+      "month": "Miesięcznie",
+      "year": "Rocznie",
+      "lifetime": "Dożywotnio"
+    }
+  },
+  "otaUpdate": {
+    "updateReady": "Nowa aktualizacja jest gotowa - uruchom ponownie, aby zastosować",
+    "restart": "Uruchom ponownie"
+  },
+  "errorBoundary": {
+    "title": "Coś poszło nie tak",
+    "message": "Wystąpił nieoczekiwany błąd. Spróbuj ponownie."
+  },
+  "onboarding": {
+    "next": "Dalej",
+    "done": "Zaczynamy",
+    "welcome": {
+      "title": "Jedna kwota\nWszystkie Twoje waluty",
+      "description": "Wpisz kwotę raz i obserwuj, jak każda waluta aktualizuje się natychmiast."
+    },
+    "features": {
+      "title": "Zawsze właściwy kurs, wszędzie",
+      "description": "150+ walut, prawie aktualne kursy w czasie rzeczywistym i w pełni gotowe offline."
+    },
+    "getStarted": {
+      "title": "Historia kursów na pierwszy rzut oka",
+      "description": "Dotknij dowolnej waluty, aby przejrzeć historię jej kursów przez tygodnie, miesiące lub ostatni rok."
+    }
+  }
+}

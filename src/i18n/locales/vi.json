@@ -1,0 +1,118 @@
+{
+  "common": {
+    "button": {
+      "retry": "Thử lại"
+    }
+  },
+  "tabs": {
+    "convert": "Chuyển đổi",
+    "settings": "Cài đặt"
+  },
+  "settings": {
+    "title": "Cài đặt",
+    "subtitle": "Tùy chỉnh ứng dụng chuyển đổi tiền tệ",
+    "preferences": "Tùy chọn",
+    "support": "Hỗ trợ",
+    "contactSupport": "Liên hệ hỗ trợ",
+    "contactSupportSubtitle": "Chúng tôi luôn sẵn sàng hỗ trợ bạn",
+    "contactSupportError": "Không thể mở ứng dụng email",
+    "rateApp": "Đánh giá chúng tôi",
+    "rateAppSubtitle": "Bạn thích ứng dụng? Hãy để lại đánh giá nhé",
+    "shareApp": "Chia sẻ",
+    "shareAppSubtitle": "Giới thiệu ứng dụng đến bạn bè & gia đình",
+    "shareMessage": "Hãy thử {{appName}} nhé!",
+    "shareMessageWithUrl": "Hãy thử {{appName}} nhé! Tải về tại đây: {{url}}",
+    "userId": "ID người dùng",
+    "userIdCopied": "Đã sao chép ID người dùng",
+    "legalSection": "Pháp lý",
+    "privacyConsent": "Quyền riêng tư & Sự đồng ý",
+    "appName": "Chuyển đổi tiền tệ",
+    "version": "Phiên bản {{version}}",
+    "otaUpdateId": "Cập nhật: {{updateId}}",
+    "upgradeBanner": {
+      "title": "Nâng cấp lên Premium",
+      "subtitle": "Cập nhật tỷ giá thường xuyên, không quảng cáo & biểu đồ đầy đủ"
+    }
+  },
+  "paywall": {
+    "title": "Mở khóa Premium",
+    "subtitle": "Tận dụng tối đa Currency Converter",
+    "cta": "Tiếp tục",
+    "ctaFreeTrial": "Dùng thử miễn phí",
+    "restore": "Khôi phục giao dịch",
+    "terms": "Điều khoản dịch vụ",
+    "privacy": "Chính sách bảo mật",
+    "then": "sau đó",
+    "trial": "Dùng thử {{count}} {{unit}} miễn phí",
+    "save": "Tiết kiệm {{percent}}%",
+    "trialUnit": {
+      "day": "ngày",
+      "week": "tuần",
+      "month": "tháng",
+      "year": "năm"
+    },
+    "period": {
+      "day": "mỗi ngày",
+      "week": "mỗi tuần",
+      "month": "mỗi tháng",
+      "year": "mỗi năm",
+      "lifetime": "Mua một lần"
+    },
+    "features": {
+      "liveRates": {
+        "title": "Tỷ giá luôn mới nhất",
+        "description": "Tỷ giá cập nhật gần như thời gian thực, không bị trễ."
+      },
+      "unlimited": {
+        "title": "Hơn 150 loại tiền tệ, không giới hạn",
+        "description": "Thêm tất cả loại tiền tệ bạn cần, không có giới hạn."
+      },
+      "charts": {
+        "title": "Toàn bộ lịch sử tỷ giá",
+        "description": "Biểu đồ tương tác để tìm thời điểm tốt nhất để chuyển đổi."
+      },
+      "adFree": {
+        "title": "Không gián đoạn",
+        "description": "Không quảng cáo. Trải nghiệm tập trung, gọn gàng."
+      }
+    },
+    "feedback": {
+      "subscribeSuccess": "Chào mừng! Gói đăng ký của bạn đã được kích hoạt.",
+      "subscribeError": "Đã xảy ra lỗi. Vui lòng thử lại.",
+      "restoreSuccess": "Khôi phục gói đăng ký thành công!",
+      "restoreNotFound": "Không tìm thấy gói đăng ký nào.",
+      "restoreError": "Không thể khôi phục giao dịch. Vui lòng thử lại."
+    },
+    "packageTitle": {
+      "day": "Hàng ngày",
+      "week": "Hàng tuần",
+      "month": "Hàng tháng",
+      "year": "Hàng năm",
+      "lifetime": "Trọn đời"
+    }
+  },
+  "otaUpdate": {
+    "updateReady": "Có bản cập nhật mới - khởi động lại để áp dụng",
+    "restart": "Khởi động lại"
+  },
+  "errorBoundary": {
+    "title": "Đã xảy ra lỗi",
+    "message": "Có lỗi không mong muốn xảy ra. Vui lòng thử lại."
+  },
+  "onboarding": {
+    "next": "Tiếp theo",
+    "done": "Bắt đầu",
+    "welcome": {
+      "title": "Một số tiền\nTất cả tiền tệ",
+      "description": "Nhập số tiền một lần và xem tất cả tiền tệ cập nhật ngay lập tức."
+    },
+    "features": {
+      "title": "Luôn đúng tỷ giá, ở bất cứ đâu",
+      "description": "Hơn 150 loại tiền tệ, tỷ giá gần như thời gian thực, và hoạt động ngoại tuyến."
+    },
+    "getStarted": {
+      "title": "Lịch sử tỷ giá trong tầm tay",
+      "description": "Nhấn vào bất kỳ tiền tệ nào để xem lịch sử tỷ giá theo tuần, tháng hoặc năm qua."
+    }
+  }
+}

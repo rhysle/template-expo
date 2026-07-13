@@ -1,0 +1,118 @@
+{
+  "common": {
+    "button": {
+      "retry": "נסה שוב"
+    }
+  },
+  "tabs": {
+    "convert": "המרה",
+    "settings": "הגדרות"
+  },
+  "settings": {
+    "title": "הגדרות",
+    "subtitle": "התאם אישית את ממיר המטבעות",
+    "preferences": "העדפות",
+    "support": "תמיכה",
+    "contactSupport": "פנה לתמיכה",
+    "contactSupportSubtitle": "אנחנו כאן לעזור",
+    "contactSupportError": "לא ניתן לפתוח לקוח דוא\"ל",
+    "rateApp": "דרג אותנו",
+    "rateAppSubtitle": "נהנה מהאפליקציה? השאר ביקורת",
+    "shareApp": "שתף",
+    "shareAppSubtitle": "ספר לחברים ולמשפחה",
+    "shareMessage": "בדוק את {{appName}}!",
+    "shareMessageWithUrl": "בדוק את {{appName}}! הורד כאן: {{url}}",
+    "userId": "מזהה משתמש",
+    "userIdCopied": "מזהה משתמש הועתק",
+    "legalSection": "משפטי",
+    "privacyConsent": "פרטיות והסכמה",
+    "appName": "Currency Converter",
+    "version": "גרסה {{version}}",
+    "otaUpdateId": "עדכון: {{updateId}}",
+    "upgradeBanner": {
+      "title": "שדרג ל-Premium",
+      "subtitle": "עדכוני שערים תכופים, ללא פרסומות וגישה מלאה לגרפים"
+    }
+  },
+  "paywall": {
+    "title": "פתח Premium",
+    "subtitle": "קבל את המרב מממיר המטבעות",
+    "cta": "המשך",
+    "ctaFreeTrial": "נסה בחינם",
+    "restore": "שחזר רכישות",
+    "terms": "תנאי שירות",
+    "privacy": "מדיניות פרטיות",
+    "then": "ואז",
+    "trial": "ניסיון חינם של {{count}}-{{unit}}",
+    "save": "חסוך {{percent}}%",
+    "trialUnit": {
+      "day": "יום",
+      "week": "שבוע",
+      "month": "חודש",
+      "year": "שנה"
+    },
+    "period": {
+      "day": "ליום",
+      "week": "לשבוע",
+      "month": "לחודש",
+      "year": "לשנה",
+      "lifetime": "רכישה חד-פעמית"
+    },
+    "features": {
+      "liveRates": {
+        "title": "שערים תמיד עדכניים",
+        "description": "השערים מתרעננים כמעט בזמן אמת, ללא עיכוב."
+      },
+      "unlimited": {
+        "title": "150+ מטבעות, ללא הגבלה",
+        "description": "הוסף כל מטבע שתצטרך, ללא מגבלות."
+      },
+      "charts": {
+        "title": "היסטוריית שערים מלאה",
+        "description": "גרפים אינטראקטיביים למציאת הזמן הטוב ביותר להמרה."
+      },
+      "adFree": {
+        "title": "אפס הפרעות",
+        "description": "ללא פרסומות. רק המרה נקייה וממוקדת."
+      }
+    },
+    "feedback": {
+      "subscribeSuccess": "ברוך הבא! המנוי שלך פעיל.",
+      "subscribeError": "משהו השתבש. אנא נסה שוב.",
+      "restoreSuccess": "המנוי שוחזר בהצלחה!",
+      "restoreNotFound": "לא נמצא מנוי פעיל.",
+      "restoreError": "לא ניתן לשחזר רכישות. אנא נסה שוב."
+    },
+    "packageTitle": {
+      "day": "יומי",
+      "week": "שבועי",
+      "month": "חודשי",
+      "year": "שנתי",
+      "lifetime": "לכל החיים"
+    }
+  },
+  "otaUpdate": {
+    "updateReady": "עדכון חדש מוכן - הפעל מחדש כדי להחיל",
+    "restart": "הפעל מחדש"
+  },
+  "errorBoundary": {
+    "title": "משהו השתבש",
+    "message": "אירעה שגיאה בלתי צפויה. אנא נסה שוב."
+  },
+  "onboarding": {
+    "next": "הבא",
+    "done": "בואו נתחיל",
+    "welcome": {
+      "title": "סכום אחד\nכל המטבעות שלך",
+      "description": "הזן סכום פעם אחת וראה את כל המטבעות מתעדכנים מיידית."
+    },
+    "features": {
+      "title": "תמיד השער הנכון, בכל מקום",
+      "description": "150+ מטבעות, שערים כמעט בזמן אמת, ופועל לחלוטין ללא חיבור."
+    },
+    "getStarted": {
+      "title": "היסטוריית שערים במבט אחד",
+      "description": "הקש על מטבע כלשהו לחקירת היסטוריית השערים שלו לאורך שבועות, חודשים או שנה."
+    }
+  }
+}

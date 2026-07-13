@@ -1,0 +1,118 @@
+{
+  "common": {
+    "button": {
+      "retry": "Újrapróbálás"
+    }
+  },
+  "tabs": {
+    "convert": "Átváltás",
+    "settings": "Beállítások"
+  },
+  "settings": {
+    "title": "Beállítások",
+    "subtitle": "Valutaváltójának testreszabása",
+    "preferences": "Beállítások",
+    "support": "Támogatás",
+    "contactSupport": "Kapcsolatfelvétel a támogatással",
+    "contactSupportSubtitle": "Segítségre készen állunk",
+    "contactSupportError": "Nem sikerült megnyitni az e-mail klienst",
+    "rateApp": "Értékelje az alkalmazást",
+    "rateAppSubtitle": "Tetszik az alkalmazás? Írjon értékelést",
+    "shareApp": "Megosztás",
+    "shareAppSubtitle": "Ossza meg barátaival és családjával",
+    "shareMessage": "Nézze meg a {{appName}}-t!",
+    "shareMessageWithUrl": "Nézze meg a {{appName}}-t! Töltse le itt: {{url}}",
+    "userId": "Felhasználói azonosító",
+    "userIdCopied": "Felhasználói azonosító másolva",
+    "legalSection": "Jogi",
+    "privacyConsent": "Adatvédelem és hozzájárulás",
+    "appName": "Currency Converter",
+    "version": "{{version}} verzió",
+    "otaUpdateId": "Frissítés: {{updateId}}",
+    "upgradeBanner": {
+      "title": "Frissítsen Prémiumra",
+      "subtitle": "Gyakori árfolyamfrissítések, nincs reklám és teljes grafikonhozzáférés"
+    }
+  },
+  "paywall": {
+    "title": "Prémium feloldása",
+    "subtitle": "Hozza ki a legtöbbet a Currency Converterből",
+    "cta": "Folytatás",
+    "ctaFreeTrial": "Próbálja ki ingyen",
+    "restore": "Vásárlások visszaállítása",
+    "terms": "Felhasználási feltételek",
+    "privacy": "Adatvédelmi irányelvek",
+    "then": "majd",
+    "trial": "{{count}}-{{unit}} ingyenes próbaverzió",
+    "save": "{{percent}}% megtakarítás",
+    "trialUnit": {
+      "day": "nap",
+      "week": "hét",
+      "month": "hónap",
+      "year": "év"
+    },
+    "period": {
+      "day": "naponta",
+      "week": "hetente",
+      "month": "havonta",
+      "year": "évente",
+      "lifetime": "Egyszeri vásárlás"
+    },
+    "features": {
+      "liveRates": {
+        "title": "Mindig friss árfolyamok",
+        "description": "Az árfolyamok közel valós időben frissülnek, késedelem nélkül."
+      },
+      "unlimited": {
+        "title": "Minden 150+ valuta, korlát nélkül",
+        "description": "Adjon hozzá minden szükséges valutát, korlátozás nélkül."
+      },
+      "charts": {
+        "title": "Teljes árfolyamtörténet",
+        "description": "Interaktív grafikonok a legjobb átváltási idő megtalálásához."
+      },
+      "adFree": {
+        "title": "Nulla megszakítás",
+        "description": "Nincs reklám. Csak tiszta, koncentrált átváltás."
+      }
+    },
+    "feedback": {
+      "subscribeSuccess": "Üdvözöljük! Az előfizetése aktív.",
+      "subscribeError": "Valami hiba történt. Kérjük, próbálja újra.",
+      "restoreSuccess": "Az előfizetés sikeresen visszaállítva!",
+      "restoreNotFound": "Nem található aktív előfizetés.",
+      "restoreError": "Nem sikerült visszaállítani a vásárlásokat. Kérjük, próbálja újra."
+    },
+    "packageTitle": {
+      "day": "Napi",
+      "week": "Heti",
+      "month": "Havi",
+      "year": "Éves",
+      "lifetime": "Élethosszig"
+    }
+  },
+  "otaUpdate": {
+    "updateReady": "Új frissítés áll rendelkezésre - indítsa újra az alkalmazáshoz",
+    "restart": "Újraindítás"
+  },
+  "errorBoundary": {
+    "title": "Valami hiba történt",
+    "message": "Váratlan hiba lépett fel. Kérjük, próbálja újra."
+  },
+  "onboarding": {
+    "next": "Következő",
+    "done": "Kezdjük el",
+    "welcome": {
+      "title": "Egy összeg\nAz összes valutája",
+      "description": "Adjon meg egy összeget egyszer, és figyelje, ahogy minden valuta azonnal frissül."
+    },
+    "features": {
+      "title": "Mindig a megfelelő árfolyam, mindenhol",
+      "description": "150+ valuta, közel valós idejű árfolyamok, és teljesen offline-kész."
+    },
+    "getStarted": {
+      "title": "Árfolyamtörténet egy pillantásra",
+      "description": "Koppintson bármelyik valutára, hogy feltárja az árfolyamtörténetét heteken, hónapokon vagy az elmúlt éven át."
+    }
+  }
+}

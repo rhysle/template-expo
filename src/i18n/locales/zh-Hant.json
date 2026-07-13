@@ -1,0 +1,118 @@
+{
+  "common": {
+    "button": {
+      "retry": "重試"
+    }
+  },
+  "tabs": {
+    "convert": "換算",
+    "settings": "設定"
+  },
+  "settings": {
+    "title": "設定",
+    "subtitle": "自訂您的貨幣換算器",
+    "preferences": "偏好設定",
+    "support": "支援",
+    "contactSupport": "聯絡支援",
+    "contactSupportSubtitle": "我們隨時為您服務",
+    "contactSupportError": "無法開啟郵件客戶端",
+    "rateApp": "評價我們",
+    "rateAppSubtitle": "喜歡此應用程式？留下您的評價",
+    "shareApp": "分享",
+    "shareAppSubtitle": "向朋友和家人推薦",
+    "shareMessage": "來試試 {{appName}}！",
+    "shareMessageWithUrl": "來試試 {{appName}}！點擊下載: {{url}}",
+    "userId": "使用者ID",
+    "userIdCopied": "已複製使用者ID",
+    "legalSection": "法律",
+    "privacyConsent": "隱私與同意",
+    "appName": "貨幣換算",
+    "version": "版本 {{version}}",
+    "otaUpdateId": "更新: {{updateId}}",
+    "upgradeBanner": {
+      "title": "升級至進階版",
+      "subtitle": "更頻繁的匯率更新、無廣告及完整圖表"
+    }
+  },
+  "paywall": {
+    "title": "解鎖進階版",
+    "subtitle": "充分利用貨幣換算器",
+    "cta": "繼續",
+    "ctaFreeTrial": "免費試用",
+    "restore": "恢復購買",
+    "terms": "服務條款",
+    "privacy": "隱私政策",
+    "then": "之後",
+    "trial": "{{count}}{{unit}}免費試用",
+    "save": "節省 {{percent}}%",
+    "trialUnit": {
+      "day": "天",
+      "week": "週",
+      "month": "個月",
+      "year": "年"
+    },
+    "period": {
+      "day": "每天",
+      "week": "每週",
+      "month": "每月",
+      "year": "每年",
+      "lifetime": "一次性購買"
+    },
+    "features": {
+      "liveRates": {
+        "title": "始終最新匯率",
+        "description": "匯率近即時更新，無延遲。"
+      },
+      "unlimited": {
+        "title": "150+種貨幣，無上限",
+        "description": "新增所需的所有貨幣，沒有限制。"
+      },
+      "charts": {
+        "title": "完整匯率歷史",
+        "description": "互動式圖表幫您找到最佳換匯時機。"
+      },
+      "adFree": {
+        "title": "零干擾",
+        "description": "無廣告。純淨、專注的換算體驗。"
+      }
+    },
+    "feedback": {
+      "subscribeSuccess": "歡迎！您的訂閱已啟用。",
+      "subscribeError": "發生錯誤，請重試。",
+      "restoreSuccess": "訂閱恢復成功！",
+      "restoreNotFound": "未找到有效訂閱。",
+      "restoreError": "無法恢復購買，請重試。"
+    },
+    "packageTitle": {
+      "day": "每日",
+      "week": "每週",
+      "month": "每月",
+      "year": "每年",
+      "lifetime": "永久"
+    }
+  },
+  "otaUpdate": {
+    "updateReady": "新更新已就緒 - 重新啟動以套用",
+    "restart": "重新啟動"
+  },
+  "errorBoundary": {
+    "title": "發生錯誤",
+    "message": "發生意外錯誤，請重試。"
+  },
+  "onboarding": {
+    "next": "下一步",
+    "done": "開始使用",
+    "welcome": {
+      "title": "一個金額\n所有貨幣",
+      "description": "輸入一次金額，所有貨幣即時更新。"
+    },
+    "features": {
+      "title": "隨時隨地取得正確匯率",
+      "description": "150+種貨幣、近即時匯率，完全支援離線使用。"
+    },
+    "getStarted": {
+      "title": "一覽匯率歷史",
+      "description": "點選任一貨幣，查看週、月或過去一年的匯率歷史。"
+    }
+  }
+}

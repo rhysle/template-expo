@@ -1,0 +1,118 @@
+{
+  "common": {
+    "button": {
+      "retry": "Yritä uudelleen"
+    }
+  },
+  "tabs": {
+    "convert": "Muunna",
+    "settings": "Asetukset"
+  },
+  "settings": {
+    "title": "Asetukset",
+    "subtitle": "Mukauta valuuttamuuntimesi",
+    "preferences": "Asetukset",
+    "support": "Tuki",
+    "contactSupport": "Ota yhteyttä tukeen",
+    "contactSupportSubtitle": "Olemme täällä auttamassa",
+    "contactSupportError": "Sähköpostiohjelmaa ei voitu avata",
+    "rateApp": "Arvioi meidät",
+    "rateAppSubtitle": "Pidätkö sovelluksesta? Jätä arvostelu",
+    "shareApp": "Jaa",
+    "shareAppSubtitle": "Kerro ystäville ja perheelle",
+    "shareMessage": "Tutustu sovellukseen {{appName}}!",
+    "shareMessageWithUrl": "Tutustu sovellukseen {{appName}}! Lataa se täältä: {{url}}",
+    "userId": "Käyttäjätunnus",
+    "userIdCopied": "Käyttäjätunnus kopioitu",
+    "legalSection": "Oikeudellinen",
+    "privacyConsent": "Tietosuoja ja suostumus",
+    "appName": "Currency Converter",
+    "version": "Versio {{version}}",
+    "otaUpdateId": "Päivitys: {{updateId}}",
+    "upgradeBanner": {
+      "title": "Päivitä Premiumiin",
+      "subtitle": "Tiheät kurssiupdateet, ei mainoksia ja täydellinen kaavioiden käyttö"
+    }
+  },
+  "paywall": {
+    "title": "Avaa Premium",
+    "subtitle": "Hyödynnä Currency Converter täysimääräisesti",
+    "cta": "Jatka",
+    "ctaFreeTrial": "Kokeile ilmaiseksi",
+    "restore": "Palauta ostokset",
+    "terms": "Käyttöehdot",
+    "privacy": "Tietosuojakäytäntö",
+    "then": "sitten",
+    "trial": "{{count}}-{{unit}} ilmainen kokeilujakso",
+    "save": "Säästä {{percent}} %",
+    "trialUnit": {
+      "day": "päivä",
+      "week": "viikko",
+      "month": "kuukausi",
+      "year": "vuosi"
+    },
+    "period": {
+      "day": "päivässä",
+      "week": "viikossa",
+      "month": "kuukaudessa",
+      "year": "vuodessa",
+      "lifetime": "Kertaosto"
+    },
+    "features": {
+      "liveRates": {
+        "title": "Aina tuoreet kurssit",
+        "description": "Kurssit päivittyvät lähes reaaliaikaisesti, ilman viivettä."
+      },
+      "unlimited": {
+        "title": "Kaikki 150+ valuuttaa, ei rajoituksia",
+        "description": "Lisää tarvitsemasi valuutat, ilman rajoituksia."
+      },
+      "charts": {
+        "title": "Täydellinen kurssihistoria",
+        "description": "Interaktiiviset kaaviot parhaan muuntoajankohdan löytämiseksi."
+      },
+      "adFree": {
+        "title": "Nolla keskeytyksiä",
+        "description": "Ei mainoksia. Vain puhdas, keskittynyt muuntaminen."
+      }
+    },
+    "feedback": {
+      "subscribeSuccess": "Tervetuloa! Tilauksesi on aktiivinen.",
+      "subscribeError": "Jotain meni pieleen. Yritä uudelleen.",
+      "restoreSuccess": "Tilaus palautettu onnistuneesti!",
+      "restoreNotFound": "Aktiivista tilausta ei löydetty.",
+      "restoreError": "Ostoksia ei voitu palauttaa. Yritä uudelleen."
+    },
+    "packageTitle": {
+      "day": "Päivittäin",
+      "week": "Viikoittain",
+      "month": "Kuukausittain",
+      "year": "Vuosittain",
+      "lifetime": "Elinikäinen"
+    }
+  },
+  "otaUpdate": {
+    "updateReady": "Uusi päivitys on valmis - käynnistä uudelleen ottaaksesi sen käyttöön",
+    "restart": "Käynnistä uudelleen"
+  },
+  "errorBoundary": {
+    "title": "Jotain meni pieleen",
+    "message": "Tapahtui odottamaton virhe. Yritä uudelleen."
+  },
+  "onboarding": {
+    "next": "Seuraava",
+    "done": "Aloita",
+    "welcome": {
+      "title": "Yksi summa\nKaikki valuuttasi",
+      "description": "Syötä summa kerran ja katso jokaisen valuutan päivittyvän välittömästi."
+    },
+    "features": {
+      "title": "Aina oikea kurssi, kaikkialla",
+      "description": "150+ valuuttaa, lähes reaaliaikaiset kurssit ja täysin offline-valmis."
+    },
+    "getStarted": {
+      "title": "Kurssihistoria yhdellä silmäyksellä",
+      "description": "Napauta mitä tahansa valuuttaa tutkiaksesi sen kurssihistoriaa viikkojen, kuukausien tai viimeisen vuoden ajalta."
+    }
+  }
+}

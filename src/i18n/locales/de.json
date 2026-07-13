@@ -1,0 +1,118 @@
+{
+  "common": {
+    "button": {
+      "retry": "Erneut versuchen"
+    }
+  },
+  "tabs": {
+    "convert": "Umrechnen",
+    "settings": "Einstellungen"
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "subtitle": "Währungsrechner anpassen",
+    "preferences": "Einstellungen",
+    "support": "Support",
+    "contactSupport": "Support kontaktieren",
+    "contactSupportSubtitle": "Wir helfen gerne",
+    "contactSupportError": "E-Mail-Programm konnte nicht geöffnet werden",
+    "rateApp": "Bewerten",
+    "rateAppSubtitle": "Gefällt Ihnen die App? Hinterlassen Sie eine Bewertung",
+    "shareApp": "Teilen",
+    "shareAppSubtitle": "Freunden und Familie empfehlen",
+    "shareMessage": "Schau dir {{appName}} an!",
+    "shareMessageWithUrl": "Schau dir {{appName}} an! Hier herunterladen: {{url}}",
+    "userId": "Benutzer-ID",
+    "userIdCopied": "Benutzer-ID kopiert",
+    "legalSection": "Rechtliches",
+    "privacyConsent": "Datenschutz & Einwilligung",
+    "appName": "Währungsrechner",
+    "version": "Version {{version}}",
+    "otaUpdateId": "Update: {{updateId}}",
+    "upgradeBanner": {
+      "title": "Auf Premium upgraden",
+      "subtitle": "Häufigere Kursaktualisierungen, keine Werbung & voller Diagrammzugang"
+    }
+  },
+  "paywall": {
+    "title": "Premium freischalten",
+    "subtitle": "Hol das Beste aus dem Währungsrechner heraus",
+    "cta": "Weiter",
+    "ctaFreeTrial": "Kostenlos testen",
+    "restore": "Käufe wiederherstellen",
+    "terms": "Nutzungsbedingungen",
+    "privacy": "Datenschutzrichtlinie",
+    "then": "dann",
+    "trial": "{{count}}-{{unit}} kostenlos testen",
+    "save": "{{percent}} % sparen",
+    "trialUnit": {
+      "day": "Tag",
+      "week": "Woche",
+      "month": "Monat",
+      "year": "Jahr"
+    },
+    "period": {
+      "day": "pro Tag",
+      "week": "pro Woche",
+      "month": "pro Monat",
+      "year": "pro Jahr",
+      "lifetime": "Einmaliger Kauf"
+    },
+    "features": {
+      "liveRates": {
+        "title": "Immer aktuelle Kurse",
+        "description": "Kurse werden nahezu in Echtzeit aktualisiert, ohne Verzögerung."
+      },
+      "unlimited": {
+        "title": "Alle 150+ Währungen, unbegrenzt",
+        "description": "Füge jede benötigte Währung hinzu, ohne Einschränkungen."
+      },
+      "charts": {
+        "title": "Vollständige Kurshistorie",
+        "description": "Interaktive Diagramme für den besten Umtauschzeitpunkt."
+      },
+      "adFree": {
+        "title": "Keine Unterbrechungen",
+        "description": "Keine Werbung. Nur sauberes, fokussiertes Umrechnen."
+      }
+    },
+    "feedback": {
+      "subscribeSuccess": "Willkommen! Ihr Abonnement ist aktiv.",
+      "subscribeError": "Etwas ist schiefgelaufen. Bitte erneut versuchen.",
+      "restoreSuccess": "Abonnement erfolgreich wiederhergestellt!",
+      "restoreNotFound": "Kein aktives Abonnement gefunden.",
+      "restoreError": "Käufe konnten nicht wiederhergestellt werden. Bitte erneut versuchen."
+    },
+    "packageTitle": {
+      "day": "Täglich",
+      "week": "Wöchentlich",
+      "month": "Monatlich",
+      "year": "Jährlich",
+      "lifetime": "Einmalig"
+    }
+  },
+  "otaUpdate": {
+    "updateReady": "Ein neues Update ist bereit - neu starten zum Anwenden",
+    "restart": "Neu starten"
+  },
+  "errorBoundary": {
+    "title": "Etwas ist schiefgelaufen",
+    "message": "Ein unerwarteter Fehler ist aufgetreten. Bitte erneut versuchen."
+  },
+  "onboarding": {
+    "next": "Weiter",
+    "done": "Loslegen",
+    "welcome": {
+      "title": "Ein Betrag\nAlle Währungen",
+      "description": "Betrag einmal eingeben und alle Währungen sofort aktualisiert sehen."
+    },
+    "features": {
+      "title": "Immer der richtige Kurs, überall",
+      "description": "150+ Währungen, nahezu Echtzeit-Kurse und vollständig offline verfügbar."
+    },
+    "getStarted": {
+      "title": "Kurshistorie auf einen Blick",
+      "description": "Tippe auf eine Währung, um die Kurshistorie über Wochen, Monate oder das vergangene Jahr zu erkunden."
+    }
+  }
+}

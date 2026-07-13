@@ -1,0 +1,118 @@
+{
+  "common": {
+    "button": {
+      "retry": "إعادة المحاولة"
+    }
+  },
+  "tabs": {
+    "convert": "تحويل",
+    "settings": "الإعدادات"
+  },
+  "settings": {
+    "title": "الإعدادات",
+    "subtitle": "تخصيص محوّل العملات",
+    "preferences": "التفضيلات",
+    "support": "الدعم",
+    "contactSupport": "تواصل مع الدعم",
+    "contactSupportSubtitle": "نحن هنا للمساعدة",
+    "contactSupportError": "تعذّر فتح تطبيق البريد الإلكتروني",
+    "rateApp": "قيّمنا",
+    "rateAppSubtitle": "هل تستمتع بالتطبيق؟ اترك تقييمًا",
+    "shareApp": "مشاركة",
+    "shareAppSubtitle": "أخبر أصدقاءك وعائلتك",
+    "shareMessage": "تحقق من {{appName}}!",
+    "shareMessageWithUrl": "تحقق من {{appName}}! حمّله من هنا: {{url}}",
+    "userId": "معرّف المستخدم",
+    "userIdCopied": "تم نسخ معرّف المستخدم",
+    "legalSection": "قانوني",
+    "privacyConsent": "الخصوصية والموافقة",
+    "appName": "Currency Converter",
+    "version": "الإصدار {{version}}",
+    "otaUpdateId": "التحديث: {{updateId}}",
+    "upgradeBanner": {
+      "title": "الترقية إلى Premium",
+      "subtitle": "تحديثات متكررة للأسعار، بدون إعلانات ووصول كامل للمخططات"
+    }
+  },
+  "paywall": {
+    "title": "افتح Premium",
+    "subtitle": "استفد إلى أقصى حد من محوّل العملات",
+    "cta": "متابعة",
+    "ctaFreeTrial": "جرّب مجانًا",
+    "restore": "استعادة المشتريات",
+    "terms": "شروط الخدمة",
+    "privacy": "سياسة الخصوصية",
+    "then": "ثم",
+    "trial": "تجربة مجانية لمدة {{count}}-{{unit}}",
+    "save": "وفر {{percent}}٪",
+    "trialUnit": {
+      "day": "يوم",
+      "week": "أسبوع",
+      "month": "شهر",
+      "year": "سنة"
+    },
+    "period": {
+      "day": "يوميًا",
+      "week": "أسبوعيًا",
+      "month": "شهريًا",
+      "year": "سنويًا",
+      "lifetime": "عملية شراء لمرة واحدة"
+    },
+    "features": {
+      "liveRates": {
+        "title": "أسعار دائمًا محدّثة",
+        "description": "تتحدث الأسعار في الوقت الفعلي تقريبًا، دون تأخير."
+      },
+      "unlimited": {
+        "title": "أكثر من 150 عملة، بلا حدود",
+        "description": "أضف أي عملة تحتاجها، بدون قيود."
+      },
+      "charts": {
+        "title": "السجل الكامل للأسعار",
+        "description": "مخططات تفاعلية لإيجاد أفضل وقت للتحويل."
+      },
+      "adFree": {
+        "title": "بدون انقطاعات",
+        "description": "لا إعلانات. مجرد تحويل نظيف ومركّز."
+      }
+    },
+    "feedback": {
+      "subscribeSuccess": "مرحبًا! اشتراكك فعّال.",
+      "subscribeError": "حدث خطأ ما. يرجى المحاولة مجددًا.",
+      "restoreSuccess": "تم استعادة الاشتراك بنجاح!",
+      "restoreNotFound": "لم يتم العثور على اشتراك فعّال.",
+      "restoreError": "تعذّر استعادة المشتريات. يرجى المحاولة مجددًا."
+    },
+    "packageTitle": {
+      "day": "يومي",
+      "week": "أسبوعي",
+      "month": "شهري",
+      "year": "سنوي",
+      "lifetime": "مدى الحياة"
+    }
+  },
+  "otaUpdate": {
+    "updateReady": "تحديث جديد جاهز - أعد التشغيل للتطبيق",
+    "restart": "إعادة التشغيل"
+  },
+  "errorBoundary": {
+    "title": "حدث خطأ ما",
+    "message": "حدث خطأ غير متوقع. يرجى المحاولة مجددًا."
+  },
+  "onboarding": {
+    "next": "التالي",
+    "done": "ابدأ",
+    "welcome": {
+      "title": "مبلغ واحد\nجميع عملاتك",
+      "description": "أدخل المبلغ مرة واحدة وشاهد كل العملات تتحدث فورًا."
+    },
+    "features": {
+      "title": "دائمًا السعر الصحيح، في أي مكان",
+      "description": "أكثر من 150 عملة، أسعار شبه فورية، وتعمل بالكامل دون اتصال."
+    },
+    "getStarted": {
+      "title": "سجل الأسعار بلمحة",
+      "description": "انقر على أي عملة لاستكشاف سجل أسعارها على مدى أسابيع أو أشهر أو عام."
+    }
+  }
+}
