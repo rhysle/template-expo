@@ -155,7 +155,7 @@ When enabling ads, configure real IDs, run the setup script, keep the ads initia
 - Keep generic analytics events in `analyticsGeneralEvents.ts`; define only product events in `analyticsAppEvents.ts`.
 - Firebase native config files must be replaced for every released app, followed by a clean prebuild.
 - `initSentry()` runs before components render. Configure a project-specific DSN and EAS source-map credentials; do not record development events.
-- User identity is an anonymous, SecureStore-backed UUID shared with supported services. It is keyed by `APP_VARIANT` to isolate builds and must not move to MMKV.
+- User identity is an anonymous, per-variant UUID stored in MMKV and shared with supported services. It represents the current installation and resets after uninstall/reinstall on both platforms. Android Auto Backup is disabled at the template level so restored local data cannot revive a previous installation identity; each product fork must choose and configure its own backup policy before release.
 - OTA checks are initialized with `useOtaUpdateInit()` and controlled by `AppConfig.otaUpdate.enabled`.
 
 ### Settings helpers

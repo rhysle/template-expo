@@ -151,6 +151,8 @@ Generated `ios/` and `android/` directories must not be edited directly. Change 
 
 `src/app/_layout.tsx` mounts the app-wide providers and lifecycle hooks: fonts, identity, subscriptions, RTL sync, query persistence, i18n, error boundary, measured tab-bar height, analytics screen tracking, OTA update checks, and snackbar rendering.
 
+Anonymous identity is a per-variant, installation-scoped UUID stored in MMKV and shared with configured analytics, diagnostics, and subscription services. It persists across app launches and updates, but resets after uninstall/reinstall on both iOS and Android. Android Auto Backup is disabled for this barebone template; each product fork should define its own backup policy before release.
+
 The current routes demonstrate a common paid-app shape:
 
 - `onboarding` is shown before the persisted onboarding gate is complete.

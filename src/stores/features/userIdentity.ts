@@ -15,7 +15,8 @@ export interface UserIdentitySlice {
   clearUserId: () => void
 }
 
-// userId excluded from MMKV persistence - expo-secure-store is the source of truth.
+// The dedicated userIdentity MMKV namespace is the source of truth. Keeping this
+// runtime slice excluded avoids storing the same UUID in the Zustand snapshot.
 export const userIdentityPersistExcludeKeys: ExcludeKeys<UserIdentitySlice> = ['userId']
 
 export const createUserIdentitySlice = (

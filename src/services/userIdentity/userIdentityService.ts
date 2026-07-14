@@ -1,43 +1,39 @@
 import * as Crypto from 'expo-crypto'
-import * as SecureStore from 'expo-secure-store'
+
+import { recordError } from '@/services/sentry'
+import { getStoredUserId, removeStoredUserId, setStoredUserId } from '@/storage'
 
 // Per-variant key prevents IDs leaking between dev/preview/production
 // analytics and RevenueCat customers under a shared bundle ID.
-const STORAGE_KEY = `user.identity.${process.env.APP_VARIANT ?? 'development'}`
+const APP_VARIANT = process.env.APP_VARIANT ?? 'development'
 
 /**
- * Returns the existing anonymous user ID from SecureStore, or generates a new
- * UUID, persists it, and returns it.
- *
- * On iOS, SecureStore uses the Keychain - the value survives app uninstall.
- * On Android, SecureStore uses EncryptedSharedPreferences - reset on uninstall
- * (acceptable; purchase restoration works independently via store receipts).
+ * Returns the current installation's anonymous user ID from MMKV, or generates
+ * and persists a new UUID. Uninstalling the app removes the ID on both platforms.
  */
 export const getOrCreateUserId = async (): Promise<string> => {
   try {
-    const existing = await SecureStore.getItemAsync(STORAGE_KEY)
-    if (existing) return existing
-  } catch {
-    // Read failure - fall through to generate a new ID for this session.
+    const existingId = getStoredUserId(APP_VARIANT)
+    if (existingId) return existingId
+  } catch (error) {
+    recordError(error, 'userIdentity.getOrCreateUserId.read')
   }
 
   const newId = Crypto.randomUUID()
 
   try {
-    await SecureStore.setItemAsync(STORAGE_KEY, newId)
+    setStoredUserId(APP_VARIANT, newId)
   } catch (error) {
-    if (__DEV__) {
-      console.warn('[userIdentity] Failed to persist user ID to SecureStore:', error)
-    }
+    recordError(error, 'userIdentity.getOrCreateUserId.write')
   }
 
   return newId
 }
 
 /**
- * Deletes the persisted user ID from SecureStore.
+ * Deletes the persisted user ID from MMKV.
  * Intended for dev/debug use only - the next cold launch will generate a new ID.
  */
 export const clearUserId = async (): Promise<void> => {
-  await SecureStore.deleteItemAsync(STORAGE_KEY)
+  removeStoredUserId(APP_VARIANT)
 }
