@@ -1,9 +1,17 @@
 import { useReactQueryDevTools } from '@dev-plugins/react-query'
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
-import { defaultShouldDehydrateQuery, onlineManager, QueryClient } from '@tanstack/react-query'
+import {
+  defaultShouldDehydrateQuery,
+  focusManager,
+  onlineManager,
+  QueryClient,
+} from '@tanstack/react-query'
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
 import * as Network from 'expo-network'
-import { ReactNode } from 'react'
+import type { ReactNode } from 'react'
+import { useEffect } from 'react'
+import type { AppStateStatus } from 'react-native'
+import { AppState, Platform } from 'react-native'
 
 import { queryStorage } from '@/storage'
 import { isNetworkOnline } from '@/utils/network'
@@ -27,6 +35,20 @@ onlineManager.setEventListener((setOnline) => {
 
   return () => subscription.remove()
 })
+
+const useQueryFocusManager = () => {
+  useEffect(() => {
+    if (Platform.OS === 'web') return
+
+    const onAppStateChange = (status: AppStateStatus) => {
+      focusManager.setFocused(status === 'active')
+    }
+
+    const subscription = AppState.addEventListener('change', onAppStateChange)
+
+    return () => subscription.remove()
+  }, [])
+}
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -71,6 +93,8 @@ const ReactQueryDevTools = () => {
 }
 
 export const QueryProvider = ({ children }: QueryProviderProps) => {
+  useQueryFocusManager()
+
   return (
     <PersistQueryClientProvider
       client={queryClient}
