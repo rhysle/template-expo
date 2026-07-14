@@ -16,41 +16,68 @@ This repository intentionally contains sample screens and app-specific placehold
 
 ## New Project Setup
 
-Use this checklist when turning the template into a new app. The template includes working-looking sample values, so do not ship until every applicable item has been reviewed.
+Use this ordered process when turning the template into a new app. The template contains sample credentials and product content, so do not ship until every applicable section has been completed.
 
-### 1. Create the app identity and EAS project
+### 1. Configure Expo
 
-1. Fork or copy this repository, rename the package in `package.json`, and run `npm install`.
-2. Choose final, globally unique iOS and Android identifiers. Update `expo.name`, `expo.slug`, `expo.scheme`, `expo.ios.bundleIdentifier`, and `expo.android.package` in `app.json`.
-3. Sign in to the intended Expo account and create/link a new EAS project (for example, run `eas init`). Replace `expo.extra.eas.projectId` with the new project ID and set `expo.updates.url` to `https://u.expo.dev/<new-project-id>`. Do not reuse the template's project ID or update URL.
+1. Fork or copy this repository and run `npm install`.
+2. Sign in to the intended Expo account, then run:
+
+   ```bash
+   npm run setup:expo
+   ```
+
+   The script prompts for an npm-style app name, updates the package and Expo app names, creates or links an EAS project, and writes the new EAS project ID and update URL to `app.json`. Do not reuse the template's EAS project ID or update URL.
+
+3. Choose final, globally unique iOS and Android identifiers. Update `expo.scheme`, `expo.ios.bundleIdentifier`, and `expo.android.package` in `app.json`.
 4. Replace icons, adaptive-icon layers, splash art, and favicon under `assets/images/`, then update their references and colors in `app.json`.
 
-### 2. Configure app-facing settings
-
-Replace every product value in `src/configs/AppConfig.ts`:
-
-- The iOS App Store ID once the App Store Connect record exists.
-- RevenueCat API keys and entitlement ID, if the app sells subscriptions or purchases.
-- Sentry DSN.
-- AdMob app and ad-unit IDs, only if the app uses ads.
-
-Also update the Sentry Expo plugin in `app.json`: its organization and project must belong to the new Sentry project. Store the Sentry authentication token used for EAS source-map uploads as an EAS secret; never commit it.
-
-### 3. Set up Firebase Analytics
+### 2. Configure Firebase Analytics
 
 1. Create a Firebase project and register both an iOS app and an Android app using the exact bundle ID/package name from `app.json`.
 2. Download `GoogleService-Info.plist` for iOS and `google-services.json` for Android. Place them at the repository root using exactly those names; `app.json` already references them.
 3. The files are intentionally Git-ignored. Provide them securely to local developers and your build environment rather than committing them.
 4. Replace the sample events in `src/services/firebase/analytics/analyticsAppEvents.ts`. Keep generic lifecycle events in `analyticsGeneralEvents.ts`.
 
-### 4. Configure only the optional services the product needs
+### 3. Configure RevenueCat
 
-- **RevenueCat:** Create the app in RevenueCat, connect its App Store Connect and/or Google Play products, create the entitlement named in `AppConfig.revenueCat.entitlementId`, then add the platform API keys. Replace `src/components/paywall/usePaywallFeatures.ts` and confirm the paywall and automatic-presentation behavior fit the product.
-- **AdMob:** Decide whether ads are enabled with `AppConfig.ads.enabled`. After changing it, run `npm run setup:ads`; if enabled, enter the platform app IDs and ad-unit IDs and retain the ads initialization hooks in the root and tabs layouts. Run a clean prebuild afterwards.
+1. Create the app in RevenueCat and connect its App Store Connect and/or Google Play products.
+2. Create the entitlement that the app will use for premium access.
+3. For development and testing, you can use RevenueCat's Test Store API key in `AppConfig.revenueCat.iosApiKey` and `androidApiKey` in `src/configs/AppConfig.ts`.
+4. Before submitting a release to the App Store or Google Play, replace the Test Store key with the correct platform-specific production API key for each field. Never submit an app configured with a Test Store key.
+5. Set `AppConfig.revenueCat.entitlementId` to the entitlement created in step 2, then replace `src/components/paywall/usePaywallFeatures.ts` and confirm the paywall and automatic-presentation behavior fit the product.
+
+### 4. Configure Sentry
+
+1. Create a Sentry project for the app.
+2. Set `AppConfig.sentry.dsn` in `src/configs/AppConfig.ts`.
+3. Update the Sentry Expo plugin's `organization` and `project` values in `app.json`.
+4. Store the Sentry authentication token for EAS source-map uploads as an EAS secret; never commit it.
+
+### 5. Configure AdMob (if the app shows ads)
+
+1. In AdMob, create an app record for each platform and copy its app ID. Add them to `AppConfig.ads.ios.appId` and `AppConfig.ads.android.appId` in `src/configs/AppConfig.ts`.
+2. For each AdMob app, open **Ad units**, choose **Add ad unit**, and create the formats used by this template: one **Banner** unit and one **Interstitial** unit.
+3. Copy each platform's Banner and Interstitial ad-unit IDs into the matching `bannerAdUnitId` and `interstitialAdUnitId` fields in `AppConfig.ads`.
+4. Set `AppConfig.ads.enabled` to `true`, then run `npm run setup:ads` to synchronize the native configuration. Keep the ads initialization hooks in the root and tabs layouts when ads are enabled; remove them when ads are disabled.
+5. Development and preview builds automatically use Google test ad-unit IDs. The AdMob ad-unit IDs above are used by production builds.
+6. Run a clean prebuild after changing the ads configuration.
+
+### 6. Configure fonts, localization, and OTA updates
+
 - **Fonts:** Change `FONT_NAME` in `src/configs/fonts.ts`, run `npm run setup:font`, then run a clean prebuild so the selected font is embedded in release builds.
+- **Localization:** Update every locale in `src/i18n/locales/` for the product, or remove unsupported locales. Run `npm run setup:i18n` after adding or removing a locale, and `npm run check:i18n` after changing translations.
 - **OTA updates:** Keep `AppConfig.otaUpdate.enabled` only when the new EAS project and update channels are ready. OTA builds and updates must share the same EAS project and runtime-version policy.
 
-### 5. Replace the template product shell
+### 7. Configure app-facing settings
+
+Replace the remaining product values in `src/configs/AppConfig.ts`:
+
+- The iOS App Store ID once the App Store Connect record exists.
+- Support email, terms-of-service URL, and privacy-policy URL.
+- App-review and automatic-paywall behavior, if those template defaults do not suit the product.
+
+### 8. Replace the template product shell
 
 Replace the sample tabs, routes, settings preferences, onboarding pages, paywall content, analytics events, and API/query modules:
 
@@ -60,13 +87,11 @@ Replace the sample tabs, routes, settings preferences, onboarding pages, paywall
 - `src/services/firebase/analytics/analyticsAppEvents.ts`
 - Product data modules under `src/services/queries/`
 
-Review all locale files in `src/i18n/locales/`; the shipped translations describe the sample app. Update every locale for the product, or remove locales the app will not support and run `npm run setup:i18n`.
-
-### 6. Prepare store delivery
+### 9. Prepare store delivery
 
 Create the App Store Connect and Google Play app records using the same identifiers as `app.json`. Then replace the template identifiers, URLs, metadata, screenshots, reviewer details, and credentials in `fastlane/` before using a `fastlane:*` command. Keep API keys, service-account JSON, signing credentials, and review credentials outside Git.
 
-### 7. Regenerate and verify
+### 10. Regenerate and verify
 
 Native configuration changes—including `app.json`, Firebase files, fonts, ads, or config plugins—require regeneration because `ios/` and `android/` are generated directories:
 
@@ -98,6 +123,11 @@ npm run format            # Format and apply safe lint fixes
 npm run prebuild:clean    # Regenerate native projects from Expo config
 npm run doctor            # Expo environment diagnostics
 npm run align-deps        # Align installed packages with the Expo SDK
+
+npm run setup:expo        # Rename the app and create/link its EAS project
+npm run setup:ads         # Synchronize AdMob native configuration
+npm run setup:font        # Synchronize the selected embedded font
+npm run setup:i18n        # Synchronize supported locales in Expo config
 ```
 
 ## Project Layout
@@ -217,17 +247,6 @@ return <Text>{t('settings.title')}</Text>
 When changing copy, update the English resource and every supported locale, then run `npm run check:i18n`. To add a locale, add its JSON resource and run `npm run setup:i18n` to synchronize `app.json`.
 
 The i18n configuration includes `number` and `currency` formatters for products that need them, but neither is a requirement of the template.
-
-## Optional Product Services
-
-These integrations are available but should be configured deliberately for each product:
-
-- **RevenueCat:** reusable paywall UI lives in `src/components/base/Paywall/`; replace the feature list and configure entitlement/API keys before enabling paid access.
-- **AdMob:** controlled by `AppConfig.ads.enabled`. When changing it, run `npm run setup:ads`, add or remove the related layout hooks as instructed in the service comments, then run a clean prebuild.
-- **Firebase Analytics:** keep generic lifecycle events in `analyticsGeneralEvents.ts`; define product events in `analyticsAppEvents.ts`.
-- **Sentry:** configure the product DSN and EAS source-map secret before release.
-- **OTA updates:** controlled by `AppConfig.otaUpdate.enabled` and initialized in the root layout.
-- **Store review, support, sharing:** settings helpers read `AppConfig`; replace the provided contact and legal values before release.
 
 ## Build and Release
 
