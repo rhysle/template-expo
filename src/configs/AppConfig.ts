@@ -1,5 +1,5 @@
 export const AppConfig = {
-  iosAppStoreId: '', // Set your iOS App Store ID here (e.g., '1234567890')
+  iosAppStoreId: '6790683139', // Set your iOS App Store ID here (e.g., '1234567890')
   support: {
     email: 'support@rhysle.com',
   },
