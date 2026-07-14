@@ -10,7 +10,7 @@ import {
 
 import type { ResolvedTheme } from '@/theme'
 import { useThemedStyles } from '@/theme'
-import { haptics } from '@/utils/haptics'
+import { haptics, type HapticType } from '@/utils/haptics'
 
 type PressableVariant = 'default' | 'surface' | 'ghost'
 type PressableSize = 'sm' | 'md' | 'lg'
@@ -20,6 +20,7 @@ export interface PressableProps extends Omit<RNPressableProps, 'style'> {
   variant?: PressableVariant
   size?: PressableSize
   haptic?: boolean
+  hapticType?: HapticType
   style?: StyleProp<ViewStyle> | ((state: PressableStateCallbackType) => StyleProp<ViewStyle>)
 }
 
@@ -28,6 +29,7 @@ export const Pressable = ({
   variant = 'ghost',
   size,
   haptic = false,
+  hapticType = 'light',
   style,
   disabled,
   onPress,
@@ -38,7 +40,7 @@ export const Pressable = ({
   const handlePress =
     onPress && haptic
       ? (e: GestureResponderEvent) => {
-          void haptics.light()
+          void haptics[hapticType]()
           onPress(e)
         }
       : onPress

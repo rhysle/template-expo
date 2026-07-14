@@ -5,3 +5,5 @@ export const haptics = {
   medium: () => ExpoHaptics.impactAsync(ExpoHaptics.ImpactFeedbackStyle.Medium),
   selection: () => ExpoHaptics.selectionAsync(),
 }
+
+export type HapticType = keyof typeof haptics

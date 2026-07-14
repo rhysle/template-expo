@@ -146,6 +146,7 @@ export const SegmentedControl = <T extends string = string>({
               variant="ghost"
               size={size}
               haptic={enableHaptic}
+              hapticType="selection"
               disabled={isDisabled}
               accessibilityRole="tab"
               accessibilityState={{ selected: isSelected, disabled: isDisabled }}
