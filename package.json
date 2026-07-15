@@ -54,6 +54,8 @@
     "fastlane:android:metadata": "fastlane android metadata",
     "fastlane:android:metadata:test": "fastlane android metadata locales:\"en-US,vi\"",
     "fastlane:android:metadata:validate": "fastlane android metadata validate_only:true",
+    "fastlane:android:changelog": "fastlane android changelog track:internal",
+    "fastlane:android:changelog:test": "fastlane android changelog locales:\"en-US,es-ES\" track:internal validate_only:true",
     "doctor": "npx expo-doctor",
     "align-deps": "npx expo install --fix",
     "format": "prettier ./src --write --log-level error && eslint ./src --fix --quiet"
