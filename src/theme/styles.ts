@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native'
 
-import { useTheme } from './'
 import type { CommonStyles, ResolvedTheme } from './types'
+import { useTheme } from './useTheme'
 
 export function getCommonStyles(theme: ResolvedTheme): CommonStyles {
   const { colors: c, spacing: s, typography: t, borderRadius, shadows: sh } = theme
