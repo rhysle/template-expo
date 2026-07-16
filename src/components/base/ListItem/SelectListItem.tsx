@@ -56,7 +56,7 @@ export const SelectListItem = <T extends string | number | boolean>({
         }
       />
 
-      <BottomSheet visible={sheetVisible} onClose={() => setSheetVisible(false)}>
+      <BottomSheet visible={sheetVisible} onDismiss={() => setSheetVisible(false)}>
         <Text variant="subtitle" weight="semibold" style={styles.sheetTitle}>
           {sheetTitle}
         </Text>

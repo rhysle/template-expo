@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 import { Modal, Pressable, StyleSheet, useWindowDimensions, View } from 'react-native'
 import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler'
 import Animated, {
   Extrapolation,
   interpolate,
+  type SharedValue,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
@@ -18,34 +19,63 @@ import { withAlpha } from '@/utils/color'
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 
 const SPRING_CONFIG = { damping: 25, stiffness: 200, mass: 1 }
+const DISMISS_DURATION_MS = 200
+
+const animateDismiss = (
+  translateY: SharedValue<number>,
+  isDismissing: SharedValue<boolean>,
+  screenHeight: number,
+  setIsModalVisible: (visible: boolean) => void,
+  onDismiss: () => void
+) => {
+  if (isDismissing.value) return
+
+  isDismissing.value = true
+  translateY.value = withTiming(screenHeight, { duration: DISMISS_DURATION_MS }, (finished) => {
+    isDismissing.value = false
+    if (finished) {
+      scheduleOnRN(setIsModalVisible, false)
+      scheduleOnRN(onDismiss)
+    }
+  })
+}
 
 export interface BottomSheetProps {
   visible: boolean
-  onClose: () => void
+  /** Called once after the exit animation. User-initiated dismissals should set `visible` false here. */
+  onDismiss: () => void
   children: React.ReactNode
 }
 
-export const BottomSheet = ({ visible, onClose, children }: BottomSheetProps) => {
+export const BottomSheet = ({ visible, onDismiss, children }: BottomSheetProps) => {
   const styles = useThemedStyles(createStyles)
   const { spacing } = useTheme()
   const { height: screenHeight } = useWindowDimensions()
   const insets = useSafeAreaInsets()
   const [isModalVisible, setIsModalVisible] = useState(visible)
+  const wasVisibleRef = useRef(false)
 
   const translateY = useSharedValue(screenHeight)
+  const isDismissing = useSharedValue(false)
 
-  useEffect(() => {
-    if (visible) {
+  const dismiss = () => {
+    if (!visible && !isModalVisible) return
+    animateDismiss(translateY, isDismissing, screenHeight, setIsModalVisible, onDismiss)
+  }
+
+  useLayoutEffect(() => {
+    const wasVisible = wasVisibleRef.current
+    wasVisibleRef.current = visible
+
+    if (visible && !wasVisible) {
+      isDismissing.value = false
       setIsModalVisible(true)
+      translateY.value = screenHeight
       translateY.value = withSpring(0, SPRING_CONFIG)
-    } else {
-      translateY.value = withTiming(screenHeight, { duration: 200 }, (finished) => {
-        if (finished) {
-          scheduleOnRN(setIsModalVisible, false)
-        }
-      })
+    } else if (!visible && wasVisible && isModalVisible) {
+      animateDismiss(translateY, isDismissing, screenHeight, setIsModalVisible, onDismiss)
     }
-  }, [visible, translateY, screenHeight])
+  }, [visible, isModalVisible, isDismissing, onDismiss, translateY, screenHeight])
 
   const panGesture = Gesture.Pan()
     .onChange((event) => {
@@ -55,7 +85,7 @@ export const BottomSheet = ({ visible, onClose, children }: BottomSheetProps) =>
     })
     .onEnd((event) => {
       if (event.translationY > 150 || event.velocityY > 500) {
-        scheduleOnRN(onClose)
+        scheduleOnRN(dismiss)
       } else {
         translateY.value = withSpring(0, SPRING_CONFIG)
       }
@@ -71,14 +101,17 @@ export const BottomSheet = ({ visible, onClose, children }: BottomSheetProps) =>
     opacity: interpolate(translateY.value, [0, screenHeight], [1, 0], Extrapolation.CLAMP),
   }))
 
-  if (!isModalVisible) return null
-
   return (
-    <Modal visible={isModalVisible} transparent animationType="none" statusBarTranslucent>
+    <Modal
+      visible={visible || isModalVisible}
+      transparent
+      animationType="none"
+      onRequestClose={dismiss}
+      statusBarTranslucent>
       <GestureHandlerRootView style={styles.overlay}>
         <AnimatedPressable
           style={[StyleSheet.absoluteFill, styles.backdrop, backdropStyle]}
-          onPress={onClose}
+          onPress={dismiss}
         />
 
         <GestureDetector gesture={panGesture}>
