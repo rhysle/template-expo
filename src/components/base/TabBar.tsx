@@ -97,7 +97,7 @@ const TabBarItem = ({
 
   const iconAnimatedStyle = useAnimatedStyle(() => ({
     transform: [
-      { scale: interpolate(progress.value, [0, 1], [1, 1.1]) },
+      { scale: interpolate(progress.value, [0, 1], [1, 1.25]) },
       { translateY: interpolate(progress.value, [0, 1], [0, -2]) },
     ],
   }))
