@@ -1,8 +1,18 @@
 {
   "common": {
-    "button": {
-      "retry": "Zkusit znovu"
-    }
+    "back": "Zpět",
+    "cancel": "Zrušit",
+    "close": "Zavřít",
+    "confirm": "Potvrdit",
+    "continue": "Pokračovat",
+    "done": "Hotovo",
+    "getStarted": "Začít",
+    "next": "Další",
+    "ok": "OK",
+    "retry": "Zkusit znovu",
+    "restart": "Restartovat",
+    "save": "Uložit",
+    "skip": "Přeskočit"
   },
   "tabs": {
     "convert": "Převod",
@@ -37,7 +47,6 @@
   "paywall": {
     "title": "Odemknout Premium",
     "subtitle": "Získejte z Currency Converteru maximum",
-    "cta": "Pokračovat",
     "ctaFreeTrial": "Vyzkoušet zdarma",
     "restore": "Obnovit nákupy",
     "terms": "Podmínky služby",
@@ -92,16 +101,13 @@
     }
   },
   "otaUpdate": {
-    "updateReady": "Nová aktualizace je připravena - restartujte pro použití",
-    "restart": "Restartovat"
+    "updateReady": "Nová aktualizace je připravena - restartujte pro použití"
   },
   "errorBoundary": {
     "title": "Něco se pokazilo",
     "message": "Došlo k neočekávané chybě. Zkuste to prosím znovu."
   },
   "onboarding": {
-    "next": "Další",
-    "done": "Začít",
     "welcome": {
       "title": "Jedna částka\nVšechny vaše měny",
       "description": "Zadejte částku jednou a sledujte, jak se každá měna okamžitě aktualizuje."

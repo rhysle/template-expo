@@ -1,8 +1,18 @@
 {
   "common": {
-    "button": {
-      "retry": "Pokušaj ponovo"
-    }
+    "back": "Natrag",
+    "cancel": "Odustani",
+    "close": "Zatvori",
+    "confirm": "Potvrdi",
+    "continue": "Nastavi",
+    "done": "Gotovo",
+    "getStarted": "Počni",
+    "next": "Dalje",
+    "ok": "U redu",
+    "retry": "Pokušaj ponovo",
+    "restart": "Ponovo pokreni",
+    "save": "Spremi",
+    "skip": "Preskoči"
   },
   "tabs": {
     "convert": "Pretvori",
@@ -37,7 +47,6 @@
   "paywall": {
     "title": "Otključaj Premium",
     "subtitle": "Iskoristite sve mogućnosti Currency Convertera",
-    "cta": "Nastavi",
     "ctaFreeTrial": "Isprobaj besplatno",
     "restore": "Obnovi kupnje",
     "terms": "Uvjeti usluge",
@@ -92,16 +101,13 @@
     }
   },
   "otaUpdate": {
-    "updateReady": "Novo ažuriranje je spremno - ponovo pokrenite za primjenu",
-    "restart": "Ponovo pokreni"
+    "updateReady": "Novo ažuriranje je spremno - ponovo pokrenite za primjenu"
   },
   "errorBoundary": {
     "title": "Nešto je pošlo po krivu",
     "message": "Došlo je do neočekivane pogreške. Molimo pokušajte ponovo."
   },
   "onboarding": {
-    "next": "Dalje",
-    "done": "Počni",
     "welcome": {
       "title": "Jedan iznos\nSve vaše valute",
       "description": "Unesite iznos jednom i gledajte kako se svaka valuta trenutno ažurira."

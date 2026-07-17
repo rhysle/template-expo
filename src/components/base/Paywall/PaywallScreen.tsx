@@ -126,7 +126,7 @@ export const PaywallScreen = ({
         <Button
           variant="primary"
           size="lg"
-          label={hasFreeTrialSelected ? t('paywall.ctaFreeTrial') : t('paywall.cta')}
+          label={hasFreeTrialSelected ? t('paywall.ctaFreeTrial') : t('common.continue')}
           haptic
           fullWidth
           loading={purchasing}

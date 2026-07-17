@@ -1,8 +1,18 @@
 {
   "common": {
-    "button": {
-      "retry": "Erneut versuchen"
-    }
+    "back": "Zurück",
+    "cancel": "Abbrechen",
+    "close": "Schließen",
+    "confirm": "Bestätigen",
+    "continue": "Weiter",
+    "done": "Fertig",
+    "getStarted": "Loslegen",
+    "next": "Weiter",
+    "ok": "OK",
+    "retry": "Erneut versuchen",
+    "restart": "Neu starten",
+    "save": "Speichern",
+    "skip": "Überspringen"
   },
   "tabs": {
     "convert": "Umrechnen",
@@ -37,7 +47,6 @@
   "paywall": {
     "title": "Premium freischalten",
     "subtitle": "Hol das Beste aus dem Währungsrechner heraus",
-    "cta": "Weiter",
     "ctaFreeTrial": "Kostenlos testen",
     "restore": "Käufe wiederherstellen",
     "terms": "Nutzungsbedingungen",
@@ -92,16 +101,13 @@
     }
   },
   "otaUpdate": {
-    "updateReady": "Ein neues Update ist bereit - neu starten zum Anwenden",
-    "restart": "Neu starten"
+    "updateReady": "Ein neues Update ist bereit - neu starten zum Anwenden"
   },
   "errorBoundary": {
     "title": "Etwas ist schiefgelaufen",
     "message": "Ein unerwarteter Fehler ist aufgetreten. Bitte erneut versuchen."
   },
   "onboarding": {
-    "next": "Weiter",
-    "done": "Loslegen",
     "welcome": {
       "title": "Ein Betrag\nAlle Währungen",
       "description": "Betrag einmal eingeben und alle Währungen sofort aktualisiert sehen."

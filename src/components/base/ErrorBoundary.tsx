@@ -29,7 +29,7 @@ const ErrorFallback = ({ onRetry }: ErrorFallbackProps) => {
         {t('errorBoundary.message')}
       </Text>
       <Button
-        label={t('common.button.retry')}
+        label={t('common.retry')}
         variant="primary"
         size="md"
         onPress={onRetry}

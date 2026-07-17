@@ -1,8 +1,18 @@
 {
   "common": {
-    "button": {
-      "retry": "Cuba lagi"
-    }
+    "back": "Kembali",
+    "cancel": "Batal",
+    "close": "Tutup",
+    "confirm": "Sahkan",
+    "continue": "Teruskan",
+    "done": "Selesai",
+    "getStarted": "Mulakan",
+    "next": "Seterusnya",
+    "ok": "OK",
+    "retry": "Cuba lagi",
+    "restart": "Mulakan Semula",
+    "save": "Simpan",
+    "skip": "Langkau"
   },
   "tabs": {
     "convert": "Tukar",
@@ -37,7 +47,6 @@
   "paywall": {
     "title": "Buka Kunci Premium",
     "subtitle": "Dapatkan manfaat maksimum daripada Currency Converter",
-    "cta": "Teruskan",
     "ctaFreeTrial": "Cuba Percuma",
     "restore": "Pulihkan Pembelian",
     "terms": "Syarat Perkhidmatan",
@@ -92,16 +101,13 @@
     }
   },
   "otaUpdate": {
-    "updateReady": "Kemas kini baharu sedia - mulakan semula untuk menerapkan",
-    "restart": "Mulakan Semula"
+    "updateReady": "Kemas kini baharu sedia - mulakan semula untuk menerapkan"
   },
   "errorBoundary": {
     "title": "Ada yang tidak kena",
     "message": "Ralat yang tidak dijangka berlaku. Sila cuba lagi."
   },
   "onboarding": {
-    "next": "Seterusnya",
-    "done": "Mulakan",
     "welcome": {
       "title": "Satu Jumlah\nSemua Mata Wang Anda",
       "description": "Masukkan jumlah sekali dan lihat setiap mata wang dikemas kini serta-merta."

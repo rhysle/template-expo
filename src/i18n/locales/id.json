@@ -1,8 +1,18 @@
 {
   "common": {
-    "button": {
-      "retry": "Coba lagi"
-    }
+    "back": "Kembali",
+    "cancel": "Batal",
+    "close": "Tutup",
+    "confirm": "Konfirmasi",
+    "continue": "Lanjutkan",
+    "done": "Selesai",
+    "getStarted": "Mulai",
+    "next": "Berikutnya",
+    "ok": "OK",
+    "retry": "Coba lagi",
+    "restart": "Mulai Ulang",
+    "save": "Simpan",
+    "skip": "Lewati"
   },
   "tabs": {
     "convert": "Konversi",
@@ -37,7 +47,6 @@
   "paywall": {
     "title": "Buka Kunci Premium",
     "subtitle": "Manfaatkan Currency Converter sepenuhnya",
-    "cta": "Lanjutkan",
     "ctaFreeTrial": "Coba Gratis",
     "restore": "Pulihkan Pembelian",
     "terms": "Syarat Layanan",
@@ -92,16 +101,13 @@
     }
   },
   "otaUpdate": {
-    "updateReady": "Pembaruan baru siap - mulai ulang untuk menerapkan",
-    "restart": "Mulai Ulang"
+    "updateReady": "Pembaruan baru siap - mulai ulang untuk menerapkan"
   },
   "errorBoundary": {
     "title": "Terjadi kesalahan",
     "message": "Terjadi kesalahan yang tidak terduga. Silakan coba lagi."
   },
   "onboarding": {
-    "next": "Berikutnya",
-    "done": "Mulai",
     "welcome": {
       "title": "Satu Jumlah\nSemua Mata Uang Anda",
       "description": "Masukkan jumlah sekali dan lihat setiap mata uang diperbarui seketika."

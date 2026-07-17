@@ -1,8 +1,18 @@
 {
   "common": {
-    "button": {
-      "retry": "Prøv igen"
-    }
+    "back": "Tilbage",
+    "cancel": "Annuller",
+    "close": "Luk",
+    "confirm": "Bekræft",
+    "continue": "Fortsæt",
+    "done": "Færdig",
+    "getStarted": "Kom i gang",
+    "next": "Næste",
+    "ok": "OK",
+    "retry": "Prøv igen",
+    "restart": "Genstart",
+    "save": "Gem",
+    "skip": "Spring over"
   },
   "tabs": {
     "convert": "Konverter",
@@ -37,7 +47,6 @@
   "paywall": {
     "title": "Lås op for Premium",
     "subtitle": "Få det meste ud af Currency Converter",
-    "cta": "Fortsæt",
     "ctaFreeTrial": "Prøv gratis",
     "restore": "Gendan køb",
     "terms": "Servicevilkår",
@@ -92,16 +101,13 @@
     }
   },
   "otaUpdate": {
-    "updateReady": "En ny opdatering er klar - genstart for at anvende",
-    "restart": "Genstart"
+    "updateReady": "En ny opdatering er klar - genstart for at anvende"
   },
   "errorBoundary": {
     "title": "Noget gik galt",
     "message": "Der opstod en uventet fejl. Prøv venligst igen."
   },
   "onboarding": {
-    "next": "Næste",
-    "done": "Kom i gang",
     "welcome": {
       "title": "Ét beløb\nAlle dine valutaer",
       "description": "Indtast et beløb én gang og se hver valuta opdatere øjeblikkeligt."

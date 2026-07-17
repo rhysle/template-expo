@@ -1,8 +1,18 @@
 {
   "common": {
-    "button": {
-      "retry": "Retry"
-    }
+    "back": "Back",
+    "cancel": "Cancel",
+    "close": "Close",
+    "confirm": "Confirm",
+    "continue": "Continue",
+    "done": "Done",
+    "getStarted": "Get Started",
+    "next": "Next",
+    "ok": "OK",
+    "retry": "Retry",
+    "restart": "Restart",
+    "save": "Save",
+    "skip": "Skip"
   },
   "tabs": {
     "convert": "Convert",
@@ -37,7 +47,6 @@
   "paywall": {
     "title": "Unlock Premium",
     "subtitle": "Get the most out of Currency Converter",
-    "cta": "Continue",
     "ctaFreeTrial": "Try for Free",
     "restore": "Restore Purchases",
     "terms": "Terms of Service",
@@ -92,16 +101,13 @@
     }
   },
   "otaUpdate": {
-    "updateReady": "A new update is ready - restart to apply",
-    "restart": "Restart"
+    "updateReady": "A new update is ready - restart to apply"
   },
   "errorBoundary": {
     "title": "Something went wrong",
     "message": "An unexpected error occurred. Please try again."
   },
   "onboarding": {
-    "next": "Next",
-    "done": "Get Started",
     "welcome": {
       "title": "One Amount\nAll Your Currencies",
       "description": "Enter an amount once and see every currency update instantly."

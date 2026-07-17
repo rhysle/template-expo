@@ -1,8 +1,18 @@
 {
   "common": {
-    "button": {
-      "retry": "Încearcă din nou"
-    }
+    "back": "Înapoi",
+    "cancel": "Anulează",
+    "close": "Închide",
+    "confirm": "Confirmă",
+    "continue": "Continuă",
+    "done": "Gata",
+    "getStarted": "Începe",
+    "next": "Înainte",
+    "ok": "OK",
+    "retry": "Încearcă din nou",
+    "restart": "Repornește",
+    "save": "Salvează",
+    "skip": "Omite"
   },
   "tabs": {
     "convert": "Convertește",
@@ -37,7 +47,6 @@
   "paywall": {
     "title": "Deblochează Premium",
     "subtitle": "Profită la maximum de Currency Converter",
-    "cta": "Continuă",
     "ctaFreeTrial": "Încearcă gratuit",
     "restore": "Restaurează achizițiile",
     "terms": "Termeni de serviciu",
@@ -92,16 +101,13 @@
     }
   },
   "otaUpdate": {
-    "updateReady": "O nouă actualizare este gata - repornește pentru a o aplica",
-    "restart": "Repornește"
+    "updateReady": "O nouă actualizare este gata - repornește pentru a o aplica"
   },
   "errorBoundary": {
     "title": "Ceva a mers greșit",
     "message": "A apărut o eroare neașteptată. Te rugăm să încerci din nou."
   },
   "onboarding": {
-    "next": "Înainte",
-    "done": "Începe",
     "welcome": {
       "title": "O sumă\nToate valutele tale",
       "description": "Introduce o sumă o singură dată și urmărește actualizarea imediată a fiecărei valute."

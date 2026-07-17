@@ -1,8 +1,18 @@
 {
   "common": {
-    "button": {
-      "retry": "Yritä uudelleen"
-    }
+    "back": "Takaisin",
+    "cancel": "Peruuta",
+    "close": "Sulje",
+    "confirm": "Vahvista",
+    "continue": "Jatka",
+    "done": "Valmis",
+    "getStarted": "Aloita",
+    "next": "Seuraava",
+    "ok": "OK",
+    "retry": "Yritä uudelleen",
+    "restart": "Käynnistä uudelleen",
+    "save": "Tallenna",
+    "skip": "Ohita"
   },
   "tabs": {
     "convert": "Muunna",
@@ -37,7 +47,6 @@
   "paywall": {
     "title": "Avaa Premium",
     "subtitle": "Hyödynnä Currency Converter täysimääräisesti",
-    "cta": "Jatka",
     "ctaFreeTrial": "Kokeile ilmaiseksi",
     "restore": "Palauta ostokset",
     "terms": "Käyttöehdot",
@@ -92,16 +101,13 @@
     }
   },
   "otaUpdate": {
-    "updateReady": "Uusi päivitys on valmis - käynnistä uudelleen ottaaksesi sen käyttöön",
-    "restart": "Käynnistä uudelleen"
+    "updateReady": "Uusi päivitys on valmis - käynnistä uudelleen ottaaksesi sen käyttöön"
   },
   "errorBoundary": {
     "title": "Jotain meni pieleen",
     "message": "Tapahtui odottamaton virhe. Yritä uudelleen."
   },
   "onboarding": {
-    "next": "Seuraava",
-    "done": "Aloita",
     "welcome": {
       "title": "Yksi summa\nKaikki valuuttasi",
       "description": "Syötä summa kerran ja katso jokaisen valuutan päivittyvän välittömästi."

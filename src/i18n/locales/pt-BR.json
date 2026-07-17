@@ -1,8 +1,18 @@
 {
   "common": {
-    "button": {
-      "retry": "Tentar novamente"
-    }
+    "back": "Voltar",
+    "cancel": "Cancelar",
+    "close": "Fechar",
+    "confirm": "Confirmar",
+    "continue": "Continuar",
+    "done": "Concluído",
+    "getStarted": "Começar",
+    "next": "Próximo",
+    "ok": "OK",
+    "retry": "Tentar novamente",
+    "restart": "Reiniciar",
+    "save": "Salvar",
+    "skip": "Pular"
   },
   "tabs": {
     "convert": "Converter",
@@ -37,7 +47,6 @@
   "paywall": {
     "title": "Desbloquear Premium",
     "subtitle": "Aproveite ao máximo o Conversor de Moedas",
-    "cta": "Continuar",
     "ctaFreeTrial": "Experimentar grátis",
     "restore": "Restaurar compras",
     "terms": "Termos de serviço",
@@ -92,16 +101,13 @@
     }
   },
   "otaUpdate": {
-    "updateReady": "Uma nova atualização está pronta - reinicie para aplicar",
-    "restart": "Reiniciar"
+    "updateReady": "Uma nova atualização está pronta - reinicie para aplicar"
   },
   "errorBoundary": {
     "title": "Algo deu errado",
     "message": "Ocorreu um erro inesperado. Por favor, tente novamente."
   },
   "onboarding": {
-    "next": "Próximo",
-    "done": "Começar",
     "welcome": {
       "title": "Um valor\nTodas as suas moedas",
       "description": "Digite um valor uma vez e veja todas as moedas atualizarem instantaneamente."

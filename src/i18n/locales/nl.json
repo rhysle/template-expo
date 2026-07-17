@@ -1,8 +1,18 @@
 {
   "common": {
-    "button": {
-      "retry": "Opnieuw proberen"
-    }
+    "back": "Terug",
+    "cancel": "Annuleren",
+    "close": "Sluiten",
+    "confirm": "Bevestigen",
+    "continue": "Doorgaan",
+    "done": "Gereed",
+    "getStarted": "Aan de slag",
+    "next": "Volgende",
+    "ok": "OK",
+    "retry": "Opnieuw proberen",
+    "restart": "Herstart",
+    "save": "Opslaan",
+    "skip": "Overslaan"
   },
   "tabs": {
     "convert": "Omrekenen",
@@ -37,7 +47,6 @@
   "paywall": {
     "title": "Premium ontgrendelen",
     "subtitle": "Haal het maximale uit Currency Converter",
-    "cta": "Doorgaan",
     "ctaFreeTrial": "Gratis proberen",
     "restore": "Aankopen herstellen",
     "terms": "Servicevoorwaarden",
@@ -92,16 +101,13 @@
     }
   },
   "otaUpdate": {
-    "updateReady": "Een nieuwe update is gereed - herstart om toe te passen",
-    "restart": "Herstart"
+    "updateReady": "Een nieuwe update is gereed - herstart om toe te passen"
   },
   "errorBoundary": {
     "title": "Er ging iets fout",
     "message": "Er is een onverwachte fout opgetreden. Probeer het opnieuw."
   },
   "onboarding": {
-    "next": "Volgende",
-    "done": "Aan de slag",
     "welcome": {
       "title": "Één bedrag\nAl uw valuta's",
       "description": "Voer één keer een bedrag in en zie elke valuta direct updaten."

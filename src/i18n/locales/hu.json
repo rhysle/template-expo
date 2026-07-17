@@ -1,8 +1,18 @@
 {
   "common": {
-    "button": {
-      "retry": "Újrapróbálás"
-    }
+    "back": "Vissza",
+    "cancel": "Mégse",
+    "close": "Bezárás",
+    "confirm": "Megerősítés",
+    "continue": "Folytatás",
+    "done": "Kész",
+    "getStarted": "Kezdjük el",
+    "next": "Következő",
+    "ok": "OK",
+    "retry": "Újrapróbálás",
+    "restart": "Újraindítás",
+    "save": "Mentés",
+    "skip": "Kihagyás"
   },
   "tabs": {
     "convert": "Átváltás",
@@ -37,7 +47,6 @@
   "paywall": {
     "title": "Prémium feloldása",
     "subtitle": "Hozza ki a legtöbbet a Currency Converterből",
-    "cta": "Folytatás",
     "ctaFreeTrial": "Próbálja ki ingyen",
     "restore": "Vásárlások visszaállítása",
     "terms": "Felhasználási feltételek",
@@ -92,16 +101,13 @@
     }
   },
   "otaUpdate": {
-    "updateReady": "Új frissítés áll rendelkezésre - indítsa újra az alkalmazáshoz",
-    "restart": "Újraindítás"
+    "updateReady": "Új frissítés áll rendelkezésre - indítsa újra az alkalmazáshoz"
   },
   "errorBoundary": {
     "title": "Valami hiba történt",
     "message": "Váratlan hiba lépett fel. Kérjük, próbálja újra."
   },
   "onboarding": {
-    "next": "Következő",
-    "done": "Kezdjük el",
     "welcome": {
       "title": "Egy összeg\nAz összes valutája",
       "description": "Adjon meg egy összeget egyszer, és figyelje, ahogy minden valuta azonnal frissül."

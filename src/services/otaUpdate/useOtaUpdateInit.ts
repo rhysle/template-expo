@@ -119,7 +119,7 @@ export const useOtaUpdateInit = () => {
               variant: 'success',
               durationMs: 0, // persist until user acts
               action: {
-                label: t('otaUpdate.restart'),
+                label: t('common.restart'),
                 onPress: () => {
                   // First tap wins. Reanalysis: reloadAsync terminates the JS
                   // thread, but a double-tap before that happens would fire

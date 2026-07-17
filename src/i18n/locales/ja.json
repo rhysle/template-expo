@@ -1,8 +1,18 @@
 {
   "common": {
-    "button": {
-      "retry": "再試行"
-    }
+    "back": "戻る",
+    "cancel": "キャンセル",
+    "close": "閉じる",
+    "confirm": "確認",
+    "continue": "続ける",
+    "done": "完了",
+    "getStarted": "始める",
+    "next": "次へ",
+    "ok": "OK",
+    "retry": "再試行",
+    "restart": "再起動",
+    "save": "保存",
+    "skip": "スキップ"
   },
   "tabs": {
     "convert": "換算",
@@ -37,7 +47,6 @@
   "paywall": {
     "title": "プレミアムを解除",
     "subtitle": "通貨換算をフル活用",
-    "cta": "続ける",
     "ctaFreeTrial": "無料で試す",
     "restore": "購入を復元",
     "terms": "利用規約",
@@ -92,16 +101,13 @@
     }
   },
   "otaUpdate": {
-    "updateReady": "新しいアップデートが準備できました - 適用するには再起動",
-    "restart": "再起動"
+    "updateReady": "新しいアップデートが準備できました - 適用するには再起動"
   },
   "errorBoundary": {
     "title": "エラーが発生しました",
     "message": "予期しないエラーが発生しました。もう一度お試しください。"
   },
   "onboarding": {
-    "next": "次へ",
-    "done": "始める",
     "welcome": {
       "title": "1つの金額\nすべての通貨",
       "description": "金額を1回入力するだけで、すべての通貨がリアルタイムに更新されます。"

@@ -1,8 +1,18 @@
 {
   "common": {
-    "button": {
-      "retry": "Thử lại"
-    }
+    "back": "Quay lại",
+    "cancel": "Hủy",
+    "close": "Đóng",
+    "confirm": "Xác nhận",
+    "continue": "Tiếp tục",
+    "done": "Hoàn tất",
+    "getStarted": "Bắt đầu",
+    "next": "Tiếp theo",
+    "ok": "OK",
+    "retry": "Thử lại",
+    "restart": "Khởi động lại",
+    "save": "Lưu",
+    "skip": "Bỏ qua"
   },
   "tabs": {
     "convert": "Chuyển đổi",
@@ -37,7 +47,6 @@
   "paywall": {
     "title": "Mở khóa Premium",
     "subtitle": "Tận dụng tối đa Currency Converter",
-    "cta": "Tiếp tục",
     "ctaFreeTrial": "Dùng thử miễn phí",
     "restore": "Khôi phục giao dịch",
     "terms": "Điều khoản dịch vụ",
@@ -92,16 +101,13 @@
     }
   },
   "otaUpdate": {
-    "updateReady": "Có bản cập nhật mới - khởi động lại để áp dụng",
-    "restart": "Khởi động lại"
+    "updateReady": "Có bản cập nhật mới - khởi động lại để áp dụng"
   },
   "errorBoundary": {
     "title": "Đã xảy ra lỗi",
     "message": "Có lỗi không mong muốn xảy ra. Vui lòng thử lại."
   },
   "onboarding": {
-    "next": "Tiếp theo",
-    "done": "Bắt đầu",
     "welcome": {
       "title": "Một số tiền\nTất cả tiền tệ",
       "description": "Nhập số tiền một lần và xem tất cả tiền tệ cập nhật ngay lập tức."

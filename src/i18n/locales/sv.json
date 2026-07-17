@@ -1,8 +1,18 @@
 {
   "common": {
-    "button": {
-      "retry": "Försök igen"
-    }
+    "back": "Tillbaka",
+    "cancel": "Avbryt",
+    "close": "Stäng",
+    "confirm": "Bekräfta",
+    "continue": "Fortsätt",
+    "done": "Klar",
+    "getStarted": "Kom igång",
+    "next": "Nästa",
+    "ok": "OK",
+    "retry": "Försök igen",
+    "restart": "Starta om",
+    "save": "Spara",
+    "skip": "Hoppa över"
   },
   "tabs": {
     "convert": "Konvertera",
@@ -37,7 +47,6 @@
   "paywall": {
     "title": "Lås upp Premium",
     "subtitle": "Få ut det mesta av Currency Converter",
-    "cta": "Fortsätt",
     "ctaFreeTrial": "Prova gratis",
     "restore": "Återställ köp",
     "terms": "Användarvillkor",
@@ -92,16 +101,13 @@
     }
   },
   "otaUpdate": {
-    "updateReady": "En ny uppdatering är klar - starta om för att tillämpa",
-    "restart": "Starta om"
+    "updateReady": "En ny uppdatering är klar - starta om för att tillämpa"
   },
   "errorBoundary": {
     "title": "Något gick fel",
     "message": "Ett oväntat fel inträffade. Försök igen."
   },
   "onboarding": {
-    "next": "Nästa",
-    "done": "Kom igång",
     "welcome": {
       "title": "Ett belopp\nAlla dina valutor",
       "description": "Ange ett belopp en gång och se varje valuta uppdateras direkt."

@@ -20,8 +20,8 @@ const LOCALES_DIR = path.join(ROOT, 'src/i18n/locales')
 const SRC_DIR = path.join(ROOT, 'src')
 const BASE_LOCALE = 'en'
 
-// Keys accessed via getResourceBundle (not via t()) — static grep cannot detect their usage.
-const IGNORED_KEY_PREFIXES = ['currencies.']
+// Keys accessed indirectly, or intentionally provided for future product use.
+const IGNORED_UNUSED_KEY_PREFIXES = ['common.', 'currencies.']
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -230,7 +230,8 @@ function main() {
 
   const usedKeys = collectUsedKeys()
   const unusedKeys = baseKeys.filter(
-    (k) => !usedKeys.has(k) && !IGNORED_KEY_PREFIXES.some((prefix) => k.startsWith(prefix))
+    (k) =>
+      !usedKeys.has(k) && !IGNORED_UNUSED_KEY_PREFIXES.some((prefix) => k.startsWith(prefix))
   )
   const emptyObjectKeys = flatEmptyObjects(baseJson)
 

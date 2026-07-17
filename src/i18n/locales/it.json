@@ -1,8 +1,18 @@
 {
   "common": {
-    "button": {
-      "retry": "Riprova"
-    }
+    "back": "Indietro",
+    "cancel": "Annulla",
+    "close": "Chiudi",
+    "confirm": "Conferma",
+    "continue": "Continua",
+    "done": "Fatto",
+    "getStarted": "Inizia",
+    "next": "Avanti",
+    "ok": "OK",
+    "retry": "Riprova",
+    "restart": "Riavvia",
+    "save": "Salva",
+    "skip": "Salta"
   },
   "tabs": {
     "convert": "Converti",
@@ -37,7 +47,6 @@
   "paywall": {
     "title": "Sblocca Premium",
     "subtitle": "Sfrutta al massimo il Convertitore di valute",
-    "cta": "Continua",
     "ctaFreeTrial": "Prova gratis",
     "restore": "Ripristina acquisti",
     "terms": "Termini di servizio",
@@ -92,16 +101,13 @@
     }
   },
   "otaUpdate": {
-    "updateReady": "Un nuovo aggiornamento è pronto - riavvia per applicarlo",
-    "restart": "Riavvia"
+    "updateReady": "Un nuovo aggiornamento è pronto - riavvia per applicarlo"
   },
   "errorBoundary": {
     "title": "Qualcosa è andato storto",
     "message": "Si è verificato un errore imprevisto. Riprova."
   },
   "onboarding": {
-    "next": "Avanti",
-    "done": "Inizia",
     "welcome": {
       "title": "Un importo\nTutte le tue valute",
       "description": "Inserisci un importo una volta e guarda tutte le valute aggiornarsi istantaneamente."

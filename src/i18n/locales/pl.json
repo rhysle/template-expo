@@ -1,8 +1,18 @@
 {
   "common": {
-    "button": {
-      "retry": "Spróbuj ponownie"
-    }
+    "back": "Wstecz",
+    "cancel": "Anuluj",
+    "close": "Zamknij",
+    "confirm": "Potwierdź",
+    "continue": "Kontynuuj",
+    "done": "Gotowe",
+    "getStarted": "Zaczynamy",
+    "next": "Dalej",
+    "ok": "OK",
+    "retry": "Spróbuj ponownie",
+    "restart": "Uruchom ponownie",
+    "save": "Zapisz",
+    "skip": "Pomiń"
   },
   "tabs": {
     "convert": "Przelicz",
@@ -37,7 +47,6 @@
   "paywall": {
     "title": "Odblokuj Premium",
     "subtitle": "Uzyskaj maksimum z Currency Converter",
-    "cta": "Kontynuuj",
     "ctaFreeTrial": "Wypróbuj za darmo",
     "restore": "Przywróć zakupy",
     "terms": "Warunki korzystania",
@@ -92,16 +101,13 @@
     }
   },
   "otaUpdate": {
-    "updateReady": "Nowa aktualizacja jest gotowa - uruchom ponownie, aby zastosować",
-    "restart": "Uruchom ponownie"
+    "updateReady": "Nowa aktualizacja jest gotowa - uruchom ponownie, aby zastosować"
   },
   "errorBoundary": {
     "title": "Coś poszło nie tak",
     "message": "Wystąpił nieoczekiwany błąd. Spróbuj ponownie."
   },
   "onboarding": {
-    "next": "Dalej",
-    "done": "Zaczynamy",
     "welcome": {
       "title": "Jedna kwota\nWszystkie Twoje waluty",
       "description": "Wpisz kwotę raz i obserwuj, jak każda waluta aktualizuje się natychmiast."

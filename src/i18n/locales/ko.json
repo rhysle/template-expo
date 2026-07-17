@@ -1,8 +1,18 @@
 {
   "common": {
-    "button": {
-      "retry": "다시 시도"
-    }
+    "back": "뒤로",
+    "cancel": "취소",
+    "close": "닫기",
+    "confirm": "확인",
+    "continue": "계속",
+    "done": "완료",
+    "getStarted": "시작하기",
+    "next": "다음",
+    "ok": "확인",
+    "retry": "다시 시도",
+    "restart": "재시작",
+    "save": "저장",
+    "skip": "건너뛰기"
   },
   "tabs": {
     "convert": "환전",
@@ -37,7 +47,6 @@
   "paywall": {
     "title": "프리미엄 잠금 해제",
     "subtitle": "환율 변환기를 최대한 활용하세요",
-    "cta": "계속",
     "ctaFreeTrial": "무료로 시작",
     "restore": "구매 복원",
     "terms": "서비스 약관",
@@ -92,16 +101,13 @@
     }
   },
   "otaUpdate": {
-    "updateReady": "새 업데이트가 준비되었습니다 - 적용하려면 재시작",
-    "restart": "재시작"
+    "updateReady": "새 업데이트가 준비되었습니다 - 적용하려면 재시작"
   },
   "errorBoundary": {
     "title": "오류가 발생했습니다",
     "message": "예기치 않은 오류가 발생했습니다. 다시 시도해 주세요."
   },
   "onboarding": {
-    "next": "다음",
-    "done": "시작하기",
     "welcome": {
       "title": "하나의 금액\n모든 통화",
       "description": "금액을 한 번 입력하면 모든 통화가 즉시 업데이트됩니다."

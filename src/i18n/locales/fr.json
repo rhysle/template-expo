@@ -1,8 +1,18 @@
 {
   "common": {
-    "button": {
-      "retry": "Réessayer"
-    }
+    "back": "Retour",
+    "cancel": "Annuler",
+    "close": "Fermer",
+    "confirm": "Confirmer",
+    "continue": "Continuer",
+    "done": "Terminé",
+    "getStarted": "Commencer",
+    "next": "Suivant",
+    "ok": "OK",
+    "retry": "Réessayer",
+    "restart": "Redémarrer",
+    "save": "Enregistrer",
+    "skip": "Ignorer"
   },
   "tabs": {
     "convert": "Convertir",
@@ -37,7 +47,6 @@
   "paywall": {
     "title": "Débloquer Premium",
     "subtitle": "Profitez au maximum du Convertisseur de devises",
-    "cta": "Continuer",
     "ctaFreeTrial": "Essayer gratuitement",
     "restore": "Restaurer les achats",
     "terms": "Conditions d'utilisation",
@@ -92,16 +101,13 @@
     }
   },
   "otaUpdate": {
-    "updateReady": "Une nouvelle mise à jour est prête - redémarrez pour l'appliquer",
-    "restart": "Redémarrer"
+    "updateReady": "Une nouvelle mise à jour est prête - redémarrez pour l'appliquer"
   },
   "errorBoundary": {
     "title": "Une erreur s'est produite",
     "message": "Une erreur inattendue s'est produite. Veuillez réessayer."
   },
   "onboarding": {
-    "next": "Suivant",
-    "done": "Commencer",
     "welcome": {
       "title": "Un montant\nToutes vos devises",
       "description": "Entrez un montant une fois et voyez toutes les devises se mettre à jour instantanément."

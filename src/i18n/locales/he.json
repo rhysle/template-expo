@@ -1,8 +1,18 @@
 {
   "common": {
-    "button": {
-      "retry": "נסה שוב"
-    }
+    "back": "חזרה",
+    "cancel": "ביטול",
+    "close": "סגור",
+    "confirm": "אישור",
+    "continue": "המשך",
+    "done": "סיום",
+    "getStarted": "בואו נתחיל",
+    "next": "הבא",
+    "ok": "אישור",
+    "retry": "נסה שוב",
+    "restart": "הפעל מחדש",
+    "save": "שמור",
+    "skip": "דלג"
   },
   "tabs": {
     "convert": "המרה",
@@ -37,7 +47,6 @@
   "paywall": {
     "title": "פתח Premium",
     "subtitle": "קבל את המרב מממיר המטבעות",
-    "cta": "המשך",
     "ctaFreeTrial": "נסה בחינם",
     "restore": "שחזר רכישות",
     "terms": "תנאי שירות",
@@ -92,16 +101,13 @@
     }
   },
   "otaUpdate": {
-    "updateReady": "עדכון חדש מוכן - הפעל מחדש כדי להחיל",
-    "restart": "הפעל מחדש"
+    "updateReady": "עדכון חדש מוכן - הפעל מחדש כדי להחיל"
   },
   "errorBoundary": {
     "title": "משהו השתבש",
     "message": "אירעה שגיאה בלתי צפויה. אנא נסה שוב."
   },
   "onboarding": {
-    "next": "הבא",
-    "done": "בואו נתחיל",
     "welcome": {
       "title": "סכום אחד\nכל המטבעות שלך",
       "description": "הזן סכום פעם אחת וראה את כל המטבעות מתעדכנים מיידית."

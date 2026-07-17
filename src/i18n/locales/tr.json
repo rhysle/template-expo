@@ -1,8 +1,18 @@
 {
   "common": {
-    "button": {
-      "retry": "Tekrar dene"
-    }
+    "back": "Geri",
+    "cancel": "İptal",
+    "close": "Kapat",
+    "confirm": "Onayla",
+    "continue": "Devam Et",
+    "done": "Tamam",
+    "getStarted": "Başla",
+    "next": "İleri",
+    "ok": "Tamam",
+    "retry": "Tekrar dene",
+    "restart": "Yeniden Başlat",
+    "save": "Kaydet",
+    "skip": "Atla"
   },
   "tabs": {
     "convert": "Çevir",
@@ -37,7 +47,6 @@
   "paywall": {
     "title": "Premium'u Aç",
     "subtitle": "Döviz Çeviriciden en iyi şekilde yararlanın",
-    "cta": "Devam Et",
     "ctaFreeTrial": "Ücretsiz Dene",
     "restore": "Satın Almaları Geri Yükle",
     "terms": "Hizmet Koşulları",
@@ -92,16 +101,13 @@
     }
   },
   "otaUpdate": {
-    "updateReady": "Yeni bir güncelleme hazır - uygulamak için yeniden başlatın",
-    "restart": "Yeniden Başlat"
+    "updateReady": "Yeni bir güncelleme hazır - uygulamak için yeniden başlatın"
   },
   "errorBoundary": {
     "title": "Bir şeyler ters gitti",
     "message": "Beklenmeyen bir hata oluştu. Lütfen tekrar deneyin."
   },
   "onboarding": {
-    "next": "İleri",
-    "done": "Başla",
     "welcome": {
       "title": "Bir Miktar\nTüm Dövizleriniz",
       "description": "Bir kez miktar girin ve tüm dövizlerin anında güncellendiğini görün."
