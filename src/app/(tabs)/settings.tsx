@@ -180,33 +180,31 @@ export default function SettingsScreen() {
             </Card>
           </View>
 
-          <View style={styles.section}>
-            <Card style={styles.aboutCard}>
-              <Text variant="subtitle" weight="semibold">
-                {t('settings.appName')}
+          <View style={styles.aboutCard}>
+            <Text variant="subtitle" weight="semibold">
+              {t('settings.appName')}
+            </Text>
+            <Text variant="body" tone="secondary" style={styles.appVersion}>
+              {t('settings.version', { version: Constants.expoConfig?.version ?? '1.0.0' })}
+            </Text>
+            {currentOtaUpdateId !== null && (
+              <Text variant="caption" tone="muted" style={styles.otaUpdateId}>
+                {t('settings.otaUpdateId', { updateId: currentOtaUpdateId.slice(0, 8) })}
               </Text>
-              <Text variant="body" tone="secondary" style={styles.appVersion}>
-                {t('settings.version', { version: Constants.expoConfig?.version ?? '1.0.0' })}
+            )}
+            <Pressable onPress={handleCopyUserId} style={styles.userIdRow}>
+              <Text variant="caption" tone="muted">
+                {t('settings.userId')}:{' '}
               </Text>
-              {currentOtaUpdateId !== null && (
-                <Text variant="caption" tone="muted" style={styles.otaUpdateId}>
-                  {t('settings.otaUpdateId', { updateId: currentOtaUpdateId.slice(0, 8) })}
-                </Text>
-              )}
-              <Pressable onPress={handleCopyUserId} style={styles.userIdRow}>
-                <Text variant="caption" tone="muted">
-                  {t('settings.userId')}:{' '}
-                </Text>
-                <Text variant="caption" tone="muted" style={styles.userIdValue}>
-                  {userId ? `${userId.slice(0, 8)}...${userId.slice(-4)}` : '-'}
-                </Text>
-                <CopyIcon
-                  size={iconSizes.xs}
-                  color={theme.colors.text.muted}
-                  style={styles.userIdCopyIcon}
-                />
-              </Pressable>
-            </Card>
+              <Text variant="caption" tone="muted" style={styles.userIdValue}>
+                {userId ? `${userId.slice(0, 8)}...${userId.slice(-4)}` : '-'}
+              </Text>
+              <CopyIcon
+                size={iconSizes.xs}
+                color={theme.colors.text.muted}
+                style={styles.userIdCopyIcon}
+              />
+            </Pressable>
           </View>
           {__DEV__ && (
             <View style={styles.section}>
@@ -245,8 +243,8 @@ const createStyles = createThemedStyles((t) => ({
     textTransform: 'uppercase',
   },
   aboutCard: {
+    marginVertical: t.spacing.xl,
     alignItems: 'center',
-    backgroundColor: t.colors.background.base,
   },
   userIdRow: {
     flexDirection: 'row',
