@@ -3,7 +3,7 @@ import { type StyleProp, View, type ViewProps, type ViewStyle } from 'react-nati
 
 import { createThemedStyles, useThemedStyles } from '@/theme'
 
-type CardVariant = 'default' | 'surface' | 'flat'
+type CardVariant = 'default' | 'subtle'
 type CardPadding = 'none' | 'sm' | 'md' | 'lg'
 
 export interface CardProps extends ViewProps {
@@ -24,8 +24,7 @@ export const Card = ({
 
   const variantStyle = {
     default: styles.variantDefault,
-    surface: styles.variantSurface,
-    flat: styles.variantFlat,
+    subtle: styles.variantSubtle,
   }[variant]
 
   const paddingStyle = {
@@ -44,20 +43,15 @@ export const Card = ({
 
 const createStyles = createThemedStyles((t) => ({
   base: {
+    overflow: 'hidden',
     borderRadius: t.borderRadius.lg,
   },
   variantDefault: {
     backgroundColor: t.colors.background.card,
-    borderColor: t.colors.background.surface,
     ...t.shadows.sm,
   },
-  variantSurface: {
-    backgroundColor: t.colors.background.surface,
-    borderColor: t.colors.background.card,
-    ...t.shadows.sm,
-  },
-  variantFlat: {
-    backgroundColor: t.colors.background.card,
+  variantSubtle: {
+    backgroundColor: t.colors.background.subtle,
   },
   paddingNone: {},
   paddingSm: { padding: t.spacing.sm },

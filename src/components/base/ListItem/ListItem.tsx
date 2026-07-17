@@ -64,7 +64,7 @@ const createStyles = createThemedStyles((t) => ({
   },
   divider: {
     borderBottomWidth: 1,
-    borderBottomColor: t.colors.background.surface,
+    borderBottomColor: t.colors.border.subtle,
   },
   right: {
     flexDirection: 'row',

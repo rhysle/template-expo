@@ -1,18 +1,17 @@
 import { getTheme } from './themes'
-import { radius, shadows, spacing } from './tokens'
-export type { ColorScheme, ResolvedTheme, Theme, ThemeId } from './types'
+import { radius, spacing } from './tokens'
+export type { ColorScheme, ResolvedTheme, Theme, ThemeAppearance, ThemeId } from './types'
 
 // Default theme colors for static usage (e.g. before provider); prefer useTheme() in components
 // Utility functions (use tokens; for colors use theme from useTheme())
 
 // Tokens (shared across themes)
 export type { IconSize, Radius, Shadows, Spacing, Typography } from './tokens'
-export { iconSizes, radius, shadows, spacing, typography } from './tokens'
+export { createShadows, iconSizes, radius, spacing, typography } from './tokens'
 
 // Backward-compatible token names
 export {
   radius as borderRadiusConfig,
-  shadows as shadowsConfig,
   spacing as spacingConfig,
   typography as typographyConfig,
 } from './tokens'
@@ -27,10 +26,6 @@ export const colors = getTheme('default').colors
 
 export function getBorderRadius(size: keyof typeof radius) {
   return radius[size]
-}
-
-export function getShadow(type: keyof typeof shadows) {
-  return shadows[type]
 }
 
 export function getSpacing(size: keyof typeof spacing) {

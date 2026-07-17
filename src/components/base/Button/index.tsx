@@ -152,7 +152,7 @@ const createStyles = createThemedStyles((t) => ({
   sizeMd: { paddingVertical: t.spacing.md, paddingHorizontal: t.spacing.lg },
   sizeLg: { paddingVertical: t.spacing.lg, paddingHorizontal: t.spacing.xl },
   variantPrimary: { backgroundColor: t.colors.primary.main },
-  variantSecondary: { backgroundColor: t.colors.background.surface },
+  variantSecondary: { backgroundColor: t.colors.background.subtle },
   variantGhost: { backgroundColor: 'transparent' },
   variantDanger: { backgroundColor: t.colors.status.error },
   variantInverted: { backgroundColor: t.colors.background.base },

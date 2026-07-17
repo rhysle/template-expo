@@ -116,7 +116,7 @@ const createStyles = createThemedStyles((t) => ({
     padding: t.spacing.lg,
     borderRadius: t.borderRadius.lg,
     borderWidth: 2,
-    borderColor: t.colors.background.surface,
+    borderColor: t.colors.border.default,
     backgroundColor: t.colors.background.card,
   },
   containerSelected: {

@@ -50,7 +50,7 @@ export const Toggle = ({
     backgroundColor: interpolateColor(
       progress.value,
       [0, 1],
-      [colors.background.surface, colors.primary.main]
+      [colors.background.subtle, colors.primary.main]
     ),
   }))
 
@@ -92,7 +92,7 @@ const createStyles = createThemedStyles((t) => ({
     width: THUMB_SIZE,
     height: THUMB_SIZE,
     borderRadius: THUMB_SIZE / 2,
-    backgroundColor: t.colors.background.base,
+    backgroundColor: t.colors.background.surface,
     marginStart: THUMB_OFFSET,
   },
   disabled: {

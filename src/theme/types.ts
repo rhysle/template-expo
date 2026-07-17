@@ -4,6 +4,7 @@ import type { TextStyle, ViewStyle } from 'react-native'
 import type { Radius, Shadows, Spacing, Typography } from './tokens'
 
 export type ThemeId = 'default'
+export type ThemeAppearance = 'light' | 'dark'
 
 // Semantic color structure per theme
 export interface ColorScheme {
@@ -16,6 +17,7 @@ export interface ColorScheme {
     base: string
     surface: string
     card: string
+    subtle: string
     overlay: string
   }
   text: {
@@ -23,21 +25,21 @@ export interface ColorScheme {
     secondary: string
     muted: string
     accent: string
-    inverse: string // dark primary text for light/colored surfaces
-    inverseSecondary: string // dark secondary text
-    inverseMuted: string // dark muted text / placeholders (alpha-based)
+    inverse: string
+    inverseSecondary: string
+    inverseMuted: string
   }
   status: {
     success: string
     error: string
     warning: string
+    info: string
     neutral: string
-    favorite: string
   }
   border: {
-    subtle: string // ~8% white - card edges, faint dividers
-    default: string // ~14% white - inputs, list separators
-    strong: string // ~28% white - focused states, selected items
+    subtle: string
+    default: string
+    strong: string
   }
   shadow: {
     base: string
@@ -46,6 +48,7 @@ export interface ColorScheme {
 
 // Theme = colors; tokens (spacing, typography, etc.) are shared
 export interface Theme {
+  appearance: ThemeAppearance
   colors: ColorScheme
 }
 
@@ -55,6 +58,7 @@ export interface Theme {
 export interface ResolvedTheme {
   themeId: ThemeId
   setTheme: (id: ThemeId) => void
+  appearance: ThemeAppearance
   colors: ColorScheme
   borderRadius: Radius
   shadows: Shadows

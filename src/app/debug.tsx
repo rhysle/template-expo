@@ -268,6 +268,12 @@ export default function DebugScreen() {
             <Button
               variant="secondary"
               size="sm"
+              label="Info"
+              onPress={() => showSnackbar({ title: 'A new update is available', variant: 'info' })}
+            />
+            <Button
+              variant="secondary"
+              size="sm"
               label="Neutral"
               onPress={() => showSnackbar({ title: 'Currency added', variant: 'neutral' })}
             />
@@ -520,7 +526,7 @@ const createStyles = createThemedStyles((t) => ({
   },
   divider: {
     height: 1,
-    backgroundColor: t.colors.background.surface,
+    backgroundColor: t.colors.border.subtle,
     marginVertical: t.spacing.sm,
   },
   sliceRow: {
@@ -542,7 +548,7 @@ const createStyles = createThemedStyles((t) => ({
   },
   entryDivider: {
     borderBottomWidth: 1,
-    borderBottomColor: t.colors.background.surface,
+    borderBottomColor: t.colors.border.subtle,
   },
   entryHeader: {
     flexDirection: 'row',

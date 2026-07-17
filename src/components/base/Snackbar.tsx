@@ -40,6 +40,7 @@ const VARIANT_ICONS: Record<Exclude<SnackbarVariant, 'default'>, Icon> = {
   success: CheckCircleIcon,
   error: XCircleIcon,
   warning: WarningCircleIcon,
+  info: InfoIcon,
   neutral: InfoIcon,
 }
 
@@ -58,7 +59,7 @@ export const Snackbar = ({
   blur = true,
   blurIntensity = 60,
 }: SnackbarProps) => {
-  const { colors } = useTheme()
+  const { appearance, colors } = useTheme()
   const styles = useThemedStyles(createStyles)
   const tabBarHeight = useTabBarHeight()
 
@@ -90,6 +91,7 @@ export const Snackbar = ({
             success: colors.status.success,
             error: colors.status.error,
             warning: colors.status.warning,
+            info: colors.status.info,
             neutral: colors.status.neutral,
           } as const
         )[variant]
@@ -167,7 +169,7 @@ export const Snackbar = ({
   return (
     <Animated.View style={[styles.container, { bottom }, animatedStyle]}>
       {Platform.OS === 'ios' && blur ? (
-        <BlurView intensity={blurIntensity} tint="systemMaterial" style={contentStyle}>
+        <BlurView intensity={blurIntensity} tint={appearance} style={contentStyle}>
           {snackbarContent}
         </BlurView>
       ) : (
@@ -194,7 +196,6 @@ const createStyles = createThemedStyles((t) => ({
   },
   contentShadow: {
     ...t.shadows.lg,
-    shadowColor: t.colors.shadow.base,
   },
   contentBlur: {
     backgroundColor: 'transparent',

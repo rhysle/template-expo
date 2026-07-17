@@ -14,7 +14,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { scheduleOnRN } from 'react-native-worklets'
 
 import { createThemedStyles, useTheme, useThemedStyles } from '@/theme'
-import { withAlpha } from '@/utils/color'
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 
@@ -148,7 +147,7 @@ const createStyles = createThemedStyles((t) => ({
     width: 44,
     height: 6,
     borderRadius: t.borderRadius.full,
-    backgroundColor: withAlpha(t.colors.background.card, 0.5),
+    backgroundColor: t.colors.border.strong,
   },
   backdrop: {
     backgroundColor: t.colors.background.overlay,

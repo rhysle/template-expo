@@ -10,7 +10,7 @@ declare global {
   }
 }
 
-export type SnackbarVariant = 'default' | 'success' | 'error' | 'warning' | 'neutral'
+export type SnackbarVariant = 'default' | 'success' | 'error' | 'warning' | 'info' | 'neutral'
 
 export type SnackbarAction = {
   label: string

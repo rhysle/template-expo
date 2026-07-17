@@ -174,7 +174,7 @@ export const TabBar = ({
   blurIntensity = 60,
 }: TabBarProps) => {
   const styles = useThemedStyles(createStyles)
-  const { spacing } = useTheme()
+  const { appearance, spacing } = useTheme()
   const insets = useSafeAreaInsets()
   const { width } = useWindowDimensions()
   const paddingOffset = spacing.lg
@@ -233,7 +233,7 @@ export const TabBar = ({
     return (
       <BlurView
         intensity={blurIntensity}
-        tint="dark"
+        tint={appearance}
         style={[styles.tabContainerBlur, safeAreaStyle]}>
         {tabBarContent}
       </BlurView>
@@ -249,10 +249,12 @@ const createStyles = createThemedStyles((t) => ({
     paddingHorizontal: t.spacing.lg,
     overflow: 'hidden',
     position: 'relative',
+    ...t.shadows.md,
   },
   tabContainerBlur: {
     paddingHorizontal: t.spacing.lg,
     overflow: 'hidden',
+    ...t.shadows.md,
   },
   tabButton: {
     flex: 1,

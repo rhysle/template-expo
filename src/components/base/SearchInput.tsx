@@ -74,7 +74,7 @@ const createStyles = createThemedStyles((t) => ({
     backgroundColor: t.colors.background.card,
     borderRadius: t.borderRadius.md,
     borderWidth: 1,
-    borderColor: t.colors.background.surface,
+    borderColor: t.colors.border.default,
     flexDirection: 'row',
     paddingHorizontal: t.spacing.md,
     paddingVertical: t.spacing.sm,

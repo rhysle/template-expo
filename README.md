@@ -166,6 +166,12 @@ Replace, add, or remove routes to match the product. Keep provider initializatio
 
 Theme tokens live in `src/theme/`. Use `useThemedStyles(createStyles)` for themed styles and `useTheme()` for values passed to components or animation APIs. Prefer tokens for colors, spacing, typography, radius, shadows, and icon sizes.
 
+Each theme declares an `appearance` of `light` or `dark`. Use it for appearance-dependent native props such as blur tint, and invert it when choosing status-bar content so system UI stays legible. Do not hardcode theme-dependent `light` or `dark` values in components.
+
+The default theme uses a light surface hierarchy: `background.base` for screens, `surface` and `card` for foreground content, `subtle` for inactive controls or nested sections, and `overlay` for modal scrims. Create actual elevation by combining a surface color with a shadow token; `subtle` is not an elevation color.
+
+Status colors are flat semantic values for icons, indicators, and borders. Derive a tinted feedback surface with `withAlpha(statusColor, 0.08)` only when a component needs one, and keep feedback text on the normal text tokens so color is not the only carrier of meaning. The status roles are `success`, `error`, `warning`, `info`, and `neutral`.
+
 `iconSizes` is a static token and should be imported from `@/theme`; do not supply raw icon-size literals.
 
 Font configuration lives only in `src/configs/fonts.ts`. After changing `FONT_NAME`, run:

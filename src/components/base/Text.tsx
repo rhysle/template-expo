@@ -19,6 +19,7 @@ type TextTone =
   | 'success'
   | 'error'
   | 'warning'
+  | 'info'
   | 'inverse'
   | 'inverseSecondary'
   | 'inverseMuted'
@@ -91,6 +92,7 @@ const createStyles = (t: ResolvedTheme) => ({
     success: { color: t.colors.status.success },
     error: { color: t.colors.status.error },
     warning: { color: t.colors.status.warning },
+    info: { color: t.colors.status.info },
     inverse: { color: t.colors.text.inverse },
     inverseSecondary: { color: t.colors.text.inverseSecondary },
     inverseMuted: { color: t.colors.text.inverseMuted },

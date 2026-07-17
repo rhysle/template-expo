@@ -4,7 +4,7 @@ import { getFontFamilyForLanguage } from '@/configs/fonts'
 import { useThemeState } from '@/stores/features/theme'
 
 import { getTheme } from './themes'
-import { radius, shadows, spacing, typography } from './tokens'
+import { createShadows, radius, spacing, typography } from './tokens'
 import type { ResolvedTheme } from './types'
 
 export function useTheme(): ResolvedTheme {
@@ -15,6 +15,7 @@ export function useTheme(): ResolvedTheme {
   return {
     themeId,
     setTheme,
+    appearance: theme.appearance,
     colors: theme.colors,
     spacing,
     typography: {
@@ -22,6 +23,6 @@ export function useTheme(): ResolvedTheme {
       fontFamily: getFontFamilyForLanguage(i18n.language),
     },
     borderRadius: radius,
-    shadows,
+    shadows: createShadows(theme.colors.shadow.base),
   }
 }

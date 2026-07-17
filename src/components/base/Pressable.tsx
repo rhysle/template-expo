@@ -84,7 +84,7 @@ const createStyles = (t: ResolvedTheme) => ({
       backgroundColor: t.colors.background.card,
     },
     surface: {
-      backgroundColor: t.colors.background.surface,
+      backgroundColor: t.colors.background.subtle,
     },
     ghost: {
       backgroundColor: 'transparent',

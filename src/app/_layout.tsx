@@ -30,12 +30,12 @@ SplashScreen.setOptions({ fade: true, duration: 250 })
 
 function RootLayoutContent() {
   const { hasCompletedOnboarding } = useOnboardingState()
-  const { colors, typography } = useTheme()
+  const { appearance, colors, typography } = useTheme()
   useScreenTracker()
   useOtaUpdateInit()
   return (
     <>
-      <StatusBar style="light" />
+      <StatusBar style={appearance === 'light' ? 'dark' : 'light'} />
       <Stack
         screenOptions={{
           headerStyle: {
