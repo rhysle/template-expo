@@ -12,7 +12,9 @@ import {
   checkEntitlement,
   getActiveEntitlementId,
   getCustomerInfo,
+  getRevenueCatErrorDetails,
   initRevenueCat,
+  isRevenueCatConnectivityError,
 } from './revenueCatService'
 
 /**
@@ -42,7 +44,15 @@ export const useRevenueCatInit = (): void => {
         setAnalyticsUserProperties({ is_subscribed: isActive ? 'true' : 'false' })
       } catch (error) {
         // Subscription state stays as default (false) - app remains functional.
-        recordError(error, 'useRevenueCatInit.refreshSubscriptionStatus')
+        // RevenueCat exposes stable error codes, so expected connectivity failures can be
+        // filtered without relying on localized native error messages.
+        if (!isRevenueCatConnectivityError(error)) {
+          recordError(
+            error,
+            'useRevenueCatInit.refreshSubscriptionStatus',
+            getRevenueCatErrorDetails(error)
+          )
+        }
       } finally {
         setRevenueCatReady(true)
       }

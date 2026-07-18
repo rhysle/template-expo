@@ -81,8 +81,13 @@ export const initSentry = (): void => {
  * Record a caught JS error.
  * `context` is added as a breadcrumb before the exception so it appears in
  * the Sentry issue log - useful for diagnosing what triggered the error.
+ * `details` is attached only to this event as structured diagnostic context.
  */
-export const recordError = (error: unknown, context?: string): void => {
+export const recordError = (
+  error: unknown,
+  context?: string,
+  details?: Record<string, unknown>
+): void => {
   if (__DEV__) {
     const prefix = `[recordError]${context ? ` (${context})` : ''}`
     const stack = error instanceof Error ? error.stack : String(error)
@@ -91,7 +96,17 @@ export const recordError = (error: unknown, context?: string): void => {
   if (context) {
     Sentry.addBreadcrumb({ message: context, level: 'error' })
   }
-  Sentry.captureException(error instanceof Error ? error : new Error(String(error)))
+  const exception = error instanceof Error ? error : new Error(String(error))
+
+  if (!details) {
+    Sentry.captureException(exception)
+    return
+  }
+
+  Sentry.withScope((scope) => {
+    scope.setContext('error_details', details)
+    Sentry.captureException(exception)
+  })
 }
 
 /**

@@ -4,8 +4,10 @@ export {
   fetchOfferings,
   getActiveEntitlementId,
   getCustomerInfo,
+  getRevenueCatErrorDetails,
   initRevenueCat,
   isBillingUnavailableError,
+  isRevenueCatConnectivityError,
   purchasePackage,
   restorePurchases,
 } from './revenueCatService'
