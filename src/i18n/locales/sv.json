@@ -36,7 +36,6 @@
     "userIdCopied": "Användar-ID kopierat",
     "legalSection": "Juridiskt",
     "privacyConsent": "Integritet och samtycke",
-    "appName": "Currency Converter",
     "version": "Version {{version}}",
     "otaUpdateId": "Uppdatering: {{updateId}}",
     "upgradeBanner": {

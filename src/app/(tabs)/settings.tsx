@@ -62,6 +62,7 @@ export default function SettingsScreen() {
   const { showSnackbar } = useSnackbarState()
   const showPrivacyConsentItem = isAdsEnabled() && !isSubscribed && privacyOptionsRequired
   const currentOtaUpdateId = getCurrentOtaUpdateId()
+  const appName = Constants.expoConfig?.name ?? 'App'
 
   const onContactSupportPress = useContactSupport()
   const onSharePress = useShareApp()
@@ -182,7 +183,7 @@ export default function SettingsScreen() {
 
           <View style={styles.aboutCard}>
             <Text variant="subtitle" weight="semibold">
-              {t('settings.appName')}
+              {appName}
             </Text>
             <Text variant="body" tone="secondary" style={styles.appVersion}>
               {t('settings.version', { version: Constants.expoConfig?.version ?? '1.0.0' })}

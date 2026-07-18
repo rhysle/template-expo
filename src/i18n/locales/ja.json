@@ -36,7 +36,6 @@
     "userIdCopied": "ユーザーIDをコピーしました",
     "legalSection": "法的情報",
     "privacyConsent": "プライバシーと同意",
-    "appName": "通貨換算",
     "version": "バージョン {{version}}",
     "otaUpdateId": "更新: {{updateId}}",
     "upgradeBanner": {

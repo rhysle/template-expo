@@ -36,7 +36,6 @@
     "userIdCopied": "Benutzer-ID kopiert",
     "legalSection": "Rechtliches",
     "privacyConsent": "Datenschutz & Einwilligung",
-    "appName": "Währungsrechner",
     "version": "Version {{version}}",
     "otaUpdateId": "Update: {{updateId}}",
     "upgradeBanner": {

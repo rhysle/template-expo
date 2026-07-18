@@ -36,7 +36,6 @@
     "userIdCopied": "사용자 ID 복사됨",
     "legalSection": "법적 정보",
     "privacyConsent": "개인정보 및 동의",
-    "appName": "환율 변환기",
     "version": "버전 {{version}}",
     "otaUpdateId": "업데이트: {{updateId}}",
     "upgradeBanner": {
