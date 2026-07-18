@@ -15,8 +15,10 @@
     "skip": "Lewati"
   },
   "tabs": {
-    "convert": "Konversi",
-    "settings": "Pengaturan"
+    "eject": "Keluarkan",
+    "toneGenerator": "Generator Nada",
+    "stereoTest": "Tes Stereo",
+    "dbMeter": "Meter dB"
   },
   "settings": {
     "title": "Pengaturan",

@@ -15,8 +15,10 @@
     "skip": "건너뛰기"
   },
   "tabs": {
-    "convert": "환전",
-    "settings": "설정"
+    "eject": "물 빼기",
+    "toneGenerator": "톤 생성기",
+    "stereoTest": "스테레오 테스트",
+    "dbMeter": "dB 미터"
   },
   "settings": {
     "title": "설정",

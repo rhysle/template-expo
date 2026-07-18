@@ -15,8 +15,10 @@
     "skip": "Пропустить"
   },
   "tabs": {
-    "convert": "Конвертер",
-    "settings": "Настройки"
+    "eject": "Удалить",
+    "toneGenerator": "Генератор тона",
+    "stereoTest": "Стереотест",
+    "dbMeter": "Измеритель дБ"
   },
   "settings": {
     "title": "Настройки",

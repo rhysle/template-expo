@@ -1,23 +1,7 @@
-import { View } from 'react-native'
-
-import { Text } from '@/components/base'
-import { createThemedStyles, useThemedStyles } from '@/theme'
+import { TabPlaceholderScreen } from '@/components/TabPlaceholderScreen'
 
 export default function HomeScreen() {
-  const styles = useThemedStyles(createStyles)
   return (
-    <View style={styles.container}>
-      <Text>Sample Text</Text>
-    </View>
+    <TabPlaceholderScreen description="Play cleaning sounds to help eject water and clear debris from your speaker." />
   )
 }
-
-const createStyles = createThemedStyles((t) => ({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: t.spacing.lg,
-    backgroundColor: t.colors.background.base,
-  },
-}))

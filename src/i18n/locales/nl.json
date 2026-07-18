@@ -15,8 +15,10 @@
     "skip": "Overslaan"
   },
   "tabs": {
-    "convert": "Omrekenen",
-    "settings": "Instellingen"
+    "eject": "Uitwerpen",
+    "toneGenerator": "Toongenerator",
+    "stereoTest": "Stereotest",
+    "dbMeter": "dB-meter"
   },
   "settings": {
     "title": "Instellingen",

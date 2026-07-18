@@ -15,8 +15,10 @@
     "skip": "Omite"
   },
   "tabs": {
-    "convert": "Convertește",
-    "settings": "Setări"
+    "eject": "Elimină",
+    "toneGenerator": "Generator de ton",
+    "stereoTest": "Test stereo",
+    "dbMeter": "Sonometru dB"
   },
   "settings": {
     "title": "Setări",

@@ -15,8 +15,10 @@
     "skip": "Pular"
   },
   "tabs": {
-    "convert": "Converter",
-    "settings": "Configurações"
+    "eject": "Ejetar",
+    "toneGenerator": "Gerador de tons",
+    "stereoTest": "Teste estéreo",
+    "dbMeter": "Medidor de dB"
   },
   "settings": {
     "title": "Configurações",

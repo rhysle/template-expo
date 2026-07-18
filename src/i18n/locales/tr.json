@@ -15,8 +15,10 @@
     "skip": "Atla"
   },
   "tabs": {
-    "convert": "Çevir",
-    "settings": "Ayarlar"
+    "eject": "Çıkar",
+    "toneGenerator": "Ton Üreteci",
+    "stereoTest": "Stereo Testi",
+    "dbMeter": "dB Ölçer"
   },
   "settings": {
     "title": "Ayarlar",

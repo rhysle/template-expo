@@ -15,8 +15,10 @@
     "skip": "تخطي"
   },
   "tabs": {
-    "convert": "تحويل",
-    "settings": "الإعدادات"
+    "eject": "إخراج",
+    "toneGenerator": "مولّد النغمات",
+    "stereoTest": "اختبار ستيريو",
+    "dbMeter": "مقياس ديسيبل"
   },
   "settings": {
     "title": "الإعدادات",

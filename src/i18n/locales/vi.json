@@ -15,8 +15,10 @@
     "skip": "Bỏ qua"
   },
   "tabs": {
-    "convert": "Chuyển đổi",
-    "settings": "Cài đặt"
+    "eject": "Đẩy nước",
+    "toneGenerator": "Bộ tạo âm",
+    "stereoTest": "Kiểm tra âm thanh nổi",
+    "dbMeter": "Máy đo dB"
   },
   "settings": {
     "title": "Cài đặt",

@@ -6,6 +6,7 @@ import { Stack } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { StatusBar } from 'expo-status-bar'
 import { useEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
 import { ErrorBoundary, TabBarHeightProvider } from '@/components/base'
@@ -30,6 +31,7 @@ SplashScreen.setOptions({ fade: true, duration: 250 })
 
 function RootLayoutContent() {
   const { hasCompletedOnboarding } = useOnboardingState()
+  const { t } = useTranslation()
   const { appearance, colors, typography } = useTheme()
   useScreenTracker()
   useOtaUpdateInit()
@@ -41,6 +43,7 @@ function RootLayoutContent() {
           headerStyle: {
             backgroundColor: colors.background.base,
           },
+          headerShadowVisible: false,
           headerTintColor: colors.text.primary,
           headerTitleStyle: {
             fontFamily: typography.fontFamily.semibold,
@@ -52,7 +55,16 @@ function RootLayoutContent() {
           },
         }}>
         <Stack.Protected guard={hasCompletedOnboarding}>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          {/* iOS needs the back title enabled for headerBackButtonMenuEnabled to work.
+              Keep this hidden parent title empty so Settings stays icon-only without exposing "(tabs)". */}
+          <Stack.Screen name="(tabs)" options={{ headerShown: false, title: '' }} />
+          <Stack.Screen
+            name="settings"
+            options={{
+              title: t('settings.title'),
+              headerBackButtonMenuEnabled: false,
+            }}
+          />
           <Stack.Screen
             name="paywall"
             options={{ headerShown: false, presentation: 'fullScreenModal' }}
