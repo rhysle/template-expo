@@ -15,8 +15,10 @@
     "skip": "跳过"
   },
   "tabs": {
-    "convert": "换算",
-    "settings": "设置"
+    "eject": "排水",
+    "toneGenerator": "音调发生器",
+    "stereoTest": "立体声测试",
+    "dbMeter": "分贝仪"
   },
   "settings": {
     "title": "设置",

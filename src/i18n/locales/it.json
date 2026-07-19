@@ -15,8 +15,10 @@
     "skip": "Salta"
   },
   "tabs": {
-    "convert": "Converti",
-    "settings": "Impostazioni"
+    "eject": "Espelli",
+    "toneGenerator": "Generatore di toni",
+    "stereoTest": "Test stereo",
+    "dbMeter": "Misuratore dB"
   },
   "settings": {
     "title": "Impostazioni",

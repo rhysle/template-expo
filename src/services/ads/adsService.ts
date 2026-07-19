@@ -59,12 +59,12 @@ export const initMobileAds = async (): Promise<void> => {
   if (!AppConfig.ads.enabled) return
 
   try {
-    await MobileAds().initialize()
     await MobileAds().setRequestConfiguration({
       tagForChildDirectedTreatment: false,
       tagForUnderAgeOfConsent: false,
       maxAdContentRating: MaxAdContentRating.G,
     })
+    await MobileAds().initialize()
   } catch (error) {
     recordError(error, 'adsService.initMobileAds')
     throw error

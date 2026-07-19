@@ -15,8 +15,10 @@
     "skip": "Kihagyás"
   },
   "tabs": {
-    "convert": "Átváltás",
-    "settings": "Beállítások"
+    "eject": "Kilökés",
+    "toneGenerator": "Hanggenerátor",
+    "stereoTest": "Sztereóteszt",
+    "dbMeter": "dB-mérő"
   },
   "settings": {
     "title": "Beállítások",

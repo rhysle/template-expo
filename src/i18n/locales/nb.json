@@ -15,8 +15,10 @@
     "skip": "Hopp over"
   },
   "tabs": {
-    "convert": "Konverter",
-    "settings": "Innstillinger"
+    "eject": "Tøm",
+    "toneGenerator": "Tonegenerator",
+    "stereoTest": "Stereotest",
+    "dbMeter": "dB-måler"
   },
   "settings": {
     "title": "Innstillinger",

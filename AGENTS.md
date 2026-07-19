@@ -94,7 +94,9 @@ Use `react-native-reanimated` v4 for animations, never React Native's legacy `An
 
 Place product-specific layouts and content under `src/components/` or the relevant route. Keep the reusable onboarding and paywall cores intact; replace the matching app-specific content folders instead.
 
-`FloatingTabBar` publishes its measured height through `useTabBarHeight()`. Tab screens and bottom notifications should use that hook for bottom spacing rather than the `TAB_BAR_HEIGHT` fallback constant.
+Tab metadata is shared by `NativeTabNavigator` and `CustomTabNavigator`; switch implementations only through the aliased import in `src/app/(tabs)/_layout.tsx`. Native tabs are the mobile default, resolve to custom tabs on web, support at most five Android tabs, and require a nested `TabStack` for each tab because they do not render headers.
+
+Use `TabScreen` for tab-root content so content clears either navigator and the persistent banner. `TabNavigatorFrame` owns one compact anchored-adaptive banner above the bottom bar; do not mount a banner per tab or reload it on tab focus. `FloatingTabBar` publishes its measured custom height, the banner publishes its accessory height, and native tabs use safe-area content insets plus a conservative bar fallback because Expo Router does not expose their height. Change `TabBarBanner` when a product needs a different policy-appropriate placement. Consumers that float above navigation, such as Snackbar, should use `useTabBarHeight()` rather than `TAB_BAR_HEIGHT` directly.
 
 ### RTL and localization
 
@@ -151,7 +153,7 @@ Set real API keys and entitlement ID before release. Product feature rows belong
 
 Ads are controlled by `AppConfig.ads.enabled`. The native package/plugin configuration is synchronized with `npm run setup:ads`.
 
-When enabling ads, configure real IDs, run the setup script, keep the ads initialization hooks in the root and tabs layouts, run a clean prebuild, and test consent behavior. When disabling ads, run the setup script and remove the relevant hooks so Metro does not bundle the ads SDK. Import ad APIs only through `@/services/ads`, never directly from `react-native-google-mobile-ads`.
+When enabling ads, configure real IDs and AdMob Privacy & messaging forms, run the setup script, keep the ads initialization hooks in the root and tabs layouts, run a clean prebuild, and test consent behavior. Preserve the `canRequestAds` and SDK-initialization gate before creating any ad object. Development and preview builds use Google test IDs; production-variant QA devices must be registered as test devices. When disabling ads, run the setup script and remove the relevant hooks so Metro does not bundle the ads SDK. Import ad APIs only through `@/services/ads`, never directly from `react-native-google-mobile-ads`.
 
 ### Firebase, Sentry, identity, and OTA
 

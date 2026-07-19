@@ -127,6 +127,9 @@ const TabBarItem = ({
 
   return (
     <Pressable
+      accessibilityLabel={options.tabBarAccessibilityLabel ?? label}
+      accessibilityRole="tab"
+      accessibilityState={{ selected: isFocused }}
       onPress={onPress}
       variant="ghost"
       style={styles.tabButton}
@@ -144,8 +147,11 @@ const TabBarItem = ({
         </View>
       </Animated.View>
       {showLabel && (
-        <Animated.View style={labelAnimatedStyle}>
+        <Animated.View style={[styles.labelContainer, labelAnimatedStyle]}>
           <Animated.Text
+            adjustsFontSizeToFit
+            minimumFontScale={0.7}
+            numberOfLines={1}
             style={[
               styles.labelText,
               {
@@ -258,6 +264,7 @@ const createStyles = createThemedStyles((t) => ({
   },
   tabButton: {
     flex: 1,
+    minWidth: 0,
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: t.spacing.xl,
@@ -269,9 +276,13 @@ const createStyles = createThemedStyles((t) => ({
   iconAbsolute: {
     position: 'absolute',
   },
+  labelContainer: {
+    width: '100%',
+  },
   labelText: {
     fontSize: t.typography.sizes.xs,
     marginTop: LABEL_MARGIN_TOP,
+    textAlign: 'center',
   },
   indicator: {
     position: 'absolute',

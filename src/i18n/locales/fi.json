@@ -15,8 +15,10 @@
     "skip": "Ohita"
   },
   "tabs": {
-    "convert": "Muunna",
-    "settings": "Asetukset"
+    "eject": "Poista",
+    "toneGenerator": "Äänigeneraattori",
+    "stereoTest": "Stereotesti",
+    "dbMeter": "dB-mittari"
   },
   "settings": {
     "title": "Asetukset",

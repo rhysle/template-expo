@@ -15,8 +15,10 @@
     "skip": "דלג"
   },
   "tabs": {
-    "convert": "המרה",
-    "settings": "הגדרות"
+    "eject": "הוצאה",
+    "toneGenerator": "מחולל צלילים",
+    "stereoTest": "בדיקת סטריאו",
+    "dbMeter": "מד דציבלים"
   },
   "settings": {
     "title": "הגדרות",

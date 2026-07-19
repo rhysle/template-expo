@@ -15,8 +15,10 @@
     "skip": "Omitir"
   },
   "tabs": {
-    "convert": "Convertir",
-    "settings": "Ajustes"
+    "eject": "Expulsar",
+    "toneGenerator": "Generador de tonos",
+    "stereoTest": "Prueba estéreo",
+    "dbMeter": "Medidor de dB"
   },
   "settings": {
     "title": "Ajustes",

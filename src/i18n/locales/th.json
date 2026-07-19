@@ -15,8 +15,10 @@
     "skip": "ข้าม"
   },
   "tabs": {
-    "convert": "แปลง",
-    "settings": "การตั้งค่า"
+    "eject": "ไล่น้ำ",
+    "toneGenerator": "เครื่องกำเนิดเสียง",
+    "stereoTest": "ทดสอบสเตอริโอ",
+    "dbMeter": "เครื่องวัด dB"
   },
   "settings": {
     "title": "การตั้งค่า",

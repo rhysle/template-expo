@@ -1,64 +1,59 @@
-import { Tabs } from 'expo-router'
-import { CurrencyCircleDollarIcon, FadersHorizontalIcon, IconProps } from 'phosphor-react-native'
+import { DropIcon, GaugeIcon, SpeakerHifiIcon, WaveformIcon } from 'phosphor-react-native'
 import { useTranslation } from 'react-i18next'
 
-import { FloatingTabBar } from '@/components/base'
+import { NativeTabNavigator as TabNavigator, type TabDefinition } from '@/components/base'
 import { useConsentInit } from '@/services/ads'
 import { useAutoPaywall } from '@/services/revenueCat'
-import { useTheme } from '@/theme'
+
+export const unstable_settings = {
+  initialRouteName: '(eject)',
+}
 
 export default function TabLayout() {
   const { t } = useTranslation()
-  const { colors, typography } = useTheme()
 
   // If AppConfig.ads.enabled is false, remove this call and run npm run setup:ads
   useConsentInit()
   useAutoPaywall()
 
-  return (
-    <Tabs
-      tabBar={(props) => <FloatingTabBar {...props} />}
-      screenOptions={{
-        headerStyle: {
-          backgroundColor: colors.background.base,
-        },
-        headerTitleStyle: {
-          fontFamily: typography.fontFamily.semibold,
-          fontWeight: typography.weights.semibold,
-          color: colors.text.primary,
-        },
-        headerTintColor: colors.text.primary,
-        lazy: false,
-        tabBarStyle: { position: 'absolute', backgroundColor: 'transparent' },
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: t('tabs.convert'),
-          headerShown: false,
-          tabBarIcon: ({ color, size, focused }) => (
-            <CurrencyCircleDollarIcon
-              size={size}
-              color={color as IconProps['color']}
-              weight={focused ? 'fill' : 'regular'}
-            />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="settings"
-        options={{
-          title: t('tabs.settings'),
-          headerShown: false,
-          tabBarIcon: ({ color, size, focused }) => (
-            <FadersHorizontalIcon
-              size={size}
-              color={color as IconProps['color']}
-              weight={focused ? 'fill' : 'regular'}
-            />
-          ),
-        }}
-      />
-    </Tabs>
-  )
+  const tabs = [
+    {
+      name: '(eject)',
+      label: t('tabs.eject'),
+      icon: DropIcon,
+      nativeIcon: {
+        sf: { default: 'drop', selected: 'drop.fill' },
+        md: 'water_drop',
+      },
+    },
+    {
+      name: 'tone-generator',
+      label: t('tabs.toneGenerator'),
+      icon: WaveformIcon,
+      nativeIcon: {
+        sf: 'waveform',
+        md: 'graphic_eq',
+      },
+    },
+    {
+      name: 'stereo-test',
+      label: t('tabs.stereoTest'),
+      icon: SpeakerHifiIcon,
+      nativeIcon: {
+        sf: { default: 'hifispeaker.2', selected: 'hifispeaker.2.fill' },
+        md: 'speaker',
+      },
+    },
+    {
+      name: 'db-meter',
+      label: t('tabs.dbMeter'),
+      icon: GaugeIcon,
+      nativeIcon: {
+        sf: 'gauge.with.dots.needle.50percent',
+        md: 'speed',
+      },
+    },
+  ] satisfies readonly TabDefinition[]
+
+  return <TabNavigator tabs={tabs} />
 }

@@ -15,8 +15,10 @@
     "skip": "Παράλειψη"
   },
   "tabs": {
-    "convert": "Μετατροπή",
-    "settings": "Ρυθμίσεις"
+    "eject": "Αποβολή",
+    "toneGenerator": "Γεννήτρια τόνου",
+    "stereoTest": "Δοκιμή στερεοφωνικού",
+    "dbMeter": "Μετρητής dB"
   },
   "settings": {
     "title": "Ρυθμίσεις",

@@ -2,10 +2,12 @@ import 'react-native-reanimated'
 
 import * as Sentry from '@sentry/react-native'
 import Constants from 'expo-constants'
-import { Stack } from 'expo-router'
+import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { StatusBar } from 'expo-status-bar'
 import { useEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Platform } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
 import { ErrorBoundary, TabBarHeightProvider } from '@/components/base'
@@ -30,17 +32,33 @@ SplashScreen.setOptions({ fade: true, duration: 250 })
 
 function RootLayoutContent() {
   const { hasCompletedOnboarding } = useOnboardingState()
+  const { t } = useTranslation()
   const { appearance, colors, typography } = useTheme()
+  const baseNavigationTheme = appearance === 'dark' ? DarkTheme : DefaultTheme
+  const navigationTheme = {
+    ...baseNavigationTheme,
+    colors: {
+      ...baseNavigationTheme.colors,
+      background: colors.background.base,
+      border: colors.border.subtle,
+      card: colors.background.card,
+      notification: colors.status.error,
+      primary: colors.primary.main,
+      text: colors.text.primary,
+    },
+  }
   useScreenTracker()
   useOtaUpdateInit()
+
   return (
-    <>
+    <ThemeProvider value={navigationTheme}>
       <StatusBar style={appearance === 'light' ? 'dark' : 'light'} />
       <Stack
         screenOptions={{
           headerStyle: {
             backgroundColor: colors.background.base,
           },
+          headerShadowVisible: false,
           headerTintColor: colors.text.primary,
           headerTitleStyle: {
             fontFamily: typography.fontFamily.semibold,
@@ -52,7 +70,25 @@ function RootLayoutContent() {
           },
         }}>
         <Stack.Protected guard={hasCompletedOnboarding}>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          {/* iOS needs the back title enabled for headerBackButtonMenuEnabled to work.
+              Keep this hidden parent title empty so Settings stays icon-only without exposing "(tabs)". */}
+          <Stack.Screen name="(tabs)" options={{ headerShown: false, title: '' }} />
+          <Stack.Screen
+            name="settings"
+            options={{
+              title: t('settings.title'),
+              headerBackButtonMenuEnabled: false,
+              ...(Platform.OS === 'ios'
+                ? {
+                    headerTransparent: true,
+                    headerStyle: { backgroundColor: 'transparent' },
+                    headerBlurEffect: 'systemChromeMaterial',
+                    // Avoid layering the iOS 26 scroll-edge effect over the native header material.
+                    scrollEdgeEffects: { top: 'hidden' as const },
+                  }
+                : {}),
+            }}
+          />
           <Stack.Screen
             name="paywall"
             options={{ headerShown: false, presentation: 'fullScreenModal' }}
@@ -65,7 +101,7 @@ function RootLayoutContent() {
         <Stack.Screen name="+not-found" />
       </Stack>
       <SnackbarHost />
-    </>
+    </ThemeProvider>
   )
 }
 

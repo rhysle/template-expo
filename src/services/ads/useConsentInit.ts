@@ -29,12 +29,13 @@ const isOfflineConsentFailure = async (error: unknown): Promise<boolean> => {
 // If AppConfig.ads.enabled is false, remove the call to this hook in
 // src/app/(tabs)/_layout.tsx and run npm run setup:ads.
 export const useConsentInit = () => {
-  const { setConsentGathered, setPrivacyOptionsRequired } = useAdsState()
+  const { setCanRequestAds, setConsentGathered, setPrivacyOptionsRequired } = useAdsState()
   const { isSubscribed } = useSubscriptionState()
 
   useEffect(() => {
     // Subscribers see no ads - skip consent entirely.
     if (!isAdsEnabled() || isSubscribed) {
+      setCanRequestAds(false)
       setConsentGathered(true)
       return
     }
@@ -42,41 +43,57 @@ export const useConsentInit = () => {
     let cancelled = false
 
     const gather = async () => {
+      let consentError: unknown
+
       try {
         // Avoid invoking UMP while offline. Native iOS network errors are localized, so
         // matching their message in Sentry is not reliable across device languages.
         await assertOnline()
 
-        if (Platform.OS === 'ios') {
-          await requestTrackingPermissionsAsync()
-        }
-
         await AdsConsent.gatherConsent(
           __DEV__ ? { debugGeography: AdsConsentDebugGeography.EEA } : undefined
         )
+      } catch (error) {
+        consentError = error
+      }
 
+      try {
+        // UMP may retain a valid choice from an earlier session even when the current
+        // information update fails. Its canRequestAds result is the source of truth.
         const info = await AdsConsent.getConsentInfo()
+
+        if (Platform.OS === 'ios' && info.canRequestAds) {
+          const gdprApplies = await AdsConsent.getGdprApplies()
+          const mayRequestTracking =
+            !gdprApplies || (await AdsConsent.getPurposeConsents()).startsWith('1')
+
+          if (mayRequestTracking) {
+            await requestTrackingPermissionsAsync()
+          }
+        }
+
         if (!cancelled) {
+          setCanRequestAds(info.canRequestAds)
           setPrivacyOptionsRequired(
             info.privacyOptionsRequirementStatus ===
               AdsConsentPrivacyOptionsRequirementStatus.REQUIRED
           )
         }
       } catch (error) {
-        // Consent errors are non-fatal - ads still initialize with non-personalized targeting.
-        // Record actionable production issues (for example, no GDPR form published), while
-        // treating a confirmed offline state as expected rather than a Sentry error.
-        if (!(await isOfflineConsentFailure(error))) {
-          recordError(error, 'useConsentInit')
-        }
-      } finally {
-        if (!cancelled) setConsentGathered(true)
+        consentError ??= error
+        if (!cancelled) setCanRequestAds(false)
       }
+
+      if (consentError && !(await isOfflineConsentFailure(consentError))) {
+        recordError(consentError, 'useConsentInit')
+      }
+
+      if (!cancelled) setConsentGathered(true)
     }
 
     void gather()
     return () => {
       cancelled = true
     }
-  }, [isSubscribed, setConsentGathered, setPrivacyOptionsRequired])
+  }, [isSubscribed, setCanRequestAds, setConsentGathered, setPrivacyOptionsRequired])
 }

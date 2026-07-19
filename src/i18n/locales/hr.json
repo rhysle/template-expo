@@ -15,8 +15,10 @@
     "skip": "Preskoči"
   },
   "tabs": {
-    "convert": "Pretvori",
-    "settings": "Postavke"
+    "eject": "Izbaci",
+    "toneGenerator": "Generator tona",
+    "stereoTest": "Stereo test",
+    "dbMeter": "dB mjerač"
   },
   "settings": {
     "title": "Postavke",

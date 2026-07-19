@@ -13,15 +13,16 @@ import { initMobileAds, isAdsEnabled } from './adsService'
  *   // Inside RootLayout:
  *   useAdsInit()
  *
- * The hook waits for consentGathered (set by useConsentInit in the tabs layout)
- * before calling initialize(). If ads are disabled, the hook is a no-op.
+ * The hook waits for UMP to resolve and explicitly allow ad requests before calling
+ * initialize(). If ads are disabled, the hook is a no-op.
  * When not using ads in a project, omit this call so Metro never bundles the package.
  */
 export const useAdsInit = () => {
-  const { consentGathered, setAdsInitialized, setAdsInitError } = useAdsState()
+  const { adsInitialized, canRequestAds, consentGathered, setAdsInitialized, setAdsInitError } =
+    useAdsState()
 
   useEffect(() => {
-    if (!isAdsEnabled() || !consentGathered) return
+    if (!isAdsEnabled() || !consentGathered || !canRequestAds || adsInitialized) return
 
     let cancelled = false
 
@@ -41,5 +42,5 @@ export const useAdsInit = () => {
     return () => {
       cancelled = true
     }
-  }, [consentGathered, setAdsInitialized, setAdsInitError])
+  }, [adsInitialized, canRequestAds, consentGathered, setAdsInitialized, setAdsInitError])
 }

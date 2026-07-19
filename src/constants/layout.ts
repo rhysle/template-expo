@@ -1,6 +1,5 @@
 /**
- * Estimated height of the floating TabBar (icon + padding + container bottom).
- * Used as paddingBottom for scroll content so items aren't hidden under the overlay.
- * Tune this value visually on a real device / simulator if it looks off.
+ * Conservative fallback used before the custom tab bar is measured and for root
+ * overlays above native tabs, whose height Expo Router does not expose.
  */
 export const TAB_BAR_HEIGHT = 80

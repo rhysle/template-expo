@@ -15,8 +15,10 @@
     "skip": "छोड़ें"
   },
   "tabs": {
-    "convert": "रूपांतरण",
-    "settings": "सेटिंग्स"
+    "eject": "बाहर निकालें",
+    "toneGenerator": "टोन जनरेटर",
+    "stereoTest": "स्टीरियो परीक्षण",
+    "dbMeter": "dB मीटर"
   },
   "settings": {
     "title": "सेटिंग्स",

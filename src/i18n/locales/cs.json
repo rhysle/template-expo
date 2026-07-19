@@ -15,8 +15,10 @@
     "skip": "Přeskočit"
   },
   "tabs": {
-    "convert": "Převod",
-    "settings": "Nastavení"
+    "eject": "Vytlačit",
+    "toneGenerator": "Generátor tónů",
+    "stereoTest": "Test sterea",
+    "dbMeter": "dB metr"
   },
   "settings": {
     "title": "Nastavení",

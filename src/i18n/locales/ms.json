@@ -15,8 +15,10 @@
     "skip": "Langkau"
   },
   "tabs": {
-    "convert": "Tukar",
-    "settings": "Tetapan"
+    "eject": "Keluarkan",
+    "toneGenerator": "Penjana Nada",
+    "stereoTest": "Ujian Stereo",
+    "dbMeter": "Meter dB"
   },
   "settings": {
     "title": "Tetapan",

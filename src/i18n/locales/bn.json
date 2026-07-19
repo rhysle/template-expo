@@ -15,8 +15,10 @@
     "skip": "এড়িয়ে যান"
   },
   "tabs": {
-    "convert": "রূপান্তর",
-    "settings": "সেটিংস"
+    "eject": "বের করুন",
+    "toneGenerator": "টোন জেনারেটর",
+    "stereoTest": "স্টেরিও পরীক্ষা",
+    "dbMeter": "ডেসিবেল মিটার"
   },
   "settings": {
     "title": "সেটিংস",

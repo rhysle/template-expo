@@ -15,8 +15,10 @@
     "skip": "スキップ"
   },
   "tabs": {
-    "convert": "換算",
-    "settings": "設定"
+    "eject": "排水",
+    "toneGenerator": "トーン生成",
+    "stereoTest": "ステレオテスト",
+    "dbMeter": "dBメーター"
   },
   "settings": {
     "title": "設定",
