@@ -7,7 +7,7 @@ import * as SplashScreen from 'expo-splash-screen'
 import { StatusBar } from 'expo-status-bar'
 import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Appearance, Platform } from 'react-native'
+import { Platform } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
 import { ErrorBoundary, TabBarHeightProvider } from '@/components/base'
@@ -49,10 +49,6 @@ function RootLayoutContent() {
   }
   useScreenTracker()
   useOtaUpdateInit()
-
-  useEffect(() => {
-    Appearance.setColorScheme(appearance)
-  }, [appearance])
 
   return (
     <ThemeProvider value={navigationTheme}>
