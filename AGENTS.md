@@ -94,7 +94,9 @@ Use `react-native-reanimated` v4 for animations, never React Native's legacy `An
 
 Place product-specific layouts and content under `src/components/` or the relevant route. Keep the reusable onboarding and paywall cores intact; replace the matching app-specific content folders instead.
 
-`FloatingTabBar` publishes its measured height through `useTabBarHeight()`. Tab screens and bottom notifications should use that hook for bottom spacing rather than the `TAB_BAR_HEIGHT` fallback constant.
+Tab metadata is shared by `NativeTabNavigator` and `CustomTabNavigator`; switch implementations only through the aliased import in `src/app/(tabs)/_layout.tsx`. Native tabs are the mobile default, resolve to custom tabs on web, support at most five Android tabs, and require a nested `TabStack` for each tab because they do not render headers.
+
+Use `TabScreen` for tab-root content so banner ads mount only in the focused tab and content clears either navigator. `FloatingTabBar` publishes its measured custom height, while native tabs use safe-area content insets and a conservative overlay fallback because Expo Router does not expose their height. Consumers that float above navigation, such as Snackbar, should use `useTabBarHeight()` rather than `TAB_BAR_HEIGHT` directly.
 
 ### RTL and localization
 

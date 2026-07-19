@@ -1,6 +1,6 @@
 import { View } from 'react-native'
 
-import { Text, useTabBarHeight } from '@/components/base'
+import { TabScreen, Text } from '@/components/base'
 import { createThemedStyles, useThemedStyles } from '@/theme'
 
 export interface TabPlaceholderScreenProps {
@@ -9,14 +9,15 @@ export interface TabPlaceholderScreenProps {
 
 export const TabPlaceholderScreen = ({ description }: TabPlaceholderScreenProps) => {
   const styles = useThemedStyles(createStyles)
-  const tabBarHeight = useTabBarHeight()
 
   return (
-    <View style={[styles.container, { paddingBottom: tabBarHeight }]}>
-      <Text variant="body" tone="secondary" style={styles.description}>
-        {description}
-      </Text>
-    </View>
+    <TabScreen>
+      <View style={styles.container}>
+        <Text variant="body" tone="secondary" style={styles.description}>
+          {description}
+        </Text>
+      </View>
+    </TabScreen>
   )
 }
 

@@ -149,18 +149,32 @@ Generated `ios/` and `android/` directories must not be edited directly. Change 
 
 ## Product Shell
 
-`src/app/_layout.tsx` mounts the app-wide providers and lifecycle hooks: fonts, identity, subscriptions, RTL sync, query persistence, i18n, error boundary, measured tab-bar height, analytics screen tracking, OTA update checks, and snackbar rendering.
+`src/app/_layout.tsx` mounts the app-wide providers and lifecycle hooks: fonts, identity, subscriptions, RTL sync, query persistence, i18n, error boundary, navigator-aware tab insets, analytics screen tracking, OTA update checks, and snackbar rendering.
 
 Anonymous identity is a per-variant, installation-scoped UUID stored in MMKV and shared with configured analytics, diagnostics, and subscription services. It persists across app launches and updates, but resets after uninstall/reinstall on both iOS and Android. Android Auto Backup is disabled for this barebone template; each product fork should define its own backup policy before release.
 
 The current routes demonstrate a common paid-app shape:
 
 - `onboarding` is shown before the persisted onboarding gate is complete.
-- `(tabs)` contains a sample Home screen and a Settings screen.
+- `(tabs)` contains four sample product tabs, each with its own navigation stack.
 - `paywall` is a full-screen modal route available after onboarding.
 - `debug` is a development-only diagnostic screen.
 
 Replace, add, or remove routes to match the product. Keep provider initialization in the root layout unless an integration truly belongs to a narrower navigation scope.
+
+### Tab Navigation
+
+The checked-in mobile navigator uses Expo Router native tabs. Tab labels and icon metadata are declared once in `src/app/(tabs)/_layout.tsx` and shared by `NativeTabNavigator` and `CustomTabNavigator`. Native tabs use SF Symbols on iOS and Material Symbols on Android; Android supports at most five native tabs.
+
+To switch the app back to the floating custom tab bar, change only the navigator alias import:
+
+```ts
+import { CustomTabNavigator as TabNavigator, type TabDefinition } from '@/components/base'
+```
+
+`NativeTabNavigator` resolves to `CustomTabNavigator` on web, so the existing custom web UI remains unchanged. Native tabs do not provide headers, so every tab is a folder with its own `TabStack`. Keep that structure when adding detail routes.
+
+Expo Router does not expose native tab-bar height. `useTabBarHeight()` therefore returns the measured custom height or a conservative native fallback for root overlays. Tab content should use `TabScreen`, which applies the correct navigator-aware content inset and mounts the banner ad only for the focused tab. The native bar is intentionally fixed at the bottom: iOS minimization and iPad sidebar adaptation are disabled by default.
 
 ## UI and Theme
 
@@ -185,7 +199,7 @@ The template enables RTL support through Expo configuration. `useIsRTL()` is ava
 
 ### Reusable Components
 
-`src/components/base/` is the reusable layer. Notable building blocks include `Button`, `Text`, `Card`, `ListItem` variants, `Toggle`, `SegmentedControl`, `BottomSheet`, `SearchInput`, `FadeScrollView`, `Snackbar`, `CollapsingHeader`, `FloatingTabBar`, `Onboarding`, `Paywall`, and loading indicators.
+`src/components/base/` is the reusable layer. Notable building blocks include `Button`, `Text`, `Card`, `ListItem` variants, `Toggle`, `SegmentedControl`, `BottomSheet`, `SearchInput`, `FadeScrollView`, `Snackbar`, `CollapsingHeader`, `NativeTabNavigator`, `CustomTabNavigator`, `TabStack`, `TabScreen`, `FloatingTabBar`, `Onboarding`, `Paywall`, and loading indicators.
 
 Keep reusable behavior here. Put product-specific composition in `src/components/` or route files.
 

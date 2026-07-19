@@ -2,7 +2,7 @@ import 'react-native-reanimated'
 
 import * as Sentry from '@sentry/react-native'
 import Constants from 'expo-constants'
-import { Stack } from 'expo-router'
+import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { StatusBar } from 'expo-status-bar'
 import { useEffect, useRef } from 'react'
@@ -34,6 +34,19 @@ function RootLayoutContent() {
   const { hasCompletedOnboarding } = useOnboardingState()
   const { t } = useTranslation()
   const { appearance, colors, typography } = useTheme()
+  const baseNavigationTheme = appearance === 'dark' ? DarkTheme : DefaultTheme
+  const navigationTheme = {
+    ...baseNavigationTheme,
+    colors: {
+      ...baseNavigationTheme.colors,
+      background: colors.background.base,
+      border: colors.border.subtle,
+      card: colors.background.card,
+      notification: colors.status.error,
+      primary: colors.primary.main,
+      text: colors.text.primary,
+    },
+  }
   useScreenTracker()
   useOtaUpdateInit()
 
@@ -42,7 +55,7 @@ function RootLayoutContent() {
   }, [appearance])
 
   return (
-    <>
+    <ThemeProvider value={navigationTheme}>
       <StatusBar style={appearance === 'light' ? 'dark' : 'light'} />
       <Stack
         screenOptions={{
@@ -92,7 +105,7 @@ function RootLayoutContent() {
         <Stack.Screen name="+not-found" />
       </Stack>
       <SnackbarHost />
-    </>
+    </ThemeProvider>
   )
 }
 
