@@ -1,4 +1,5 @@
 import { NativeTabs } from 'expo-router/unstable-native-tabs'
+import { Platform } from 'react-native'
 
 import { useTheme } from '@/theme'
 
@@ -12,7 +13,7 @@ export const NativeTabNavigator = ({ tabs }: TabNavigatorProps) => {
   const { colors, typography } = useTheme()
   useRegisterTabNavigator('native')
 
-  if (process.env.EXPO_OS === 'android' && tabs.length > MAX_ANDROID_TABS) {
+  if (Platform.OS === 'android' && tabs.length > MAX_ANDROID_TABS) {
     throw new Error(`NativeTabNavigator supports at most ${MAX_ANDROID_TABS} tabs on Android.`)
   }
 

@@ -1,4 +1,5 @@
 import { createContext, type ReactNode, useContext, useEffect, useState } from 'react'
+import { Platform } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { TAB_BAR_HEIGHT } from '@/constants/layout'
@@ -60,7 +61,7 @@ export const useTabBarContentInset = () => {
   const insets = useSafeAreaInsets()
 
   if (mode === 'custom') return height + accessoryHeight
-  return (process.env.EXPO_OS === 'ios' ? insets.bottom : 0) + accessoryHeight
+  return (Platform.OS === 'ios' ? insets.bottom : 0) + accessoryHeight
 }
 
 export const useSetTabBarHeight = () => useContext(TabBarHeightContext).setHeight

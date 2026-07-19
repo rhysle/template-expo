@@ -7,7 +7,7 @@ import * as SplashScreen from 'expo-splash-screen'
 import { StatusBar } from 'expo-status-bar'
 import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Appearance } from 'react-native'
+import { Appearance, Platform } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
 import { ErrorBoundary, TabBarHeightProvider } from '@/components/base'
@@ -82,7 +82,7 @@ function RootLayoutContent() {
             options={{
               title: t('settings.title'),
               headerBackButtonMenuEnabled: false,
-              ...(process.env.EXPO_OS === 'ios'
+              ...(Platform.OS === 'ios'
                 ? {
                     headerTransparent: true,
                     headerStyle: { backgroundColor: 'transparent' },
