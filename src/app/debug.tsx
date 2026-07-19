@@ -23,6 +23,7 @@ import {
   Toggle,
 } from '@/components/base'
 import type { SegmentedOption } from '@/components/base/SegmentedControl'
+import { DesignTokenSection } from '@/components/debug/DesignTokenSection'
 import { ScreenHeader } from '@/components/ScreenHeader'
 import { clearUserId as clearUserIdService } from '@/services/userIdentity'
 import { useSnackbarState } from '@/stores/features/snackbar'
@@ -42,11 +43,6 @@ import {
   getSliceVersionInfo,
   type StorageEntry,
 } from '@/utils/debugState'
-
-if (!__DEV__) {
-  // Prevent this module from being imported in production
-  throw new Error('debug screen should not be imported in production')
-}
 
 type ZustandTab = 'live' | 'persisted' | 'diff'
 type PlaygroundTab = 'first' | 'second' | 'third'
@@ -111,6 +107,8 @@ export default function DebugScreen() {
     <ScrollView style={commonStyles.screen} showsVerticalScrollIndicator={false}>
       <View style={styles.container}>
         <ScreenHeader title="Debug State" subtitle="Inspect live, persisted, and migration state" />
+
+        <DesignTokenSection />
 
         {/* Component Playground */}
         <CollapsibleSection title="Component Playground">
