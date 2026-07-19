@@ -93,7 +93,15 @@ function RootLayoutContent() {
             name="paywall"
             options={{ headerShown: false, presentation: 'fullScreenModal' }}
           />
-          <Stack.Screen name="debug" options={{ headerTitle: 'Debug State' }} />
+          {__DEV__ ? (
+            <Stack.Screen
+              name="debug"
+              options={{
+                headerTitle: 'Debug State',
+                headerBackButtonDisplayMode: 'minimal',
+              }}
+            />
+          ) : null}
         </Stack.Protected>
         <Stack.Protected guard={!hasCompletedOnboarding}>
           <Stack.Screen name="onboarding" options={{ headerShown: false, animation: 'fade' }} />

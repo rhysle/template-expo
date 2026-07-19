@@ -8,21 +8,22 @@ import { createShadows, radius, spacing, typography } from './tokens'
 import type { ResolvedTheme } from './types'
 
 export function useTheme(): ResolvedTheme {
-  const { themeId, setTheme } = useThemeState()
+  const { previewColors, themeId, setTheme } = useThemeState()
   const { i18n } = useTranslation()
   const theme = getTheme(themeId)
+  const colors = previewColors ?? theme.colors
 
   return {
     themeId,
     setTheme,
     appearance: theme.appearance,
-    colors: theme.colors,
+    colors,
     spacing,
     typography: {
       ...typography,
       fontFamily: getFontFamilyForLanguage(i18n.language),
     },
     borderRadius: radius,
-    shadows: createShadows(theme.colors.shadow.base),
+    shadows: createShadows(colors.shadow.base),
   }
 }
