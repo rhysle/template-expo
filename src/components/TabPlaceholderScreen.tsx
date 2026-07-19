@@ -1,13 +1,14 @@
+import type { PropsWithChildren } from 'react'
 import { View } from 'react-native'
 
 import { TabScreen, Text } from '@/components/base'
 import { createThemedStyles, useThemedStyles } from '@/theme'
 
-export interface TabPlaceholderScreenProps {
+export interface TabPlaceholderScreenProps extends PropsWithChildren {
   description: string
 }
 
-export const TabPlaceholderScreen = ({ description }: TabPlaceholderScreenProps) => {
+export const TabPlaceholderScreen = ({ children, description }: TabPlaceholderScreenProps) => {
   const styles = useThemedStyles(createStyles)
 
   return (
@@ -16,6 +17,7 @@ export const TabPlaceholderScreen = ({ description }: TabPlaceholderScreenProps)
         <Text variant="body" tone="secondary" style={styles.description}>
           {description}
         </Text>
+        {children}
       </View>
     </TabScreen>
   )
@@ -26,6 +28,7 @@ const createStyles = createThemedStyles((t) => ({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    gap: t.spacing.xl,
     paddingHorizontal: t.spacing['2xl'],
     backgroundColor: t.colors.background.base,
   },

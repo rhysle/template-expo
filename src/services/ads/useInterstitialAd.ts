@@ -4,9 +4,9 @@ import { AppConfig } from '@/configs'
 import { recordError } from '@/services/sentry'
 import { useAdsState } from '@/stores/features/ads'
 import { usePaywallState } from '@/stores/features/paywall'
-import { useSubscriptionState } from '@/stores/features/subscription'
 
 import { AdEventType, getAdUnitId, InterstitialAd } from './adsService'
+import { useCanShowAds } from './useCanShowAds'
 
 export interface UseInterstitialAdOptions {
   /** Override the ad unit ID. Defaults to AppConfig interstitial unit for current platform. */
@@ -36,24 +36,30 @@ export const useInterstitialAd = (
   options: UseInterstitialAdOptions = {}
 ): UseInterstitialAdReturn => {
   const { unitId, autoReload = true } = options
-  const { isSubscribed } = useSubscriptionState()
+  const canShowAds = useCanShowAds()
   const { interstitialLastShownAt, interstitialSessionCount, recordInterstitialShown } =
     useAdsState()
   const { isAutoPaywallShowing } = usePaywallState()
 
-  const isActive = AppConfig.ads.enabled && !isSubscribed
+  const isActive = canShowAds
   const { gracePeriodSessions, cooldownMs } = AppConfig.ads.interstitial
 
-  const adRef = useRef(InterstitialAd.createForAdRequest(unitId ?? getAdUnitId('interstitial')))
+  const adRef = useRef<InterstitialAd | null>(null)
 
   const [isLoaded, setIsLoaded] = useState(false)
   const [isShowing, setIsShowing] = useState(false)
   const [error, setError] = useState<Error | null>(null)
 
   useEffect(() => {
-    if (!isActive) return
+    if (!isActive) {
+      adRef.current = null
+      setIsLoaded(false)
+      setIsShowing(false)
+      return
+    }
 
-    const ad = adRef.current
+    const ad = InterstitialAd.createForAdRequest(unitId ?? getAdUnitId('interstitial'))
+    adRef.current = ad
 
     const unsubLoaded = ad.addAdEventListener(AdEventType.LOADED, () => {
       setIsLoaded(true)
@@ -77,8 +83,9 @@ export const useInterstitialAd = (
       unsubLoaded()
       unsubError()
       unsubClosed()
+      if (adRef.current === ad) adRef.current = null
     }
-  }, [isActive, autoReload])
+  }, [isActive, autoReload, unitId])
 
   const show = useCallback(async (): Promise<boolean> => {
     if (!isActive || !isLoaded) return false
@@ -86,9 +93,11 @@ export const useInterstitialAd = (
     if (interstitialSessionCount < gracePeriodSessions) return false
     if (interstitialLastShownAt !== null && Date.now() - interstitialLastShownAt < cooldownMs)
       return false
+    const ad = adRef.current
+    if (!ad) return false
     setIsShowing(true)
     try {
-      await adRef.current.show()
+      await ad.show()
       recordInterstitialShown()
       return true
     } catch (error) {

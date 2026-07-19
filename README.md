@@ -60,8 +60,9 @@ Use this ordered process when turning the template into a new app. The template 
 2. For each AdMob app, open **Ad units**, choose **Add ad unit**, and create the formats used by this template: one **Banner** unit and one **Interstitial** unit.
 3. Copy each platform's Banner and Interstitial ad-unit IDs into the matching `bannerAdUnitId` and `interstitialAdUnitId` fields in `AppConfig.ads`.
 4. Set `AppConfig.ads.enabled` to `true`, then run `npm run setup:ads` to synchronize the native configuration. Keep the ads initialization hooks in the root and tabs layouts when ads are enabled; remove them when ads are disabled.
-5. Development and preview builds automatically use Google test ad-unit IDs. The AdMob ad-unit IDs above are used by production builds.
-6. Run a clean prebuild after changing the ads configuration.
+5. Development and preview builds automatically use Google's adaptive-banner and interstitial test ad-unit IDs. Register any physical device used to test a production variant as an AdMob test device; never click live ads during development.
+6. The template requests UMP consent before initializing Mobile Ads or constructing ad objects. Preserve that gate and configure any required Privacy & messaging forms in AdMob before release.
+7. Run a clean prebuild after changing the ads configuration.
 
 ### 6. Configure fonts, localization, and OTA updates
 
@@ -174,7 +175,7 @@ import { CustomTabNavigator as TabNavigator, type TabDefinition } from '@/compon
 
 `NativeTabNavigator` resolves to `CustomTabNavigator` on web, so the existing custom web UI remains unchanged. Native tabs do not provide headers, so every tab is a folder with its own `TabStack`. Keep that structure when adding detail routes.
 
-Expo Router does not expose native tab-bar height. `useTabBarHeight()` therefore returns the measured custom height or a conservative native fallback for root overlays. Tab content should use `TabScreen`, which applies the correct navigator-aware content inset and mounts the banner ad only for the focused tab. The native bar is intentionally fixed at the bottom: iOS minimization and iPad sidebar adaptation are disabled by default.
+Expo Router does not expose native tab-bar height. `useTabBarHeight()` therefore returns the measured custom height or a conservative native fallback for root overlays. `TabNavigatorFrame` owns one persistent compact anchored-adaptive banner above the bottom bar for both navigator implementations, so tab changes do not remount the ad or issue new requests. It reserves non-interactive spacing and publishes the measured banner height; `TabScreen` applies the combined navigator-aware content inset. Change `TabBarBanner` when a product needs a different policy-appropriate placement rather than mounting banners inside individual tab routes. The native bar is intentionally fixed at the bottom: iOS minimization and iPad sidebar adaptation are disabled by default.
 
 ## UI and Theme
 
@@ -226,9 +227,10 @@ export const examplePersistExcludeKeys: ExcludeKeys<ExampleSlice> = []
 
 const createExampleSlice = (set: any): ExampleSlice => ({
   value: '',
-  setValue: (value) => set((state: AppSlices) => {
-    state.example.value = value
-  }),
+  setValue: (value) =>
+    set((state: AppSlices) => {
+      state.example.value = value
+    }),
 })
 
 export const sliceConfig = {
@@ -237,7 +239,9 @@ export const sliceConfig = {
 } satisfies SliceConfig<ExampleSlice>
 
 export const useExampleState = () =>
-  getUseAppStore()(useShallow(({ example }) => ({ value: example.value, setValue: example.setValue })))
+  getUseAppStore()(
+    useShallow(({ example }) => ({ value: example.value, setValue: example.setValue }))
+  )
 ```
 
 Only list non-function state values in `persistExcludeKeys`; actions are excluded automatically. Add a per-slice version and migrations only after that slice has shipped persisted state.

@@ -50,12 +50,17 @@ export const useTabBarHeight = () => {
   return tabBarHeight + accessoryHeight
 }
 
-export const useTabBarContentInset = () => {
+export const useTabBarBaseHeight = () => {
   const { height, mode } = useContext(TabBarHeightContext)
+  return mode === 'custom' ? height : TAB_BAR_HEIGHT
+}
+
+export const useTabBarContentInset = () => {
+  const { accessoryHeight, height, mode } = useContext(TabBarHeightContext)
   const insets = useSafeAreaInsets()
 
-  if (mode === 'custom') return height
-  return process.env.EXPO_OS === 'ios' ? insets.bottom : 0
+  if (mode === 'custom') return height + accessoryHeight
+  return (process.env.EXPO_OS === 'ios' ? insets.bottom : 0) + accessoryHeight
 }
 
 export const useSetTabBarHeight = () => useContext(TabBarHeightContext).setHeight

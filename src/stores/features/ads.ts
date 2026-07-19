@@ -13,10 +13,12 @@ export interface AdsSlice {
   // SDK init state (runtime, not persisted)
   adsInitialized: boolean
   adsInitError: string | null
+  canRequestAds: boolean
   consentGathered: boolean
   privacyOptionsRequired: boolean
   setAdsInitialized: (initialized: boolean) => void
   setAdsInitError: (error: string | null) => void
+  setCanRequestAds: (canRequest: boolean) => void
   setConsentGathered: (gathered: boolean) => void
   setPrivacyOptionsRequired: (required: boolean) => void
   // Interstitial trigger state (persisted)
@@ -29,6 +31,7 @@ export interface AdsSlice {
 export const adsPersistExcludeKeys: ExcludeKeys<AdsSlice> = [
   'adsInitialized',
   'adsInitError',
+  'canRequestAds',
   'consentGathered',
   'privacyOptionsRequired',
 ]
@@ -36,6 +39,7 @@ export const adsPersistExcludeKeys: ExcludeKeys<AdsSlice> = [
 export const createAdsSlice = (set: (updater: (state: AdsSlice) => void) => void): AdsSlice => ({
   adsInitialized: false,
   adsInitError: null,
+  canRequestAds: false,
   consentGathered: false,
   privacyOptionsRequired: false,
   setAdsInitialized: (initialized) =>
@@ -47,6 +51,10 @@ export const createAdsSlice = (set: (updater: (state: AdsSlice) => void) => void
     set((state) => {
       state.adsInitialized = false
       state.adsInitError = error
+    }),
+  setCanRequestAds: (canRequest) =>
+    set((state) => {
+      state.canRequestAds = canRequest
     }),
   setConsentGathered: (gathered) =>
     set((state) => {
@@ -78,10 +86,12 @@ export const useAdsState = () =>
     useShallow(({ ads }) => ({
       adsInitialized: ads.adsInitialized,
       adsInitError: ads.adsInitError,
+      canRequestAds: ads.canRequestAds,
       consentGathered: ads.consentGathered,
       privacyOptionsRequired: ads.privacyOptionsRequired,
       setAdsInitialized: ads.setAdsInitialized,
       setAdsInitError: ads.setAdsInitError,
+      setCanRequestAds: ads.setCanRequestAds,
       setConsentGathered: ads.setConsentGathered,
       setPrivacyOptionsRequired: ads.setPrivacyOptionsRequired,
       interstitialLastShownAt: ads.interstitialLastShownAt,
