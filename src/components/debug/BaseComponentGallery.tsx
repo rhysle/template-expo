@@ -23,6 +23,13 @@ import {
   type ComponentTone,
   IconButton,
   InlineNotice,
+  NativeAlertDialog,
+  NativeBottomSheet,
+  NativeMenu,
+  type NativeMenuAction,
+  NativeSegmentedControl,
+  NativeSlider,
+  NativeToggle,
   ProgressRing,
   PulsingRingLoader,
   SearchInput,
@@ -75,7 +82,30 @@ export const BaseComponentGallery = () => {
   const [progressValue, setProgressValue] = useState(68)
   const [playgroundTab, setPlaygroundTab] = useState<PlaygroundTab>('first')
   const [toggleEnabled, setToggleEnabled] = useState(false)
+  const [sliderValue, setSliderValue] = useState(40)
+  const [menuFavorite, setMenuFavorite] = useState(false)
+  const [lastMenuAction, setLastMenuAction] = useState<string>()
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false)
+  const [isNativeBottomSheetVisible, setIsNativeBottomSheetVisible] = useState(false)
+  const [isNativeAlertVisible, setIsNativeAlertVisible] = useState(false)
+
+  const nativeMenuActions: readonly NativeMenuAction[] = [
+    { id: 'favorite', label: 'Favorite', selected: menuFavorite },
+    { id: 'disabled', label: 'Unavailable action', disabled: true },
+    {
+      id: 'more',
+      label: 'More',
+      children: [
+        { id: 'duplicate', label: 'Duplicate' },
+        { id: 'delete', label: 'Delete', destructive: true },
+      ],
+    },
+  ]
+
+  const handleMenuSelect = (id: string) => {
+    setLastMenuAction(id)
+    if (id === 'favorite') setMenuFavorite((current) => !current)
+  }
 
   return (
     <>
@@ -299,8 +329,15 @@ export const BaseComponentGallery = () => {
           </View>
         </GalleryCard>
 
-        <GalleryCard title="Segmented control">
+        <GalleryCard title="Segmented control — custom and Expo UI">
+          <ComparisonLabel>Custom</ComparisonLabel>
           <SegmentedControl
+            options={PLAYGROUND_TABS}
+            value={playgroundTab}
+            onValueChange={setPlaygroundTab}
+          />
+          <ComparisonLabel>Expo UI native</ComparisonLabel>
+          <NativeSegmentedControl
             options={PLAYGROUND_TABS}
             value={playgroundTab}
             onValueChange={setPlaygroundTab}
@@ -310,26 +347,93 @@ export const BaseComponentGallery = () => {
           </Text>
         </GalleryCard>
 
-        <GalleryCard title="Toggle">
-          <View style={styles.toggleRow}>
-            <View style={styles.toggleCopy}>
-              <Text variant="body" weight="medium">
-                Toggle
-              </Text>
-              <Text variant="caption" tone="muted">
-                {toggleEnabled ? 'Enabled' : 'Disabled'}
-              </Text>
-            </View>
+        <GalleryCard title="Toggle — custom and Expo UI">
+          <ComparisonRow label="Custom toggle" detail={toggleEnabled ? 'Enabled' : 'Disabled'}>
             <Toggle value={toggleEnabled} onValueChange={setToggleEnabled} />
+          </ComparisonRow>
+          <ComparisonRow label="Expo UI toggle" detail={toggleEnabled ? 'Enabled' : 'Disabled'}>
+            <NativeToggle value={toggleEnabled} onValueChange={setToggleEnabled} />
+          </ComparisonRow>
+          <ComparisonRow label="Disabled native toggle" detail="Non-interactive example">
+            <NativeToggle value disabled onValueChange={() => {}} />
+          </ComparisonRow>
+        </GalleryCard>
+
+        <GalleryCard title="Bottom sheets — custom and Expo UI">
+          <View style={styles.comparisonGrid}>
+            <View style={styles.comparisonCell}>
+              <ComparisonLabel>Custom</ComparisonLabel>
+              <Button
+                variant="secondary"
+                label="Open custom"
+                fullWidth
+                onPress={() => setIsBottomSheetVisible(true)}
+              />
+            </View>
+            <View style={styles.comparisonCell}>
+              <ComparisonLabel>Expo UI native</ComparisonLabel>
+              <Button
+                variant="secondary"
+                label="Open native"
+                fullWidth
+                onPress={() => setIsNativeBottomSheetVisible(true)}
+              />
+            </View>
           </View>
         </GalleryCard>
 
-        <GalleryCard title="Bottom sheet">
+        <GalleryCard title="Native slider — Expo UI">
+          <NativeSlider
+            value={sliderValue}
+            min={0}
+            max={100}
+            step={10}
+            onValueChange={setSliderValue}
+          />
+          <Text variant="caption" tone="muted" style={styles.tabularNumbers} selectable>
+            Value: {sliderValue}
+          </Text>
+          <NativeSlider value={60} min={0} max={100} disabled onValueChange={() => {}} />
+        </GalleryCard>
+
+        <GalleryCard title="Native menus — Expo UI">
+          <View style={styles.comparisonGrid}>
+            <View style={styles.comparisonCell}>
+              <ComparisonLabel>Tap menu</ComparisonLabel>
+              <NativeMenu actions={nativeMenuActions} onSelect={handleMenuSelect} title="Actions">
+                <View style={styles.menuTrigger}>
+                  <Text variant="body" weight="semibold" align="center">
+                    Tap to open
+                  </Text>
+                </View>
+              </NativeMenu>
+            </View>
+            <View style={styles.comparisonCell}>
+              <ComparisonLabel>Context menu</ComparisonLabel>
+              <NativeMenu
+                actions={nativeMenuActions}
+                onSelect={handleMenuSelect}
+                title="Actions"
+                trigger="longPress">
+                <View style={styles.menuTrigger}>
+                  <Text variant="body" weight="semibold" align="center">
+                    Long press
+                  </Text>
+                </View>
+              </NativeMenu>
+            </View>
+          </View>
+          <Text variant="caption" tone="muted" selectable>
+            Last action: {lastMenuAction ?? 'None'}
+          </Text>
+        </GalleryCard>
+
+        <GalleryCard title="Native alert dialog — Expo UI">
           <Button
             variant="secondary"
-            label="Open Bottom Sheet"
+            label="Open native alert"
             fullWidth
-            onPress={() => setIsBottomSheetVisible(true)}
+            onPress={() => setIsNativeAlertVisible(true)}
           />
         </GalleryCard>
 
@@ -431,6 +535,33 @@ export const BaseComponentGallery = () => {
           <Button label="Dismiss" fullWidth onPress={() => setIsBottomSheetVisible(false)} />
         </View>
       </BottomSheet>
+
+      <NativeBottomSheet
+        visible={isNativeBottomSheetVisible}
+        onDismiss={() => setIsNativeBottomSheetVisible(false)}>
+        <View style={styles.bottomSheetContent}>
+          <Text variant="title" weight="semibold">
+            Expo UI Bottom Sheet
+          </Text>
+          <Text variant="body" tone="muted">
+            This sheet uses the platform-native SwiftUI or Material 3 presentation.
+          </Text>
+          <Button label="Dismiss" fullWidth onPress={() => setIsNativeBottomSheetVisible(false)} />
+        </View>
+      </NativeBottomSheet>
+
+      <NativeAlertDialog
+        visible={isNativeAlertVisible}
+        title="Delete preset?"
+        message="This demonstrates a destructive native confirmation action."
+        confirmAction={{
+          label: 'Delete',
+          role: 'destructive',
+          onPress: () => showSnackbar({ title: 'Native confirm action', variant: 'success' }),
+        }}
+        dismissAction={{ label: 'Cancel', role: 'cancel', onPress: () => {} }}
+        onDismiss={() => setIsNativeAlertVisible(false)}
+      />
     </>
   )
 }
@@ -470,6 +601,38 @@ const LoaderPreview = ({ label, children }: { label: string; children: React.Rea
       <Text variant="caption" tone="muted" align="center">
         {label}
       </Text>
+    </View>
+  )
+}
+
+const ComparisonLabel = ({ children }: { children: React.ReactNode }) => (
+  <Text variant="caption" weight="semibold" tone="muted">
+    {children}
+  </Text>
+)
+
+const ComparisonRow = ({
+  label,
+  detail,
+  children,
+}: {
+  label: string
+  detail: string
+  children: React.ReactNode
+}) => {
+  const styles = useThemedStyles(createStyles)
+
+  return (
+    <View style={styles.comparisonRow}>
+      <View style={styles.comparisonCopy}>
+        <Text variant="body" weight="medium">
+          {label}
+        </Text>
+        <Text variant="caption" tone="muted">
+          {detail}
+        </Text>
+      </View>
+      {children}
     </View>
   )
 }
@@ -518,13 +681,33 @@ const createStyles = createThemedStyles((t) => ({
     height: 32,
     justifyContent: 'center',
   },
-  toggleRow: {
+  comparisonRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    gap: t.spacing.md,
   },
-  toggleCopy: {
+  comparisonCopy: {
+    flex: 1,
     gap: t.spacing.xs,
+  },
+  comparisonGrid: {
+    flexDirection: 'row',
+    gap: t.spacing.sm,
+  },
+  comparisonCell: {
+    flex: 1,
+    gap: t.spacing.sm,
+  },
+  menuTrigger: {
+    minHeight: 48,
+    justifyContent: 'center',
+    paddingHorizontal: t.spacing.md,
+    paddingVertical: t.spacing.sm,
+    borderWidth: 1,
+    borderColor: t.colors.border.default,
+    borderRadius: t.borderRadius.md,
+    backgroundColor: t.colors.background.subtle,
   },
   actionsGrid: {
     gap: t.spacing.sm,

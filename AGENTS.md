@@ -92,6 +92,8 @@ Use `react-native-reanimated` v4 for animations, never React Native's legacy `An
 
 `src/components/base/` is the reusable template layer. It includes fundamental text, button, card, list, input, sheet, feedback, header, navigation, onboarding, paywall, and loader components. Improve or add abstractions there only when they are broadly reusable.
 
+Expo UI wrappers live under `src/components/base/NativeUI/` and use the `Native*` prefix so they remain distinct from custom React Native implementations. Keep shared props platform-neutral and apply the app appearance, tint, and RTL direction through the shared native host. These wrappers target iOS and Android only; do not add web fallbacks unless a product explicitly restores web support.
+
 Place product-specific layouts and content under `src/components/` or the relevant route. Keep the reusable onboarding and paywall cores intact; replace the matching app-specific content folders instead.
 
 Tab metadata is shared by `NativeTabNavigator` and `CustomTabNavigator`; switch implementations only through the aliased import in `src/app/(tabs)/_layout.tsx`. Native tabs are the mobile default, resolve to custom tabs on web, support at most five Android tabs, and require a nested `TabStack` for each tab because they do not render headers.
