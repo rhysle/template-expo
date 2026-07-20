@@ -18,6 +18,8 @@ This repository intentionally contains sample screens and app-specific placehold
 
 Use this ordered process when turning the template into a new app. The template contains sample credentials and product content, so do not ship until every applicable section has been completed.
 
+Before implementing product features, fill in [`docs/PRODUCT.md`](docs/PRODUCT.md) with the app's problem, users, scope, core flows, requirements, privacy choices, monetization, analytics, and release criteria. Keep it lightweight and remove sections that do not apply.
+
 ### 1. Configure Expo
 
 1. Fork or copy this repository and run `npm install`.
