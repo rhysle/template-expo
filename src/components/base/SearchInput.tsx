@@ -1,15 +1,9 @@
 import { XCircleIcon } from 'phosphor-react-native'
-import { useRef } from 'react'
-import {
-  Pressable,
-  type StyleProp,
-  TextInput,
-  type TextInputProps,
-  View,
-  type ViewStyle,
-} from 'react-native'
+import { useEffect, useRef, useState } from 'react'
+import { type StyleProp, TextInput, type TextInputProps, type ViewStyle } from 'react-native'
 
-import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
+import { IconButton } from './IconButton'
+import { TextField } from './TextField'
 
 export interface SearchInputProps extends Omit<
   TextInputProps,
@@ -28,67 +22,50 @@ export const SearchInput = ({
   readOnly,
   ...props
 }: SearchInputProps) => {
-  const { colors } = useTheme()
-  const styles = useThemedStyles(createStyles)
   const inputRef = useRef<TextInput>(null)
+  const [internalValue, setInternalValue] = useState(value ?? '')
+
+  useEffect(() => {
+    if (value !== undefined) setInternalValue(value)
+  }, [value])
 
   const canEdit = editable !== false && readOnly !== true
-  const showClearButton = canEdit && Boolean(value?.length)
+  const showClearButton = canEdit && internalValue.length > 0
+
+  const handleChangeText = (nextValue: string) => {
+    setInternalValue(nextValue)
+    onChangeText?.(nextValue)
+  }
 
   const handleClear = () => {
     inputRef.current?.clear()
+    setInternalValue('')
     onChangeText?.('')
   }
 
   return (
-    <View style={[styles.container, containerStyle]}>
-      <TextInput
-        ref={inputRef}
-        value={value}
-        onChangeText={onChangeText}
-        editable={editable}
-        readOnly={readOnly}
-        style={styles.input}
-        placeholderTextColor={colors.text.muted}
-        returnKeyType="search"
-        underlineColorAndroid="transparent"
-        {...props}
-      />
-      {showClearButton ? (
-        <Pressable
-          accessibilityLabel={clearAccessibilityLabel}
-          accessibilityRole="button"
-          hitSlop={8}
-          onPress={handleClear}
-          style={({ pressed }) => [styles.clearButton, pressed && styles.clearButtonPressed]}>
-          <XCircleIcon size={iconSizes.md} color={colors.text.muted} weight="fill" />
-        </Pressable>
-      ) : null}
-    </View>
+    <TextField
+      ref={inputRef}
+      value={value}
+      onChangeText={handleChangeText}
+      editable={editable}
+      readOnly={readOnly}
+      containerStyle={containerStyle}
+      returnKeyType="search"
+      trailing={
+        showClearButton ? (
+          <IconButton
+            icon={XCircleIcon}
+            iconWeight="fill"
+            size="sm"
+            variant="ghost"
+            haptic={false}
+            accessibilityLabel={clearAccessibilityLabel}
+            onPress={handleClear}
+          />
+        ) : null
+      }
+      {...props}
+    />
   )
 }
-
-const createStyles = createThemedStyles((t) => ({
-  container: {
-    alignItems: 'center',
-    backgroundColor: t.colors.background.card,
-    borderRadius: t.borderRadius.md,
-    borderWidth: 1,
-    borderColor: t.colors.border.default,
-    flexDirection: 'row',
-    paddingHorizontal: t.spacing.md,
-    paddingVertical: t.spacing.sm,
-  },
-  input: {
-    color: t.colors.text.primary,
-    flex: 1,
-    fontSize: t.typography.sizes.lg,
-    paddingVertical: t.spacing.xs,
-  },
-  clearButton: {
-    marginLeft: t.spacing.sm,
-  },
-  clearButtonPressed: {
-    opacity: 0.65,
-  },
-}))

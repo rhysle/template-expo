@@ -1,28 +1,16 @@
 import {
   ArrowClockwiseIcon,
-  ArrowRightIcon,
   CaretDownIcon,
   CaretUpIcon,
-  CheckIcon,
   TrashIcon,
   WarningIcon,
 } from 'phosphor-react-native'
 import { useState } from 'react'
 import { Alert, ScrollView, View } from 'react-native'
 
-import {
-  BottomSheet,
-  BouncingDotsLoader,
-  Button,
-  Card,
-  Pressable,
-  PulsingRingLoader,
-  SegmentedControl,
-  SpinArcLoader,
-  Text,
-  Toggle,
-} from '@/components/base'
+import { Button, Card, Pressable, SegmentedControl, Text } from '@/components/base'
 import type { SegmentedOption } from '@/components/base/SegmentedControl'
+import { BaseComponentGallery } from '@/components/debug/BaseComponentGallery'
 import { DesignTokenSection } from '@/components/debug/DesignTokenSection'
 import { ScreenHeader } from '@/components/ScreenHeader'
 import { clearUserId as clearUserIdService } from '@/services/userIdentity'
@@ -45,18 +33,11 @@ import {
 } from '@/utils/debugState'
 
 type ZustandTab = 'live' | 'persisted' | 'diff'
-type PlaygroundTab = 'first' | 'second' | 'third'
 
 const ZUSTAND_TABS: readonly SegmentedOption<ZustandTab>[] = [
   { label: 'Live', value: 'live' },
   { label: 'Persisted', value: 'persisted' },
   { label: 'Diff', value: 'diff' },
-] as const
-
-const PLAYGROUND_TABS: readonly SegmentedOption<PlaygroundTab>[] = [
-  { label: 'First', value: 'first' },
-  { label: 'Second', value: 'second' },
-  { label: 'Third', value: 'third' },
 ] as const
 
 export default function DebugScreen() {
@@ -66,9 +47,6 @@ export default function DebugScreen() {
   const { showSnackbar } = useSnackbarState()
   const { userId, clearUserId: clearUserIdSlice } = useUserIdentityState()
   const [zustandTab, setZustandTab] = useState<ZustandTab>('live')
-  const [playgroundTab, setPlaygroundTab] = useState<PlaygroundTab>('first')
-  const [toggleEnabled, setToggleEnabled] = useState(false)
-  const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false)
 
   const readDebugData = () => {
     const sliceVersions = getSliceVersionInfo()
@@ -110,177 +88,8 @@ export default function DebugScreen() {
 
         <DesignTokenSection />
 
-        {/* Component Playground */}
-        <CollapsibleSection title="Component Playground">
-          <Card padding="md">
-            <View style={styles.playgroundContent}>
-              <Text variant="caption" weight="semibold" tone="muted">
-                Button variants
-              </Text>
-              <View style={styles.buttonGallery}>
-                <Button variant="primary" label="Primary" fullWidth />
-                <Button variant="secondary" label="Secondary" fullWidth />
-                <Button variant="ghost" label="Ghost" fullWidth />
-                <Button variant="outlined" label="Outlined" fullWidth />
-                <Button variant="inverted" label="Inverted" fullWidth />
-                <Button variant="danger" label="Danger" fullWidth />
-                <Button
-                  label="With left icon"
-                  leftIcon={<CheckIcon size={iconSizes.sm} color={theme.colors.text.inverse} />}
-                  fullWidth
-                />
-                <Button
-                  variant="outlined"
-                  label="With right icon"
-                  rightIcon={
-                    <ArrowRightIcon size={iconSizes.sm} color={theme.colors.primary.main} />
-                  }
-                  fullWidth
-                />
-                <Button label="Loading" loading fullWidth />
-              </View>
-
-              <View style={styles.divider} />
-              <Text variant="caption" weight="semibold" tone="muted">
-                Loaders
-              </Text>
-              <View style={styles.loaderRow}>
-                <LoaderPreview label="Bouncing dots">
-                  <BouncingDotsLoader color={theme.colors.primary.main} />
-                </LoaderPreview>
-                <LoaderPreview label="Spin arc">
-                  <SpinArcLoader color={theme.colors.primary.main} size={28} />
-                </LoaderPreview>
-                <LoaderPreview label="Pulsing ring">
-                  <PulsingRingLoader color={theme.colors.primary.main} />
-                </LoaderPreview>
-              </View>
-
-              <View style={styles.divider} />
-              <Text variant="caption" weight="semibold" tone="muted">
-                Segmented control
-              </Text>
-              <SegmentedControl
-                options={PLAYGROUND_TABS}
-                value={playgroundTab}
-                onValueChange={setPlaygroundTab}
-              />
-              <Text variant="caption" tone="muted">
-                Selected: {playgroundTab}
-              </Text>
-
-              <View style={styles.divider} />
-              <View style={styles.toggleRow}>
-                <View style={styles.toggleCopy}>
-                  <Text variant="body" weight="medium">
-                    Toggle
-                  </Text>
-                  <Text variant="caption" tone="muted">
-                    {toggleEnabled ? 'Enabled' : 'Disabled'}
-                  </Text>
-                </View>
-                <Toggle value={toggleEnabled} onValueChange={setToggleEnabled} />
-              </View>
-
-              <View style={styles.divider} />
-              <Button
-                variant="secondary"
-                label="Open Bottom Sheet"
-                fullWidth
-                onPress={() => setIsBottomSheetVisible(true)}
-              />
-
-              <View style={styles.divider} />
-              <Text variant="caption" weight="semibold" tone="muted">
-                Snackbar
-              </Text>
-              <View style={styles.actionsGrid}>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  label="Default"
-                  onPress={() => showSnackbar({ title: 'Hello from snackbar' })}
-                />
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  label="Success"
-                  onPress={() => showSnackbar({ title: 'Changes saved', variant: 'success' })}
-                />
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  label="Success + subtitle"
-                  onPress={() =>
-                    showSnackbar({
-                      title: 'Changes saved',
-                      subtitle: 'Your data has been saved successfully',
-                      variant: 'success',
-                    })
-                  }
-                />
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  label="Error"
-                  onPress={() => showSnackbar({ title: 'Something went wrong', variant: 'error' })}
-                />
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  label="Warning"
-                  onPress={() => showSnackbar({ title: 'Connection lost', variant: 'warning' })}
-                />
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  label="Info"
-                  onPress={() =>
-                    showSnackbar({ title: 'A new update is available', variant: 'info' })
-                  }
-                />
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  label="Neutral"
-                  onPress={() => showSnackbar({ title: 'Currency added', variant: 'neutral' })}
-                />
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  label="With action"
-                  onPress={() =>
-                    showSnackbar({
-                      title: 'Currency removed',
-                      variant: 'neutral',
-                      action: { label: 'Undo', onPress: () => {} },
-                    })
-                  }
-                />
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  label="Persistent (no auto-dismiss)"
-                  onPress={() =>
-                    showSnackbar({
-                      title: 'Update ready',
-                      variant: 'success',
-                      durationMs: 0,
-                      action: { label: 'Restart', onPress: () => {} },
-                    })
-                  }
-                />
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  label="No icon override"
-                  onPress={() =>
-                    showSnackbar({ title: 'Success but no icon', variant: 'success', icon: null })
-                  }
-                />
-              </View>
-            </View>
-          </Card>
+        <CollapsibleSection title="Component Gallery">
+          <BaseComponentGallery />
         </CollapsibleSection>
 
         {/* User Identity */}
@@ -463,17 +272,6 @@ export default function DebugScreen() {
           </View>
         </View>
       </View>
-      <BottomSheet visible={isBottomSheetVisible} onDismiss={() => setIsBottomSheetVisible(false)}>
-        <View style={styles.bottomSheetContent}>
-          <Text variant="title" weight="semibold">
-            Bottom Sheet
-          </Text>
-          <Text variant="body" tone="muted">
-            Drag down, tap the backdrop, or use the button below to dismiss this sheet.
-          </Text>
-          <Button label="Dismiss" fullWidth onPress={() => setIsBottomSheetVisible(false)} />
-        </View>
-      </BottomSheet>
     </ScrollView>
   )
 }
@@ -495,7 +293,12 @@ const CollapsibleSection = ({
 
   return (
     <View style={styles.section}>
-      <Pressable onPress={() => setOpen((v) => !v)} style={styles.sectionHeader}>
+      <Pressable
+        accessibilityLabel={title}
+        accessibilityRole="button"
+        accessibilityState={{ expanded: open }}
+        onPress={() => setOpen((v) => !v)}
+        style={styles.sectionHeader}>
         <Text variant="subtitle" weight="semibold">
           {title}
         </Text>
@@ -611,19 +414,6 @@ const DiffView = ({ entries }: { entries: ReturnType<typeof diffStates> }) => {
   )
 }
 
-const LoaderPreview = ({ label, children }: { label: string; children: React.ReactNode }) => {
-  const styles = useThemedStyles(createStyles)
-
-  return (
-    <View style={styles.loaderPreview}>
-      <View style={styles.loaderPreviewAnimation}>{children}</View>
-      <Text variant="caption" tone="muted" align="center">
-        {label}
-      </Text>
-    </View>
-  )
-}
-
 // ── Styles ──
 
 const createStyles = createThemedStyles((t) => ({
@@ -701,37 +491,6 @@ const createStyles = createThemedStyles((t) => ({
   },
   actionsGrid: {
     gap: t.spacing.sm,
-  },
-  playgroundContent: {
-    gap: t.spacing.md,
-  },
-  buttonGallery: {
-    gap: t.spacing.sm,
-  },
-  loaderRow: {
-    flexDirection: 'row',
-    gap: t.spacing.sm,
-  },
-  loaderPreview: {
-    flex: 1,
-    alignItems: 'center',
-    gap: t.spacing.sm,
-  },
-  loaderPreviewAnimation: {
-    height: 32,
-    justifyContent: 'center',
-  },
-  toggleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  toggleCopy: {
-    gap: t.spacing.xs,
-  },
-  bottomSheetContent: {
-    paddingHorizontal: t.spacing.lg,
-    gap: t.spacing.md,
   },
   diffRow: {
     padding: t.spacing.md,
