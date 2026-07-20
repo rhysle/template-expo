@@ -202,6 +202,8 @@ The template enables RTL support through Expo configuration. `useIsRTL()` is ava
 
 `src/components/base/` is the reusable layer. Notable building blocks include `Button`, `Text`, `Card`, `ListItem` variants, `Toggle`, `SegmentedControl`, `BottomSheet`, `SearchInput`, `FadeScrollView`, `Snackbar`, `CollapsingHeader`, `NativeTabNavigator`, `CustomTabNavigator`, `TabStack`, `TabScreen`, `FloatingTabBar`, `Onboarding`, `Paywall`, and loading indicators.
 
+Expo UI wrappers live in `src/components/base/NativeUI/` and use PascalCase `Native*` names such as `NativeToggle`, `NativeBottomSheet`, and `NativeAlertDialog`. They preserve the custom base components for side-by-side comparison, expose platform-neutral props, inherit the app theme and RTL direction where supported, and target iOS and Android only.
+
 Keep reusable behavior here. Put product-specific composition in `src/components/` or route files.
 
 ## State and Persistence
