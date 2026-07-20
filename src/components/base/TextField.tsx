@@ -42,6 +42,8 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(
       accessibilityHint,
       accessibilityState,
       placeholderTextColor,
+      cursorColor,
+      selectionHandleColor,
       onFocus,
       onBlur,
       ...props
@@ -97,6 +99,8 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(
             onBlur={handleBlur}
             onFocus={handleFocus}
             placeholderTextColor={placeholderTextColor ?? colors.text.muted}
+            cursorColor={cursorColor ?? colors.primary.main}
+            selectionHandleColor={selectionHandleColor ?? colors.primary.main}
             readOnly={readOnly}
             style={[
               styles.input,
@@ -108,7 +112,7 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(
             {...props}
           />
 
-          {trailing ? <View style={styles.adornment}>{trailing}</View> : null}
+          {trailing ?? null}
         </View>
 
         {supportingText ? (

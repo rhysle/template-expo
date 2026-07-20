@@ -82,7 +82,10 @@ export default function DebugScreen() {
   }
 
   return (
-    <ScrollView style={commonStyles.screen} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      style={commonStyles.screen}
+      showsVerticalScrollIndicator={false}
+      keyboardShouldPersistTaps="handled">
       <View style={styles.container}>
         <ScreenHeader title="Debug State" subtitle="Inspect live, persisted, and migration state" />
 

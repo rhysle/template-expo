@@ -1,8 +1,16 @@
 import { XCircleIcon } from 'phosphor-react-native'
 import { useEffect, useRef, useState } from 'react'
-import { type StyleProp, TextInput, type TextInputProps, type ViewStyle } from 'react-native'
+import {
+  type StyleProp,
+  StyleSheet,
+  TextInput,
+  type TextInputProps,
+  type ViewStyle,
+} from 'react-native'
 
-import { IconButton } from './IconButton'
+import { iconSizes, useTheme } from '@/theme'
+
+import { Pressable } from './Pressable'
 import { TextField } from './TextField'
 
 export interface SearchInputProps extends Omit<
@@ -20,8 +28,11 @@ export const SearchInput = ({
   onChangeText,
   editable,
   readOnly,
+  cursorColor,
+  selectionHandleColor,
   ...props
 }: SearchInputProps) => {
+  const { colors } = useTheme()
   const inputRef = useRef<TextInput>(null)
   const [internalValue, setInternalValue] = useState(value ?? '')
 
@@ -41,6 +52,7 @@ export const SearchInput = ({
     inputRef.current?.clear()
     setInternalValue('')
     onChangeText?.('')
+    inputRef.current?.focus()
   }
 
   return (
@@ -50,22 +62,30 @@ export const SearchInput = ({
       onChangeText={handleChangeText}
       editable={editable}
       readOnly={readOnly}
+      cursorColor={cursorColor ?? colors.primary.main}
+      selectionHandleColor={selectionHandleColor ?? colors.primary.main}
       containerStyle={containerStyle}
       returnKeyType="search"
       trailing={
         showClearButton ? (
-          <IconButton
-            icon={XCircleIcon}
-            iconWeight="fill"
-            size="sm"
-            variant="ghost"
-            haptic={false}
+          <Pressable
             accessibilityLabel={clearAccessibilityLabel}
+            accessibilityRole="button"
+            activeOpacity={0.65}
+            hitSlop={12}
             onPress={handleClear}
-          />
+            style={styles.clearButton}>
+            <XCircleIcon size={iconSizes.md} color={colors.text.muted} weight="fill" />
+          </Pressable>
         ) : null
       }
       {...props}
     />
   )
 }
+
+const styles = StyleSheet.create({
+  clearButton: {
+    zIndex: 1,
+  },
+})
