@@ -1,4 +1,5 @@
-// App-specific analytics events for this app.
-// When forking this template for a new project, replace this file entirely
-// with events relevant to that app. Keep analyticsGeneralEvents.ts untouched.
-export const AnalyticsAppEvents = {} as const
+export const AnalyticsAppEvents = {
+  AUDIO_TOOL_STARTED: 'audio_tool_started',
+  AUDIO_TOOL_ENDED: 'audio_tool_ended',
+  MICROPHONE_PERMISSION_RESULT: 'microphone_permission_result',
+} as const

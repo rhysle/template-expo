@@ -12,7 +12,11 @@
     "retry": "আবার চেষ্টা করুন",
     "restart": "পুনরায় চালু করুন",
     "save": "সংরক্ষণ করুন",
-    "skip": "এড়িয়ে যান"
+    "skip": "এড়িয়ে যান",
+    "openSettings": "Open Settings",
+    "reset": "Reset",
+    "start": "Start",
+    "stop": "Stop"
   },
   "tabs": {
     "eject": "বের করুন",
@@ -22,8 +26,7 @@
   },
   "settings": {
     "title": "সেটিংস",
-    "subtitle": "আপনার মুদ্রা রূপান্তরকারী কাস্টমাইজ করুন",
-    "preferences": "পছন্দসমূহ",
+    "subtitle": "Tune your speaker tools and sound meter",
     "support": "সহায়তা",
     "contactSupport": "সহায়তায় যোগাযোগ করুন",
     "contactSupportSubtitle": "আমরা সাহায্য করতে এখানে আছি",
@@ -42,7 +45,25 @@
     "otaUpdateId": "আপডেট: {{updateId}}",
     "upgradeBanner": {
       "title": "Premium-এ আপগ্রেড করুন",
-      "subtitle": "ঘন ঘন রেট আপডেট, কোনো বিজ্ঞাপন নেই এবং সম্পূর্ণ চার্ট অ্যাক্সেস"
+      "subtitle": "Remove ads for uninterrupted sound tools"
+    },
+    "audio": {
+      "section": "Audio & Meter",
+      "ejectDuration": "Cleaning duration",
+      "ejectDurationSubtitle": "Default length of each water-eject cycle",
+      "durationValue": "{{count}} seconds",
+      "haptics": "Control haptics",
+      "hapticsSubtitle": "Use tactile feedback in sound tools",
+      "meterResponse": "Meter response",
+      "meterResponseSubtitle": "Choose how quickly readings react",
+      "responseFast": "Fast",
+      "responseSlow": "Slow",
+      "calibration": "Meter calibration",
+      "calibrationSubtitle": "Adjust estimated readings to match a trusted meter",
+      "calibrationValue": "{{value}} dB",
+      "calibrationReset": "Reset calibration",
+      "safety": "Audio Safety & Privacy",
+      "safetySubtitle": "Playback, microphone, and measurement guidance"
     }
   },
   "paywall": {
@@ -120,6 +141,114 @@
     "getStarted": {
       "title": "এক নজরে রেট ইতিহাস",
       "description": "সপ্তাহ, মাস বা গত বছরের রেট ইতিহাস অন্বেষণ করতে যেকোনো মুদ্রায় ট্যাপ করুন।"
+    }
+  },
+  "audioTools": {
+    "common": {
+      "mascot": "Water Eject mascot",
+      "interrupted": "The session stopped when audio focus or the app state changed.",
+      "error": "Audio could not start. Check the current output and try again.",
+      "gradualVolume": "Start at a low device volume and raise it gradually. Keep the speaker away from your ears."
+    },
+    "eject": {
+      "subtitle": "A low-frequency sweep may help move water and loose debris from the speaker.",
+      "safe": "Ready to clean",
+      "running": "Ejecting water…",
+      "completed": "Cleaning cycle complete",
+      "remaining": "{{time}} remaining",
+      "start": "Start cleaning",
+      "stop": "Stop cleaning",
+      "idleHint": "Place the device speaker-side down before starting.",
+      "runningHint": "Keep the device still and away from your ears while the sweep plays.",
+      "completedHint": "Test your speaker and repeat the cycle if the sound is still muffled.",
+      "externalTitle": "Disconnect external audio",
+      "externalBody": "Water eject works through the device speaker, not headphones or Bluetooth outputs.",
+      "howTitle": "How it works",
+      "howBody": "The cycle repeatedly sweeps from 150 to 220 Hz with a smooth pulse designed to vibrate the speaker membrane. Results vary by device."
+    },
+    "tone": {
+      "subtitle": "Generate a precise sine tone and explore the audible frequency range.",
+      "currentFrequency": "Current frequency",
+      "waveformLabel": "Waveform at {{frequency}} hertz",
+      "swipeHint": "Swipe across the waveform or use the slider to adjust frequency.",
+      "presets": "Presets",
+      "play": "Play tone",
+      "stop": "Stop tone",
+      "band": {
+        "veryLow": "Very low",
+        "low": "Low",
+        "midLow": "Low-mid",
+        "mid": "Mid",
+        "high": "High",
+        "veryHigh": "Very high"
+      }
+    },
+    "stereo": {
+      "subtitle": "Check left and right channel separation with a controlled 700 Hz tone.",
+      "manual": "Manual",
+      "auto": "Auto sweep",
+      "left": "Left",
+      "center": "Center",
+      "right": "Right",
+      "positionLeft": "Playing mostly through the left channel",
+      "positionCenter": "Playing equally through both channels",
+      "positionRight": "Playing mostly through the right channel",
+      "idlePosition": "Choose a channel to begin",
+      "startAuto": "Start 8-second sweep",
+      "stop": "Stop stereo test",
+      "completed": "Automatic stereo sweep complete",
+      "headphonesTitle": "Headphones recommended",
+      "headphonesBody": "Channel separation is easier to identify with headphones. Device-speaker results depend on the hardware and current output route."
+    },
+    "meter": {
+      "subtitle": "Estimate the sound level around you while the microphone is active.",
+      "protect": "Protect your hearing",
+      "estimated": "Estimated dB",
+      "start": "Start measuring",
+      "stop": "Stop measuring",
+      "reset": "Reset session",
+      "permissionTitle": "Microphone access is off",
+      "permissionBody": "Allow microphone access in system settings to estimate nearby sound levels.",
+      "privacyTitle": "Processed only on this device",
+      "privacyBody": "Audio samples are analyzed in memory and are never recorded, saved, or uploaded.",
+      "disclaimer": "Estimated readings vary by device and are not a calibrated, medical, or hearing-safety instrument.",
+      "minimum": "Minimum",
+      "average": "Average",
+      "maximum": "Maximum",
+      "status": {
+        "veryQuiet": "Very quiet",
+        "normal": "Normal",
+        "loud": "Loud",
+        "danger": "Danger"
+      },
+      "description": {
+        "veryQuiet": "Library, soft breathing",
+        "normal": "Conversation, office",
+        "loud": "Busy street, loud music",
+        "danger": "Concert, siren"
+      },
+      "guidance": {
+        "veryQuiet": "This environment is very quiet.",
+        "normal": "The estimated sound level is in a typical range.",
+        "loud": "Prolonged exposure may affect your hearing.",
+        "danger": "Move to a quieter place and protect your hearing."
+      }
+    },
+    "safety": {
+      "title": "Audio Safety & Privacy",
+      "intro": "Use these tools carefully and understand what your phone can—and cannot—measure.",
+      "playbackTitle": "Safe playback",
+      "playbackBody": "Start at low volume, raise it gradually, keep the speaker away from your ears, and stop if a sound is uncomfortable.",
+      "routingTitle": "Audio routing",
+      "routingBody": "Water-eject sound must use the device speaker. Stereo separation depends on the connected speaker or headphones.",
+      "estimateTitle": "Estimated sound levels",
+      "estimateBody": "Phone microphones report digital signal level rather than laboratory SPL. The app applies an estimate that varies by device.",
+      "calibrationTitle": "Calibration",
+      "calibrationBody": "Compare the meter with a trusted reference in the same position, then adjust the calibration offset in Settings.",
+      "privacyTitle": "Microphone privacy",
+      "privacyBody": "The microphone runs only while the dB Meter is active. Samples are processed in memory and are never saved or uploaded.",
+      "limitationsTitle": "Important limitations",
+      "limitationsBody": "This app cannot guarantee water removal and must not replace calibrated equipment, medical advice, or professional hearing protection guidance."
     }
   }
 }

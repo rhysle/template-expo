@@ -90,6 +90,13 @@ function RootLayoutContent() {
             }}
           />
           <Stack.Screen
+            name="audio-safety"
+            options={{
+              title: t('audioTools.safety.title'),
+              headerBackButtonDisplayMode: 'minimal',
+            }}
+          />
+          <Stack.Screen
             name="paywall"
             options={{ headerShown: false, presentation: 'fullScreenModal' }}
           />

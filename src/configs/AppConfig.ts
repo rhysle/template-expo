@@ -38,7 +38,7 @@ export const AppConfig = {
      * bannerAdUnitId and interstitialAdUnitId should be set to
      * real ad unit IDs from AdMob for production builds.
      */
-    enabled: true,
+    enabled: false,
     ios: {
       appId: 'ca-app-pub-4662625232077043~6949204305',
       bannerAdUnitId: '',
