@@ -54,6 +54,7 @@ The idle layout matches the selected Option 1 hierarchy and the running state pr
 ## Visual truth
 
 - Selected source: `docs/design/references/tone-generator-focused-approved.png`
+- Gauge override source: `docs/design/references/tone-generator-three-wave-reference.jpg`
 - Target: Tone Generator tab, light appearance, 440 Hz idle state
 - User-requested refinement: keep the Play tone card in the same content parent as the upper controls instead of rendering it as a sticky footer
 
@@ -62,17 +63,18 @@ The idle layout matches the selected Option 1 hierarchy and the running state pr
 - Idle: `docs/design/implementation/2026-07-21/tone-generator-idle.png`
 - Running: `docs/design/implementation/2026-07-21/tone-generator-running.png`
 - Full-view comparison: `docs/design/implementation/2026-07-21/tone-generator-idle-comparison.png`
+- Focused gauge comparison: `docs/design/implementation/2026-07-21/tone-generator-three-wave-focused-comparison.png`
 - Simulator: iPhone 17 Pro Max, iOS 26.5
 - Viewport capture: 1320 × 2868, light appearance, 440 Hz
 - The approved source was normalized to the implementation canvas and placed beside the rendered app in one comparison image.
-- A focused crop was not needed because the original-resolution comparison keeps the typography, mascot edges, waveform, slider, presets, action card, safety copy, and tab-bar clearance readable.
+- The full-view comparison keeps the typography, mascot, slider, presets, action card, safety copy, and tab-bar clearance readable. The new gauge motif was also compared in a dedicated source-versus-implementation crop because its three overlapping strokes are too fine to judge reliably in the full screen.
 
 ## Findings
 
 - No actionable P0, P1, or P2 mismatch remains.
 - Fonts and typography: the implementation preserves the app's configured type system, hierarchy, tabular frequency numerals, weights, wrapping, and localized labels. The native header and compact control labels remain legible without truncation.
 - Spacing and layout rhythm: the status, subtitle, mascot, frequency block, gauge, presets, and Play tone card follow the approved vertical hierarchy. The action card is now a sibling of those sections inside `AudioToolScreen`'s content container; the separate footer wrapper has been removed.
-- Colors and visual tokens: surfaces, borders, shadows, and controls use project theme tokens. The refined gauge now uses the approved primary-blue treatment while the 440 Hz readout retains the existing semantic low-mid band color as intentional product behavior.
+- Colors and visual tokens: surfaces, borders, shadows, and controls use project theme tokens. The gauge uses one full-strength primary-blue path plus medium- and low-opacity supporting paths, while the 440 Hz readout retains the existing semantic low-mid band color as intentional product behavior.
 - Image quality and asset fidelity: the existing whale mascot asset is sharp and correctly cropped. The Play/Stop card uses the user-supplied waveform ornament with its background removed and transparency preserved; it is not an icon approximation or code-drawn substitute. The simulator's gray floating gear at the left edge is a Simulator Tools overlay, not app UI.
 - Copy and content: title, frequency status, subtitle, presets, Play/Stop label, and safety guidance are localized and complete. The safety sentence is intentionally more explicit than the abbreviated mock copy.
 - Native product differences: the implementation retains the real iOS status bar, native header spacing, settings control, and app tab bar.
@@ -91,6 +93,7 @@ The idle layout matches the selected Option 1 hierarchy and the running state pr
 2. The revised comparison confirmed improved mascot weight and preserved the separate waveform panel and slider selected from Design 2. Remaining differences were classified as intentional native/product behavior or P3 polish.
 3. After the user's inline-card refinement, the sticky footer API was removed, the Play tone card was inserted after the presets in the same content parent, and idle/running Pro Max captures were regenerated. The final comparison shows the complete card clear of the tab bar with no new P0/P1/P2 issue.
 4. The latest comparison identified the line-wave gauge and missing action-card ornaments as remaining source mismatches. The gauge was rebuilt as a responsive five-cluster rounded-bar waveform in primary blue, the exact supplied ornament was placed on both sides of the primary control, and idle/running evidence was regenerated. The post-fix comparison shows both details aligned with the approved source.
+5. The user selected a new three-line wave reference for the gauge. The bar clusters were replaced with three responsive sine paths using distinct frequency, phase, weight, and opacity; active playback moves the layers independently. A focused side-by-side comparison confirms the primary, secondary, and faint detail hierarchy matches the new reference while preserving the app's light panel treatment.
 
 ## Follow-up polish
 

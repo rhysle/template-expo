@@ -1,4 +1,4 @@
-import { Canvas, Path, useClock, usePathValue } from '@shopify/react-native-skia'
+import { Canvas, Group, Path, useClock, usePathValue } from '@shopify/react-native-skia'
 import { useEffect } from 'react'
 import { type LayoutChangeEvent, type StyleProp, View, type ViewStyle } from 'react-native'
 import { useReducedMotion, useSharedValue, withTiming } from 'react-native-reanimated'
@@ -37,7 +37,7 @@ export const FrequencyWaveform = ({
     isActive.value = active && !reducedMotion ? 1 : 0
   }, [active, isActive, reducedMotion])
 
-  const path = usePathValue((builder) => {
+  const primaryPath = usePathValue((builder) => {
     'worklet'
     builder.reset()
     const canvasWidth = width.value
@@ -45,29 +45,61 @@ export const FrequencyWaveform = ({
     if (canvasWidth <= 0 || canvasHeight <= 0) return
 
     const centerY = canvasHeight / 2
-    const barCount = Math.max(Math.round(canvasWidth / 5), 48)
-    const pulseCount = 3 + Math.round(normalizedFrequency.value * 4)
-    const activePhase = isActive.value ? clock.value / 220 : 0
+    const cycles = 2.15 + normalizedFrequency.value * 1.7
+    const phase = isActive.value ? clock.value / 560 : 0.35
+    const amplitude = canvasHeight * 0.25
+    const points = Math.max(Math.round(canvasWidth / 3), 64)
 
-    for (let index = 0; index <= barCount; index += 1) {
-      const progress = index / barCount
-      let envelope = 0
-
-      for (let pulse = 0; pulse < pulseCount; pulse += 1) {
-        const pulseCenter = (pulse + 0.75) / (pulseCount + 0.5)
-        const distance = (progress - pulseCenter) * pulseCount * 3.2
-        envelope = Math.max(envelope, Math.exp(-(distance * distance)))
-      }
-
-      const barTexture = 0.94 + Math.sin(index * 1.7) * 0.06
-      const activeScale = isActive.value
-        ? 0.92 + Math.sin(activePhase + progress * Math.PI * 4) * 0.08
-        : 1
-      const barHeight = 3 + envelope * canvasHeight * 0.72 * barTexture * activeScale
+    for (let index = 0; index <= points; index += 1) {
+      const progress = index / points
       const x = progress * canvasWidth
+      const y = centerY + Math.sin(progress * Math.PI * 2 * cycles + phase) * amplitude
+      if (index === 0) builder.moveTo(x, y)
+      else builder.lineTo(x, y)
+    }
+  })
 
-      builder.moveTo(x, centerY - barHeight / 2)
-      builder.lineTo(x, centerY + barHeight / 2)
+  const secondaryPath = usePathValue((builder) => {
+    'worklet'
+    builder.reset()
+    const canvasWidth = width.value
+    const canvasHeight = height.value
+    if (canvasWidth <= 0 || canvasHeight <= 0) return
+
+    const centerY = canvasHeight / 2
+    const cycles = 3.1 + normalizedFrequency.value * 2.5
+    const phase = isActive.value ? 1.4 - clock.value / 820 : 1.4
+    const amplitude = canvasHeight * 0.16
+    const points = Math.max(Math.round(canvasWidth / 3), 64)
+
+    for (let index = 0; index <= points; index += 1) {
+      const progress = index / points
+      const x = progress * canvasWidth
+      const y = centerY + Math.sin(progress * Math.PI * 2 * cycles + phase) * amplitude
+      if (index === 0) builder.moveTo(x, y)
+      else builder.lineTo(x, y)
+    }
+  })
+
+  const detailPath = usePathValue((builder) => {
+    'worklet'
+    builder.reset()
+    const canvasWidth = width.value
+    const canvasHeight = height.value
+    if (canvasWidth <= 0 || canvasHeight <= 0) return
+
+    const centerY = canvasHeight / 2
+    const cycles = 4.3 + normalizedFrequency.value * 3
+    const phase = isActive.value ? 2.1 + clock.value / 470 : 2.1
+    const amplitude = canvasHeight * 0.1
+    const points = Math.max(Math.round(canvasWidth / 3), 64)
+
+    for (let index = 0; index <= points; index += 1) {
+      const progress = index / points
+      const x = progress * canvasWidth
+      const y = centerY + Math.sin(progress * Math.PI * 2 * cycles + phase) * amplitude
+      if (index === 0) builder.moveTo(x, y)
+      else builder.lineTo(x, y)
     }
   })
 
@@ -84,7 +116,25 @@ export const FrequencyWaveform = ({
       onLayout={handleLayout}
       style={[styles.container, style]}>
       <Canvas pointerEvents="none" style={styles.canvas}>
-        <Path path={path} color={color} style="stroke" strokeWidth={2.5} strokeCap="round" />
+        <Group opacity={0.2}>
+          <Path
+            path={detailPath}
+            color={color}
+            style="stroke"
+            strokeWidth={1.25}
+            strokeCap="round"
+          />
+        </Group>
+        <Group opacity={0.5}>
+          <Path
+            path={secondaryPath}
+            color={color}
+            style="stroke"
+            strokeWidth={1.25}
+            strokeCap="round"
+          />
+        </Group>
+        <Path path={primaryPath} color={color} style="stroke" strokeWidth={3} strokeCap="round" />
       </Canvas>
     </View>
   )
