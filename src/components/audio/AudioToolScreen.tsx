@@ -6,25 +6,33 @@ import { createThemedStyles, useTheme, useThemedStyles } from '@/theme'
 
 interface AudioToolScreenProps extends PropsWithChildren {
   contentStyle?: StyleProp<ViewStyle>
+  variant?: 'default' | 'focused'
 }
 
-export const AudioToolScreen = ({ children, contentStyle }: AudioToolScreenProps) => {
+export const AudioToolScreen = ({
+  children,
+  contentStyle,
+  variant = 'default',
+}: AudioToolScreenProps) => {
   const bottomInset = useTabBarContentInset()
   const { spacing } = useTheme()
   const styles = useThemedStyles(createStyles)
+  const isFocused = variant === 'focused'
 
   return (
-    <TabScreen contentUnderTabBar>
+    <TabScreen contentUnderTabBar={!isFocused}>
       <ScrollView
         contentInsetAdjustmentBehavior="never"
         contentContainerStyle={[
           styles.scrollContent,
-          contentStyle,
-          { paddingBottom: spacing['4xl'] + bottomInset },
+          isFocused && styles.focusedScrollContent,
+          { paddingBottom: isFocused ? spacing.lg : spacing['4xl'] + bottomInset },
         ]}
-        scrollIndicatorInsets={{ bottom: bottomInset }}
+        scrollIndicatorInsets={isFocused ? undefined : { bottom: bottomInset }}
         showsVerticalScrollIndicator={false}>
-        <View style={styles.content}>{children}</View>
+        <View style={[styles.content, isFocused && styles.focusedContent, contentStyle]}>
+          {children}
+        </View>
       </ScrollView>
     </TabScreen>
   )
@@ -36,10 +44,17 @@ const createStyles = createThemedStyles((t) => ({
     paddingHorizontal: t.spacing.lg,
     paddingTop: t.spacing.lg,
   },
+  focusedScrollContent: {
+    paddingTop: t.spacing.md,
+  },
   content: {
     width: '100%',
     maxWidth: 720,
     alignSelf: 'center',
     gap: t.spacing.xl,
+  },
+  focusedContent: {
+    flexGrow: 1,
+    gap: t.spacing.lg,
   },
 }))

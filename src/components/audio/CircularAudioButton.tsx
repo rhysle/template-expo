@@ -9,6 +9,7 @@ interface CircularAudioButtonProps {
   active: boolean
   accessibilityLabel: string
   onPress: () => void
+  size?: 'default' | 'large'
   loading?: boolean
   disabled?: boolean
   haptic?: boolean
@@ -19,6 +20,7 @@ export const CircularAudioButton = ({
   active,
   accessibilityLabel,
   onPress,
+  size = 'default',
   loading = false,
   disabled = false,
   haptic = true,
@@ -26,9 +28,10 @@ export const CircularAudioButton = ({
 }: CircularAudioButtonProps) => {
   const theme = useTheme()
   const styles = useThemedStyles(createStyles)
+  const isLarge = size === 'large'
 
   return (
-    <View style={[styles.halo, active && styles.haloActive, style]}>
+    <View style={[styles.halo, isLarge && styles.haloLarge, active && styles.haloActive, style]}>
       <Pressable
         accessibilityLabel={accessibilityLabel}
         accessibilityRole="button"
@@ -37,7 +40,7 @@ export const CircularAudioButton = ({
         haptic={haptic}
         hapticType="medium"
         onPress={onPress}
-        style={[styles.button, active && styles.buttonActive]}>
+        style={[styles.button, isLarge && styles.buttonLarge, active && styles.buttonActive]}>
         {loading ? (
           <ActivityIndicator color={theme.colors.text.inverse} />
         ) : active ? (
@@ -63,6 +66,10 @@ const createStyles = createThemedStyles((t) => ({
   haloActive: {
     backgroundColor: withAlpha(t.colors.status.error, 0.1),
   },
+  haloLarge: {
+    width: 152,
+    height: 152,
+  },
   button: {
     width: 84,
     height: 84,
@@ -74,5 +81,9 @@ const createStyles = createThemedStyles((t) => ({
   },
   buttonActive: {
     backgroundColor: t.colors.status.error,
+  },
+  buttonLarge: {
+    width: 124,
+    height: 124,
   },
 }))
