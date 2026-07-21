@@ -160,7 +160,6 @@ export default function ToneGeneratorScreen() {
     <>
       <AudioToolScreen
         variant="focused"
-        footer={actionDock}
         contentStyle={[styles.content, isCompactLayout && styles.contentCompact]}>
         <View style={styles.intro}>
           <StatusBadge
@@ -177,8 +176,9 @@ export default function ToneGeneratorScreen() {
         <MascotHero
           active={isRunning}
           compact
+          showWaves={false}
           accentColor={waveformColor}
-          style={[styles.mascot, isCompactLayout && styles.mascotCompact]}
+          style={isCompactLayout && styles.mascotCompact}
         />
 
         <View style={styles.frequencyBlock}>
@@ -280,6 +280,8 @@ export default function ToneGeneratorScreen() {
           </Pressable>
         </View>
 
+        {actionDock}
+
         {snapshot.status === 'error' && isLastToneSession ? (
           <InlineNotice tone="error">{t('audioTools.common.error')}</InlineNotice>
         ) : null}
@@ -321,9 +323,6 @@ const createStyles = createThemedStyles((t) => ({
   },
   status: {
     alignSelf: 'center',
-  },
-  mascot: {
-    marginVertical: -t.spacing.sm,
   },
   mascotCompact: {
     transform: [{ scale: 0.86 }],
