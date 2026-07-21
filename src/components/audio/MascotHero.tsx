@@ -21,6 +21,7 @@ interface MascotHeroProps {
   active?: boolean
   accentColor?: string
   compact?: boolean
+  showWaves?: boolean
   style?: StyleProp<ViewStyle>
 }
 
@@ -28,6 +29,7 @@ export const MascotHero = ({
   active = false,
   accentColor,
   compact = false,
+  showWaves = true,
   style,
 }: MascotHeroProps) => {
   const theme = useTheme()
@@ -68,25 +70,36 @@ export const MascotHero = ({
 
   return (
     <View style={[styles.container, compact && styles.containerCompact, style]}>
+      {showWaves ? (
+        <>
+          <Animated.View
+            pointerEvents="none"
+            style={[
+              styles.wave,
+              compact && styles.waveCompact,
+              { borderColor: withAlpha(resolvedAccent, 0.8) },
+              outerWaveStyle,
+            ]}
+          />
+          <Animated.View
+            pointerEvents="none"
+            style={[
+              styles.wave,
+              compact && styles.waveCompact,
+              { borderColor: resolvedAccent },
+              innerWaveStyle,
+            ]}
+          />
+        </>
+      ) : null}
       <Animated.View
-        pointerEvents="none"
         style={[
-          styles.wave,
-          compact && styles.waveCompact,
-          { borderColor: withAlpha(resolvedAccent, 0.8) },
-          outerWaveStyle,
-        ]}
-      />
-      <Animated.View
-        pointerEvents="none"
-        style={[
-          styles.wave,
-          compact && styles.waveCompact,
-          { borderColor: resolvedAccent },
-          innerWaveStyle,
-        ]}
-      />
-      <Animated.View style={[styles.imageFrame, compact && styles.imageFrameCompact, imageStyle]}>
+          styles.imageFrame,
+          !showWaves && styles.imageFramePlain,
+          compact && styles.imageFrameCompact,
+          !showWaves && compact && styles.imageFramePlainCompact,
+          imageStyle,
+        ]}>
         <Image
           accessibilityLabel={t('audioTools.common.mascot')}
           source={require('@/assets/images/mascot.png')}
@@ -122,6 +135,14 @@ const createStyles = createThemedStyles((t) => ({
     width: 156,
     height: 156,
     borderRadius: t.borderRadius['3xl'],
+  },
+  imageFramePlain: {
+    width: 336,
+    height: 336,
+  },
+  imageFramePlainCompact: {
+    width: 244,
+    height: 244,
   },
   image: {
     width: '100%',

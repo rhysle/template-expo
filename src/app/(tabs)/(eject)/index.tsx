@@ -1,16 +1,16 @@
 import {
   CheckCircleIcon,
-  DropIcon,
+  DeviceMobileSpeakerIcon,
   ShieldCheckIcon,
   SpeakerSlashIcon,
   WaveformIcon,
 } from 'phosphor-react-native'
 import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { View } from 'react-native'
+import { useWindowDimensions, View } from 'react-native'
 
 import { AudioToolScreen, CircularAudioButton, MascotHero } from '@/components/audio'
-import { Card, InlineNotice, ProgressRing, StatusBadge, Text } from '@/components/base'
+import { InlineNotice, ProgressRing, StatusBadge, Text } from '@/components/base'
 import {
   audioController,
   calculateProgress,
@@ -33,6 +33,7 @@ export default function EjectScreen() {
   const { t } = useTranslation()
   const theme = useTheme()
   const styles = useThemedStyles(createStyles)
+  const { height } = useWindowDimensions()
   const snapshot = useAudioController()
   const { ejectDurationSeconds, hapticsEnabled } = useAudioPreferencesState()
   const celebratedRef = useRef(false)
@@ -50,6 +51,7 @@ export default function EjectScreen() {
     : resultState === 'completed'
       ? 1
       : 0
+  const isCompactLayout = height < 900
 
   useEffect(() => {
     void audioController.refreshOutputRoute()
@@ -83,59 +85,72 @@ export default function EjectScreen() {
       : { label: t('audioTools.eject.safe'), tone: 'success' as const, icon: ShieldCheckIcon }
 
   return (
-    <AudioToolScreen>
+    <AudioToolScreen variant="focused">
       <View style={styles.intro}>
+        <StatusBadge
+          label={status.label}
+          tone={status.tone}
+          icon={status.icon}
+          style={styles.status}
+        />
         <Text variant="body" tone="secondary" align="center">
           {t('audioTools.eject.subtitle')}
         </Text>
-        <StatusBadge label={status.label} tone={status.tone} icon={status.icon} />
       </View>
 
-      <MascotHero active={isRunning} />
+      <View style={styles.primaryInteraction}>
+        <View style={[styles.heroSlot, isCompactLayout && styles.heroSlotCompact]}>
+          {isActive ? (
+            <ProgressRing
+              value={progress}
+              maximumValue={1}
+              size={isCompactLayout ? 156 : 184}
+              strokeWidth={12}
+              accessibilityLabel={status.label}
+              accessibilityValueText={t('audioTools.eject.remaining', {
+                time: formatDuration(remainingSeconds),
+              })}>
+              <View style={styles.progressContent}>
+                <Text variant="title" weight="bold" tone="accent" style={styles.timer}>
+                  {formatDuration(remainingSeconds)}
+                </Text>
+                <Text variant="caption" tone="secondary" align="center">
+                  {t('audioTools.eject.running')}
+                </Text>
+              </View>
+            </ProgressRing>
+          ) : (
+            <MascotHero compact={isCompactLayout} showWaves={false} />
+          )}
+        </View>
 
-      <View style={styles.controlSection}>
-        <ProgressRing
-          value={progress}
-          maximumValue={1}
-          size={178}
-          strokeWidth={12}
-          accessibilityLabel={status.label}
-          accessibilityValueText={
-            isActive
-              ? t('audioTools.eject.remaining', { time: formatDuration(remainingSeconds) })
-              : status.label
-          }>
-          <View style={styles.progressContent}>
-            <Text variant="title" weight="bold" tone="accent" style={styles.timer}>
-              {isActive ? formatDuration(remainingSeconds) : formatDuration(durationSeconds)}
-            </Text>
-            <Text variant="caption" tone="secondary" align="center">
+        <View style={styles.controlSection}>
+          <CircularAudioButton
+            active={isActive}
+            size="large"
+            loading={isStarting || snapshot.status === 'stopping'}
+            haptic={hapticsEnabled}
+            accessibilityLabel={isActive ? t('audioTools.eject.stop') : t('audioTools.eject.start')}
+            onPress={handleMainPress}
+          />
+          <Text variant="subtitle" weight="semibold" tone="accent" align="center">
+            {isActive ? t('audioTools.eject.stop') : t('audioTools.eject.start')}
+          </Text>
+          <View style={styles.guidance}>
+            <DeviceMobileSpeakerIcon
+              size={iconSizes.md}
+              color={theme.colors.text.secondary}
+              weight="regular"
+            />
+            <Text variant="body" tone="secondary" align="center" style={styles.guidanceText}>
               {isActive
-                ? t('audioTools.eject.running')
+                ? t('audioTools.eject.runningHint')
                 : resultState === 'completed'
-                  ? t('audioTools.eject.completed')
-                  : t('audioTools.eject.safe')}
+                  ? t('audioTools.eject.completedHint')
+                  : t('audioTools.eject.idleHint')}
             </Text>
           </View>
-        </ProgressRing>
-
-        <CircularAudioButton
-          active={isActive}
-          loading={isStarting || snapshot.status === 'stopping'}
-          haptic={hapticsEnabled}
-          accessibilityLabel={isActive ? t('audioTools.eject.stop') : t('audioTools.eject.start')}
-          onPress={handleMainPress}
-        />
-        <Text variant="subtitle" weight="semibold" tone="accent" align="center">
-          {isActive ? t('audioTools.eject.stop') : t('audioTools.eject.start')}
-        </Text>
-        <Text variant="body" tone="secondary" align="center">
-          {isActive
-            ? t('audioTools.eject.runningHint')
-            : resultState === 'completed'
-              ? t('audioTools.eject.completedHint')
-              : t('audioTools.eject.idleHint')}
-        </Text>
+        </View>
       </View>
 
       {snapshot.outputRouteKind === 'external' ? (
@@ -154,22 +169,6 @@ export default function EjectScreen() {
       {snapshot.status === 'error' && isLastEjectSession ? (
         <InlineNotice tone="error">{t('audioTools.common.error')}</InlineNotice>
       ) : null}
-
-      <Card style={styles.howCard}>
-        <View style={styles.howIcon}>
-          <DropIcon size={iconSizes.lg} color={theme.colors.primary.main} weight="fill" />
-        </View>
-        <View style={styles.howContent}>
-          <Text variant="subtitle" weight="semibold" tone="accent">
-            {t('audioTools.eject.howTitle')}
-          </Text>
-          <Text variant="body" tone="secondary">
-            {t('audioTools.eject.howBody')}
-          </Text>
-        </View>
-      </Card>
-
-      <InlineNotice compact>{t('audioTools.common.gradualVolume')}</InlineNotice>
     </AudioToolScreen>
   )
 }
@@ -179,7 +178,25 @@ const createStyles = createThemedStyles((t) => ({
     alignItems: 'center',
     gap: t.spacing.md,
   },
+  status: {
+    alignSelf: 'center',
+  },
+  primaryInteraction: {
+    flexGrow: 1,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  heroSlot: {
+    width: '100%',
+    height: 336,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  heroSlotCompact: {
+    height: 244,
+  },
   controlSection: {
+    width: '100%',
     alignItems: 'center',
     gap: t.spacing.md,
   },
@@ -191,22 +208,15 @@ const createStyles = createThemedStyles((t) => ({
   timer: {
     fontVariant: ['tabular-nums'],
   },
-  howCard: {
+  guidance: {
+    maxWidth: 420,
     flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: t.spacing.md,
-  },
-  howIcon: {
-    width: 44,
-    height: 44,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: t.borderRadius.full,
-    backgroundColor: t.colors.primary.soft,
+    gap: t.spacing.sm,
+    paddingHorizontal: t.spacing.sm,
   },
-  howContent: {
-    minWidth: 0,
-    flex: 1,
-    gap: t.spacing.xs,
+  guidanceText: {
+    flexShrink: 1,
   },
 }))

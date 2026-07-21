@@ -162,9 +162,7 @@
       "runningHint": "Keep the device still and away from your ears while the sweep plays.",
       "completedHint": "Test your speaker and repeat the cycle if the sound is still muffled.",
       "externalTitle": "Disconnect external audio",
-      "externalBody": "Water eject works through the device speaker, not headphones or Bluetooth outputs.",
-      "howTitle": "How it works",
-      "howBody": "The cycle repeatedly sweeps from 150 to 220 Hz with a smooth pulse designed to vibrate the speaker membrane. Results vary by device."
+      "externalBody": "Water eject works through the device speaker, not headphones or Bluetooth outputs."
     },
     "tone": {
       "subtitle": "Generate a precise sine tone and explore the audible frequency range.",
