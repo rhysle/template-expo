@@ -120,7 +120,11 @@ export default function EjectScreen() {
               </View>
             </ProgressRing>
           ) : (
-            <MascotHero compact={isCompactLayout} showWaves={false} />
+            <MascotHero
+              compact={isCompactLayout}
+              showWaves={false}
+              style={[styles.mascot, isCompactLayout && styles.mascotCompact]}
+            />
           )}
         </View>
 
@@ -128,7 +132,6 @@ export default function EjectScreen() {
           <CircularAudioButton
             active={isActive}
             size="large"
-            loading={isStarting || snapshot.status === 'stopping'}
             haptic={hapticsEnabled}
             accessibilityLabel={isActive ? t('audioTools.eject.stop') : t('audioTools.eject.start')}
             onPress={handleMainPress}
@@ -194,6 +197,12 @@ const createStyles = createThemedStyles((t) => ({
   },
   heroSlotCompact: {
     height: 244,
+  },
+  mascot: {
+    transform: [{ scale: 1.32 }],
+  },
+  mascotCompact: {
+    transform: [{ scale: 1.2 }],
   },
   controlSection: {
     width: '100%',
