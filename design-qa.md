@@ -72,10 +72,10 @@ The idle layout matches the selected Option 1 hierarchy and the running state pr
 - No actionable P0, P1, or P2 mismatch remains.
 - Fonts and typography: the implementation preserves the app's configured type system, hierarchy, tabular frequency numerals, weights, wrapping, and localized labels. The native header and compact control labels remain legible without truncation.
 - Spacing and layout rhythm: the status, subtitle, mascot, frequency block, gauge, presets, and Play tone card follow the approved vertical hierarchy. The action card is now a sibling of those sections inside `AudioToolScreen`'s content container; the separate footer wrapper has been removed.
-- Colors and visual tokens: surfaces, borders, shadows, and controls use project theme tokens. The 440 Hz green treatment is the existing semantic low-mid band color and is an intentional product behavior rather than design drift.
-- Image quality and asset fidelity: the existing whale mascot asset is sharp, correctly cropped, and uses no placeholder or code-drawn substitute. The simulator's gray floating gear at the left edge is a Simulator Tools overlay, not app UI.
+- Colors and visual tokens: surfaces, borders, shadows, and controls use project theme tokens. The refined gauge now uses the approved primary-blue treatment while the 440 Hz readout retains the existing semantic low-mid band color as intentional product behavior.
+- Image quality and asset fidelity: the existing whale mascot asset is sharp and correctly cropped. The Play/Stop card uses the user-supplied waveform ornament with its background removed and transparency preserved; it is not an icon approximation or code-drawn substitute. The simulator's gray floating gear at the left edge is a Simulator Tools overlay, not app UI.
 - Copy and content: title, frequency status, subtitle, presets, Play/Stop label, and safety guidance are localized and complete. The safety sentence is intentionally more explicit than the abbreviated mock copy.
-- Native product differences: the implementation retains the real iOS status bar, native header spacing, settings control, and app tab bar. Decorative side wave marks from the concept are omitted in favor of the app's established component language.
+- Native product differences: the implementation retains the real iOS status bar, native header spacing, settings control, and app tab bar.
 
 ## Interaction and accessibility verification
 
@@ -90,10 +90,11 @@ The idle layout matches the selected Option 1 hierarchy and the running state pr
 1. The first focused implementation comparison found a P2 mascot-scale mismatch: the whale was too small and retained decorative rings. The mascot was enlarged and `showWaves={false}` was applied.
 2. The revised comparison confirmed improved mascot weight and preserved the separate waveform panel and slider selected from Design 2. Remaining differences were classified as intentional native/product behavior or P3 polish.
 3. After the user's inline-card refinement, the sticky footer API was removed, the Play tone card was inserted after the presets in the same content parent, and idle/running Pro Max captures were regenerated. The final comparison shows the complete card clear of the tab bar with no new P0/P1/P2 issue.
+4. The latest comparison identified the line-wave gauge and missing action-card ornaments as remaining source mismatches. The gauge was rebuilt as a responsive five-cluster rounded-bar waveform in primary blue, the exact supplied ornament was placed on both sides of the primary control, and idle/running evidence was regenerated. The post-fix comparison shows both details aligned with the approved source.
 
 ## Follow-up polish
 
-- P3: the approved concept uses a slightly larger mascot and decorative action-card wave marks. These may be revisited later if closer concept fidelity is preferred over the current product component language.
+- P3: the approved concept uses a slightly larger mascot. This may be revisited later if closer concept fidelity is preferred over the current product proportions.
 
 ## Final result
 
