@@ -1,155 +1,320 @@
-import { Image } from 'expo-image'
-import { SpeakerHighIcon } from 'phosphor-react-native'
 import { useEffect } from 'react'
-import { useTranslation } from 'react-i18next'
-import { type LayoutChangeEvent, View } from 'react-native'
+import { View } from 'react-native'
 import Animated, {
+  cancelAnimation,
   interpolate,
   useAnimatedStyle,
+  useReducedMotion,
   useSharedValue,
-  withSpring,
+  withDelay,
+  withRepeat,
+  withSequence,
+  withTiming,
 } from 'react-native-reanimated'
+import Svg, { Circle, Rect } from 'react-native-svg'
 
-import { Text } from '@/components/base'
-import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
+import { Pressable, Text } from '@/components/base'
+import { createThemedStyles, useTheme, useThemedStyles } from '@/theme'
 import { withAlpha } from '@/utils/color'
 
 interface StereoStageProps {
-  pan: number
-  active: boolean
+  leftActive: boolean
+  rightActive: boolean
+  playing: boolean
+  compact?: boolean
   leftLabel: string
   rightLabel: string
-  positionLabel: string
+  onToggleLeft: () => void
+  onToggleRight: () => void
+  haptic?: boolean
 }
 
-export const StereoStage = ({
-  pan,
-  active,
-  leftLabel,
-  rightLabel,
-  positionLabel,
-}: StereoStageProps) => {
-  const theme = useTheme()
-  const { t } = useTranslation()
+interface SpeakerControlProps {
+  active: boolean
+  playing: boolean
+  compact: boolean
+  label: string
+  accessibilityLabel: string
+  onPress: () => void
+  haptic: boolean
+}
+
+interface LevelBarProps {
+  active: boolean
+  index: number
+}
+
+const LEVEL_HEIGHTS = [10, 18, 26, 16, 9]
+
+const LevelBar = ({ active, index }: LevelBarProps) => {
   const styles = useThemedStyles(createStyles)
-  const animatedPan = useSharedValue(pan)
-  const trackWidth = useSharedValue(0)
+  const reduceMotion = useReducedMotion()
+  const level = useSharedValue(active ? 1 : 0)
 
   useEffect(() => {
-    animatedPan.value = withSpring(pan, { damping: 20, stiffness: 170, mass: 0.8 })
-  }, [animatedPan, pan])
+    cancelAnimation(level)
+    if (!active) {
+      level.value = withTiming(0, { duration: 180 })
+      return
+    }
+    if (reduceMotion) {
+      level.value = 1
+      return
+    }
 
-  const leftStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(animatedPan.value, [-1, 0, 1], [1, 0.72, 0.42]),
-    transform: [{ scale: interpolate(animatedPan.value, [-1, 0, 1], [1.08, 1, 0.94]) }],
-  }))
-  const rightStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(animatedPan.value, [-1, 0, 1], [0.42, 0.72, 1]),
-    transform: [{ scale: interpolate(animatedPan.value, [-1, 0, 1], [0.94, 1, 1.08]) }],
-  }))
-  const indicatorStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: ((animatedPan.value + 1) / 2) * trackWidth.value - 9 }],
-  }))
+    level.value = withDelay(
+      index * 70,
+      withRepeat(
+        withSequence(
+          withTiming(1, { duration: 260 + index * 25 }),
+          withTiming(0.42, { duration: 300 + (4 - index) * 30 })
+        ),
+        -1,
+        true
+      )
+    )
+  }, [active, index, level, reduceMotion])
 
-  const handleTrackLayout = ({ nativeEvent }: LayoutChangeEvent) => {
-    trackWidth.value = nativeEvent.layout.width
-  }
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(level.value, [0, 1], [0.22, 1]),
+    transform: [{ scaleY: interpolate(level.value, [0, 1], [0.45, 1]) }],
+  }))
 
   return (
-    <View
-      accessible
-      accessibilityLabel={positionLabel}
-      style={[styles.container, active && styles.containerActive]}>
-      <View style={styles.stageRow}>
-        <Animated.View style={[styles.speaker, leftStyle]}>
-          <SpeakerHighIcon size={iconSizes.xl} color={theme.colors.primary.main} weight="fill" />
-          <Text variant="caption" weight="bold" tone="accent">
-            {leftLabel}
-          </Text>
-        </Animated.View>
-
-        <Image
-          accessibilityLabel={t('audioTools.common.mascot')}
-          source={require('@/assets/images/mascot.png')}
-          contentFit="cover"
-          style={styles.mascot}
-        />
-
-        <Animated.View style={[styles.speaker, rightStyle]}>
-          <SpeakerHighIcon size={iconSizes.xl} color={theme.colors.primary.main} weight="fill" />
-          <Text variant="caption" weight="bold" tone="accent">
-            {rightLabel}
-          </Text>
-        </Animated.View>
-      </View>
-
-      <View onLayout={handleTrackLayout} style={styles.panTrack}>
-        <View style={styles.panTrackFill} />
-        <Animated.View style={[styles.panIndicator, indicatorStyle]} />
-      </View>
-      <Text variant="caption" weight="semibold" align="center" tone="secondary">
-        {positionLabel}
-      </Text>
-    </View>
+    <Animated.View style={[styles.levelBar, { height: LEVEL_HEIGHTS[index] }, animatedStyle]} />
   )
 }
 
+const SpeakerControl = ({
+  active,
+  playing,
+  compact,
+  label,
+  accessibilityLabel,
+  onPress,
+  haptic,
+}: SpeakerControlProps) => {
+  const theme = useTheme()
+  const styles = useThemedStyles(createStyles)
+  const reduceMotion = useReducedMotion()
+  const pulse = useSharedValue(0)
+  const pulseDelayed = useSharedValue(0)
+  const energy = useSharedValue(active ? 1 : 0)
+  const energized = active && playing
+
+  useEffect(() => {
+    cancelAnimation(pulse)
+    cancelAnimation(pulseDelayed)
+    cancelAnimation(energy)
+
+    if (!energized) {
+      pulse.value = withTiming(0, { duration: 180 })
+      pulseDelayed.value = withTiming(0, { duration: 180 })
+      energy.value = withTiming(active ? 1 : 0, { duration: 220 })
+      return
+    }
+
+    if (reduceMotion) {
+      pulse.value = 0.28
+      pulseDelayed.value = 0
+      energy.value = 1
+      return
+    }
+
+    pulse.value = withRepeat(withTiming(1, { duration: 1050 }), -1, false)
+    pulseDelayed.value = withDelay(450, withRepeat(withTiming(1, { duration: 1050 }), -1, false))
+    energy.value = withRepeat(
+      withSequence(withTiming(1, { duration: 420 }), withTiming(0.7, { duration: 420 })),
+      -1,
+      true
+    )
+  }, [active, energized, energy, pulse, pulseDelayed, reduceMotion])
+
+  const pulseStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(pulse.value, [0, 0.3, 1], [0, 0.3, 0]),
+    transform: [{ scale: interpolate(pulse.value, [0, 1], [0.86, 1.22]) }],
+  }))
+  const delayedPulseStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(pulseDelayed.value, [0, 0.3, 1], [0, 0.22, 0]),
+    transform: [{ scale: interpolate(pulseDelayed.value, [0, 1], [0.86, 1.34]) }],
+  }))
+  const speakerStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: interpolate(energy.value, [0, 1], [0.985, 1]) }],
+  }))
+
+  const activeColor = theme.colors.primary.main
+  const cabinetFill = active
+    ? theme.colors.primary.soft
+    : withAlpha(theme.colors.primary.soft, 0.62)
+  const cabinetStroke = active ? activeColor : theme.colors.border.default
+  const coneFill = active
+    ? withAlpha(theme.colors.primary.main, 0.16)
+    : theme.colors.background.surface
+  const coneStroke = active ? activeColor : theme.colors.border.strong
+
+  return (
+    <Pressable
+      accessibilityLabel={accessibilityLabel}
+      accessibilityRole="switch"
+      accessibilityState={{ checked: active }}
+      haptic={haptic}
+      hapticType="medium"
+      onPress={onPress}
+      style={({ pressed }) => [
+        styles.speakerPressable,
+        compact && styles.speakerPressableCompact,
+        pressed && styles.speakerPressed,
+      ]}>
+      <Animated.View
+        pointerEvents="none"
+        style={[styles.pulseRing, compact && styles.pulseRingCompact, pulseStyle]}
+      />
+      <Animated.View
+        pointerEvents="none"
+        style={[styles.pulseRing, compact && styles.pulseRingCompact, delayedPulseStyle]}
+      />
+
+      <Animated.View style={[styles.speakerIllustration, speakerStyle]}>
+        <Svg width="100%" height="100%" viewBox="0 0 148 260">
+          <Rect
+            x={3}
+            y={3}
+            width={142}
+            height={254}
+            rx={25}
+            fill={cabinetFill}
+            stroke={cabinetStroke}
+            strokeWidth={active ? 3 : 2}
+          />
+          <Circle cx={74} cy={57} r={28} fill={theme.colors.background.surface} />
+          <Circle cx={74} cy={57} r={20} fill={coneFill} stroke={coneStroke} strokeWidth={4} />
+          <Circle cx={74} cy={57} r={7} fill={active ? activeColor : cabinetStroke} />
+
+          <Circle cx={74} cy={148} r={54} fill={theme.colors.background.surface} />
+          <Circle cx={74} cy={148} r={45} fill={coneFill} stroke={coneStroke} strokeWidth={5} />
+          <Circle
+            cx={74}
+            cy={148}
+            r={22}
+            fill={active ? activeColor : theme.colors.background.subtle}
+            stroke={coneStroke}
+            strokeWidth={4}
+          />
+          <Circle cx={22} cy={24} r={3} fill={withAlpha(cabinetStroke, 0.65)} />
+          <Circle cx={126} cy={24} r={3} fill={withAlpha(cabinetStroke, 0.65)} />
+          <Circle cx={22} cy={236} r={3} fill={withAlpha(cabinetStroke, 0.65)} />
+          <Circle cx={126} cy={236} r={3} fill={withAlpha(cabinetStroke, 0.65)} />
+        </Svg>
+      </Animated.View>
+
+      <View style={styles.levelBars} pointerEvents="none">
+        {LEVEL_HEIGHTS.map((_, index) => (
+          <LevelBar key={index} index={index} active={energized} />
+        ))}
+      </View>
+      <Text variant="subtitle" weight="bold" tone={active ? 'accent' : 'muted'} align="center">
+        {label}
+      </Text>
+    </Pressable>
+  )
+}
+
+export const StereoStage = ({
+  leftActive,
+  rightActive,
+  playing,
+  compact = false,
+  leftLabel,
+  rightLabel,
+  onToggleLeft,
+  onToggleRight,
+  haptic = true,
+}: StereoStageProps) => (
+  <View style={[stageStyles.row, compact && stageStyles.rowCompact]}>
+    <SpeakerControl
+      active={leftActive}
+      playing={playing}
+      compact={compact}
+      label={leftLabel}
+      accessibilityLabel={leftLabel}
+      onPress={onToggleLeft}
+      haptic={haptic}
+    />
+    <SpeakerControl
+      active={rightActive}
+      playing={playing}
+      compact={compact}
+      label={rightLabel}
+      accessibilityLabel={rightLabel}
+      onPress={onToggleRight}
+      haptic={haptic}
+    />
+  </View>
+)
+
+const stageStyles = {
+  row: {
+    width: '100%' as const,
+    flexDirection: 'row' as const,
+    alignItems: 'flex-start' as const,
+    justifyContent: 'center' as const,
+    gap: 16,
+  },
+  rowCompact: {
+    gap: 12,
+  },
+}
+
 const createStyles = createThemedStyles((t) => ({
-  container: {
+  speakerPressable: {
+    flex: 1,
+    maxWidth: 188,
+    minWidth: 0,
+    alignItems: 'center',
+    gap: t.spacing.sm,
+    overflow: 'visible',
+  },
+  speakerPressableCompact: {
+    maxWidth: 164,
+  },
+  speakerPressed: {
+    transform: [{ scale: 0.98 }],
+  },
+  speakerIllustration: {
+    zIndex: 1,
     width: '100%',
-    gap: t.spacing.lg,
-    padding: t.spacing.lg,
-    borderCurve: 'continuous',
-    borderRadius: t.borderRadius['2xl'],
-    borderWidth: 1,
-    borderColor: t.colors.border.subtle,
-    backgroundColor: t.colors.background.card,
-    ...t.shadows.sm,
+    aspectRatio: 148 / 260,
   },
-  containerActive: {
-    borderColor: withAlpha(t.colors.primary.main, 0.55),
-  },
-  stageRow: {
-    minHeight: 164,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: t.spacing.sm,
-  },
-  speaker: {
-    width: 68,
-    minHeight: 96,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: t.spacing.sm,
-    borderRadius: t.borderRadius.xl,
-    backgroundColor: t.colors.primary.soft,
-  },
-  mascot: {
-    flexShrink: 1,
-    width: 144,
-    height: 144,
-    borderCurve: 'continuous',
-    borderRadius: t.borderRadius['3xl'],
-  },
-  panTrack: {
-    height: 18,
-    justifyContent: 'center',
-  },
-  panTrackFill: {
-    height: 6,
-    borderRadius: t.borderRadius.full,
-    backgroundColor: t.colors.border.default,
-  },
-  panIndicator: {
+  pulseRing: {
     position: 'absolute',
-    left: 0,
-    width: 18,
-    height: 18,
+    zIndex: 2,
+    top: 96,
+    left: '50%',
+    width: 180,
+    height: 180,
+    marginLeft: -90,
     borderRadius: t.borderRadius.full,
     borderWidth: 3,
-    borderColor: t.colors.background.surface,
+    borderColor: t.colors.primary.main,
+    backgroundColor: withAlpha(t.colors.primary.main, 0.035),
+  },
+  pulseRingCompact: {
+    top: 78,
+    width: 154,
+    height: 154,
+    marginLeft: -77,
+  },
+  levelBars: {
+    height: 28,
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    gap: t.spacing.xs,
+  },
+  levelBar: {
+    width: 4,
+    borderRadius: t.borderRadius.full,
     backgroundColor: t.colors.primary.main,
-    ...t.shadows.sm,
+    transformOrigin: 'bottom',
   },
 }))

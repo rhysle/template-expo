@@ -100,3 +100,129 @@ The idle layout matches the selected Option 1 hierarchy and the running state pr
 ## Final result
 
 final result: passed
+
+---
+
+# Stereo Test design QA
+
+## Evidence
+
+- Reference: `/Users/tailt/.codex/generated_images/019f8531-6f7f-7620-bada-d2e7164acaa2/exec-b23808dc-5f48-44fc-ae56-c75da44e0f56.png`
+- Idle implementation: `/Users/tailt/.codex/visualizations/2026/07/21/019f8531-6f7f-7620-bada-d2e7164acaa2/stereo-test-implementation-idle.png`
+- Active implementation: `/Users/tailt/.codex/visualizations/2026/07/21/019f8531-6f7f-7620-bada-d2e7164acaa2/stereo-test-implementation-active.png`
+- Side-by-side comparison: `/Users/tailt/.codex/visualizations/2026/07/21/019f8531-6f7f-7620-bada-d2e7164acaa2/stereo-test-comparison.png`
+- Native help sheet: `/Users/tailt/.codex/visualizations/2026/07/21/019f8531-6f7f-7620-bada-d2e7164acaa2/stereo-test-help-sheet.png`
+
+The reference and implementation were compared at the same 852 × 1846 aspect-ratio viewport. The implementation screenshot uses the left-channel state while the reference uses the mirrored right-channel state.
+
+## Visual checks
+
+- Header title and Help/Settings action order match the approved direction.
+- Two large, independent vector speaker controls replace the segmented control, mascot, and slider.
+- Active and inactive speaker hierarchy is clear through color, outline, driver treatment, animated level bars, and expanding pulse rings.
+- Auto alternate appears above the transport as a native toggle.
+- Start/Stop uses the shared circular audio control and a red active state.
+- Bottom navigation remains unchanged and all content clears the tab bar.
+- Typography, spacing, radii, and colors use the existing theme system.
+- Native help sheet has readable hierarchy, four concise instructions, drag-to-dismiss behavior, and a clear Done action.
+- No clipped copy, overlapping app controls, or unreachable actions were observed on iPhone 17 Pro Max. The translucent gear on the left edge is a development-only tool overlay and is not part of the product UI.
+
+## Interaction checks
+
+- Left speaker starts the left channel immediately.
+- Right speaker can be added for both-channel playback.
+- Deselecting the final playing speaker stops playback.
+- Auto alternate cycles left → right → both.
+- Stop ends playback and clears the active speaker state.
+- Help opens and dismisses through the native bottom sheet.
+
+final result: passed
+
+---
+
+# Stereo Test header and help-sheet follow-up — design QA
+
+## Reported evidence
+
+- Merged header controls: `/Users/tailt/.codex/attachments/41e8235f-29f5-4ad6-8a1b-afd02451c63f/image-1.png`
+- Excess help-sheet bottom space: `/Users/tailt/.codex/attachments/41e8235f-29f5-4ad6-8a1b-afd02451c63f/image-2.png`
+- Fixed header: `/Users/tailt/.codex/visualizations/2026/07/21/019f8531-6f7f-7620-bada-d2e7164acaa2/stereo-header-separated.png`
+- Fixed help sheet: `/Users/tailt/.codex/visualizations/2026/07/21/019f8531-6f7f-7620-bada-d2e7164acaa2/stereo-help-sheet-refined.png`
+- Combined reported/fixed comparison: `/Users/tailt/.codex/visualizations/2026/07/21/019f8531-6f7f-7620-bada-d2e7164acaa2/stereo-fixes-comparison.png`
+
+## Findings and fixes
+
+- The custom iOS header row was composited as one shared Liquid Glass item. The iOS header now uses two native toolbar buttons with background sharing disabled, so Help and Settings retain separate circular hit targets and glass treatments. Android keeps the existing custom header fallback.
+- The dynamic native sheet content was missing the library's fit-to-content wrapper and also added a second safe-area bottom offset inside an already safe-area-aware presentation. The sheet now uses `BottomSheetView` and removes the duplicate content inset.
+- The final comparison shows the two header buttons remain visually independent and the sheet ends after the Done action with only the native bottom clearance.
+
+## Interaction verification
+
+- Help opens the native sheet and Done dismisses it.
+- Settings navigates to the Settings route from its independent header button.
+- Both controls expose distinct accessibility labels and hit targets.
+- Verified on iPhone 17 Pro Max, iOS 26.5.
+
+final result: passed
+
+---
+
+# Stereo Test settings-icon consistency follow-up — design QA
+
+## Evidence
+
+- Tone Generator reference: `/Users/tailt/.codex/visualizations/2026/07/21/019f8531-6f7f-7620-bada-d2e7164acaa2/tone-settings-icon-reference.png`
+- Stereo Test fixed: `/Users/tailt/.codex/visualizations/2026/07/21/019f8531-6f7f-7620-bada-d2e7164acaa2/stereo-settings-icon-fixed.png`
+- Header comparison: `/Users/tailt/.codex/visualizations/2026/07/21/019f8531-6f7f-7620-bada-d2e7164acaa2/stereo-settings-icon-consistency.png`
+
+## Findings and fix
+
+- The regression came from replacing the shared 24-point Phosphor Gear with the heavier, system-sized `gearshape` SF Symbol when the header actions were separated.
+- Stereo now uses a template image generated directly from the same Phosphor Gear regular-weight vector used by `SettingsHeaderButton`, while retaining the native toolbar button wrapper and `sharesBackground: false` behavior.
+- The final comparison confirms matching outline, tooth geometry, stroke weight, and optical size across Tone Generator and Stereo Test.
+- Settings navigation and the Help sheet were both re-tested after the icon replacement.
+
+final result: passed
+
+---
+
+# Stereo Test default header grouping and padding — design QA
+
+This pass supersedes the two header-separation follow-ups above. The help-sheet sizing fix remains valid and unchanged.
+
+## Evidence and normalization
+
+- Source visual truth: `/var/folders/22/z30dj1kx0wqcx8gdrgfvtm_r0000gn/T/codex-clipboard-58430227-1b81-4365-93f2-24a0cebad5c4.png`
+- Implementation: `/Users/tailt/.codex/visualizations/2026/07/21/019f8531-6f7f-7620-bada-d2e7164acaa2/stereo-default-group-padding.png`
+- Full-view and focused-header comparison: `/Users/tailt/.codex/visualizations/2026/07/21/019f8531-6f7f-7620-bada-d2e7164acaa2/stereo-default-group-padding-comparison.png`
+- Device and state: iPhone 17 Pro Max, iOS 26.5, light appearance, idle Stereo Test.
+- Source pixels: 945 × 2048. Implementation pixels: 1320 × 2868. The implementation was normalized to the source width for the full view; the focused header crops used proportional 945 × 460 and 1320 × 642 regions before both were normalized to 460 × 224.
+
+## Findings and resolution
+
+- P2 found in the source: the shared Liquid Glass capsule wrapped the 24-point Help and Settings icons plus their 16-point gap with almost no explicit horizontal inset.
+- Fix: restored the default shared iOS capsule and added 8 points of horizontal padding on each side of the icon row.
+- The forced `unstable_headerRightItems` path, `sharesBackground: false` overrides, and generated settings-icon assets were removed. The header again uses the existing Phosphor controls and the base `TabStack` API remains generic.
+- Post-fix evidence shows a balanced capsule with clear side breathing room while preserving icon size, gap, alignment, header edge margin, and independent tap targets.
+
+## Required fidelity surfaces
+
+- Fonts and typography: unchanged; the header title and supporting text retain the configured family, weights, size, and wrapping.
+- Spacing and layout rhythm: the only visible change is the requested 8-point capsule side inset; screen composition and vertical rhythm are unchanged.
+- Colors and visual tokens: unchanged; the new inset uses the existing `spacing.sm` token and the system continues to own the Liquid Glass surface.
+- Image quality and asset fidelity: the generated gear raster assets were removed; both header icons again come directly from the existing Phosphor icon library.
+- Copy and content: unchanged.
+
+## Interaction verification
+
+- Help opens the native guide sheet and Done dismisses it.
+- Settings navigates to the Settings screen.
+- The two controls remain independently pressable inside the shared visual group.
+
+## Comparison history
+
+1. The source capture established the P2 side-padding issue in the default merged capsule.
+2. The forced separation and custom icon workaround were removed.
+3. The 8-point horizontal inset was added, the screen was re-captured, and the combined comparison showed no remaining P0, P1, or P2 mismatch.
+
+final result: passed

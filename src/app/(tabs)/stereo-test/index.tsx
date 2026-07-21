@@ -1,171 +1,262 @@
-import { CheckCircleIcon, HeadphonesIcon } from 'phosphor-react-native'
-import { useState } from 'react'
+import { WaveformIcon } from 'phosphor-react-native'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { View } from 'react-native'
+import { useWindowDimensions, View } from 'react-native'
 
-import { AudioToolScreen, StereoStage } from '@/components/audio'
-import {
-  Button,
-  ChoiceChip,
-  InlineNotice,
-  SegmentedControl,
-  StatusBadge,
-  Text,
-} from '@/components/base'
-import {
-  audioController,
-  getAudioResultState,
-  useAudioController,
-  useAudioToolLifecycle,
-} from '@/services/audio'
+import { AudioToolScreen, CircularAudioButton, StereoStage } from '@/components/audio'
+import { InlineNotice, NativeToggle, Text } from '@/components/base'
+import { audioController, useAudioController, useAudioToolLifecycle } from '@/services/audio'
 import { useAudioPreferencesState } from '@/stores/features/audioPreferences'
-import { createThemedStyles, useThemedStyles } from '@/theme'
+import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
 
-type ScreenMode = 'manual' | 'auto'
+const AUTO_ALTERNATE_INTERVAL_MS = 1_500
+const AUTO_PANS = [-1, 1, 0] as const
+
+interface ChannelSelection {
+  left: boolean
+  right: boolean
+}
+
+const channelsForPan = (pan: number): ChannelSelection => {
+  if (pan < -0.25) return { left: true, right: false }
+  if (pan > 0.25) return { left: false, right: true }
+  return { left: true, right: true }
+}
+
+const panForChannels = ({ left, right }: ChannelSelection): number => {
+  if (left && !right) return -1
+  if (!left && right) return 1
+  return 0
+}
 
 export default function StereoTestScreen() {
   const { t } = useTranslation()
+  const { colors } = useTheme()
   const styles = useThemedStyles(createStyles)
+  const { height } = useWindowDimensions()
   const snapshot = useAudioController()
   const { hapticsEnabled } = useAudioPreferencesState()
-  const [mode, setMode] = useState<ScreenMode>('manual')
+  const [selection, setSelection] = useState<ChannelSelection>({ left: false, right: false })
+  const [autoAlternate, setAutoAlternate] = useState(false)
+  const [autoStep, setAutoStep] = useState(0)
+  const wasActive = useRef(false)
   useAudioToolLifecycle()
 
   const isRunning = snapshot.activeTool === 'stereo' && snapshot.status === 'running'
   const isStarting = snapshot.activeTool === 'stereo' && snapshot.status === 'starting'
   const isActive = isRunning || isStarting
   const isLastStereoSession = snapshot.lastTool === 'stereo'
-  const resultState = getAudioResultState(isLastStereoSession ? snapshot.stopReason : null)
-  const pan = isActive ? snapshot.stereoPan : 0
-  const positionLabel = !isActive
+  const isCompactLayout = height < 900
+  const playbackChannels = isActive ? channelsForPan(snapshot.stereoPan) : selection
+  const leftActive = isActive && playbackChannels.left
+  const rightActive = isActive && playbackChannels.right
+
+  useEffect(() => {
+    if (!autoAlternate || !isRunning) return
+
+    const interval = setInterval(() => {
+      setAutoStep((step) => (step + 1) % AUTO_PANS.length)
+    }, AUTO_ALTERNATE_INTERVAL_MS)
+
+    return () => clearInterval(interval)
+  }, [autoAlternate, isRunning])
+
+  useEffect(() => {
+    if (autoAlternate && isRunning) audioController.setStereoPan(AUTO_PANS[autoStep])
+  }, [autoAlternate, autoStep, isRunning])
+
+  useEffect(() => {
+    if (wasActive.current && !isActive) {
+      setSelection({ left: false, right: false })
+      setAutoStep(0)
+    }
+    wasActive.current = isActive
+  }, [isActive])
+
+  const playChannels = (nextSelection: ChannelSelection) => {
+    setSelection(nextSelection)
+    if (!nextSelection.left && !nextSelection.right) {
+      void audioController.stop('manual')
+      return
+    }
+
+    const pan = panForChannels(nextSelection)
+    if (isActive) audioController.setStereoPan(pan)
+    else void audioController.startStereoManual(pan)
+  }
+
+  const toggleChannel = (channel: keyof ChannelSelection) => {
+    const currentSelection = autoAlternate && isActive ? playbackChannels : selection
+    const nextSelection = { ...currentSelection, [channel]: !currentSelection[channel] }
+    setAutoAlternate(false)
+    setAutoStep(0)
+    playChannels(nextSelection)
+  }
+
+  const toggleAutoAlternate = (value: boolean) => {
+    setAutoAlternate(value)
+    setAutoStep(0)
+
+    if (!isActive) return
+    if (value) {
+      setSelection({ left: true, right: true })
+      audioController.setStereoPan(AUTO_PANS[0])
+      return
+    }
+
+    const currentSelection = channelsForPan(snapshot.stereoPan)
+    setSelection(currentSelection)
+  }
+
+  const stop = () => {
+    setSelection({ left: false, right: false })
+    setAutoStep(0)
+    void audioController.stop('manual')
+  }
+
+  const start = () => {
+    if (autoAlternate) {
+      setSelection({ left: true, right: true })
+      setAutoStep(0)
+      void audioController.startStereoManual(AUTO_PANS[0])
+      return
+    }
+
+    const nextSelection =
+      selection.left || selection.right ? selection : { left: true, right: true }
+    playChannels(nextSelection)
+  }
+
+  const statusLabel = !isActive
     ? t('audioTools.stereo.idlePosition')
-    : pan < -0.25
-      ? t('audioTools.stereo.positionLeft')
-      : pan > 0.25
-        ? t('audioTools.stereo.positionRight')
-        : t('audioTools.stereo.positionCenter')
-
-  const setScreenMode = (nextMode: ScreenMode) => {
-    if (isActive) void audioController.stop('replaced')
-    setMode(nextMode)
-  }
-
-  const playManual = (nextPan: number) => {
-    void audioController.startStereoManual(nextPan)
-  }
+    : leftActive && rightActive
+      ? t('audioTools.stereo.positionCenter')
+      : leftActive
+        ? t('audioTools.stereo.positionLeft')
+        : t('audioTools.stereo.positionRight')
 
   return (
-    <AudioToolScreen>
-      <Text variant="body" tone="secondary" align="center">
-        {t('audioTools.stereo.subtitle')}
-      </Text>
-
-      <SegmentedControl
-        value={mode}
-        onValueChange={setScreenMode}
-        options={[
-          { label: t('audioTools.stereo.manual'), value: 'manual' },
-          { label: t('audioTools.stereo.auto'), value: 'auto' },
-        ]}
-        size="md"
-      />
+    <AudioToolScreen
+      variant="focused"
+      contentStyle={[styles.content, isCompactLayout && styles.contentCompact]}>
+      <View style={styles.status}>
+        <WaveformIcon
+          size={iconSizes.md}
+          color={isActive ? colors.primary.main : colors.text.muted}
+          weight="bold"
+        />
+        <Text variant="body" weight="semibold" tone={isActive ? 'accent' : 'muted'} align="center">
+          {statusLabel}
+        </Text>
+      </View>
 
       <StereoStage
-        pan={pan}
-        active={isRunning}
+        leftActive={leftActive}
+        rightActive={rightActive}
+        playing={isRunning}
+        compact={isCompactLayout}
         leftLabel={t('audioTools.stereo.left')}
         rightLabel={t('audioTools.stereo.right')}
-        positionLabel={positionLabel}
+        onToggleLeft={() => toggleChannel('left')}
+        onToggleRight={() => toggleChannel('right')}
+        haptic={hapticsEnabled}
       />
 
-      {mode === 'manual' ? (
-        <View style={styles.manualControls}>
-          {[
-            { label: t('audioTools.stereo.left'), pan: -1 },
-            { label: t('audioTools.stereo.center'), pan: 0 },
-            { label: t('audioTools.stereo.right'), pan: 1 },
-          ].map((option) => (
-            <ChoiceChip
-              key={option.pan}
-              label={option.label}
-              selected={isActive && Math.abs(snapshot.stereoPan - option.pan) < 0.1}
-              haptic={hapticsEnabled}
-              style={styles.manualChip}
-              onPress={() => playManual(option.pan)}
-            />
-          ))}
-        </View>
-      ) : (
-        <View style={styles.autoControls}>
-          {isActive && snapshot.stereoMode === 'auto' ? (
-            <Text variant="body" tone="secondary" align="center">
-              {Math.max(Math.ceil(8 - snapshot.elapsedSeconds), 0)}s
+      <Text variant="body" tone="secondary" align="center" style={styles.helperText}>
+        {t('audioTools.stereo.tapToChange')}
+      </Text>
+
+      <View style={styles.controls}>
+        <View style={styles.autoRow}>
+          <View style={styles.autoCopy}>
+            <Text variant="body" weight="semibold">
+              {t('audioTools.stereo.auto')}
             </Text>
-          ) : null}
-          <Button
-            fullWidth
-            size="lg"
-            haptic={hapticsEnabled}
-            loading={isStarting}
-            variant={isActive ? 'danger' : 'primary'}
-            label={isActive ? t('audioTools.stereo.stop') : t('audioTools.stereo.startAuto')}
-            onPress={() => {
-              if (isActive) void audioController.stop('manual')
-              else void audioController.startStereoAuto()
-            }}
+            <Text variant="caption" tone="muted">
+              {t('audioTools.stereo.autoHint')}
+            </Text>
+          </View>
+          <NativeToggle
+            value={autoAlternate}
+            onValueChange={toggleAutoAlternate}
+            style={styles.nativeToggle}
+            testID="stereo-auto-alternate-toggle"
           />
         </View>
-      )}
 
-      {mode === 'manual' && isActive ? (
-        <Button
-          fullWidth
-          variant="danger"
-          label={t('audioTools.stereo.stop')}
-          haptic={hapticsEnabled}
-          onPress={() => void audioController.stop('manual')}
-        />
-      ) : null}
+        <View style={styles.transport}>
+          <CircularAudioButton
+            active={isActive}
+            loading={isStarting}
+            haptic={hapticsEnabled}
+            accessibilityLabel={
+              isActive ? t('audioTools.stereo.stop') : t('audioTools.stereo.start')
+            }
+            onPress={isActive ? stop : start}
+          />
+          <Text
+            variant="subtitle"
+            weight="semibold"
+            tone={isActive ? 'error' : 'accent'}
+            align="center">
+            {isActive ? t('audioTools.stereo.stop') : t('audioTools.stereo.start')}
+          </Text>
+        </View>
+      </View>
 
-      {resultState === 'completed' ? (
-        <StatusBadge
-          label={t('audioTools.stereo.completed')}
-          tone="success"
-          icon={CheckCircleIcon}
-          style={styles.centerBadge}
-        />
-      ) : null}
-      {resultState === 'interrupted' ? (
-        <InlineNotice tone="warning">{t('audioTools.common.interrupted')}</InlineNotice>
-      ) : null}
       {snapshot.status === 'error' && isLastStereoSession ? (
         <InlineNotice tone="error">{t('audioTools.common.error')}</InlineNotice>
       ) : null}
-
-      <InlineNotice
-        title={t('audioTools.stereo.headphonesTitle')}
-        tone="info"
-        icon={HeadphonesIcon}>
-        {t('audioTools.stereo.headphonesBody')}
-      </InlineNotice>
-      <InlineNotice compact>{t('audioTools.common.gradualVolume')}</InlineNotice>
     </AudioToolScreen>
   )
 }
 
 const createStyles = createThemedStyles((t) => ({
-  manualControls: {
-    flexDirection: 'row',
+  content: {
+    gap: t.spacing.md,
+    justifyContent: 'flex-start',
+  },
+  contentCompact: {
     gap: t.spacing.sm,
   },
-  manualChip: {
-    flex: 1,
-    alignSelf: 'stretch',
+  status: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'center',
+    gap: t.spacing.sm,
   },
-  autoControls: {
+  helperText: {
+    marginTop: -t.spacing.xs,
+  },
+  controls: {
+    width: '100%',
+    maxWidth: 520,
+    alignSelf: 'center',
     gap: t.spacing.md,
   },
-  centerBadge: {
-    alignSelf: 'center',
+  autoRow: {
+    minHeight: 68,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: t.spacing.md,
+    paddingHorizontal: t.spacing.lg,
+    paddingVertical: t.spacing.sm,
+    borderCurve: 'continuous',
+    borderRadius: t.borderRadius.xl,
+    backgroundColor: t.colors.background.subtle,
+  },
+  autoCopy: {
+    flex: 1,
+    gap: t.spacing.xs,
+  },
+  nativeToggle: {
+    width: 56,
+    height: 36,
+  },
+  transport: {
+    alignItems: 'center',
+    gap: t.spacing.xs,
+    paddingTop: t.spacing.xs,
   },
 }))
