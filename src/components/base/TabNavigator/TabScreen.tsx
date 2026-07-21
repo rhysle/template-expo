@@ -7,15 +7,22 @@ import { createThemedStyles, useThemedStyles } from '@/theme'
 import { useTabBarContentInset } from '../FloatingTabBar/tabBarHeight'
 
 export interface TabScreenProps extends PropsWithChildren {
+  contentUnderTabBar?: boolean
   style?: StyleProp<ViewStyle>
 }
 
-export const TabScreen = ({ children, style }: TabScreenProps) => {
+export const TabScreen = ({ children, contentUnderTabBar = false, style }: TabScreenProps) => {
   const bottomInset = useTabBarContentInset()
   const styles = useThemedStyles(createStyles)
 
   return (
-    <View collapsable={false} style={[styles.container, { paddingBottom: bottomInset }, style]}>
+    <View
+      collapsable={false}
+      style={[
+        styles.container,
+        contentUnderTabBar ? undefined : { paddingBottom: bottomInset },
+        style,
+      ]}>
       <View style={styles.content}>{children}</View>
     </View>
   )

@@ -42,7 +42,7 @@ export const NativeTabNavigator = ({ tabs }: TabNavigatorProps) => {
         sidebarAdaptable={false}
         tintColor={colors.primary.main}>
         {tabs.map((tab) => (
-          <NativeTabs.Trigger key={tab.name} name={tab.name}>
+          <NativeTabs.Trigger key={tab.name} name={tab.name} disableAutomaticContentInsets>
             <NativeTabs.Trigger.Icon {...tab.nativeIcon} />
             <NativeTabs.Trigger.Label>{tab.label}</NativeTabs.Trigger.Label>
           </NativeTabs.Trigger>

@@ -177,7 +177,7 @@ export const TabBar = ({
   showLabel,
   animationType,
   blur = false,
-  blurIntensity = 60,
+  blurIntensity = 100,
 }: TabBarProps) => {
   const styles = useThemedStyles(createStyles)
   const { appearance, spacing } = useTheme()

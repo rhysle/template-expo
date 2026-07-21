@@ -1,10 +1,10 @@
 import { createContext, type ReactNode, useContext, useEffect, useState } from 'react'
-import { Platform } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { TAB_BAR_HEIGHT } from '@/constants/layout'
 
-export type TabNavigatorMode = 'custom' | 'native'
+import { getTabBarContentInset, type TabNavigatorMode } from './tabBarContentInset'
+
+export type { TabNavigatorMode } from './tabBarContentInset'
 
 interface TabBarHeightContextValue {
   accessoryHeight: number
@@ -58,10 +58,13 @@ export const useTabBarBaseHeight = () => {
 
 export const useTabBarContentInset = () => {
   const { accessoryHeight, height, mode } = useContext(TabBarHeightContext)
-  const insets = useSafeAreaInsets()
 
-  if (mode === 'custom') return height + accessoryHeight
-  return (Platform.OS === 'ios' ? insets.bottom : 0) + accessoryHeight
+  return getTabBarContentInset({
+    accessoryHeight,
+    height,
+    mode,
+    nativeFallbackHeight: TAB_BAR_HEIGHT,
+  })
 }
 
 export const useSetTabBarHeight = () => useContext(TabBarHeightContext).setHeight
