@@ -145,7 +145,6 @@ export default function DbMeterScreen() {
       <View style={styles.controls}>
         <CircularAudioButton
           active={isActive}
-          loading={isStarting || snapshot.status === 'stopping'}
           haptic={hapticsEnabled}
           accessibilityLabel={isActive ? t('audioTools.meter.stop') : t('audioTools.meter.start')}
           onPress={() => void handleMainPress()}

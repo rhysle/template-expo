@@ -17,6 +17,12 @@ import Animated, {
 import { createThemedStyles, useTheme, useThemedStyles } from '@/theme'
 import { withAlpha } from '@/utils/color'
 
+const IMAGE_FRAME_SIZE = 208
+const IMAGE_FRAME_COMPACT_SIZE = 156
+const IMAGE_FRAME_PLAIN_SIZE = 336
+const IMAGE_FRAME_PLAIN_COMPACT_SIZE = 244
+const IMAGE_PULSE_SCALE = 0.025
+
 interface MascotHeroProps {
   active?: boolean
   accentColor?: string
@@ -38,6 +44,13 @@ export const MascotHero = ({
   const reducedMotion = useReducedMotion()
   const pulse = useSharedValue(0)
   const resolvedAccent = accentColor ?? theme.colors.primary.main
+  const imageSize = showWaves
+    ? compact
+      ? IMAGE_FRAME_COMPACT_SIZE
+      : IMAGE_FRAME_SIZE
+    : compact
+      ? IMAGE_FRAME_PLAIN_COMPACT_SIZE
+      : IMAGE_FRAME_PLAIN_SIZE
 
   useEffect(() => {
     cancelAnimation(pulse)
@@ -56,9 +69,10 @@ export const MascotHero = ({
     return () => cancelAnimation(pulse)
   }, [active, pulse, reducedMotion])
 
-  const imageStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: 1 + pulse.value * 0.025 }],
-  }))
+  const imageStyle = useAnimatedStyle(() => {
+    const animatedSize = imageSize * (1 + pulse.value * IMAGE_PULSE_SCALE)
+    return { width: animatedSize, height: animatedSize }
+  })
   const innerWaveStyle = useAnimatedStyle(() => ({
     opacity: 0.42 - pulse.value * 0.18,
     transform: [{ scale: 0.92 + pulse.value * 0.18 }],
@@ -103,6 +117,7 @@ export const MascotHero = ({
         <Image
           accessibilityLabel={t('audioTools.common.mascot')}
           source={require('@/assets/images/mascot.png')}
+          allowDownscaling={false}
           contentFit="cover"
           transition={180}
           style={styles.image}
@@ -125,24 +140,24 @@ const createStyles = createThemedStyles((t) => ({
     height: 184,
   },
   imageFrame: {
-    width: 208,
-    height: 208,
+    width: IMAGE_FRAME_SIZE,
+    height: IMAGE_FRAME_SIZE,
     overflow: 'hidden',
     borderCurve: 'continuous',
     borderRadius: t.borderRadius['4xl'],
   },
   imageFrameCompact: {
-    width: 156,
-    height: 156,
+    width: IMAGE_FRAME_COMPACT_SIZE,
+    height: IMAGE_FRAME_COMPACT_SIZE,
     borderRadius: t.borderRadius['3xl'],
   },
   imageFramePlain: {
-    width: 336,
-    height: 336,
+    width: IMAGE_FRAME_PLAIN_SIZE,
+    height: IMAGE_FRAME_PLAIN_SIZE,
   },
   imageFramePlainCompact: {
-    width: 244,
-    height: 244,
+    width: IMAGE_FRAME_PLAIN_COMPACT_SIZE,
+    height: IMAGE_FRAME_PLAIN_COMPACT_SIZE,
   },
   image: {
     width: '100%',

@@ -175,7 +175,6 @@ export default function ToneGeneratorScreen() {
         </View>
         <CircularAudioButton
           active={isActive}
-          loading={isStarting || snapshot.status === 'stopping'}
           haptic={hapticsEnabled}
           accessibilityLabel={isActive ? t('audioTools.tone.stop') : t('audioTools.tone.play')}
           onPress={handleMainPress}

@@ -1,9 +1,16 @@
-import { Canvas, Group, Path, useClock, usePathValue } from '@shopify/react-native-skia'
+import { Canvas, Group, Path, usePathValue } from '@shopify/react-native-skia'
 import { BlurView } from 'expo-blur'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useEffect } from 'react'
 import { type LayoutChangeEvent, type StyleProp, View, type ViewStyle } from 'react-native'
-import { useReducedMotion, useSharedValue, withTiming } from 'react-native-reanimated'
+import {
+  Easing,
+  ReduceMotion,
+  useFrameCallback,
+  useReducedMotion,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated'
 
 import { normalizeFrequency } from '@/services/audio'
 import { createThemedStyles, useTheme, useThemedStyles } from '@/theme'
@@ -30,11 +37,11 @@ export const FrequencyWaveform = ({
   const { appearance, colors } = useTheme()
   const styles = useThemedStyles(createStyles)
   const reducedMotion = useReducedMotion()
-  const clock = useClock()
   const width = useSharedValue(0)
   const height = useSharedValue(0)
   const normalizedFrequency = useSharedValue(normalizeFrequency(frequencyHz))
-  const isActive = useSharedValue(active && !reducedMotion ? 1 : 0)
+  const motion = useSharedValue(active && !reducedMotion ? 1 : 0)
+  const phase = useSharedValue(0)
   const resolvedFadeIntensity = Math.min(Math.max(centerFadeIntensity, 0), 1)
   const centerVeilAlpha = 1 - (1 - resolvedFadeIntensity) ** 8
   const centerVeilColors = [
@@ -51,8 +58,21 @@ export const FrequencyWaveform = ({
   }, [frequencyHz, normalizedFrequency])
 
   useEffect(() => {
-    isActive.value = active && !reducedMotion ? 1 : 0
-  }, [active, isActive, reducedMotion])
+    const shouldMove = active && !reducedMotion
+    motion.value = withTiming(shouldMove ? 1 : 0, {
+      duration: shouldMove ? 320 : 420,
+      easing: shouldMove ? Easing.out(Easing.cubic) : Easing.inOut(Easing.quad),
+      reduceMotion: ReduceMotion.System,
+    })
+  }, [active, motion, reducedMotion])
+
+  useFrameCallback(({ timeSincePreviousFrame }) => {
+    'worklet'
+    if (timeSincePreviousFrame === null || motion.value <= 0) return
+
+    // Cap catch-up after a delayed frame so the waveform never jumps forward.
+    phase.value += Math.min(timeSincePreviousFrame, 64) * motion.value
+  })
 
   const primaryPath = usePathValue((builder) => {
     'worklet'
@@ -63,14 +83,14 @@ export const FrequencyWaveform = ({
 
     const centerY = canvasHeight / 2
     const cycles = 2.15 + normalizedFrequency.value * 1.7
-    const phase = isActive.value ? clock.value / 560 : 0.35
+    const wavePhase = 0.35 + phase.value / 560
     const amplitude = canvasHeight * 0.25
     const points = Math.max(Math.round(canvasWidth / 3), 64)
 
     for (let index = 0; index <= points; index += 1) {
       const progress = index / points
       const x = progress * canvasWidth
-      const y = centerY + Math.sin(progress * Math.PI * 2 * cycles + phase) * amplitude
+      const y = centerY + Math.sin(progress * Math.PI * 2 * cycles + wavePhase) * amplitude
       if (index === 0) builder.moveTo(x, y)
       else builder.lineTo(x, y)
     }
@@ -85,14 +105,14 @@ export const FrequencyWaveform = ({
 
     const centerY = canvasHeight / 2
     const cycles = 3.1 + normalizedFrequency.value * 2.5
-    const phase = isActive.value ? 1.4 - clock.value / 820 : 1.4
+    const wavePhase = 1.4 - phase.value / 820
     const amplitude = canvasHeight * 0.16
     const points = Math.max(Math.round(canvasWidth / 3), 64)
 
     for (let index = 0; index <= points; index += 1) {
       const progress = index / points
       const x = progress * canvasWidth
-      const y = centerY + Math.sin(progress * Math.PI * 2 * cycles + phase) * amplitude
+      const y = centerY + Math.sin(progress * Math.PI * 2 * cycles + wavePhase) * amplitude
       if (index === 0) builder.moveTo(x, y)
       else builder.lineTo(x, y)
     }
@@ -107,14 +127,14 @@ export const FrequencyWaveform = ({
 
     const centerY = canvasHeight / 2
     const cycles = 4.3 + normalizedFrequency.value * 3
-    const phase = isActive.value ? 2.1 + clock.value / 470 : 2.1
+    const wavePhase = 2.1 + phase.value / 470
     const amplitude = canvasHeight * 0.1
     const points = Math.max(Math.round(canvasWidth / 3), 64)
 
     for (let index = 0; index <= points; index += 1) {
       const progress = index / points
       const x = progress * canvasWidth
-      const y = centerY + Math.sin(progress * Math.PI * 2 * cycles + phase) * amplitude
+      const y = centerY + Math.sin(progress * Math.PI * 2 * cycles + wavePhase) * amplitude
       if (index === 0) builder.moveTo(x, y)
       else builder.lineTo(x, y)
     }
