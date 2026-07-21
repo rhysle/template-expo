@@ -1,4 +1,4 @@
-import type { PropsWithChildren } from 'react'
+import type { PropsWithChildren, ReactNode } from 'react'
 import { ScrollView, type StyleProp, View, type ViewStyle } from 'react-native'
 
 import { TabScreen, useTabBarContentInset } from '@/components/base'
@@ -6,12 +6,14 @@ import { createThemedStyles, useTheme, useThemedStyles } from '@/theme'
 
 interface AudioToolScreenProps extends PropsWithChildren {
   contentStyle?: StyleProp<ViewStyle>
+  footer?: ReactNode
   variant?: 'default' | 'focused'
 }
 
 export const AudioToolScreen = ({
   children,
   contentStyle,
+  footer,
   variant = 'default',
 }: AudioToolScreenProps) => {
   const bottomInset = useTabBarContentInset()
@@ -21,24 +23,34 @@ export const AudioToolScreen = ({
 
   return (
     <TabScreen contentUnderTabBar={!isFocused}>
-      <ScrollView
-        contentInsetAdjustmentBehavior="never"
-        contentContainerStyle={[
-          styles.scrollContent,
-          isFocused && styles.focusedScrollContent,
-          { paddingBottom: isFocused ? spacing.lg : spacing['4xl'] + bottomInset },
-        ]}
-        scrollIndicatorInsets={isFocused ? undefined : { bottom: bottomInset }}
-        showsVerticalScrollIndicator={false}>
-        <View style={[styles.content, isFocused && styles.focusedContent, contentStyle]}>
-          {children}
-        </View>
-      </ScrollView>
+      <View style={styles.screen}>
+        <ScrollView
+          style={styles.scroll}
+          contentInsetAdjustmentBehavior="never"
+          contentContainerStyle={[
+            styles.scrollContent,
+            isFocused && styles.focusedScrollContent,
+            { paddingBottom: isFocused ? spacing.lg : spacing['4xl'] + bottomInset },
+          ]}
+          scrollIndicatorInsets={isFocused ? undefined : { bottom: bottomInset }}
+          showsVerticalScrollIndicator={false}>
+          <View style={[styles.content, isFocused && styles.focusedContent, contentStyle]}>
+            {children}
+          </View>
+        </ScrollView>
+        {footer ? <View style={styles.footer}>{footer}</View> : null}
+      </View>
     </TabScreen>
   )
 }
 
 const createStyles = createThemedStyles((t) => ({
+  screen: {
+    flex: 1,
+  },
+  scroll: {
+    flex: 1,
+  },
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: t.spacing.lg,
@@ -56,5 +68,13 @@ const createStyles = createThemedStyles((t) => ({
   focusedContent: {
     flexGrow: 1,
     gap: t.spacing.lg,
+  },
+  footer: {
+    width: '100%',
+    maxWidth: 720,
+    alignSelf: 'center',
+    paddingHorizontal: t.spacing.lg,
+    paddingTop: t.spacing.sm,
+    paddingBottom: t.spacing.md,
   },
 }))
