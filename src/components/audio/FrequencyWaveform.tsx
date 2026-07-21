@@ -1,16 +1,21 @@
 import { Canvas, Group, Path, useClock, usePathValue } from '@shopify/react-native-skia'
+import { BlurView } from 'expo-blur'
+import { LinearGradient } from 'expo-linear-gradient'
 import { useEffect } from 'react'
 import { type LayoutChangeEvent, type StyleProp, View, type ViewStyle } from 'react-native'
 import { useReducedMotion, useSharedValue, withTiming } from 'react-native-reanimated'
 
 import { normalizeFrequency } from '@/services/audio'
-import { createThemedStyles, useThemedStyles } from '@/theme'
+import { createThemedStyles, useTheme, useThemedStyles } from '@/theme'
+import { withAlpha } from '@/utils/color'
 
 interface FrequencyWaveformProps {
   frequencyHz: number
   active: boolean
   color: string
   accessibilityLabel: string
+  /** Controls how strongly the waves are softened behind an overlaid readout. */
+  centerFadeIntensity?: number
   style?: StyleProp<ViewStyle>
 }
 
@@ -19,8 +24,10 @@ export const FrequencyWaveform = ({
   active,
   color,
   accessibilityLabel,
+  centerFadeIntensity = 0.3,
   style,
 }: FrequencyWaveformProps) => {
+  const { appearance, colors } = useTheme()
   const styles = useThemedStyles(createStyles)
   const reducedMotion = useReducedMotion()
   const clock = useClock()
@@ -28,6 +35,16 @@ export const FrequencyWaveform = ({
   const height = useSharedValue(0)
   const normalizedFrequency = useSharedValue(normalizeFrequency(frequencyHz))
   const isActive = useSharedValue(active && !reducedMotion ? 1 : 0)
+  const resolvedFadeIntensity = Math.min(Math.max(centerFadeIntensity, 0), 1)
+  const centerVeilAlpha = 1 - (1 - resolvedFadeIntensity) ** 8
+  const centerVeilColors = [
+    withAlpha(colors.background.base, 0),
+    withAlpha(colors.background.base, 0),
+    withAlpha(colors.background.base, centerVeilAlpha),
+    withAlpha(colors.background.base, centerVeilAlpha),
+    withAlpha(colors.background.base, 0),
+    withAlpha(colors.background.base, 0),
+  ] as const
 
   useEffect(() => {
     normalizedFrequency.value = withTiming(normalizeFrequency(frequencyHz), { duration: 180 })
@@ -136,6 +153,24 @@ export const FrequencyWaveform = ({
         </Group>
         <Path path={primaryPath} color={color} style="stroke" strokeWidth={3} strokeCap="round" />
       </Canvas>
+      {resolvedFadeIntensity > 0 ? (
+        <>
+          <BlurView
+            pointerEvents="none"
+            intensity={resolvedFadeIntensity * 35}
+            tint={appearance}
+            style={[styles.centerBlur, { opacity: resolvedFadeIntensity * 0.6 }]}
+          />
+          <LinearGradient
+            pointerEvents="none"
+            colors={centerVeilColors}
+            locations={[0, 0.26, 0.42, 0.58, 0.74, 1]}
+            start={{ x: 0, y: 0.5 }}
+            end={{ x: 1, y: 0.5 }}
+            style={styles.centerVeil}
+          />
+        </>
+      ) : null}
     </View>
   )
 }
@@ -147,9 +182,22 @@ const createStyles = createThemedStyles((t) => ({
     overflow: 'hidden',
     borderCurve: 'continuous',
     borderRadius: t.borderRadius.xl,
-    backgroundColor: t.colors.primary.soft,
   },
   canvas: {
     flex: 1,
+  },
+  centerBlur: {
+    position: 'absolute',
+    top: 0,
+    right: '36%',
+    bottom: 0,
+    left: '36%',
+  },
+  centerVeil: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
   },
 }))

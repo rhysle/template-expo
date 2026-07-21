@@ -49,55 +49,53 @@ The idle layout matches the selected Option 1 hierarchy and the running state pr
 
 ---
 
-# Tone Generator focused layout — design QA
+# Tone Generator overlay layout — design QA
 
 ## Visual truth
 
-- Selected source: `docs/design/references/tone-generator-focused-approved.png`
-- Gauge override source: `docs/design/references/tone-generator-three-wave-reference.jpg`
+- Final selected source: `docs/design/references/tone-generator-overlay-final.png`
+- Supporting wave reference: `docs/design/references/tone-generator-three-wave-reference.jpg`
 - Target: Tone Generator tab, light appearance, 440 Hz idle state
-- User-requested refinement: keep the Play tone card in the same content parent as the upper controls instead of rendering it as a sticky footer
+- Required refinements: no waveform panel background, no Play tone section background, a larger mascot, and the frequency readout layered over the three-wave gauge with a softer adjustable center treatment.
 
 ## Implementation evidence
 
 - Idle: `docs/design/implementation/2026-07-21/tone-generator-idle.png`
 - Running: `docs/design/implementation/2026-07-21/tone-generator-running.png`
-- Full-view comparison: `docs/design/implementation/2026-07-21/tone-generator-idle-comparison.png`
-- Focused gauge comparison: `docs/design/implementation/2026-07-21/tone-generator-three-wave-focused-comparison.png`
-- Simulator: iPhone 17 Pro Max, iOS 26.5
-- Viewport capture: 1320 × 2868, light appearance, 440 Hz
-- The approved source was normalized to the implementation canvas and placed beside the rendered app in one comparison image.
-- The full-view comparison keeps the typography, mascot, slider, presets, action card, safety copy, and tab-bar clearance readable. The new gauge motif was also compared in a dedicated source-versus-implementation crop because its three overlapping strokes are too fine to judge reliably in the full screen.
+- Full-view comparison: `docs/design/implementation/2026-07-21/tone-generator-overlay-final-comparison.png`
+- Focused gauge comparison: `docs/design/implementation/2026-07-21/tone-generator-overlay-gauge-comparison.png`
+- Simulator: the existing iPhone 17 Pro Max instance, iOS 26.5
+- Viewport: 1320 × 2868, light appearance, 440 Hz
+- The source was normalized to the implementation canvas and placed beside the rendered screen. A separate semantic crop compares the layered readout and fine wave treatment at readable scale.
 
 ## Findings
 
 - No actionable P0, P1, or P2 mismatch remains.
-- Fonts and typography: the implementation preserves the app's configured type system, hierarchy, tabular frequency numerals, weights, wrapping, and localized labels. The native header and compact control labels remain legible without truncation.
-- Spacing and layout rhythm: the status, subtitle, mascot, frequency block, gauge, presets, and Play tone card follow the approved vertical hierarchy. The action card is now a sibling of those sections inside `AudioToolScreen`'s content container; the separate footer wrapper has been removed.
-- Colors and visual tokens: surfaces, borders, shadows, and controls use project theme tokens. The gauge uses one full-strength primary-blue path plus medium- and low-opacity supporting paths, while the 440 Hz readout retains the existing semantic low-mid band color as intentional product behavior.
-- Image quality and asset fidelity: the existing whale mascot asset is sharp and correctly cropped. The Play/Stop card uses the user-supplied waveform ornament with its background removed and transparency preserved; it is not an icon approximation or code-drawn substitute. The simulator's gray floating gear at the left edge is a Simulator Tools overlay, not app UI.
-- Copy and content: title, frequency status, subtitle, presets, Play/Stop label, and safety guidance are localized and complete. The safety sentence is intentionally more explicit than the abbreviated mock copy.
-- Native product differences: the implementation retains the real iOS status bar, native header spacing, settings control, and app tab bar.
+- Fonts and typography: the app's configured family, hierarchy, weights, line heights, wrapping, and tabular frequency numerals are preserved. The layered value and Hz unit remain readable over all three paths and no control label truncates.
+- Spacing and layout rhythm: merging the readout into the gauge reclaims vertical space for the larger mascot. The slider, presets, floating Play controls, safety cue, and native tab bar retain clear separation. Both requested section backgrounds, their radii, and the Play section shadow are absent.
+- Colors and visual tokens: the background-free gauge uses the theme's primary blue at three weights/opacities. The readout retains its semantic frequency-band color. The center veil derives from `background.base`, so it feathers into the page without introducing a colored panel.
+- Image quality and asset fidelity: the whale is the existing sharp product asset and now carries the intended hero weight. The two Play ornaments use the supplied transparent raster asset rather than an approximation. The gray left-edge gear is a Simulator Tools overlay and is not app UI.
+- Copy and content: title, status, subtitle, presets, Play/Stop label, and safety guidance remain complete and localized. “Current frequency” is retained in the adjustable control's accessible label while the visual label is omitted to match the selected compact composition.
+- Intentional native differences: the implementation retains the real Dynamic Island/status bar, native header spacing, settings control, product tab bar, and the existing primary control sizing.
 
 ## Interaction and accessibility verification
 
-- Selecting the 440 Hz quick preset updates the status, readout, waveform, slider, and selected chip.
-- The Presets sheet exposes all six presets and returns the selected value to the main screen.
-- The waveform exposes adjustable increment/decrement accessibility actions.
-- Play changes to Stop in the same inline card position; Stop returns the screen to idle and audio was stopped after capture.
-- The primary action and safety guidance remain above the native tab bar on the tested iPhone 17 Pro Max.
+- Selecting 440 Hz updates the readout, waveform, slider, and selected chip.
+- The waveform remains an adjustable accessibility control with increment/decrement actions and announces the current value.
+- Play changes to Stop, the three wave layers animate, and Stop returns to idle; audio was stopped after the final capture.
+- The safety cue and primary action remain fully visible above the native tab bar.
+- No render error remained after the final same-device refresh.
 
 ## Comparison history
 
-1. The first focused implementation comparison found a P2 mascot-scale mismatch: the whale was too small and retained decorative rings. The mascot was enlarged and `showWaves={false}` was applied.
-2. The revised comparison confirmed improved mascot weight and preserved the separate waveform panel and slider selected from Design 2. Remaining differences were classified as intentional native/product behavior or P3 polish.
-3. After the user's inline-card refinement, the sticky footer API was removed, the Play tone card was inserted after the presets in the same content parent, and idle/running Pro Max captures were regenerated. The final comparison shows the complete card clear of the tab bar with no new P0/P1/P2 issue.
-4. The latest comparison identified the line-wave gauge and missing action-card ornaments as remaining source mismatches. The gauge was rebuilt as a responsive five-cluster rounded-bar waveform in primary blue, the exact supplied ornament was placed on both sides of the primary control, and idle/running evidence was regenerated. The post-fix comparison shows both details aligned with the approved source.
-5. The user selected a new three-line wave reference for the gauge. The bar clusters were replaced with three responsive sine paths using distinct frequency, phase, weight, and opacity; active playback moves the layers independently. A focused side-by-side comparison confirms the primary, secondary, and faint detail hierarchy matches the new reference while preserving the app's light panel treatment.
+1. Earlier approved passes established the focused hierarchy, inline Play section, supplied ornaments, and animated three-wave gauge.
+2. The first overlay pass removed both backgrounds and merged the readout with the gauge, but the combined comparison found two P2 mismatches: the mascot remained materially smaller than the final source and the primary wave was too visually busy behind the digits.
+3. The mascot switched from the compact frame to the full Pro Max treatment and the center feather was widened and strengthened while keeping blur itself at the softer `0.3` default. The post-fix full and focused comparisons show the intended hero proportion and a legible layered readout without restoring a panel background.
+4. Idle and running states were re-captured on the existing iPhone 17 Pro Max, and Play → Stop → Play was verified after the visual fixes.
 
 ## Follow-up polish
 
-- P3: the approved concept uses a slightly larger mascot. This may be revisited later if closer concept fidelity is preferred over the current product proportions.
+- P3: the generated source uses a slightly finer, more symmetrical center taper. The implementation intentionally keeps the live paths responsive to frequency and animation, so their exact crossing points vary.
 
 ## Final result
 

@@ -41,6 +41,7 @@ import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/them
 
 const PRESETS = [165, 250, 440, 1_000, 8_000, 12_000] as const
 const QUICK_PRESETS = PRESETS.slice(0, 4)
+const CENTER_FADE_INTENSITY = 0.3
 
 export default function ToneGeneratorScreen() {
   const { t } = useTranslation()
@@ -200,36 +201,18 @@ export default function ToneGeneratorScreen() {
 
         <MascotHero
           active={isRunning}
-          compact
+          compact={isCompactLayout}
           showWaves={false}
           accentColor={waveformColor}
-          style={isCompactLayout && styles.mascotCompact}
+          style={[styles.mascot, isCompactLayout && styles.mascotCompact]}
         />
 
         <View style={styles.frequencyBlock}>
-          <Text variant="caption" tone="secondary" align="center">
-            {t('audioTools.tone.currentFrequency')}
-          </Text>
-          <View style={styles.frequencyRow}>
-            <Text
-              variant="title"
-              weight="bold"
-              align="center"
-              style={[styles.frequencyValue, { color: waveformColor }]}>
-              {formattedFrequency}
-            </Text>
-            <Text variant="subtitle" weight="semibold" tone="secondary" style={styles.unit}>
-              Hz
-            </Text>
-          </View>
-
           <GestureDetector gesture={panGesture}>
             <View
               accessible
               accessibilityActions={[{ name: 'increment' }, { name: 'decrement' }]}
-              accessibilityLabel={t('audioTools.tone.waveformLabel', {
-                frequency: formattedFrequency,
-              })}
+              accessibilityLabel={`${t('audioTools.tone.currentFrequency')}: ${formattedFrequency} Hz`}
               accessibilityRole="adjustable"
               accessibilityValue={{
                 min: 20,
@@ -247,8 +230,23 @@ export default function ToneGeneratorScreen() {
                 accessibilityLabel={t('audioTools.tone.waveformLabel', {
                   frequency: formattedFrequency,
                 })}
+                centerFadeIntensity={CENTER_FADE_INTENSITY}
                 style={[styles.waveform, isCompactLayout && styles.waveformCompact]}
               />
+              <View pointerEvents="none" style={styles.frequencyOverlay}>
+                <View style={styles.frequencyRow}>
+                  <Text
+                    variant="title"
+                    weight="bold"
+                    align="center"
+                    style={[styles.frequencyValue, { color: waveformColor }]}>
+                    {formattedFrequency}
+                  </Text>
+                  <Text variant="subtitle" weight="semibold" tone="secondary" style={styles.unit}>
+                    Hz
+                  </Text>
+                </View>
+              </View>
             </View>
           </GestureDetector>
 
@@ -349,9 +347,13 @@ const createStyles = createThemedStyles((t) => ({
   status: {
     alignSelf: 'center',
   },
+  mascot: {
+    transform: [{ scale: 1.4 }],
+    marginVertical: t.spacing.xs,
+  },
   mascotCompact: {
-    transform: [{ scale: 0.86 }],
-    marginVertical: -t.spacing.md,
+    transform: [{ scale: 0.96 }],
+    marginVertical: -t.spacing.sm,
   },
   frequencyBlock: {
     alignItems: 'center',
@@ -373,6 +375,16 @@ const createStyles = createThemedStyles((t) => ({
   },
   waveformAdjuster: {
     width: '100%',
+    position: 'relative',
+  },
+  frequencyOverlay: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   waveform: {
     height: 76,
@@ -419,11 +431,7 @@ const createStyles = createThemedStyles((t) => ({
     alignItems: 'center',
     gap: t.spacing.sm,
     paddingHorizontal: t.spacing.lg,
-    paddingVertical: t.spacing.md,
-    borderCurve: 'continuous',
-    borderRadius: t.borderRadius['2xl'],
-    backgroundColor: t.colors.background.surface,
-    ...t.shadows.sm,
+    paddingVertical: t.spacing.sm,
   },
   actionControlRow: {
     width: '100%',
