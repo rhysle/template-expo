@@ -45,20 +45,29 @@ export const FrequencyWaveform = ({
     if (canvasWidth <= 0 || canvasHeight <= 0) return
 
     const centerY = canvasHeight / 2
-    const cycles = 2 + normalizedFrequency.value * 12
-    const amplitude = canvasHeight * (0.2 + (1 - normalizedFrequency.value) * 0.16)
-    const phase = isActive.value ? clock.value / 340 : 0
-    const points = Math.max(Math.round(canvasWidth / 4), 48)
+    const barCount = Math.max(Math.round(canvasWidth / 5), 48)
+    const pulseCount = 3 + Math.round(normalizedFrequency.value * 4)
+    const activePhase = isActive.value ? clock.value / 220 : 0
 
-    for (let index = 0; index <= points; index += 1) {
-      const progress = index / points
-      const edgeFade = Math.sin(progress * Math.PI)
-      const harmonic = Math.sin(progress * Math.PI * cycles * 2 + phase)
-      const detail = Math.sin(progress * Math.PI * cycles * 4 - phase * 0.65) * 0.22
-      const y = centerY + (harmonic + detail) * amplitude * edgeFade
+    for (let index = 0; index <= barCount; index += 1) {
+      const progress = index / barCount
+      let envelope = 0
+
+      for (let pulse = 0; pulse < pulseCount; pulse += 1) {
+        const pulseCenter = (pulse + 0.75) / (pulseCount + 0.5)
+        const distance = (progress - pulseCenter) * pulseCount * 3.2
+        envelope = Math.max(envelope, Math.exp(-(distance * distance)))
+      }
+
+      const barTexture = 0.94 + Math.sin(index * 1.7) * 0.06
+      const activeScale = isActive.value
+        ? 0.92 + Math.sin(activePhase + progress * Math.PI * 4) * 0.08
+        : 1
+      const barHeight = 3 + envelope * canvasHeight * 0.72 * barTexture * activeScale
       const x = progress * canvasWidth
-      if (index === 0) builder.moveTo(x, y)
-      else builder.lineTo(x, y)
+
+      builder.moveTo(x, centerY - barHeight / 2)
+      builder.lineTo(x, centerY + barHeight / 2)
     }
   })
 
@@ -75,7 +84,7 @@ export const FrequencyWaveform = ({
       onLayout={handleLayout}
       style={[styles.container, style]}>
       <Canvas pointerEvents="none" style={styles.canvas}>
-        <Path path={path} color={color} style="stroke" strokeWidth={4} strokeCap="round" />
+        <Path path={path} color={color} style="stroke" strokeWidth={2.5} strokeCap="round" />
       </Canvas>
     </View>
   )

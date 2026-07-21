@@ -1,3 +1,4 @@
+import { Image } from 'expo-image'
 import { SlidersHorizontalIcon, SpeakerLowIcon, WaveformIcon } from 'phosphor-react-native'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -137,13 +138,37 @@ export default function ToneGeneratorScreen() {
 
   const actionDock = (
     <View style={[styles.actionDock, isCompactLayout && styles.actionDockCompact]}>
-      <CircularAudioButton
-        active={isActive}
-        loading={isStarting || snapshot.status === 'stopping'}
-        haptic={hapticsEnabled}
-        accessibilityLabel={isActive ? t('audioTools.tone.stop') : t('audioTools.tone.play')}
-        onPress={handleMainPress}
-      />
+      <View style={styles.actionControlRow}>
+        <View
+          accessible={false}
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+          style={styles.actionOrnament}>
+          <Image
+            source={require('@/assets/images/tone-wave-ornament.png')}
+            contentFit="contain"
+            style={styles.actionOrnamentImage}
+          />
+        </View>
+        <CircularAudioButton
+          active={isActive}
+          loading={isStarting || snapshot.status === 'stopping'}
+          haptic={hapticsEnabled}
+          accessibilityLabel={isActive ? t('audioTools.tone.stop') : t('audioTools.tone.play')}
+          onPress={handleMainPress}
+        />
+        <View
+          accessible={false}
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+          style={styles.actionOrnament}>
+          <Image
+            source={require('@/assets/images/tone-wave-ornament.png')}
+            contentFit="contain"
+            style={styles.actionOrnamentImage}
+          />
+        </View>
+      </View>
       <Text variant="subtitle" weight="semibold" tone="accent" align="center">
         {isActive ? t('audioTools.tone.stop') : t('audioTools.tone.play')}
       </Text>
@@ -218,7 +243,7 @@ export default function ToneGeneratorScreen() {
               <FrequencyWaveform
                 frequencyHz={frequencyHz}
                 active={isRunning}
-                color={waveformColor}
+                color={theme.colors.primary.main}
                 accessibilityLabel={t('audioTools.tone.waveformLabel', {
                   frequency: formattedFrequency,
                 })}
@@ -399,6 +424,21 @@ const createStyles = createThemedStyles((t) => ({
     borderRadius: t.borderRadius['2xl'],
     backgroundColor: t.colors.background.surface,
     ...t.shadows.sm,
+  },
+  actionControlRow: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+  },
+  actionOrnament: {
+    width: iconSizes.hero,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  actionOrnamentImage: {
+    width: '100%',
+    height: iconSizes.xl,
   },
   actionDockCompact: {
     gap: t.spacing.xs,
