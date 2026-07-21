@@ -51,6 +51,7 @@ export default function ToneGeneratorScreen() {
   const snapshot = useAudioController()
   const { hapticsEnabled, lastToneFrequencyHz, setLastToneFrequencyHz } = useAudioPreferencesState()
   const [frequencyHz, setFrequencyHz] = useState(lastToneFrequencyHz)
+  const [presetSelectionFrequencyHz, setPresetSelectionFrequencyHz] = useState(lastToneFrequencyHz)
   const [isPresetSheetVisible, setIsPresetSheetVisible] = useState(false)
   const gestureWidth = useSharedValue(1)
   const gestureStart = useSharedValue(normalizeFrequency(lastToneFrequencyHz))
@@ -84,6 +85,7 @@ export default function ToneGeneratorScreen() {
     veryHigh: t('audioTools.tone.band.veryHigh'),
   }
   const waveformColor = bandColors[band]
+  const frequencyValueColor = theme.colors.primary.main
 
   useEffect(() => {
     currentPosition.value = normalizeFrequency(frequencyHz)
@@ -93,19 +95,32 @@ export default function ToneGeneratorScreen() {
 
   const applyFrequencyPosition = (position: number) => {
     const nextFrequency = frequencyFromNormalized(position)
+    currentPosition.value = position
     setFrequencyHz(nextFrequency)
+    if (isRunning) audioController.setToneFrequency(nextFrequency)
+  }
+
+  const commitFrequencyPosition = (position: number) => {
+    const nextFrequency = frequencyFromNormalized(position)
+    currentPosition.value = position
+    setFrequencyHz(nextFrequency)
+    setPresetSelectionFrequencyHz(nextFrequency)
     if (isRunning) audioController.setToneFrequency(nextFrequency)
   }
 
   const adjustFrequency = (direction: 'increment' | 'decrement') => {
     const multiplier = direction === 'increment' ? 1.1 : 1 / 1.1
     const nextFrequency = Math.min(Math.max(Math.round(frequencyHz * multiplier), 20), 20_000)
+    currentPosition.value = normalizeFrequency(nextFrequency)
     setFrequencyHz(nextFrequency)
+    setPresetSelectionFrequencyHz(nextFrequency)
     if (isRunning) audioController.setToneFrequency(nextFrequency)
   }
 
   const selectPreset = (preset: (typeof PRESETS)[number], dismissSheet = false) => {
+    currentPosition.value = normalizeFrequency(preset)
     setFrequencyHz(preset)
+    setPresetSelectionFrequencyHz(preset)
     if (isRunning) audioController.setToneFrequency(preset)
     if (dismissSheet) setIsPresetSheetVisible(false)
   }
@@ -120,6 +135,13 @@ export default function ToneGeneratorScreen() {
         1
       )
       scheduleOnRN(applyFrequencyPosition, nextPosition)
+    })
+    .onEnd(({ translationX }) => {
+      const nextPosition = Math.min(
+        Math.max(gestureStart.value + translationX / gestureWidth.value, 0),
+        1
+      )
+      scheduleOnRN(commitFrequencyPosition, nextPosition)
     })
 
   const handleWaveformLayout = ({ nativeEvent }: LayoutChangeEvent) => {
@@ -239,7 +261,7 @@ export default function ToneGeneratorScreen() {
                     variant="title"
                     weight="bold"
                     align="center"
-                    style={[styles.frequencyValue, { color: waveformColor }]}>
+                    style={[styles.frequencyValue, { color: frequencyValueColor }]}>
                     {formattedFrequency}
                   </Text>
                   <Text variant="subtitle" weight="semibold" tone="secondary" style={styles.unit}>
@@ -256,6 +278,9 @@ export default function ToneGeneratorScreen() {
               max={1}
               value={normalizeFrequency(frequencyHz)}
               onValueChange={applyFrequencyPosition}
+              onValueChangeFinished={() => {
+                setPresetSelectionFrequencyHz(frequencyFromNormalized(currentPosition.value))
+              }}
             />
             <View style={styles.rangeLabels}>
               <Text variant="caption" tone="muted">
@@ -273,7 +298,7 @@ export default function ToneGeneratorScreen() {
             <ChoiceChip
               key={preset}
               label={`${new Intl.NumberFormat().format(preset)} Hz`}
-              selected={frequencyHz === preset}
+              selected={presetSelectionFrequencyHz === preset}
               haptic={hapticsEnabled}
               onPress={() => selectPreset(preset)}
               style={styles.quickPreset}
@@ -320,7 +345,7 @@ export default function ToneGeneratorScreen() {
               <ChoiceChip
                 key={preset}
                 label={`${new Intl.NumberFormat().format(preset)} Hz`}
-                selected={frequencyHz === preset}
+                selected={presetSelectionFrequencyHz === preset}
                 haptic={hapticsEnabled}
                 onPress={() => selectPreset(preset, true)}
                 style={styles.sheetPreset}
