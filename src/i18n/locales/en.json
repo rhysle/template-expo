@@ -91,10 +91,10 @@
       "subtitle": "Generate a precise sine tone and explore the audible frequency range.",
       "currentFrequency": "Current frequency",
       "waveformLabel": "Waveform at {{frequency}} hertz",
-      "swipeHint": "Swipe across the waveform or use the slider to adjust frequency.",
       "presets": "Presets",
       "play": "Play tone",
       "stop": "Stop tone",
+      "volumeHint": "Keep volume low and the speaker away from your ears.",
       "band": {
         "veryLow": "Very low",
         "low": "Low",
