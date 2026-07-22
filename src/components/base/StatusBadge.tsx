@@ -46,7 +46,6 @@ const createStyles = createThemedStyles((t) => ({
   container: {
     minHeight: 28,
     maxWidth: '100%',
-    alignSelf: 'flex-start',
     flexDirection: 'row',
     alignItems: 'center',
     gap: t.spacing.xs,
