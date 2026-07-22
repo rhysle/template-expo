@@ -181,7 +181,12 @@ export default function ToneGeneratorScreen() {
           />
         </View>
       </View>
-      <Text variant="subtitle" weight="semibold" tone="accent" align="center">
+      <Text
+        variant="subtitle"
+        weight="semibold"
+        tone="accent"
+        align="center"
+        style={{ color: isActive ? theme.colors.status.error : theme.colors.primary.main }}>
         {isActive ? t('audioTools.tone.stop') : t('audioTools.tone.play')}
       </Text>
       <View style={styles.safetyCue}>
