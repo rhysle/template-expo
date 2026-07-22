@@ -93,8 +93,8 @@ const createStyles = createThemedStyles((t) => ({
   indicator: {
     position: 'absolute',
     left: 0,
-    width: 20,
-    height: 20,
+    width: 24,
+    height: 24,
     borderRadius: t.borderRadius.full,
     borderWidth: 3,
     borderColor: t.colors.background.surface,

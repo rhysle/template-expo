@@ -7,13 +7,17 @@ import { Button, NativeBottomSheet, Pressable, TabStack, Text } from '@/componen
 import { SettingsHeaderButton } from '@/components/SettingsHeaderButton'
 import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
 
-const GUIDE_KEYS = ['helpTap', 'helpBoth', 'helpAuto', 'helpStop'] as const
-
 export default function StereoTestTabLayout() {
   const { t } = useTranslation()
   const { colors } = useTheme()
   const styles = useThemedStyles(createStyles)
   const [helpVisible, setHelpVisible] = useState(false)
+  const guideSteps = [
+    t('audioTools.stereo.helpTap'),
+    t('audioTools.stereo.helpBoth'),
+    t('audioTools.stereo.helpAuto'),
+    t('audioTools.stereo.helpStop'),
+  ]
 
   return (
     <>
@@ -46,15 +50,15 @@ export default function StereoTestTabLayout() {
           </View>
 
           <View style={styles.guideList}>
-            {GUIDE_KEYS.map((key, index) => (
-              <View key={key} style={styles.guideRow}>
+            {guideSteps.map((step, index) => (
+              <View key={step} style={styles.guideRow}>
                 <View style={styles.guideNumber}>
                   <Text variant="caption" weight="bold" tone="accent">
                     {index + 1}
                   </Text>
                 </View>
                 <Text variant="body" tone="secondary" style={styles.guideText}>
-                  {t(`audioTools.stereo.${key}`)}
+                  {step}
                 </Text>
               </View>
             ))}

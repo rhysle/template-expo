@@ -1,11 +1,12 @@
-import { EarIcon, ShieldCheckIcon, WarningCircleIcon } from 'phosphor-react-native'
+import { ShieldCheckIcon, WarningCircleIcon } from 'phosphor-react-native'
 import { useTranslation } from 'react-i18next'
-import { Linking, View } from 'react-native'
+import { Linking, useWindowDimensions, View } from 'react-native'
 
 import { AudioToolScreen, CircularAudioButton, DbMeterGauge, MascotHero } from '@/components/audio'
-import { Button, Card, InlineNotice, StatusBadge, Text } from '@/components/base'
+import { InlineNotice, StatusBadge, Text } from '@/components/base'
 import {
   audioController,
+  classifyMeterBand,
   type MeterBand,
   useAudioController,
   useAudioToolLifecycle,
@@ -17,6 +18,7 @@ export default function DbMeterScreen() {
   const { t } = useTranslation()
   const theme = useTheme()
   const styles = useThemedStyles(createStyles)
+  const { height } = useWindowDimensions()
   const snapshot = useAudioController()
   const { hapticsEnabled, meterCalibrationOffsetDb, meterResponse } = useAudioPreferencesState()
   useAudioToolLifecycle()
@@ -25,6 +27,7 @@ export default function DbMeterScreen() {
   const isStarting = snapshot.activeTool === 'meter' && snapshot.status === 'starting'
   const isActive = isRunning || isStarting
   const isLastMeterSession = snapshot.lastTool === 'meter'
+  const isCompactLayout = height < 900
   const meter = snapshot.meter
   const roundedDb = Math.round(meter.currentDb)
 
@@ -52,14 +55,12 @@ export default function DbMeterScreen() {
     loud: t('audioTools.meter.description.loud'),
     danger: t('audioTools.meter.description.danger'),
   }
-  const statusGuidance: Record<MeterBand, string> = {
-    veryQuiet: t('audioTools.meter.guidance.veryQuiet'),
-    normal: t('audioTools.meter.guidance.normal'),
-    loud: t('audioTools.meter.guidance.loud'),
-    danger: t('audioTools.meter.guidance.danger'),
-  }
   const statusColor = bandColors[meter.band]
   const statusTone = bandTones[meter.band]
+  const isInitialReading = meter.sampleCount === 0 && roundedDb === 0
+  const readingColor = isInitialReading ? theme.colors.status.success : statusColor
+
+  const getStatColor = (value: number) => bandColors[classifyMeterBand(value)]
 
   const handleMainPress = async () => {
     if (isActive) {
@@ -74,38 +75,33 @@ export default function DbMeterScreen() {
   }
 
   return (
-    <AudioToolScreen>
-      <View style={styles.intro}>
-        <Text variant="body" tone="secondary" align="center">
-          {t('audioTools.meter.subtitle')}
-        </Text>
-        <StatusBadge label={t('audioTools.meter.protect')} tone="success" icon={ShieldCheckIcon} />
-      </View>
+    <AudioToolScreen
+      variant="focused"
+      contentStyle={[styles.content, isCompactLayout && styles.contentCompact]}>
+      <MascotHero
+        active={isRunning}
+        compact={isCompactLayout}
+        showWaves={false}
+        accentColor={statusColor}
+        style={[styles.mascot, isCompactLayout && styles.mascotCompact]}
+      />
 
-      <MascotHero active={isRunning} compact accentColor={statusColor} />
-
-      <Card style={styles.meterCard}>
-        <Text variant="caption" tone="secondary" align="center">
-          {t('audioTools.meter.estimated')}
-        </Text>
+      <View style={styles.meterBlock}>
         <View style={styles.readingRow}>
+          <Text variant="subtitle" weight="semibold" style={{ opacity: 0, color: readingColor }}>
+            dB
+          </Text>
           <Text
             variant="title"
             weight="bold"
-            style={[styles.reading, { color: statusColor }]}
+            style={[styles.reading, { color: readingColor }]}
             accessibilityLiveRegion="polite">
             {roundedDb}
           </Text>
-          <Text variant="subtitle" weight="semibold" style={{ color: statusColor }}>
+          <Text variant="subtitle" weight="semibold" style={{ color: readingColor }}>
             dB
           </Text>
         </View>
-
-        <DbMeterGauge
-          value={meter.currentDb}
-          indicatorColor={statusColor}
-          accessibilityLabel={`${t('audioTools.meter.estimated')}: ${roundedDb} dB`}
-        />
 
         <View style={styles.statusBlock}>
           <StatusBadge
@@ -120,45 +116,49 @@ export default function DbMeterScreen() {
           </Text>
         </View>
 
-        <InlineNotice compact tone={statusTone} icon={EarIcon}>
-          {statusGuidance[meter.band]}
-        </InlineNotice>
-      </Card>
+        <DbMeterGauge
+          value={meter.currentDb}
+          indicatorColor={readingColor}
+          accessibilityLabel={`${t('audioTools.meter.estimated')}: ${roundedDb} dB`}
+          style={styles.gauge}
+        />
+      </View>
 
       <View style={styles.statsRow}>
         {[
           { label: t('audioTools.meter.minimum'), value: meter.minimumDb },
           { label: t('audioTools.meter.average'), value: meter.averageDb },
           { label: t('audioTools.meter.maximum'), value: meter.maximumDb },
-        ].map((stat) => (
-          <Card key={stat.label} variant="subtle" padding="md" style={styles.statCard}>
+        ].map((stat, index) => (
+          <View key={stat.label} style={[styles.stat, index > 0 && styles.statDivider]}>
             <Text variant="caption" tone="secondary" align="center">
               {stat.label}
             </Text>
-            <Text variant="subtitle" weight="bold" align="center" style={styles.statValue}>
+            <Text
+              variant="subtitle"
+              weight="bold"
+              align="center"
+              style={[styles.statValue, { color: getStatColor(stat.value) }]}>
               {Math.round(stat.value)} dB
             </Text>
-          </Card>
+          </View>
         ))}
       </View>
 
-      <View style={styles.controls}>
+      <View style={[styles.controls, isCompactLayout && styles.controlsCompact]}>
         <CircularAudioButton
           active={isActive}
           haptic={hapticsEnabled}
           accessibilityLabel={isActive ? t('audioTools.meter.stop') : t('audioTools.meter.start')}
           onPress={() => void handleMainPress()}
         />
-        <Text variant="subtitle" weight="semibold" tone="accent" align="center">
+        <Text
+          variant="subtitle"
+          weight="semibold"
+          align="center"
+          style={{ color: isActive ? theme.colors.status.error : theme.colors.primary.main }}>
           {isActive ? t('audioTools.meter.stop') : t('audioTools.meter.start')}
         </Text>
-        <Button
-          variant="secondary"
-          label={t('audioTools.meter.reset')}
-          haptic={hapticsEnabled}
-          disabled={meter.sampleCount === 0}
-          onPress={audioController.resetMeterStats}
-        />
       </View>
 
       {snapshot.microphonePermission === 'Denied' ? (
@@ -176,25 +176,31 @@ export default function DbMeterScreen() {
       {snapshot.status === 'error' && isLastMeterSession ? (
         <InlineNotice tone="error">{t('audioTools.common.error')}</InlineNotice>
       ) : null}
-
-      <InlineNotice title={t('audioTools.meter.privacyTitle')} tone="info">
-        {t('audioTools.meter.privacyBody')}
-      </InlineNotice>
-      <Text variant="caption" tone="muted" align="center">
-        {t('audioTools.meter.disclaimer')}
-      </Text>
     </AudioToolScreen>
   )
 }
 
 const createStyles = createThemedStyles((t) => ({
-  intro: {
-    alignItems: 'center',
+  content: {
     gap: t.spacing.md,
   },
-  meterCard: {
+  contentCompact: {
+    gap: t.spacing.sm,
+  },
+  mascot: {
+    height: 278,
+    width: '100%',
+    transform: [{ scale: 1.2 }],
+    marginVertical: -t.spacing.lg,
+  },
+  mascotCompact: {
+    height: 202,
+    transform: [{ scale: 0.98 }],
+    marginVertical: -t.spacing.lg,
+  },
+  meterBlock: {
     alignItems: 'center',
-    gap: t.spacing.lg,
+    gap: t.spacing.md,
   },
   readingRow: {
     flexDirection: 'row',
@@ -204,26 +210,41 @@ const createStyles = createThemedStyles((t) => ({
   },
   reading: {
     fontSize: t.typography.sizes['6xl'],
+    lineHeight: 52,
     fontVariant: ['tabular-nums'],
   },
   statusBlock: {
     alignItems: 'center',
     gap: t.spacing.xs,
   },
+  gauge: {
+    marginTop: t.spacing.sm,
+  },
   statsRow: {
     flexDirection: 'row',
-    gap: t.spacing.sm,
+    marginTop: t.spacing.md,
+    paddingVertical: t.spacing.sm,
   },
-  statCard: {
+  stat: {
     minWidth: 0,
     flex: 1,
+    alignItems: 'center',
     gap: t.spacing.xs,
+  },
+  statDivider: {
+    borderLeftWidth: 1,
+    borderLeftColor: t.colors.border.subtle,
   },
   statValue: {
     fontVariant: ['tabular-nums'],
   },
   controls: {
     alignItems: 'center',
-    gap: t.spacing.md,
+    gap: t.spacing.sm,
+    marginTop: t.spacing.md,
+    paddingTop: t.spacing.sm,
+  },
+  controlsCompact: {
+    paddingTop: 0,
   },
 }))
