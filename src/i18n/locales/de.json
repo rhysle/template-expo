@@ -50,7 +50,6 @@
     "audio": {
       "section": "Audio & Meter",
       "ejectDuration": "Cleaning duration",
-      "ejectDurationSubtitle": "Default length of each water-eject cycle",
       "durationValue": "{{count}} seconds",
       "haptics": "Control haptics",
       "hapticsSubtitle": "Use tactile feedback in sound tools",
@@ -146,7 +145,6 @@
   "audioTools": {
     "common": {
       "mascot": "Water Eject mascot",
-      "interrupted": "The session stopped when audio focus or the app state changed.",
       "error": "Audio could not start. Check the current output and try again."
     },
     "eject": {

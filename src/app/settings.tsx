@@ -14,7 +14,6 @@ import {
   ShareNetworkIcon,
   ShieldCheckIcon,
   StarIcon,
-  TimerIcon,
   VibrateIcon,
 } from 'phosphor-react-native'
 import { useTranslation } from 'react-i18next'
@@ -38,11 +37,7 @@ import { getCurrentOtaUpdateId } from '@/services/otaUpdate'
 import { recordError } from '@/services/sentry'
 import { openWriteReview } from '@/services/storeReview'
 import { useAdsState } from '@/stores/features/ads'
-import {
-  type EjectDurationSeconds,
-  type MeterResponse,
-  useAudioPreferencesState,
-} from '@/stores/features/audioPreferences'
+import { type MeterResponse, useAudioPreferencesState } from '@/stores/features/audioPreferences'
 import { useSnackbarState } from '@/stores/features/snackbar'
 import { useSubscriptionState } from '@/stores/features/subscription'
 import { useUserIdentityState } from '@/stores/features/userIdentity'
@@ -58,11 +53,9 @@ export default function SettingsScreen() {
   const router = useRouter()
   const { isSubscribed } = useSubscriptionState()
   const {
-    ejectDurationSeconds,
     hapticsEnabled,
     meterResponse,
     meterCalibrationOffsetDb,
-    setEjectDurationSeconds,
     setHapticsEnabled,
     setMeterResponse,
     setMeterCalibrationOffsetDb,
@@ -128,16 +121,6 @@ export default function SettingsScreen() {
           {t('settings.audio.section')}
         </Text>
         <Card padding="none">
-          <SelectListItem<EjectDurationSeconds>
-            icon={TimerIcon}
-            title={t('settings.audio.ejectDuration')}
-            subtitle={t('settings.audio.ejectDurationSubtitle')}
-            value={ejectDurationSeconds}
-            options={[30, 60, 90]}
-            sheetTitle={t('settings.audio.ejectDuration')}
-            renderLabel={(value) => t('settings.audio.durationValue', { count: value })}
-            onChange={setEjectDurationSeconds}
-          />
           <ToggleListItem
             icon={VibrateIcon}
             title={t('settings.audio.haptics')}
