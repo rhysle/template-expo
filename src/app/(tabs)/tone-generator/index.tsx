@@ -18,7 +18,14 @@ import {
   FrequencyWaveform,
   MascotHero,
 } from '@/components/audio'
-import { ChoiceChip, InlineNotice, NativeSlider, StatusBadge, Text } from '@/components/base'
+import {
+  ChoiceChip,
+  InlineNotice,
+  MorphingNumber,
+  NativeSlider,
+  StatusBadge,
+  Text,
+} from '@/components/base'
 import {
   audioController,
   type FrequencyBand,
@@ -36,7 +43,7 @@ const CENTER_FADE_INTENSITY = 0.3
 const EDGE_FADE_INTENSITY = 1
 
 export default function ToneGeneratorScreen() {
-  const { t } = useTranslation()
+  const { i18n, t } = useTranslation()
   const theme = useTheme()
   const styles = useThemedStyles(createStyles)
   const { height, width } = useWindowDimensions()
@@ -55,9 +62,10 @@ export default function ToneGeneratorScreen() {
   const isLastToneSession = snapshot.lastTool === 'tone'
   const isCompactLayout = height < 900
   const band = getFrequencyBand(frequencyHz)
-  const formattedFrequency = new Intl.NumberFormat(undefined, {
+  const numberFormatter = new Intl.NumberFormat(i18n.resolvedLanguage ?? i18n.language, {
     maximumFractionDigits: 0,
-  }).format(frequencyHz)
+  })
+  const formattedFrequency = numberFormatter.format(frequencyHz)
 
   const bandColors: Record<FrequencyBand, string> = {
     veryLow: theme.colors.primary.strong,
@@ -251,13 +259,13 @@ export default function ToneGeneratorScreen() {
             />
             <View pointerEvents="none" style={styles.frequencyOverlay}>
               <View style={styles.frequencyRow}>
-                <Text
-                  variant="title"
-                  weight="bold"
-                  align="center"
-                  style={[styles.frequencyValue, { color: frequencyValueColor }]}>
-                  {formattedFrequency}
-                </Text>
+                <MorphingNumber
+                  value={frequencyHz}
+                  formattedValue={formattedFrequency}
+                  color={frequencyValueColor}
+                  outlineColor={theme.colors.text.inverse}
+                  textStyle={styles.frequencyValue}
+                />
                 <Text variant="subtitle" weight="semibold" tone="secondary" style={styles.unit}>
                   Hz
                 </Text>
@@ -278,10 +286,10 @@ export default function ToneGeneratorScreen() {
           />
           <View style={styles.rangeLabels}>
             <Text variant="caption" tone="muted">
-              20 Hz
+              {numberFormatter.format(20)} Hz
             </Text>
             <Text variant="caption" tone="muted">
-              20,000 Hz
+              {numberFormatter.format(20_000)} Hz
             </Text>
           </View>
         </View>
@@ -291,7 +299,7 @@ export default function ToneGeneratorScreen() {
         {PRESETS.map((preset) => (
           <ChoiceChip
             key={preset}
-            label={`${new Intl.NumberFormat().format(preset)} Hz`}
+            label={`${numberFormatter.format(preset)} Hz`}
             selected={presetSelectionFrequencyHz === preset}
             haptic={hapticsEnabled}
             onPress={() => selectPreset(preset)}
@@ -337,7 +345,7 @@ const createStyles = createThemedStyles((t) => ({
   },
   frequencyRow: {
     flexDirection: 'row',
-    alignItems: 'baseline',
+    alignItems: 'flex-end',
     justifyContent: 'center',
     gap: t.spacing.xs,
   },
@@ -347,7 +355,7 @@ const createStyles = createThemedStyles((t) => ({
     fontVariant: ['tabular-nums'],
   },
   unit: {
-    marginBottom: t.spacing.xs,
+    marginBottom: t.spacing.sm,
   },
   waveformAdjuster: {
     position: 'relative',
