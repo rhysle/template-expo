@@ -56,6 +56,9 @@ firebase-debug.log
 .claude/
 .env.local
 
+#Codex
+.codex/
+
 # Misc
 .superpowers/
 tmp/
