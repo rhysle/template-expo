@@ -1,4 +1,4 @@
-import { BottomSheet as ExpoBottomSheet } from '@expo/ui/community/bottom-sheet'
+import { BottomSheet as ExpoBottomSheet, BottomSheetView } from '@expo/ui/community/bottom-sheet'
 import type { ReactNode } from 'react'
 
 import { createThemedStyles, useThemedStyles } from '@/theme'
@@ -29,7 +29,7 @@ export const NativeBottomSheet = ({
       handleComponent={showDragIndicator ? undefined : null}
       backgroundStyle={styles.sheet}
       onDismiss={onDismiss}>
-      {children}
+      <BottomSheetView>{children}</BottomSheetView>
     </ExpoBottomSheet>
   )
 }
