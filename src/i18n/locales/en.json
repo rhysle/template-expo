@@ -70,8 +70,7 @@
     "common": {
       "mascot": "Water Eject mascot",
       "interrupted": "The session stopped when audio focus or the app state changed.",
-      "error": "Audio could not start. Check the current output and try again.",
-      "gradualVolume": "Start at a low device volume and raise it gradually. Keep the speaker away from your ears."
+      "error": "Audio could not start. Check the current output and try again."
     },
     "eject": {
       "subtitle": "A low-frequency sweep may help move water and loose debris from the speaker.",
@@ -105,8 +104,6 @@
       }
     },
     "stereo": {
-      "subtitle": "Check left and right channel separation with a controlled 700 Hz tone.",
-      "manual": "Manual",
       "auto": "Auto alternate",
       "autoHint": "Cycle left, right, and both",
       "tapToChange": "Tap speakers to change channels",
@@ -117,30 +114,19 @@
       "helpAuto": "Use Auto alternate to cycle between left, right, and both channels.",
       "helpStop": "Use Stop test whenever you want to end playback.",
       "left": "Left",
-      "center": "Center",
       "right": "Right",
       "positionLeft": "Left channel playing",
       "positionCenter": "Both channels playing",
       "positionRight": "Right channel playing",
       "idlePosition": "Tap a speaker to begin",
-      "startAuto": "Start 8-second sweep",
-      "stop": "Stop test",
-      "completed": "Automatic stereo sweep complete",
-      "headphonesTitle": "Headphones recommended",
-      "headphonesBody": "Channel separation is easier to identify with headphones. Device-speaker results depend on the hardware and current output route."
+      "stop": "Stop test"
     },
     "meter": {
-      "subtitle": "Estimate the sound level around you while the microphone is active.",
-      "protect": "Protect your hearing",
       "estimated": "Estimated dB",
       "start": "Start measuring",
       "stop": "Stop measuring",
-      "reset": "Reset session",
       "permissionTitle": "Microphone access is off",
       "permissionBody": "Allow microphone access in system settings to estimate nearby sound levels.",
-      "privacyTitle": "Processed only on this device",
-      "privacyBody": "Audio samples are analyzed in memory and are never recorded, saved, or uploaded.",
-      "disclaimer": "Estimated readings vary by device and are not a calibrated, medical, or hearing-safety instrument.",
       "minimum": "Minimum",
       "average": "Average",
       "maximum": "Maximum",
@@ -156,11 +142,34 @@
         "loud": "Busy street, loud music",
         "danger": "Concert, siren"
       },
-      "guidance": {
-        "veryQuiet": "This environment is very quiet.",
-        "normal": "The estimated sound level is in a typical range.",
-        "loud": "Prolonged exposure may affect your hearing.",
-        "danger": "Move to a quieter place and protect your hearing."
+      "help": {
+        "title": "dB Meter guide",
+        "howToMeasure": "How to measure",
+        "stepPlace": "Place the phone where you want to check the sound.",
+        "stepUncovered": "Keep the microphone uncovered.",
+        "stepStart": "Tap Start measuring and watch the live estimate.",
+        "everydayLevels": "Everyday sound levels",
+        "examplesApproximate": "Examples are approximate and vary with distance.",
+        "currentEstimate": "Current estimate",
+        "exposureTitle": "Exposure time matters",
+        "exposureDescription": "NIOSH occupational guidance; every +3 dB halves the recommended time.",
+        "useItWell": "Use it well",
+        "tipMicrophoneTitle": "Keep the microphone uncovered",
+        "tipMicrophoneBody": "Avoid covering it with your hand or case.",
+        "tipPositionTitle": "Measure where you listen",
+        "tipPositionBody": "Move the device to the location you want to assess.",
+        "tipProtectTitle": "If it feels too loud, protect your ears",
+        "tipProtectBody": "Move away from the source or use hearing protection.",
+        "reference": {
+          "concertSpeaker": "Concert speaker",
+          "sirenNightclub": "Siren or nightclub",
+          "lawnMower": "Lawn mower",
+          "busyStreet": "Busy street",
+          "conversation": "Conversation",
+          "quietHome": "Quiet home",
+          "whisper": "Whisper",
+          "hearingThreshold": "Threshold of hearing"
+        }
       }
     },
     "safety": {

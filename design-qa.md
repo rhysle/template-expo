@@ -103,6 +103,74 @@ final result: passed
 
 ---
 
+# dB Meter revamp and guide — design QA
+
+## Visual truth and implementation evidence
+
+- Main-screen source: `/Users/tailt/.codex/generated_images/019f8800-83cd-7eb3-bd67-3c3c6f686ea3/exec-fbe7e8e7-18da-466d-8699-6aae6359d0ed.png`
+- Guide source: `/Users/tailt/.codex/generated_images/019f8800-83cd-7eb3-bd67-3c3c6f686ea3/exec-31e6b593-f8cd-4501-a75f-bf13e46caf14.png`
+- Active implementation: `/Users/tailt/.codex/visualizations/2026/07/22/019f8800-83cd-7eb3-bd67-3c3c6f686ea3/db-meter/db-meter-active-final-v3.png`
+- Initial 0 dB implementation: `/Users/tailt/.codex/visualizations/2026/07/22/019f8800-83cd-7eb3-bd67-3c3c6f686ea3/db-meter/db-meter-initial-final-2.png`
+- Guide top: `/Users/tailt/.codex/visualizations/2026/07/22/019f8800-83cd-7eb3-bd67-3c3c6f686ea3/db-meter/db-meter-help-top-final.png`
+- Guide lower content and Done action: `/Users/tailt/.codex/visualizations/2026/07/22/019f8800-83cd-7eb3-bd67-3c3c6f686ea3/db-meter/db-meter-help-top-v2.png`
+- Main same-input comparison: `/Users/tailt/.codex/visualizations/2026/07/22/019f8800-83cd-7eb3-bd67-3c3c6f686ea3/db-meter/db-meter-active-comparison-v3.png`
+- Guide top same-input comparison: `/Users/tailt/.codex/visualizations/2026/07/22/019f8800-83cd-7eb3-bd67-3c3c6f686ea3/db-meter/db-meter-help-comparison-final.png`
+- Guide lower same-input comparison: `/Users/tailt/.codex/visualizations/2026/07/22/019f8800-83cd-7eb3-bd67-3c3c6f686ea3/db-meter/db-meter-help-lower-comparison-final.png`
+- Sticky guide implementation: `/Users/tailt/.codex/visualizations/2026/07/22/019f8800-83cd-7eb3-bd67-3c3c6f686ea3/db-meter/help-sticky-final.png`
+- Sticky guide same-input comparison: `/Users/tailt/.codex/visualizations/2026/07/22/019f8800-83cd-7eb3-bd67-3c3c6f686ea3/db-meter/help-sticky-comparison.png`
+- Matched-surface follow-up: `/Users/tailt/.codex/visualizations/2026/07/22/019f8800-83cd-7eb3-bd67-3c3c6f686ea3/db-meter/help-surface-match-final.png`
+- Reported/fixed surface comparison: `/Users/tailt/.codex/visualizations/2026/07/22/019f8800-83cd-7eb3-bd67-3c3c6f686ea3/db-meter/help-surface-match-comparison.png`
+- Borderless blur and category follow-up: `/Users/tailt/.codex/visualizations/2026/07/22/019f8800-83cd-7eb3-bd67-3c3c6f686ea3/db-meter/help-blur-category-final.png`
+- Reported/fixed blur-category comparison: `/Users/tailt/.codex/visualizations/2026/07/22/019f8800-83cd-7eb3-bd67-3c3c6f686ea3/db-meter/help-blur-category-comparison.png`
+- Reading alignment follow-up: `/Users/tailt/.codex/visualizations/2026/07/22/019f8800-83cd-7eb3-bd67-3c3c6f686ea3/db-meter/meter-reading-alignment-final.png`
+- Reading alignment reported/fixed comparison: `/Users/tailt/.codex/visualizations/2026/07/22/019f8800-83cd-7eb3-bd67-3c3c6f686ea3/db-meter/meter-reading-alignment-comparison.png`
+- Header fade and live-unit follow-up: `/Users/tailt/.codex/visualizations/2026/07/22/019f8800-83cd-7eb3-bd67-3c3c6f686ea3/db-meter/help-header-fade-unit-final.png`
+- Header fade and live-unit reported/fixed comparison: `/Users/tailt/.codex/visualizations/2026/07/22/019f8800-83cd-7eb3-bd67-3c3c6f686ea3/db-meter/help-header-fade-unit-comparison.png`
+
+## Viewport, state, and normalization
+
+- Device: iPhone 17 Pro Max simulator, iOS 26.5, light appearance.
+- Implementation capture: 1320 × 2868 pixels at 3× density, corresponding to a 440 × 956-point app viewport.
+- Main source: 853 × 1844 pixels. Guide source: 854 × 1842 pixels. Source density metadata is unavailable, so each implementation capture was resized to the matching source pixel canvas before the source and implementation were joined side by side. The aspect-ratio difference is under 0.6%.
+- Main comparison state: running meter in the Normal band. The source uses illustrative 58/26/51/92 dB values; the implementation uses live simulator readings, so values differ while state styling and per-value band colors remain the comparison target.
+- Additional state: the cold-start 0 dB capture verifies the requested green gradient-endpoint color for both the primary reading and gauge thumb. Start and Stop states were both exercised.
+- Guide comparison state: a captured 45 dB current estimate, with both the top of the sheet and the scrolled lower sections captured.
+
+## Findings
+
+- No actionable P0, P1, or P2 mismatch remains.
+- Fonts and typography: the implementation uses the app's configured font family, tabular numerals, existing 48-point reading size, and established text hierarchy. The native guide deliberately uses the app's readable body sizes rather than compressing all sections into one viewport; scrolling was explicitly accepted.
+- Spacing and layout rhythm: the mascot is the dominant hero, the reading/status/gauge are one clear group, stats use only vertical dividers, and the action remains clear of the persistent tab bar. The sheet preserves section separation and scroll reachability without an artificial bottom information block.
+- Colors and visual tokens: the live reading, gauge thumb, status, and each stat map to semantic band colors. The idle 0 dB exception maps to the green color at the gauge's zero endpoint. Start remains primary blue and Stop uses semantic red, including matching label color.
+- Image quality and asset fidelity: the screen uses the existing sharp product mascot asset at a larger scale. No placeholder art or replacement illustration was introduced.
+- Icons: Help, Settings, measurement status, microphone, location, and hearing-protection icons use the project's Phosphor icon family and retain accessible labels or adjacent text.
+- Copy and content: the guide includes all three measurement steps, the full everyday-sound scale, the NIOSH exposure table, and all three usage tips. Per the final user direction, it has no X button and no “About this estimate” or “Privacy” sections.
+- Accessibility and behavior: Help opens as a native bottom sheet, nested scrolling reaches the lower content and Done action, Done dismisses the sheet, and Start/Stop expose correct button labels. Conditional permission and error notices remain available on the meter screen.
+- Simulator-only artifact: the translucent floating gear at the left edge belongs to the Simulator Tools overlay and is not rendered by app code.
+
+## Comparison history
+
+1. First guide comparison found a P2 collision when the live estimate sat close to a fixed reference value, and the sheet sat lower than the selected composition. The chart was changed to insert the live estimate as its own ordered row, nearby duplicates are suppressed, and the sheet detent increased from 92% to 96%.
+2. Post-fix guide captures show the current estimate has a full non-overlapping highlighted row, the reference scale remains legible, and the scrolled view contains Exposure time matters, Use it well, and only the Done action below them.
+3. First main-screen comparison found P2 proportion drift: the mascot was too small and the meter/action rhythm did not match the approved hero emphasis. The mascot scale increased, the reading group moved closer to it, and explicit spacing was added before stats and controls.
+4. The final full-view comparison shows the intended hierarchy, semantic colors, borderless stats, larger mascot, and active red Stop state with no clipped or unreachable app controls.
+5. The modal follow-up keeps the title and Done action in fixed overlay chrome. The title uses the same `systemChromeMaterial` blur material as Settings, while a transparent-to-surface gradient above the footer progressively obscures the last reference row before it passes under the fixed action. Overlay hit testing is restricted to the button, leaving the fade and title regions available to the underlying scroll gesture.
+6. The reported/fixed comparison identified the system material tint as visibly different from the modal surface. Both fixed regions now use the exact sheet surface token, and the footer's top padding and separator were removed so the fade terminates directly at the Done container without a contrasting strip.
+7. The next reported/fixed comparison found that an opaque matching header had lost its scroll-under blur and that “Current estimate” displaced useful classification context. The header now uses a theme-adaptive light/dark BlurView over a translucent sheet-surface tint, is rendered after the ScrollView as required by Expo, and has no bottom border. The live row now stacks its semantic meter category above “Current estimate” and follows that category's color, so a 46 dB reading reads “Normal / Current estimate” without removing either meaning.
+8. The final follow-up replaces that header blur with a 32-point surface-to-transparent fade, matching the footer's visual language without the material distortion. A symmetric invisible unit spacer keeps the numeric reading itself centered over the status badge while preserving the visible trailing dB unit. The nested dB unit in the live guide row now explicitly inherits the category color; reference-row units remain standard text color.
+
+## Open questions
+
+- None. Native status-bar/header height and the iOS shared header-action capsule are expected platform differences from the generated concept.
+
+## Follow-up polish
+
+- P3: on devices with substantially shorter viewports, the retained screen ScrollView may require a small vertical scroll; content and controls remain reachable.
+
+final result: passed
+
+---
+
 # Stereo Test design QA
 
 ## Evidence
