@@ -1,5 +1,5 @@
 import { Image } from 'expo-image'
-import { SlidersHorizontalIcon, SpeakerLowIcon, WaveformIcon } from 'phosphor-react-native'
+import { SpeakerLowIcon, WaveformIcon } from 'phosphor-react-native'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
@@ -18,15 +18,7 @@ import {
   FrequencyWaveform,
   MascotHero,
 } from '@/components/audio'
-import {
-  BottomSheet,
-  ChoiceChip,
-  InlineNotice,
-  NativeSlider,
-  Pressable,
-  StatusBadge,
-  Text,
-} from '@/components/base'
+import { ChoiceChip, InlineNotice, NativeSlider, StatusBadge, Text } from '@/components/base'
 import {
   audioController,
   type FrequencyBand,
@@ -39,20 +31,19 @@ import {
 import { useAudioPreferencesState } from '@/stores/features/audioPreferences'
 import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
 
-const PRESETS = [165, 250, 440, 1_000, 8_000, 12_000] as const
-const QUICK_PRESETS = PRESETS.slice(0, 4)
+const PRESETS = [165, 250, 440, 1_000, 5_000] as const
 const CENTER_FADE_INTENSITY = 0.3
+const EDGE_FADE_INTENSITY = 1
 
 export default function ToneGeneratorScreen() {
   const { t } = useTranslation()
   const theme = useTheme()
   const styles = useThemedStyles(createStyles)
-  const { height } = useWindowDimensions()
+  const { height, width } = useWindowDimensions()
   const snapshot = useAudioController()
   const { hapticsEnabled, lastToneFrequencyHz, setLastToneFrequencyHz } = useAudioPreferencesState()
   const [frequencyHz, setFrequencyHz] = useState(lastToneFrequencyHz)
   const [presetSelectionFrequencyHz, setPresetSelectionFrequencyHz] = useState(lastToneFrequencyHz)
-  const [isPresetSheetVisible, setIsPresetSheetVisible] = useState(false)
   const gestureWidth = useSharedValue(1)
   const gestureStart = useSharedValue(normalizeFrequency(lastToneFrequencyHz))
   const currentPosition = useSharedValue(normalizeFrequency(lastToneFrequencyHz))
@@ -117,12 +108,11 @@ export default function ToneGeneratorScreen() {
     if (isRunning) audioController.setToneFrequency(nextFrequency)
   }
 
-  const selectPreset = (preset: (typeof PRESETS)[number], dismissSheet = false) => {
+  const selectPreset = (preset: (typeof PRESETS)[number]) => {
     currentPosition.value = normalizeFrequency(preset)
     setFrequencyHz(preset)
     setPresetSelectionFrequencyHz(preset)
     if (isRunning) audioController.setToneFrequency(preset)
-    if (dismissSheet) setIsPresetSheetVisible(false)
   }
 
   const panGesture = Gesture.Pan()
@@ -204,156 +194,113 @@ export default function ToneGeneratorScreen() {
   )
 
   return (
-    <>
-      <AudioToolScreen
-        variant="focused"
-        contentStyle={[styles.content, isCompactLayout && styles.contentCompact]}>
-        <View style={styles.intro}>
-          <StatusBadge
-            label={bandLabels[band]}
-            tone="accent"
-            icon={WaveformIcon}
-            style={styles.status}
-          />
-          <Text variant="body" tone="secondary" align="center">
-            {t('audioTools.tone.subtitle')}
-          </Text>
-        </View>
-
-        <MascotHero
-          active={isRunning}
-          compact={isCompactLayout}
-          showWaves={false}
-          accentColor={waveformColor}
-          style={[styles.mascot, isCompactLayout && styles.mascotCompact]}
+    <AudioToolScreen
+      variant="focused"
+      contentStyle={[styles.content, isCompactLayout && styles.contentCompact]}>
+      <View style={styles.intro}>
+        <StatusBadge
+          label={bandLabels[band]}
+          tone="accent"
+          icon={WaveformIcon}
+          style={styles.status}
         />
+        <Text variant="body" tone="secondary" align="center">
+          {t('audioTools.tone.subtitle')}
+        </Text>
+      </View>
 
-        <View style={styles.frequencyBlock}>
-          <GestureDetector gesture={panGesture}>
-            <View
-              accessible
-              accessibilityActions={[{ name: 'increment' }, { name: 'decrement' }]}
-              accessibilityLabel={`${t('audioTools.tone.currentFrequency')}: ${formattedFrequency} Hz`}
-              accessibilityRole="adjustable"
-              accessibilityValue={{
-                min: 20,
-                max: 20_000,
-                now: frequencyHz,
-                text: `${formattedFrequency} Hz`,
-              }}
-              onAccessibilityAction={handleAccessibilityAction}
-              onLayout={handleWaveformLayout}
-              style={styles.waveformAdjuster}>
-              <FrequencyWaveform
-                frequencyHz={frequencyHz}
-                active={isRunning}
-                color={theme.colors.primary.main}
-                accessibilityLabel={t('audioTools.tone.waveformLabel', {
-                  frequency: formattedFrequency,
-                })}
-                centerFadeIntensity={CENTER_FADE_INTENSITY}
-                style={[styles.waveform, isCompactLayout && styles.waveformCompact]}
-              />
-              <View pointerEvents="none" style={styles.frequencyOverlay}>
-                <View style={styles.frequencyRow}>
-                  <Text
-                    variant="title"
-                    weight="bold"
-                    align="center"
-                    style={[styles.frequencyValue, { color: frequencyValueColor }]}>
-                    {formattedFrequency}
-                  </Text>
-                  <Text variant="subtitle" weight="semibold" tone="secondary" style={styles.unit}>
-                    Hz
-                  </Text>
-                </View>
+      <MascotHero
+        active={isRunning}
+        compact={isCompactLayout}
+        showWaves={false}
+        accentColor={waveformColor}
+        style={[styles.mascot, isCompactLayout && styles.mascotCompact]}
+      />
+
+      <View style={styles.frequencyBlock}>
+        <GestureDetector gesture={panGesture}>
+          <View
+            accessible
+            accessibilityActions={[{ name: 'increment' }, { name: 'decrement' }]}
+            accessibilityLabel={`${t('audioTools.tone.currentFrequency')}: ${formattedFrequency} Hz`}
+            accessibilityRole="adjustable"
+            accessibilityValue={{
+              min: 20,
+              max: 20_000,
+              now: frequencyHz,
+              text: `${formattedFrequency} Hz`,
+            }}
+            onAccessibilityAction={handleAccessibilityAction}
+            onLayout={handleWaveformLayout}
+            style={[styles.waveformAdjuster, { width }]}>
+            <FrequencyWaveform
+              frequencyHz={frequencyHz}
+              active={isRunning}
+              color={theme.colors.primary.main}
+              accessibilityLabel={t('audioTools.tone.waveformLabel', {
+                frequency: formattedFrequency,
+              })}
+              centerFadeIntensity={CENTER_FADE_INTENSITY}
+              edgeFadeIntensity={EDGE_FADE_INTENSITY}
+              style={[styles.waveform, isCompactLayout && styles.waveformCompact]}
+            />
+            <View pointerEvents="none" style={styles.frequencyOverlay}>
+              <View style={styles.frequencyRow}>
+                <Text
+                  variant="title"
+                  weight="bold"
+                  align="center"
+                  style={[styles.frequencyValue, { color: frequencyValueColor }]}>
+                  {formattedFrequency}
+                </Text>
+                <Text variant="subtitle" weight="semibold" tone="secondary" style={styles.unit}>
+                  Hz
+                </Text>
               </View>
             </View>
-          </GestureDetector>
-
-          <View style={styles.sliderBlock}>
-            <NativeSlider
-              min={0}
-              max={1}
-              value={normalizeFrequency(frequencyHz)}
-              onValueChange={applyFrequencyPosition}
-              onValueChangeFinished={() => {
-                setPresetSelectionFrequencyHz(frequencyFromNormalized(currentPosition.value))
-              }}
-            />
-            <View style={styles.rangeLabels}>
-              <Text variant="caption" tone="muted">
-                20 Hz
-              </Text>
-              <Text variant="caption" tone="muted">
-                20,000 Hz
-              </Text>
-            </View>
           </View>
-        </View>
+        </GestureDetector>
 
-        <View style={styles.presetRow}>
-          {QUICK_PRESETS.map((preset) => (
-            <ChoiceChip
-              key={preset}
-              label={`${new Intl.NumberFormat().format(preset)} Hz`}
-              selected={presetSelectionFrequencyHz === preset}
-              haptic={hapticsEnabled}
-              onPress={() => selectPreset(preset)}
-              style={styles.quickPreset}
-            />
-          ))}
-          <Pressable
-            accessibilityLabel={t('audioTools.tone.presets')}
-            accessibilityRole="button"
-            accessibilityState={{ expanded: isPresetSheetVisible }}
-            haptic={hapticsEnabled}
-            hapticType="selection"
-            onPress={() => setIsPresetSheetVisible(true)}
-            style={styles.presetsButton}>
-            <SlidersHorizontalIcon
-              size={iconSizes.sm}
-              color={theme.colors.primary.main}
-              weight="bold"
-            />
-            <Text
-              variant="caption"
-              weight="semibold"
-              tone="accent"
-              numberOfLines={1}
-              style={styles.presetsButtonText}>
-              {t('audioTools.tone.presets')}
+        <View style={styles.sliderBlock}>
+          <NativeSlider
+            min={0}
+            max={1}
+            value={normalizeFrequency(frequencyHz)}
+            onValueChange={applyFrequencyPosition}
+            onValueChangeFinished={() => {
+              setPresetSelectionFrequencyHz(frequencyFromNormalized(currentPosition.value))
+            }}
+          />
+          <View style={styles.rangeLabels}>
+            <Text variant="caption" tone="muted">
+              20 Hz
             </Text>
-          </Pressable>
-        </View>
-
-        {actionDock}
-
-        {snapshot.status === 'error' && isLastToneSession ? (
-          <InlineNotice tone="error">{t('audioTools.common.error')}</InlineNotice>
-        ) : null}
-      </AudioToolScreen>
-
-      <BottomSheet visible={isPresetSheetVisible} onDismiss={() => setIsPresetSheetVisible(false)}>
-        <View style={styles.presetSheet}>
-          <Text variant="title" weight="bold">
-            {t('audioTools.tone.presets')}
-          </Text>
-          <View style={styles.presetSheetGrid}>
-            {PRESETS.map((preset) => (
-              <ChoiceChip
-                key={preset}
-                label={`${new Intl.NumberFormat().format(preset)} Hz`}
-                selected={presetSelectionFrequencyHz === preset}
-                haptic={hapticsEnabled}
-                onPress={() => selectPreset(preset, true)}
-                style={styles.sheetPreset}
-              />
-            ))}
+            <Text variant="caption" tone="muted">
+              20,000 Hz
+            </Text>
           </View>
         </View>
-      </BottomSheet>
-    </>
+      </View>
+
+      <View style={styles.presetRow}>
+        {PRESETS.map((preset) => (
+          <ChoiceChip
+            key={preset}
+            label={`${new Intl.NumberFormat().format(preset)} Hz`}
+            selected={presetSelectionFrequencyHz === preset}
+            haptic={hapticsEnabled}
+            onPress={() => selectPreset(preset)}
+            style={styles.quickPreset}
+          />
+        ))}
+      </View>
+
+      {actionDock}
+
+      {snapshot.status === 'error' && isLastToneSession ? (
+        <InlineNotice tone="error">{t('audioTools.common.error')}</InlineNotice>
+      ) : null}
+    </AudioToolScreen>
   )
 }
 
@@ -398,7 +345,6 @@ const createStyles = createThemedStyles((t) => ({
     marginBottom: t.spacing.xs,
   },
   waveformAdjuster: {
-    width: '100%',
     position: 'relative',
   },
   frequencyOverlay: {
@@ -431,25 +377,12 @@ const createStyles = createThemedStyles((t) => ({
     gap: t.spacing.xs,
   },
   quickPreset: {
+    minHeight: 0,
     minWidth: 0,
     flex: 1,
     alignSelf: 'stretch',
     paddingHorizontal: t.spacing.xs,
-  },
-  presetsButton: {
-    minHeight: 44,
-    minWidth: 80,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: t.spacing.xs,
-    paddingHorizontal: t.spacing.sm,
-    borderCurve: 'continuous',
-    borderRadius: t.borderRadius.full,
-    backgroundColor: t.colors.primary.soft,
-  },
-  presetsButtonText: {
-    flexShrink: 1,
+    paddingVertical: t.spacing.sm,
   },
   actionDock: {
     alignItems: 'center',
@@ -485,19 +418,5 @@ const createStyles = createThemedStyles((t) => ({
   },
   safetyText: {
     flexShrink: 1,
-  },
-  presetSheet: {
-    gap: t.spacing.lg,
-    paddingHorizontal: t.spacing.lg,
-    paddingBottom: t.spacing.xl,
-  },
-  presetSheetGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: t.spacing.sm,
-  },
-  sheetPreset: {
-    minWidth: '30%',
-    flexGrow: 1,
   },
 }))
