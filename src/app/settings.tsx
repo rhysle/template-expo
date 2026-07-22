@@ -9,7 +9,6 @@ import {
   DiamondsFourIcon,
   EnvelopeIcon,
   FileTextIcon,
-  GaugeIcon,
   LockIcon,
   ShareNetworkIcon,
   ShieldCheckIcon,
@@ -21,12 +20,9 @@ import { ScrollView, View } from 'react-native'
 
 import {
   ActionListItem,
-  Button,
   Card,
-  NativeSlider,
   Pressable,
   PromoBanner,
-  SelectListItem,
   Text,
   ToggleListItem,
 } from '@/components/base'
@@ -37,7 +33,7 @@ import { getCurrentOtaUpdateId } from '@/services/otaUpdate'
 import { recordError } from '@/services/sentry'
 import { openWriteReview } from '@/services/storeReview'
 import { useAdsState } from '@/stores/features/ads'
-import { type MeterResponse, useAudioPreferencesState } from '@/stores/features/audioPreferences'
+import { useAudioPreferencesState } from '@/stores/features/audioPreferences'
 import { useSnackbarState } from '@/stores/features/snackbar'
 import { useSubscriptionState } from '@/stores/features/subscription'
 import { useUserIdentityState } from '@/stores/features/userIdentity'
@@ -52,15 +48,7 @@ export default function SettingsScreen() {
   const styles = useThemedStyles(createStyles)
   const router = useRouter()
   const { isSubscribed } = useSubscriptionState()
-  const {
-    hapticsEnabled,
-    meterResponse,
-    meterCalibrationOffsetDb,
-    setHapticsEnabled,
-    setMeterResponse,
-    setMeterCalibrationOffsetDb,
-    resetMeterCalibration,
-  } = useAudioPreferencesState()
+  const { hapticsEnabled, setHapticsEnabled } = useAudioPreferencesState()
   const { userId } = useUserIdentityState()
   const { privacyOptionsRequired } = useAdsState()
   const { showSnackbar } = useSnackbarState()
@@ -128,53 +116,6 @@ export default function SettingsScreen() {
             value={hapticsEnabled}
             onValueChange={setHapticsEnabled}
           />
-          <SelectListItem<MeterResponse>
-            icon={GaugeIcon}
-            title={t('settings.audio.meterResponse')}
-            subtitle={t('settings.audio.meterResponseSubtitle')}
-            value={meterResponse}
-            options={['fast', 'slow']}
-            sheetTitle={t('settings.audio.meterResponse')}
-            renderLabel={(value) =>
-              value === 'fast' ? t('settings.audio.responseFast') : t('settings.audio.responseSlow')
-            }
-            onChange={setMeterResponse}
-          />
-          <View style={styles.calibrationBlock}>
-            <View style={styles.calibrationHeader}>
-              <View style={styles.calibrationTitle}>
-                <Text variant="body" weight="medium">
-                  {t('settings.audio.calibration')}
-                </Text>
-                <Text variant="caption" tone="secondary">
-                  {t('settings.audio.calibrationSubtitle')}
-                </Text>
-              </View>
-              <Text variant="body" weight="semibold" tone="accent" style={styles.calibrationValue}>
-                {t('settings.audio.calibrationValue', {
-                  value:
-                    meterCalibrationOffsetDb > 0
-                      ? `+${meterCalibrationOffsetDb}`
-                      : meterCalibrationOffsetDb,
-                })}
-              </Text>
-            </View>
-            <NativeSlider
-              min={-20}
-              max={20}
-              step={1}
-              value={meterCalibrationOffsetDb}
-              onValueChange={setMeterCalibrationOffsetDb}
-            />
-            <Button
-              variant="ghost"
-              size="sm"
-              label={t('settings.audio.calibrationReset')}
-              disabled={meterCalibrationOffsetDb === 0}
-              onPress={resetMeterCalibration}
-              style={styles.calibrationReset}
-            />
-          </View>
           <ActionListItem
             onPress={() => router.push('/audio-safety' as never)}
             icon={ShieldCheckIcon}
@@ -299,30 +240,6 @@ const createStyles = createThemedStyles((t) => ({
   sectionTitle: {
     marginBottom: t.spacing.xl,
     textTransform: 'uppercase',
-  },
-  calibrationBlock: {
-    gap: t.spacing.md,
-    paddingHorizontal: t.spacing.lg,
-    paddingVertical: t.spacing.lg,
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: t.colors.border.subtle,
-  },
-  calibrationHeader: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: t.spacing.md,
-  },
-  calibrationTitle: {
-    minWidth: 0,
-    flex: 1,
-    gap: t.spacing.xs,
-  },
-  calibrationValue: {
-    fontVariant: ['tabular-nums'],
-  },
-  calibrationReset: {
-    alignSelf: 'flex-start',
   },
   aboutCard: {
     marginVertical: t.spacing.xl,

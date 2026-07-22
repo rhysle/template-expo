@@ -20,7 +20,7 @@ export default function DbMeterScreen() {
   const styles = useThemedStyles(createStyles)
   const { height } = useWindowDimensions()
   const snapshot = useAudioController()
-  const { hapticsEnabled, meterCalibrationOffsetDb, meterResponse } = useAudioPreferencesState()
+  const { hapticsEnabled } = useAudioPreferencesState()
   useAudioToolLifecycle()
 
   const isRunning = snapshot.activeTool === 'meter' && snapshot.status === 'running'
@@ -68,10 +68,7 @@ export default function DbMeterScreen() {
       return
     }
 
-    await audioController.startMeter({
-      calibrationOffsetDb: meterCalibrationOffsetDb,
-      response: meterResponse,
-    })
+    await audioController.startMeter()
   }
 
   return (

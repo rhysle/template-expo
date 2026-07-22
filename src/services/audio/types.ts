@@ -1,7 +1,5 @@
 import type { PermissionStatus } from 'react-native-audio-api'
 
-import type { MeterResponse } from '@/stores/features/audioPreferences'
-
 export type AudioTool = 'eject' | 'tone' | 'stereo' | 'meter'
 export type AudioRuntimeStatus = 'idle' | 'starting' | 'running' | 'stopping' | 'error'
 export type AudioStopReason =
@@ -43,11 +41,6 @@ export interface AudioSnapshot {
   microphonePermission: PermissionStatus
   outputRouteKind: OutputRouteKind
   outputRouteName: string | null
-}
-
-export interface MeterStartOptions {
-  calibrationOffsetDb: number
-  response: MeterResponse
 }
 
 export interface MeterStartResult {
