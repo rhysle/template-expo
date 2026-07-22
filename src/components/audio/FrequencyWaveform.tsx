@@ -23,6 +23,8 @@ interface FrequencyWaveformProps {
   accessibilityLabel: string
   /** Controls how strongly the waves are softened behind an overlaid readout. */
   centerFadeIntensity?: number
+  /** Controls how strongly the waves fade into the background at both horizontal edges. */
+  edgeFadeIntensity?: number
   style?: StyleProp<ViewStyle>
 }
 
@@ -32,6 +34,7 @@ export const FrequencyWaveform = ({
   color,
   accessibilityLabel,
   centerFadeIntensity = 0.3,
+  edgeFadeIntensity = 0,
   style,
 }: FrequencyWaveformProps) => {
   const { appearance, colors } = useTheme()
@@ -43,6 +46,7 @@ export const FrequencyWaveform = ({
   const motion = useSharedValue(active && !reducedMotion ? 1 : 0)
   const phase = useSharedValue(0)
   const resolvedFadeIntensity = Math.min(Math.max(centerFadeIntensity, 0), 1)
+  const resolvedEdgeFadeIntensity = Math.min(Math.max(edgeFadeIntensity, 0), 1)
   const centerVeilAlpha = 1 - (1 - resolvedFadeIntensity) ** 8
   const centerVeilColors = [
     withAlpha(colors.background.base, 0),
@@ -51,6 +55,12 @@ export const FrequencyWaveform = ({
     withAlpha(colors.background.base, centerVeilAlpha),
     withAlpha(colors.background.base, 0),
     withAlpha(colors.background.base, 0),
+  ] as const
+  const edgeVeilColors = [
+    withAlpha(colors.background.base, resolvedEdgeFadeIntensity),
+    withAlpha(colors.background.base, 0),
+    withAlpha(colors.background.base, 0),
+    withAlpha(colors.background.base, resolvedEdgeFadeIntensity),
   ] as const
 
   useEffect(() => {
@@ -191,6 +201,16 @@ export const FrequencyWaveform = ({
           />
         </>
       ) : null}
+      {resolvedEdgeFadeIntensity > 0 ? (
+        <LinearGradient
+          pointerEvents="none"
+          colors={edgeVeilColors}
+          locations={[0, 0.12, 0.88, 1]}
+          start={{ x: 0, y: 0.5 }}
+          end={{ x: 1, y: 0.5 }}
+          style={styles.edgeVeil}
+        />
+      ) : null}
     </View>
   )
 }
@@ -214,6 +234,13 @@ const createStyles = createThemedStyles((t) => ({
     left: '36%',
   },
   centerVeil: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+  },
+  edgeVeil: {
     position: 'absolute',
     top: 0,
     right: 0,
