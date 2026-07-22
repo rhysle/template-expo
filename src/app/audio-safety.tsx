@@ -3,7 +3,6 @@ import {
   GaugeIcon,
   type Icon,
   LockKeyIcon,
-  SlidersHorizontalIcon,
   SpeakerHighIcon,
   WarningCircleIcon,
 } from 'phosphor-react-native'
@@ -34,11 +33,6 @@ export default function AudioSafetyScreen() {
       icon: GaugeIcon,
       title: t('audioTools.safety.estimateTitle'),
       body: t('audioTools.safety.estimateBody'),
-    },
-    {
-      icon: SlidersHorizontalIcon,
-      title: t('audioTools.safety.calibrationTitle'),
-      body: t('audioTools.safety.calibrationBody'),
     },
     {
       icon: LockKeyIcon,

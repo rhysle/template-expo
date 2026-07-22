@@ -46,17 +46,12 @@ export const rmsToDbfs = (rms: number): number => {
   return 20 * Math.log10(rms)
 }
 
-export const dbfsToEstimatedDb = (dbfs: number, calibrationOffsetDb = 0): number =>
-  clamp(dbfs + ESTIMATED_DB_REFERENCE + calibrationOffsetDb, 0, MAX_ESTIMATED_DB)
+export const dbfsToEstimatedDb = (dbfs: number): number =>
+  clamp(dbfs + ESTIMATED_DB_REFERENCE, 0, MAX_ESTIMATED_DB)
 
-export const smoothMeterValue = (
-  previousValue: number | null,
-  nextValue: number,
-  response: 'fast' | 'slow'
-): number => {
+export const smoothMeterValue = (previousValue: number | null, nextValue: number): number => {
   if (previousValue === null || !Number.isFinite(previousValue)) return nextValue
-  const alpha = response === 'fast' ? 0.35 : 0.1
-  return previousValue + alpha * (nextValue - previousValue)
+  return previousValue + 0.35 * (nextValue - previousValue)
 }
 
 export const classifyMeterBand = (estimatedDb: number): MeterBand => {

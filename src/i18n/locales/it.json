@@ -53,14 +53,6 @@
       "durationValue": "{{count}} seconds",
       "haptics": "Control haptics",
       "hapticsSubtitle": "Use tactile feedback in sound tools",
-      "meterResponse": "Meter response",
-      "meterResponseSubtitle": "Choose how quickly readings react",
-      "responseFast": "Fast",
-      "responseSlow": "Slow",
-      "calibration": "Meter calibration",
-      "calibrationSubtitle": "Adjust estimated readings to match a trusted meter",
-      "calibrationValue": "{{value}} dB",
-      "calibrationReset": "Reset calibration",
       "safety": "Audio Safety & Privacy",
       "safetySubtitle": "Playback, microphone, and measurement guidance"
     }
@@ -256,8 +248,6 @@
       "routingBody": "Water-eject sound must use the device speaker. Stereo separation depends on the connected speaker or headphones.",
       "estimateTitle": "Estimated sound levels",
       "estimateBody": "Phone microphones report digital signal level rather than laboratory SPL. The app applies an estimate that varies by device.",
-      "calibrationTitle": "Calibration",
-      "calibrationBody": "Compare the meter with a trusted reference in the same position, then adjust the calibration offset in Settings.",
       "privacyTitle": "Microphone privacy",
       "privacyBody": "The microphone runs only while the dB Meter is active. Samples are processed in memory and are never saved or uploaded.",
       "limitationsTitle": "Important limitations",

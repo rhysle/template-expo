@@ -21,7 +21,6 @@ import {
 import type {
   AudioSnapshot,
   AudioStopReason,
-  MeterStartOptions,
   MeterStartResult,
   MeterStats,
   OutputRouteKind,
@@ -386,7 +385,7 @@ class AudioController {
       }
     })
 
-  startMeter = (options: MeterStartOptions): Promise<MeterStartResult> =>
+  startMeter = (): Promise<MeterStartResult> =>
     this.enqueue(async () => {
       await this.performStop('replaced')
       this.update({
@@ -437,15 +436,11 @@ class AudioController {
           },
           ({ buffer }) => {
             const samples = buffer.getChannelData(0)
-            const estimatedDb = dbfsToEstimatedDb(
-              rmsToDbfs(calculateRms(samples)),
-              options.calibrationOffsetDb
-            )
+            const estimatedDb = dbfsToEstimatedDb(rmsToDbfs(calculateRms(samples)))
             const previous = this.snapshot.meter
             const currentDb = smoothMeterValue(
               previous.sampleCount === 0 ? null : previous.currentDb,
-              estimatedDb,
-              options.response
+              estimatedDb
             )
             const sampleCount = previous.sampleCount + 1
             const minimumDb =
@@ -473,7 +468,7 @@ class AudioController {
         this.recorder = recorder
         this.startedAtMs = Date.now()
         this.update({ status: 'running' })
-        trackEvent(AnalyticsAppEvents.AUDIO_TOOL_STARTED, { tool: 'meter', mode: options.response })
+        trackEvent(AnalyticsAppEvents.AUDIO_TOOL_STARTED, { tool: 'meter', mode: 'fast' })
         this.startTicker()
         return { permission, started: true }
       } catch (error) {
