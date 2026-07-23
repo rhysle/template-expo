@@ -176,7 +176,7 @@ export default function EjectScreen() {
               color={theme.colors.text.secondary}
               weight="regular"
             />
-            <Text variant="body" tone="secondary" align="center" style={styles.guidanceText}>
+            <Text variant="caption" tone="secondary" align="center" style={styles.guidanceText}>
               {isActive
                 ? t('audioTools.eject.runningHint')
                 : resultState === 'completed'
