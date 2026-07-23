@@ -4,8 +4,14 @@ import { type LayoutChangeEvent, type StyleProp, View, type ViewStyle } from 're
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 
 import { Text } from '@/components/base'
-import { MAX_ESTIMATED_DB } from '@/services/audio'
+import { MAX_ESTIMATED_DB, METER_BAND_THRESHOLDS } from '@/services/audio'
 import { createThemedStyles, useTheme, useThemedStyles } from '@/theme'
+
+const BAND_TRANSITION_HALF_WIDTH_DB = 10
+const BAND_TRANSITION_WIDTH = BAND_TRANSITION_HALF_WIDTH_DB / MAX_ESTIMATED_DB
+const NORMAL_BAND_START = METER_BAND_THRESHOLDS.normal / MAX_ESTIMATED_DB
+const LOUD_BAND_START = METER_BAND_THRESHOLDS.loud / MAX_ESTIMATED_DB
+const DANGER_BAND_START = METER_BAND_THRESHOLDS.danger / MAX_ESTIMATED_DB
 
 interface DbMeterGaugeProps {
   value: number
@@ -51,13 +57,25 @@ export const DbMeterGauge = ({
       <View onLayout={handleLayout} style={styles.trackContainer}>
         <LinearGradient
           colors={[
+            theme.colors.primary.main,
+            theme.colors.primary.main,
             theme.colors.status.success,
-            '#84CC16',
+            theme.colors.status.success,
             theme.colors.status.warning,
-            '#F97316',
+            theme.colors.status.warning,
+            theme.colors.status.error,
             theme.colors.status.error,
           ]}
-          locations={[0, 0.25, 0.5, 0.75, 1]}
+          locations={[
+            0,
+            NORMAL_BAND_START - BAND_TRANSITION_WIDTH,
+            NORMAL_BAND_START + BAND_TRANSITION_WIDTH,
+            LOUD_BAND_START - BAND_TRANSITION_WIDTH,
+            LOUD_BAND_START + BAND_TRANSITION_WIDTH,
+            DANGER_BAND_START - BAND_TRANSITION_WIDTH,
+            DANGER_BAND_START + BAND_TRANSITION_WIDTH,
+            1,
+          ]}
           start={{ x: 0, y: 0.5 }}
           end={{ x: 1, y: 0.5 }}
           style={styles.track}

@@ -4,6 +4,11 @@ export const MIN_FREQUENCY_HZ = 20
 export const MAX_FREQUENCY_HZ = 20_000
 export const ESTIMATED_DB_REFERENCE = 100
 export const MAX_ESTIMATED_DB = 120
+export const METER_BAND_THRESHOLDS = {
+  normal: 30,
+  loud: 70,
+  danger: 100,
+} as const
 
 export const clamp = (value: number, minimum: number, maximum: number): number =>
   Math.min(Math.max(value, minimum), maximum)
@@ -55,9 +60,9 @@ export const smoothMeterValue = (previousValue: number | null, nextValue: number
 }
 
 export const classifyMeterBand = (estimatedDb: number): MeterBand => {
-  if (estimatedDb < 30) return 'veryQuiet'
-  if (estimatedDb < 70) return 'normal'
-  if (estimatedDb < 100) return 'loud'
+  if (estimatedDb < METER_BAND_THRESHOLDS.normal) return 'veryQuiet'
+  if (estimatedDb < METER_BAND_THRESHOLDS.loud) return 'normal'
+  if (estimatedDb < METER_BAND_THRESHOLDS.danger) return 'loud'
   return 'danger'
 }
 
