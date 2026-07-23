@@ -157,7 +157,6 @@
       "subtitle": "Generate a precise sine tone and explore the audible frequency range.",
       "currentFrequency": "Current frequency",
       "waveformLabel": "Waveform at {{frequency}} hertz",
-      "presets": "Presets",
       "play": "Play tone",
       "stop": "Stop tone",
       "volumeHint": "Keep volume low and the speaker away from your ears.",

@@ -9,14 +9,14 @@
     "getStarted": "Bắt đầu",
     "next": "Tiếp theo",
     "ok": "OK",
+    "openSettings": "Mở phần Cài đặt",
+    "reset": "Đặt lại",
     "retry": "Thử lại",
     "restart": "Khởi động lại",
     "save": "Lưu",
     "skip": "Bỏ qua",
-    "openSettings": "Open Settings",
-    "reset": "Reset",
-    "start": "Start",
-    "stop": "Stop"
+    "start": "Bắt đầu",
+    "stop": "Dừng"
   },
   "tabs": {
     "eject": "Đẩy nước",
@@ -26,46 +26,165 @@
   },
   "settings": {
     "title": "Cài đặt",
-    "subtitle": "Tune your speaker tools and sound meter",
+    "subtitle": "Tinh chỉnh công cụ loa và máy đo âm thanh",
     "support": "Hỗ trợ",
     "contactSupport": "Liên hệ hỗ trợ",
     "contactSupportSubtitle": "Chúng tôi luôn sẵn sàng hỗ trợ bạn",
     "contactSupportError": "Không thể mở ứng dụng email",
-    "rateApp": "Đánh giá chúng tôi",
+    "rateApp": "Đánh giá ứng dụng",
     "rateAppSubtitle": "Bạn thích ứng dụng? Hãy để lại đánh giá nhé",
     "shareApp": "Chia sẻ",
-    "shareAppSubtitle": "Giới thiệu ứng dụng đến bạn bè & gia đình",
+    "shareAppSubtitle": "Giới thiệu ứng dụng đến bạn bè và gia đình",
     "shareMessage": "Hãy thử {{appName}} nhé!",
     "shareMessageWithUrl": "Hãy thử {{appName}} nhé! Tải về tại đây: {{url}}",
     "userId": "ID người dùng",
     "userIdCopied": "Đã sao chép ID người dùng",
     "legalSection": "Pháp lý",
-    "privacyConsent": "Quyền riêng tư & Sự đồng ý",
+    "privacyConsent": "Quyền riêng tư và sự đồng ý",
     "version": "Phiên bản {{version}}",
-    "otaUpdateId": "Cập nhật: {{updateId}}",
+    "otaUpdateId": "Bản cập nhật: {{updateId}}",
     "upgradeBanner": {
       "title": "Nâng cấp lên Premium",
-      "subtitle": "Remove ads for uninterrupted sound tools"
+      "subtitle": "Loại bỏ quảng cáo để sử dụng công cụ âm thanh không gián đoạn"
     },
     "audio": {
-      "section": "Audio & Meter",
-      "ejectDuration": "Cleaning duration",
-      "durationValue": "{{count}} seconds",
-      "haptics": "Control haptics",
-      "hapticsSubtitle": "Use tactile feedback in sound tools",
-      "safety": "Audio Safety & Privacy",
-      "safetySubtitle": "Playback, microphone, and measurement guidance"
+      "section": "Âm thanh và đo mức ồn",
+      "ejectDuration": "Thời gian làm sạch",
+      "durationValue": "{{count}} giây",
+      "haptics": "Phản hồi rung khi thao tác",
+      "hapticsSubtitle": "Sử dụng phản hồi rung trong các công cụ âm thanh",
+      "safety": "An toàn âm thanh và quyền riêng tư",
+      "safetySubtitle": "Hướng dẫn phát âm thanh, sử dụng micrô và đo mức ồn"
+    }
+  },
+  "audioTools": {
+    "common": {
+      "mascot": "Linh vật Đẩy nước",
+      "error": "Không thể phát âm thanh. Hãy kiểm tra đầu ra âm thanh hiện tại rồi thử lại."
+    },
+    "eject": {
+      "subtitle": "Dải quét tần số thấp có thể giúp đẩy nước và bụi bẩn lỏng ra khỏi loa.",
+      "safe": "Sẵn sàng làm sạch",
+      "running": "Đang đẩy nước…",
+      "completed": "Đã hoàn tất chu trình làm sạch",
+      "remaining": "Còn lại {{time}}",
+      "start": "Bắt đầu làm sạch",
+      "stop": "Dừng làm sạch",
+      "idleHint": "Đặt thiết bị với mặt loa hướng xuống trước khi bắt đầu.",
+      "runningHint": "Giữ thiết bị cố định và cách xa tai trong khi dải âm đang phát.",
+      "completedHint": "Kiểm tra loa và lặp lại chu trình nếu âm thanh vẫn còn bị rè hoặc nghẹt.",
+      "externalTitle": "Ngắt kết nối thiết bị âm thanh ngoài",
+      "externalBody": "Tính năng đẩy nước hoạt động qua loa của thiết bị, không hoạt động qua tai nghe hoặc đầu ra Bluetooth."
+    },
+    "tone": {
+      "subtitle": "Tạo sóng âm hình sin chính xác và khám phá dải tần số con người có thể nghe được.",
+      "currentFrequency": "Tần số hiện tại",
+      "waveformLabel": "Dạng sóng ở tần số {{frequency}} hertz",
+      "play": "Phát âm",
+      "stop": "Dừng phát âm",
+      "volumeHint": "Giữ âm lượng ở mức thấp và để loa cách xa tai.",
+      "band": {
+        "veryLow": "Rất thấp",
+        "low": "Thấp",
+        "midLow": "Trung thấp",
+        "mid": "Trung",
+        "high": "Cao",
+        "veryHigh": "Rất cao"
+      }
+    },
+    "stereo": {
+      "auto": "Tự động luân phiên",
+      "autoHint": "Luân phiên kênh trái, kênh phải và cả hai",
+      "tapToChange": "Chạm vào loa để đổi kênh",
+      "start": "Bắt đầu kiểm tra",
+      "helpTitle": "Cách sử dụng tính năng Kiểm tra âm thanh nổi",
+      "helpTap": "Chạm vào loa trái hoặc loa phải để kiểm tra ngay kênh tương ứng.",
+      "helpBoth": "Bật cả hai loa để phát âm kiểm tra qua cả hai kênh.",
+      "helpAuto": "Dùng chế độ Tự động luân phiên để chuyển lần lượt giữa kênh trái, kênh phải và cả hai.",
+      "helpStop": "Chọn Dừng kiểm tra bất cứ lúc nào bạn muốn ngừng phát âm thanh.",
+      "left": "Trái",
+      "right": "Phải",
+      "positionLeft": "Đang phát kênh trái",
+      "positionCenter": "Đang phát cả hai kênh",
+      "positionRight": "Đang phát kênh phải",
+      "idlePosition": "Chạm vào một loa để bắt đầu",
+      "stop": "Dừng kiểm tra"
+    },
+    "meter": {
+      "estimated": "Mức dB ước tính",
+      "start": "Bắt đầu đo",
+      "stop": "Dừng đo",
+      "permissionTitle": "Quyền truy cập micrô đang tắt",
+      "permissionBody": "Cho phép truy cập micrô trong phần cài đặt hệ thống để ước tính mức âm thanh xung quanh.",
+      "minimum": "Thấp nhất",
+      "average": "Trung bình",
+      "maximum": "Cao nhất",
+      "status": {
+        "veryQuiet": "Rất yên tĩnh",
+        "normal": "Bình thường",
+        "loud": "Ồn",
+        "danger": "Nguy hiểm"
+      },
+      "description": {
+        "veryQuiet": "Thư viện, tiếng thở nhẹ",
+        "normal": "Trò chuyện, văn phòng",
+        "loud": "Đường phố đông đúc, nhạc lớn",
+        "danger": "Buổi hòa nhạc, còi báo động"
+      },
+      "help": {
+        "title": "Hướng dẫn sử dụng máy đo dB",
+        "howToMeasure": "Cách đo",
+        "stepPlace": "Đặt điện thoại tại vị trí bạn muốn kiểm tra âm thanh.",
+        "stepUncovered": "Không che micrô.",
+        "stepStart": "Chạm vào Bắt đầu đo và theo dõi mức ước tính trực tiếp.",
+        "everydayLevels": "Mức âm thanh thường gặp",
+        "examplesApproximate": "Các ví dụ chỉ mang tính gần đúng và thay đổi theo khoảng cách.",
+        "currentEstimate": "Mức ước tính hiện tại",
+        "exposureTitle": "Thời gian tiếp xúc rất quan trọng",
+        "exposureDescription": "Theo hướng dẫn an toàn lao động của NIOSH, cứ tăng 3 dB thì thời gian tiếp xúc khuyến nghị giảm một nửa.",
+        "useItWell": "Cách đo hiệu quả",
+        "tipMicrophoneTitle": "Không che micrô",
+        "tipMicrophoneBody": "Tránh dùng tay hoặc ốp lưng che micrô.",
+        "tipPositionTitle": "Đo tại vị trí bạn nghe",
+        "tipPositionBody": "Di chuyển thiết bị đến vị trí bạn muốn đánh giá.",
+        "tipProtectTitle": "Nếu cảm thấy âm thanh quá lớn, hãy bảo vệ tai",
+        "tipProtectBody": "Di chuyển ra xa nguồn âm hoặc sử dụng thiết bị bảo vệ thính giác.",
+        "reference": {
+          "concertSpeaker": "Loa tại buổi hòa nhạc",
+          "sirenNightclub": "Còi báo động hoặc hộp đêm",
+          "lawnMower": "Máy cắt cỏ",
+          "busyStreet": "Đường phố đông đúc",
+          "conversation": "Trò chuyện",
+          "quietHome": "Nhà ở yên tĩnh",
+          "whisper": "Tiếng thì thầm",
+          "hearingThreshold": "Ngưỡng nghe"
+        }
+      }
+    },
+    "safety": {
+      "title": "An toàn âm thanh và quyền riêng tư",
+      "intro": "Hãy sử dụng các công cụ này cẩn thận và hiểu rõ những gì điện thoại có thể và không thể đo.",
+      "playbackTitle": "Phát âm thanh an toàn",
+      "playbackBody": "Bắt đầu với âm lượng thấp, tăng dần, giữ loa cách xa tai và dừng lại nếu âm thanh gây khó chịu.",
+      "routingTitle": "Định tuyến âm thanh",
+      "routingBody": "Âm thanh đẩy nước phải được phát qua loa của thiết bị. Khả năng tách kênh âm thanh nổi phụ thuộc vào loa hoặc tai nghe được kết nối.",
+      "estimateTitle": "Mức âm thanh ước tính",
+      "estimateBody": "Micrô điện thoại ghi nhận mức tín hiệu số, không phải mức áp suất âm thanh (SPL) theo chuẩn phòng thí nghiệm. Ứng dụng sử dụng phép ước tính có thể khác nhau tùy thiết bị.",
+      "privacyTitle": "Quyền riêng tư khi dùng micrô",
+      "privacyBody": "Micrô chỉ hoạt động khi Máy đo dB đang chạy. Các mẫu âm thanh được xử lý trong bộ nhớ và không bao giờ được lưu hoặc tải lên.",
+      "limitationsTitle": "Giới hạn quan trọng",
+      "limitationsBody": "Ứng dụng này không thể đảm bảo loại bỏ hoàn toàn nước và không thể thay thế thiết bị đã hiệu chuẩn, tư vấn y tế hoặc hướng dẫn chuyên môn về bảo vệ thính giác."
     }
   },
   "paywall": {
     "title": "Mở khóa Premium",
-    "subtitle": "Tận dụng tối đa Currency Converter",
+    "subtitle": "Khai thác tối đa Trình chuyển đổi tiền tệ",
     "ctaFreeTrial": "Dùng thử miễn phí",
-    "restore": "Khôi phục giao dịch",
+    "restore": "Khôi phục giao dịch mua",
     "terms": "Điều khoản dịch vụ",
-    "privacy": "Chính sách bảo mật",
+    "privacy": "Chính sách quyền riêng tư",
     "then": "sau đó",
-    "trial": "Dùng thử {{count}} {{unit}} miễn phí",
+    "trial": "Dùng thử miễn phí trong {{count}} {{unit}}",
     "save": "Tiết kiệm {{percent}}%",
     "trialUnit": {
       "day": "ngày",
@@ -83,175 +202,55 @@
     "features": {
       "liveRates": {
         "title": "Tỷ giá luôn mới nhất",
-        "description": "Tỷ giá cập nhật gần như thời gian thực, không bị trễ."
+        "description": "Tỷ giá được cập nhật gần như theo thời gian thực, không bị chậm trễ."
       },
       "unlimited": {
         "title": "Hơn 150 loại tiền tệ, không giới hạn",
-        "description": "Thêm tất cả loại tiền tệ bạn cần, không có giới hạn."
+        "description": "Thêm mọi loại tiền tệ bạn cần, không giới hạn số lượng."
       },
       "charts": {
         "title": "Toàn bộ lịch sử tỷ giá",
-        "description": "Biểu đồ tương tác để tìm thời điểm tốt nhất để chuyển đổi."
+        "description": "Biểu đồ tương tác giúp tìm thời điểm chuyển đổi tốt nhất."
       },
       "adFree": {
-        "title": "Không gián đoạn",
-        "description": "Không quảng cáo. Trải nghiệm tập trung, gọn gàng."
+        "title": "Không bị gián đoạn",
+        "description": "Không quảng cáo. Chỉ có trải nghiệm chuyển đổi gọn gàng và tập trung."
       }
     },
     "feedback": {
-      "subscribeSuccess": "Chào mừng! Gói đăng ký của bạn đã được kích hoạt.",
+      "subscribeSuccess": "Chào mừng bạn! Gói đăng ký đã được kích hoạt.",
       "subscribeError": "Đã xảy ra lỗi. Vui lòng thử lại.",
-      "restoreSuccess": "Khôi phục gói đăng ký thành công!",
-      "restoreNotFound": "Không tìm thấy gói đăng ký nào.",
-      "restoreError": "Không thể khôi phục giao dịch. Vui lòng thử lại."
+      "restoreSuccess": "Đã khôi phục gói đăng ký thành công!",
+      "restoreNotFound": "Không tìm thấy gói đăng ký đang hoạt động.",
+      "restoreError": "Không thể khôi phục giao dịch mua. Vui lòng thử lại."
     },
     "packageTitle": {
-      "day": "Hàng ngày",
-      "week": "Hàng tuần",
-      "month": "Hàng tháng",
-      "year": "Hàng năm",
+      "day": "Hằng ngày",
+      "week": "Hằng tuần",
+      "month": "Hằng tháng",
+      "year": "Hằng năm",
       "lifetime": "Trọn đời"
     }
   },
   "otaUpdate": {
-    "updateReady": "Có bản cập nhật mới - khởi động lại để áp dụng"
+    "updateReady": "Đã có bản cập nhật mới — hãy khởi động lại để áp dụng"
   },
   "errorBoundary": {
     "title": "Đã xảy ra lỗi",
-    "message": "Có lỗi không mong muốn xảy ra. Vui lòng thử lại."
+    "message": "Đã xảy ra lỗi không mong muốn. Vui lòng thử lại."
   },
   "onboarding": {
     "welcome": {
-      "title": "Một số tiền\nTất cả tiền tệ",
-      "description": "Nhập số tiền một lần và xem tất cả tiền tệ cập nhật ngay lập tức."
+      "title": "Một số tiền\nMọi loại tiền tệ",
+      "description": "Chỉ cần nhập số tiền một lần để xem mọi loại tiền tệ cập nhật ngay lập tức."
     },
     "features": {
-      "title": "Luôn đúng tỷ giá, ở bất cứ đâu",
-      "description": "Hơn 150 loại tiền tệ, tỷ giá gần như thời gian thực, và hoạt động ngoại tuyến."
+      "title": "Tỷ giá chính xác mọi lúc, mọi nơi",
+      "description": "Hơn 150 loại tiền tệ, tỷ giá gần như theo thời gian thực và sẵn sàng hoạt động ngoại tuyến."
     },
     "getStarted": {
-      "title": "Lịch sử tỷ giá trong tầm tay",
-      "description": "Nhấn vào bất kỳ tiền tệ nào để xem lịch sử tỷ giá theo tuần, tháng hoặc năm qua."
-    }
-  },
-  "audioTools": {
-    "common": {
-      "mascot": "Water Eject mascot",
-      "error": "Audio could not start. Check the current output and try again."
-    },
-    "eject": {
-      "subtitle": "A low-frequency sweep may help move water and loose debris from the speaker.",
-      "safe": "Ready to clean",
-      "running": "Ejecting water…",
-      "completed": "Cleaning cycle complete",
-      "remaining": "{{time}} remaining",
-      "start": "Start cleaning",
-      "stop": "Stop cleaning",
-      "idleHint": "Place the device speaker-side down before starting.",
-      "runningHint": "Keep the device still and away from your ears while the sweep plays.",
-      "completedHint": "Test your speaker and repeat the cycle if the sound is still muffled.",
-      "externalTitle": "Disconnect external audio",
-      "externalBody": "Water eject works through the device speaker, not headphones or Bluetooth outputs."
-    },
-    "tone": {
-      "subtitle": "Generate a precise sine tone and explore the audible frequency range.",
-      "currentFrequency": "Current frequency",
-      "waveformLabel": "Waveform at {{frequency}} hertz",
-      "presets": "Presets",
-      "play": "Play tone",
-      "stop": "Stop tone",
-      "volumeHint": "Keep volume low and the speaker away from your ears.",
-      "band": {
-        "veryLow": "Very low",
-        "low": "Low",
-        "midLow": "Low-mid",
-        "mid": "Mid",
-        "high": "High",
-        "veryHigh": "Very high"
-      }
-    },
-    "stereo": {
-      "auto": "Auto alternate",
-      "autoHint": "Cycle left, right, and both",
-      "tapToChange": "Tap speakers to change channels",
-      "start": "Start test",
-      "helpTitle": "How to use Stereo Test",
-      "helpTap": "Tap the left or right speaker to test that channel immediately.",
-      "helpBoth": "Turn on both speakers to play the test tone through both channels.",
-      "helpAuto": "Use Auto alternate to cycle between left, right, and both channels.",
-      "helpStop": "Use Stop test whenever you want to end playback.",
-      "left": "Left",
-      "right": "Right",
-      "positionLeft": "Left channel playing",
-      "positionCenter": "Both channels playing",
-      "positionRight": "Right channel playing",
-      "idlePosition": "Tap a speaker to begin",
-      "stop": "Stop test"
-    },
-    "meter": {
-      "estimated": "Estimated dB",
-      "start": "Start measuring",
-      "stop": "Stop measuring",
-      "permissionTitle": "Microphone access is off",
-      "permissionBody": "Allow microphone access in system settings to estimate nearby sound levels.",
-      "minimum": "Minimum",
-      "average": "Average",
-      "maximum": "Maximum",
-      "status": {
-        "veryQuiet": "Very quiet",
-        "normal": "Normal",
-        "loud": "Loud",
-        "danger": "Danger"
-      },
-      "description": {
-        "veryQuiet": "Library, soft breathing",
-        "normal": "Conversation, office",
-        "loud": "Busy street, loud music",
-        "danger": "Concert, siren"
-      },
-      "help": {
-        "title": "dB Meter guide",
-        "howToMeasure": "How to measure",
-        "stepPlace": "Place the phone where you want to check the sound.",
-        "stepUncovered": "Keep the microphone uncovered.",
-        "stepStart": "Tap Start measuring and watch the live estimate.",
-        "everydayLevels": "Everyday sound levels",
-        "examplesApproximate": "Examples are approximate and vary with distance.",
-        "currentEstimate": "Current estimate",
-        "exposureTitle": "Exposure time matters",
-        "exposureDescription": "NIOSH occupational guidance; every +3 dB halves the recommended time.",
-        "useItWell": "Use it well",
-        "tipMicrophoneTitle": "Keep the microphone uncovered",
-        "tipMicrophoneBody": "Avoid covering it with your hand or case.",
-        "tipPositionTitle": "Measure where you listen",
-        "tipPositionBody": "Move the device to the location you want to assess.",
-        "tipProtectTitle": "If it feels too loud, protect your ears",
-        "tipProtectBody": "Move away from the source or use hearing protection.",
-        "reference": {
-          "concertSpeaker": "Concert speaker",
-          "sirenNightclub": "Siren or nightclub",
-          "lawnMower": "Lawn mower",
-          "busyStreet": "Busy street",
-          "conversation": "Conversation",
-          "quietHome": "Quiet home",
-          "whisper": "Whisper",
-          "hearingThreshold": "Threshold of hearing"
-        }
-      }
-    },
-    "safety": {
-      "title": "Audio Safety & Privacy",
-      "intro": "Use these tools carefully and understand what your phone can—and cannot—measure.",
-      "playbackTitle": "Safe playback",
-      "playbackBody": "Start at low volume, raise it gradually, keep the speaker away from your ears, and stop if a sound is uncomfortable.",
-      "routingTitle": "Audio routing",
-      "routingBody": "Water-eject sound must use the device speaker. Stereo separation depends on the connected speaker or headphones.",
-      "estimateTitle": "Estimated sound levels",
-      "estimateBody": "Phone microphones report digital signal level rather than laboratory SPL. The app applies an estimate that varies by device.",
-      "privacyTitle": "Microphone privacy",
-      "privacyBody": "The microphone runs only while the dB Meter is active. Samples are processed in memory and are never saved or uploaded.",
-      "limitationsTitle": "Important limitations",
-      "limitationsBody": "This app cannot guarantee water removal and must not replace calibrated equipment, medical advice, or professional hearing protection guidance."
+      "title": "Xem nhanh lịch sử tỷ giá",
+      "description": "Chạm vào bất kỳ loại tiền tệ nào để xem lịch sử tỷ giá theo tuần, tháng hoặc năm qua."
     }
   }
 }
