@@ -107,22 +107,12 @@ export default function EjectScreen() {
       </View>
 
       <View style={styles.primaryInteraction}>
-        <View
-          style={[
-            styles.heroSlot,
-            isCompactLayout && styles.heroSlotCompact,
-            isActive && styles.heroSlotActive,
-            isActive && isCompactLayout && styles.heroSlotActiveCompact,
-          ]}>
+        <View style={styles.heroSlot}>
           <MascotHero
             active={isActive}
             compact={isCompactLayout}
+            fillAvailableSpace
             showWaves={false}
-            style={[
-              styles.mascot,
-              isCompactLayout && styles.mascotCompact,
-              isActive && isCompactLayout && styles.mascotActiveCompact,
-            ]}
           />
         </View>
 
@@ -143,20 +133,18 @@ export default function EjectScreen() {
         ) : null}
 
         <View style={styles.controlSection}>
-          <View style={[styles.controlCluster, isCompactLayout && styles.controlClusterCompact]}>
+          <View style={styles.controlCluster}>
             <View style={styles.mainControl}>
               {isActive ? (
                 <ProgressRing
                   value={progress}
                   maximumValue={1}
-                  size={isCompactLayout ? 156 : 168}
                   strokeWidth={6}
                   tone="error"
                   accessibilityLabel={status.label}
                   accessibilityValueText={remainingText}>
                   <CircularAudioButton
                     active
-                    size="large"
                     haptic={hapticsEnabled}
                     accessibilityLabel={t('audioTools.eject.stop')}
                     onPress={handleMainPress}
@@ -165,7 +153,6 @@ export default function EjectScreen() {
               ) : (
                 <CircularAudioButton
                   active={false}
-                  size="large"
                   haptic={hapticsEnabled}
                   accessibilityLabel={t('audioTools.eject.start')}
                   onPress={handleMainPress}
@@ -225,34 +212,18 @@ const createStyles = createThemedStyles((t) => ({
     alignSelf: 'center',
   },
   primaryInteraction: {
-    flexGrow: 1,
+    minHeight: 0,
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'space-between',
     gap: t.spacing.md,
   },
   heroSlot: {
+    minHeight: 0,
+    flex: 1,
     width: '100%',
-    height: 336,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  heroSlotCompact: {
-    height: 244,
-  },
-  heroSlotActive: {
-    height: 288,
-  },
-  heroSlotActiveCompact: {
-    height: 208,
-  },
-  mascot: {
-    transform: [{ scale: 1.32 }],
-  },
-  mascotCompact: {
-    transform: [{ scale: 1.2 }],
-  },
-  mascotActiveCompact: {
-    transform: [{ scale: 1.06 }],
   },
   controlSection: {
     width: '100%',
@@ -270,12 +241,9 @@ const createStyles = createThemedStyles((t) => ({
   controlCluster: {
     position: 'relative',
     width: '100%',
-    minHeight: 196,
+    minHeight: 152,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  controlClusterCompact: {
-    minHeight: 184,
   },
   mainControl: {
     alignItems: 'center',
@@ -283,7 +251,7 @@ const createStyles = createThemedStyles((t) => ({
   },
   durationPill: {
     position: 'absolute',
-    top: t.spacing.sm,
+    top: t.spacing.xs,
     right: 0,
   },
   guidance: {

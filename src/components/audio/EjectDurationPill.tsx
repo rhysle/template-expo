@@ -17,7 +17,9 @@ import {
 import { createThemedStyles, useTheme, useThemedStyles } from '@/theme'
 
 const DURATION_OPTIONS = [30, 60, 90] as const satisfies readonly EjectDurationSeconds[]
-const OPTION_SIZE = 48
+const OPTION_SIZE = 44
+const INDICATOR_SIZE = 38
+const INDICATOR_INSET = (OPTION_SIZE - INDICATOR_SIZE) / 2
 const INDICATOR_SPRING_CONFIG = {
   damping: 22,
   stiffness: 210,
@@ -87,13 +89,13 @@ const DurationOption = ({
         disabled && !selected && styles.optionDisabled,
       ]}>
       <Animated.View style={[styles.labelLayer, unselectedLabelStyle]}>
-        <Text variant="body" weight="semibold" style={styles.optionLabel}>
+        <Text variant="caption" weight="semibold" style={styles.optionLabel}>
           {duration}s
         </Text>
       </Animated.View>
       <Animated.View pointerEvents="none" style={[styles.labelLayer, selectedLabelStyle]}>
         <Text
-          variant="body"
+          variant="caption"
           weight="semibold"
           style={[styles.optionLabel, styles.optionLabelSelected]}>
           {duration}s
@@ -148,19 +150,19 @@ export const EjectDurationPill = ({ disabled = false, style }: EjectDurationPill
 
 const createStyles = createThemedStyles((t) => ({
   pill: {
-    width: 64,
+    width: 52,
     alignItems: 'center',
     gap: t.spacing.xs,
-    padding: t.spacing.sm,
+    padding: t.spacing.xs,
     borderRadius: t.borderRadius.full,
     backgroundColor: t.colors.background.subtle,
   },
   indicator: {
     position: 'absolute',
-    top: t.spacing.sm,
-    left: t.spacing.sm,
-    width: OPTION_SIZE,
-    height: OPTION_SIZE,
+    top: t.spacing.xs + INDICATOR_INSET,
+    left: t.spacing.xs + INDICATOR_INSET,
+    width: INDICATOR_SIZE,
+    height: INDICATOR_SIZE,
     borderRadius: t.borderRadius.full,
     backgroundColor: t.colors.primary.main,
   },

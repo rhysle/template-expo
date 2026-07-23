@@ -225,9 +225,10 @@ export default function ToneGeneratorScreen() {
       <MascotHero
         active={isRunning}
         compact={isCompactLayout}
+        fillAvailableSpace
         showWaves={false}
         accentColor={waveformColor}
-        style={[styles.mascot, isCompactLayout && styles.mascotCompact]}
+        style={styles.mascot}
       />
 
       <View style={styles.frequencyBlock}>
@@ -332,12 +333,7 @@ const createStyles = createThemedStyles((t) => ({
     alignSelf: 'center',
   },
   mascot: {
-    transform: [{ scale: 1.4 }],
-    marginVertical: t.spacing.xs,
-  },
-  mascotCompact: {
-    transform: [{ scale: 0.96 }],
-    marginVertical: -t.spacing.sm,
+    minHeight: 0,
   },
   frequencyBlock: {
     alignItems: 'center',

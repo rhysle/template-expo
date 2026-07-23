@@ -78,9 +78,10 @@ export default function DbMeterScreen() {
       <MascotHero
         active={isRunning}
         compact={isCompactLayout}
+        fillAvailableSpace
         showWaves={false}
         accentColor={statusColor}
-        style={[styles.mascot, isCompactLayout && styles.mascotCompact]}
+        style={styles.mascot}
       />
 
       <View style={styles.meterBlock}>
@@ -185,15 +186,8 @@ const createStyles = createThemedStyles((t) => ({
     gap: t.spacing.sm,
   },
   mascot: {
-    height: 278,
+    minHeight: 0,
     width: '100%',
-    transform: [{ scale: 1.2 }],
-    marginVertical: -t.spacing.lg,
-  },
-  mascotCompact: {
-    height: 202,
-    transform: [{ scale: 0.98 }],
-    marginVertical: -t.spacing.lg,
   },
   meterBlock: {
     alignItems: 'center',
