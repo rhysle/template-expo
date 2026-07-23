@@ -1,13 +1,16 @@
 import { DropIcon, GaugeIcon, SpeakerHifiIcon, WaveformIcon } from 'phosphor-react-native'
 import { useTranslation } from 'react-i18next'
+import { Platform } from 'react-native'
 
-import { NativeTabNavigator as TabNavigator, type TabDefinition } from '@/components/base'
+import { CustomTabNavigator, NativeTabNavigator, type TabDefinition } from '@/components/base'
 import { useConsentInit } from '@/services/ads'
 import { useAutoPaywall } from '@/services/revenueCat'
 
 export const unstable_settings = {
   initialRouteName: '(eject)',
 }
+
+const TabNavigator = Platform.OS === 'ios' ? NativeTabNavigator : CustomTabNavigator
 
 export default function TabLayout() {
   const { t } = useTranslation()
