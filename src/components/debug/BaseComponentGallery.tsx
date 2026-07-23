@@ -34,6 +34,7 @@ import {
   PulsingRingLoader,
   SearchInput,
   SegmentedControl,
+  Slider,
   SpinArcLoader,
   StatusBadge,
   Text,
@@ -394,6 +395,14 @@ export const BaseComponentGallery = () => {
             Value: {sliderValue}
           </Text>
           <NativeSlider value={60} min={0} max={100} disabled onValueChange={() => {}} />
+        </GalleryCard>
+
+        <GalleryCard title="Custom slider">
+          <Slider value={sliderValue} min={0} max={100} step={10} onValueChange={setSliderValue} />
+          <Text variant="caption" tone="muted" style={styles.tabularNumbers} selectable>
+            Value: {sliderValue}
+          </Text>
+          <Slider value={60} min={0} max={100} disabled onValueChange={() => {}} />
         </GalleryCard>
 
         <GalleryCard title="Native menus — Expo UI">
