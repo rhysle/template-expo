@@ -3,12 +3,16 @@
  * i18n audit script
  *
  * Checks:
- * 1. Unused translation keys — keys defined in en.json that are never referenced in src/
- * 2. Key mismatches — non-en locale files that are missing keys or have extra keys compared to en.json
+ * 1. Unused English translation keys — keys defined in en.json that are never referenced in src/
+ * 2. Empty English translation objects or values
+ *
+ * Non-English locales are intentionally ignored during product development. They are translated
+ * and reviewed together as a separate release-preparation task.
  *
  * Usage:
  *   npx tsx scripts/check-i18n.ts
- *   npx tsx scripts/check-i18n.ts --remove-unused   # auto-remove unused keys from all locale files
+ *   npx tsx scripts/check-i18n.ts --remove-unused   # auto-remove unused keys from en.json
+ *   npx tsx scripts/check-i18n.ts --release         # validate every locale before release
  */
 
 import { execSync } from 'child_process'
@@ -35,6 +39,23 @@ function flatKeys(obj: NestedRecord, prefix = ''): string[] {
     const full = prefix ? `${prefix}.${k}` : k
     return typeof v === 'object' && v !== null ? flatKeys(v as NestedRecord, full) : [full]
   })
+}
+
+/** Flatten a nested object into a dot-notation key → value map. */
+function flatValues(
+  obj: NestedRecord,
+  prefix = '',
+  result = new Map<string, string>()
+): Map<string, string> {
+  for (const [k, v] of Object.entries(obj)) {
+    const full = prefix ? `${prefix}.${k}` : k
+    if (typeof v === 'object' && v !== null) {
+      flatValues(v as NestedRecord, full, result)
+    } else if (typeof v === 'string') {
+      result.set(full, v)
+    }
+  }
+  return result
 }
 
 /**
@@ -103,8 +124,19 @@ function flatEmptyObjects(obj: NestedRecord, prefix = ''): string[] {
   return result
 }
 
+/** Collect dot-notation paths of blank English translation values. */
+function flatEmptyValues(obj: NestedRecord, prefix = ''): string[] {
+  return Object.entries(obj).flatMap(([k, v]) => {
+    const full = prefix ? `${prefix}.${k}` : k
+    if (typeof v === 'object' && v !== null) {
+      return flatEmptyValues(v as NestedRecord, full)
+    }
+    return typeof v !== 'string' || v.trim().length === 0 ? [full] : []
+  })
+}
+
 /**
- * Recursively remove unused leaf keys from a locale JSON object.
+ * Recursively remove unused leaf keys from the English JSON object.
  * If all children of an object node are removed, the object itself is dropped.
  * Pre-existing empty objects ({}) are also dropped automatically.
  */
@@ -130,13 +162,6 @@ function pruneUnusedKeys(
     }
   }
   return result
-}
-
-function getLocaleFiles(): { locale: string; filePath: string }[] {
-  return fs
-    .readdirSync(LOCALES_DIR)
-    .filter((f) => f.endsWith('.json'))
-    .map((f) => ({ locale: path.basename(f, '.json'), filePath: path.join(LOCALES_DIR, f) }))
 }
 
 // ---------------------------------------------------------------------------
@@ -187,21 +212,106 @@ function collectUsedKeys(): Set<string> {
 }
 
 // ---------------------------------------------------------------------------
-// 2. Key mismatch between locales
+// Release locale checks
 // ---------------------------------------------------------------------------
 
-function checkMismatches(
-  baseKeys: string[],
-  locale: string,
-  localeKeys: string[]
-): { missing: string[]; extra: string[] } {
-  const baseSet = new Set(baseKeys)
-  const localeSet = new Set(localeKeys)
+function getNonBaseLocaleFiles(): { locale: string; filePath: string }[] {
+  return fs
+    .readdirSync(LOCALES_DIR)
+    .filter((fileName) => fileName.endsWith('.json') && fileName !== `${BASE_LOCALE}.json`)
+    .sort()
+    .map((fileName) => ({
+      locale: path.basename(fileName, '.json'),
+      filePath: path.join(LOCALES_DIR, fileName),
+    }))
+}
 
-  const missing = baseKeys.filter((k) => !localeSet.has(k))
-  const extra = localeKeys.filter((k) => !baseSet.has(k))
+function extractPlaceholders(value: string): string[] {
+  return value.match(/{{[^{}]+}}/g)?.sort() ?? []
+}
 
-  return { missing, extra }
+function sameStrings(left: string[], right: string[]): boolean {
+  return left.length === right.length && left.every((value, index) => value === right[index])
+}
+
+function checkReleaseLocales(baseKeys: string[], baseValues: Map<string, string>): boolean {
+  console.log('\n🔍 Checking every release locale...\n')
+
+  const baseKeySet = new Set(baseKeys)
+  const localeFiles = getNonBaseLocaleFiles()
+  let hasErrors = false
+
+  if (localeFiles.length === 0) {
+    console.log('  ℹ️  No non-English locale files are configured.')
+    return false
+  }
+
+  for (const { locale, filePath } of localeFiles) {
+    const localeJson = loadJson(filePath)
+    const localeKeys = flatKeys(localeJson)
+    const localeKeySet = new Set(localeKeys)
+    const localeValues = flatValues(localeJson)
+    const localeLineMap = buildKeyLineMap(filePath)
+    const missingKeys = baseKeys.filter((key) => !localeKeySet.has(key))
+    const extraKeys = localeKeys.filter((key) => !baseKeySet.has(key))
+    const emptyObjectKeys = flatEmptyObjects(localeJson)
+    const emptyValueKeys = flatEmptyValues(localeJson)
+    const placeholderMismatchKeys = baseKeys.filter((key) => {
+      const baseValue = baseValues.get(key)
+      const localeValue = localeValues.get(key)
+      if (baseValue === undefined || localeValue === undefined) return false
+      return !sameStrings(extractPlaceholders(baseValue), extractPlaceholders(localeValue))
+    })
+
+    const localeProblemCount =
+      missingKeys.length +
+      extraKeys.length +
+      emptyObjectKeys.length +
+      emptyValueKeys.length +
+      placeholderMismatchKeys.length
+
+    if (localeProblemCount === 0) {
+      console.log(`  ✅ ${locale}.json — complete with matching placeholders.`)
+      continue
+    }
+
+    hasErrors = true
+    console.log(`  ❌ ${locale}.json has release blockers:`)
+
+    if (missingKeys.length > 0) {
+      console.log('\n     Missing keys:')
+      missingKeys.forEach((key) => console.log(`       - ${key}`))
+    }
+    if (extraKeys.length > 0) {
+      console.log('\n     Extra keys:')
+      extraKeys.forEach((key) => {
+        const line = localeLineMap.get(key) ?? 1
+        console.log(`       - ${key}  ${filePath}:${line}:1`)
+      })
+    }
+    if (emptyObjectKeys.length > 0) {
+      console.log('\n     Empty objects:')
+      emptyObjectKeys.forEach((key) => console.log(`       - ${key}`))
+    }
+    if (emptyValueKeys.length > 0) {
+      console.log('\n     Empty values:')
+      emptyValueKeys.forEach((key) => {
+        const line = localeLineMap.get(key) ?? 1
+        console.log(`       - ${key}  ${filePath}:${line}:1`)
+      })
+    }
+    if (placeholderMismatchKeys.length > 0) {
+      console.log('\n     Interpolation placeholder mismatches:')
+      placeholderMismatchKeys.forEach((key) => {
+        const line = localeLineMap.get(key) ?? 1
+        console.log(`       - ${key}  ${filePath}:${line}:1`)
+      })
+    }
+
+    console.log()
+  }
+
+  return hasErrors
 }
 
 // ---------------------------------------------------------------------------
@@ -210,51 +320,56 @@ function checkMismatches(
 
 function main() {
   const removeUnused = process.argv.includes('--remove-unused')
+  const release = process.argv.includes('--release')
 
-  const localeFiles = getLocaleFiles()
-  const baseFile = localeFiles.find((f) => f.locale === BASE_LOCALE)
+  const baseFilePath = path.join(LOCALES_DIR, `${BASE_LOCALE}.json`)
 
-  if (!baseFile) {
+  if (!fs.existsSync(baseFilePath)) {
     console.error(`❌ Base locale file "${BASE_LOCALE}.json" not found in ${LOCALES_DIR}`)
     process.exit(1)
   }
 
-  const baseJson = loadJson(baseFile.filePath)
+  const baseJson = loadJson(baseFilePath)
   const baseKeys = flatKeys(baseJson)
-  const baseLineMap = buildKeyLineMap(baseFile.filePath)
+  const baseLineMap = buildKeyLineMap(baseFilePath)
 
   let hasErrors = false
 
-  // ── 1. Unused keys ──────────────────────────────────────────────────────
-  console.log('\n🔍 Checking for unused translation keys...\n')
+  console.log('\n🔍 Checking the English source locale...\n')
 
   const usedKeys = collectUsedKeys()
   const unusedKeys = baseKeys.filter(
-    (k) =>
-      !usedKeys.has(k) && !IGNORED_UNUSED_KEY_PREFIXES.some((prefix) => k.startsWith(prefix))
+    (k) => !usedKeys.has(k) && !IGNORED_UNUSED_KEY_PREFIXES.some((prefix) => k.startsWith(prefix))
   )
   const emptyObjectKeys = flatEmptyObjects(baseJson)
+  const emptyValueKeys = flatEmptyValues(baseJson)
 
-  const totalProblems = unusedKeys.length + emptyObjectKeys.length
+  const totalProblems = unusedKeys.length + emptyObjectKeys.length + emptyValueKeys.length
 
   if (totalProblems === 0) {
-    console.log('  ✅ All translation keys are used.')
+    console.log('  ✅ All English translation keys are used and have values.')
   } else if (removeUnused) {
     const unusedSet = new Set(unusedKeys)
-    for (const { filePath } of localeFiles) {
-      const json = loadJson(filePath)
-      const pruned = pruneUnusedKeys(json, unusedSet)
-      fs.writeFileSync(filePath, JSON.stringify(pruned, null, 2) + '\n', 'utf-8')
-    }
+    const pruned = pruneUnusedKeys(baseJson, unusedSet)
+    fs.writeFileSync(baseFilePath, JSON.stringify(pruned, null, 2) + '\n', 'utf-8')
+
     if (unusedKeys.length > 0) {
-      console.log(`  🗑️  Removed ${unusedKeys.length} unused key(s) from all locale files:\n`)
+      console.log(`  🗑️  Removed ${unusedKeys.length} unused key(s) from ${BASE_LOCALE}.json:\n`)
       unusedKeys.forEach((k) => console.log(`     - ${k}`))
     }
     if (emptyObjectKeys.length > 0) {
       console.log(
-        `  🗑️  Removed ${emptyObjectKeys.length} empty object(s) from all locale files:\n`
+        `  🗑️  Removed ${emptyObjectKeys.length} empty object(s) from ${BASE_LOCALE}.json:\n`
       )
       emptyObjectKeys.forEach((k) => console.log(`     - ${k}`))
+    }
+    if (emptyValueKeys.length > 0) {
+      hasErrors = true
+      console.log(`  ⚠️  ${emptyValueKeys.length} empty value(s) require English copy:\n`)
+      emptyValueKeys.forEach((k) => {
+        const line = baseLineMap.get(k) ?? 1
+        console.log(`     - ${k}  ${baseFilePath}:${line}:1`)
+      })
     }
   } else {
     hasErrors = true
@@ -262,66 +377,42 @@ function main() {
       console.log(`  ⚠️  ${unusedKeys.length} unused key(s) found in ${BASE_LOCALE}.json:\n`)
       unusedKeys.forEach((k) => {
         const line = baseLineMap.get(k) ?? 1
-        console.log(`     - ${k}  ${baseFile.filePath}:${line}:1`)
+        console.log(`     - ${k}  ${baseFilePath}:${line}:1`)
       })
     }
     if (emptyObjectKeys.length > 0) {
       console.log(`  ⚠️  ${emptyObjectKeys.length} empty object(s) found in ${BASE_LOCALE}.json:\n`)
       emptyObjectKeys.forEach((k) => console.log(`     - ${k}  (empty — no translation values)`))
     }
-    console.log(`\n  💡 Run with --remove-unused to automatically delete them.`)
-  }
-
-  // ── 2. Key mismatches ───────────────────────────────────────────────────
-  console.log('\n🔍 Checking locale key mismatches...\n')
-
-  const nonBaseLocales = localeFiles.filter((f) => f.locale !== BASE_LOCALE)
-
-  if (nonBaseLocales.length === 0) {
-    console.log('  ℹ️  No non-base locale files found to compare.')
-  }
-
-  for (const { locale, filePath } of nonBaseLocales) {
-    const localeJson = loadJson(filePath)
-    const localeKeys = flatKeys(localeJson)
-    const localeLineMap = buildKeyLineMap(filePath)
-    const { missing, extra } = checkMismatches(baseKeys, locale, localeKeys)
-
-    if (missing.length === 0 && extra.length === 0) {
-      console.log(`  ✅ ${locale}.json — keys match ${BASE_LOCALE}.json perfectly.`)
-    } else {
-      hasErrors = true
-      console.log(`  ❌ ${locale}.json has mismatches:`)
-
-      if (missing.length > 0) {
-        console.log(`\n     Missing keys (in ${BASE_LOCALE} but not in ${locale}):`)
-        missing.forEach((k) => {
-          // Point to where the key lives in en.json (so you know what to add)
-          const line = baseLineMap.get(k) ?? 1
-          console.log(`       - ${k}  ${baseFile.filePath}:${line}:1`)
-        })
-      }
-
-      if (extra.length > 0) {
-        console.log(`\n     Extra keys (in ${locale} but not in ${BASE_LOCALE}):`)
-        extra.forEach((k) => {
-          // Point to the rogue key in the locale file itself
-          const line = localeLineMap.get(k) ?? 1
-          console.log(`       + ${k}  ${filePath}:${line}:1`)
-        })
-      }
-
-      console.log()
+    if (emptyValueKeys.length > 0) {
+      console.log(`  ⚠️  ${emptyValueKeys.length} empty value(s) found in ${BASE_LOCALE}.json:\n`)
+      emptyValueKeys.forEach((k) => {
+        const line = baseLineMap.get(k) ?? 1
+        console.log(`     - ${k}  ${baseFilePath}:${line}:1`)
+      })
+    }
+    if (unusedKeys.length > 0 || emptyObjectKeys.length > 0) {
+      console.log(`\n  💡 Run with --remove-unused to delete unused keys and empty objects.`)
+    }
+    if (emptyValueKeys.length > 0) {
+      console.log(`\n  💡 Add English copy for every empty value.`)
     }
   }
 
-  // ── Summary ─────────────────────────────────────────────────────────────
+  if (release && checkReleaseLocales(baseKeys, flatValues(baseJson))) {
+    hasErrors = true
+  }
+
   console.log()
   if (hasErrors) {
-    console.log('❌ i18n audit failed. Fix the issues above.')
+    console.log(`❌ ${release ? 'Release' : 'English'} i18n audit failed. Fix the issues above.`)
     process.exit(1)
   } else {
-    console.log('✅ i18n audit passed.')
+    console.log(
+      release
+        ? '✅ Release i18n audit passed.'
+        : '✅ English i18n audit passed. Non-English locales were not checked.'
+    )
   }
 }
 

@@ -104,7 +104,11 @@ Use `TabScreen` for tab-root content so non-scrolling content clears either navi
 
 RTL is enabled declaratively in Expo configuration. Use `useIsRTL()` only for direction-sensitive custom rendering that React Native cannot mirror automatically. Add a base language code to `RTL_LANGUAGES` when adding a supported RTL locale.
 
-All production user-facing text must use `react-i18next`. Add and update the same key in English and all shipped locale files, then run `npm run check:i18n`. The development-only `debug` route is the sole exception and can use English literals.
+All production user-facing text must use `react-i18next`. Define product copy in the English source locale during development. The development-only `debug` route is the sole exception and can use English literals.
+
+During product development, `src/i18n/locales/en.json` is the only source locale. Add or change product copy there and run `npm run check:i18n`, which intentionally audits only the English file. Do not copy new English values into non-English locale files and do not keep those files synchronized during feature development; missing translations fall back to English.
+
+Before publishing a product fork, handle localization as a separate release task: translate the complete current English resource into every locale the product will ship, preserve interpolation placeholders, verify translation quality, remove locales the product will not support, and run `npm run check:i18n:release`. The release audit checks key parity, empty values, and interpolation placeholders across every configured locale; the development-time `check:i18n` command does not.
 
 Locale resources are dynamically assembled from `src/i18n/locales/`. When adding a locale, create its JSON resource and run `npm run setup:i18n` to synchronize supported locales in Expo config. The built-in number and currency formatters are optional utilities, not a required product feature.
 
@@ -195,6 +199,6 @@ Keep API keys, Play service-account JSON, reviewer contact details, and local en
 
 1. Run the narrowest relevant checks, and `npm run check` for normal code changes.
 2. Test the changed route or integration on its target platform when feasible.
-3. Run `npm run check:i18n` after localized text changes.
+3. Run `npm run check:i18n` after changing English product copy.
 4. Regenerate and test native projects after native configuration changes.
 5. Update this file and `README.md` when a reusable architectural convention changes.

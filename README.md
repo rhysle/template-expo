@@ -69,7 +69,7 @@ Before implementing product features, fill in [`docs/PRODUCT.md`](docs/PRODUCT.m
 ### 6. Configure fonts, localization, and OTA updates
 
 - **Fonts:** Change `FONT_NAME` in `src/configs/fonts.ts`, run `npm run setup:font`, then run a clean prebuild so the selected font is embedded in release builds.
-- **Localization:** Update every locale in `src/i18n/locales/` for the product, or remove unsupported locales. Run `npm run setup:i18n` after adding or removing a locale, and `npm run check:i18n` after changing translations.
+- **Localization:** During product development, update only `src/i18n/locales/en.json`; missing non-English values fall back to English. Do not copy English text into other locale files. Before store submission, translate the complete current English resource for every locale the product will ship, or remove unsupported locales, then run `npm run check:i18n:release`. Run `npm run setup:i18n` after adding or removing a locale, and `npm run check:i18n` after changing English copy.
 - **OTA updates:** Keep `AppConfig.otaUpdate.enabled` only when the new EAS project and update channels are ready. OTA builds and updates must share the same EAS project and runtime-version policy.
 
 ### 7. Configure app-facing settings
@@ -103,7 +103,8 @@ npm run prebuild:clean
 npm run ios        # test iOS changes
 npm run android    # test Android changes
 npm run check
-npm run check:i18n # after changing translations
+npm run check:i18n # after changing English product copy
+npm run check:i18n:release # after completing release translations
 npm run release:verify-config
 ```
 
@@ -119,7 +120,8 @@ npm run web               # Web development server
 
 npm run lint              # ESLint
 npm run check:type        # TypeScript, no emit
-npm run check:i18n        # Translation key audit
+npm run check:i18n        # English source-locale audit
+npm run check:i18n:release # All-locale release audit
 npm run check             # Lint + type check
 npm run format            # Format and apply safe lint fixes
 
@@ -274,7 +276,9 @@ const { t } = useTranslation()
 return <Text>{t('settings.title')}</Text>
 ```
 
-When changing copy, update the English resource and every supported locale, then run `npm run check:i18n`. To add a locale, add its JSON resource and run `npm run setup:i18n` to synchronize `app.json`.
+During product development, treat `src/i18n/locales/en.json` as the only source locale. Add and revise copy there, then run `npm run check:i18n`. The command checks English key usage and empty values while intentionally ignoring every non-English locale. Do not copy English values into other locale files to make their keys match; missing translations use the English fallback.
+
+Before publishing a product fork, translate the complete current English resource into every locale the product will ship. Preserve interpolation placeholders, review translation quality, remove locale files for languages the product will not support, and run `npm run check:i18n:release` to verify key coverage, non-empty values, and placeholders across every configured locale. To add or remove a locale, update its JSON resource and run `npm run setup:i18n` to synchronize `app.json`.
 
 The i18n configuration includes `number` and `currency` formatters for products that need them, but neither is a requirement of the template.
 
@@ -286,4 +290,4 @@ Fastlane at the repository root manages App Store Connect and Google Play listin
 
 ## Verification
 
-At a minimum, run `npm run check` after code or translation changes. For native dependency or configuration changes, also run `npm run prebuild:clean` and test the affected platform.
+At a minimum, run `npm run check` after code changes and `npm run check:i18n` after changing English product copy. For native dependency or configuration changes, also run `npm run prebuild:clean` and test the affected platform.

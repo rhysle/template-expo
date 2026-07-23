@@ -36,6 +36,7 @@
     "check:compiler": "npx react-compiler-healthcheck@latest",
     "check:i18n": "npx tsx scripts/check-i18n.ts",
     "check:i18n:fix": "npx tsx scripts/check-i18n.ts --remove-unused",
+    "check:i18n:release": "npx tsx scripts/check-i18n.ts --release",
     "check": "npm run lint && npm run check:type",
     "release:version": "npx tsx scripts/bump-version.ts",
     "release:patch": "npm run release:version -- patch",
