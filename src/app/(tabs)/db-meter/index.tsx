@@ -57,8 +57,7 @@ export default function DbMeterScreen() {
   }
   const statusColor = bandColors[meter.band]
   const statusTone = bandTones[meter.band]
-  const isInitialReading = meter.sampleCount === 0 && roundedDb === 0
-  const readingColor = isInitialReading ? theme.colors.status.success : statusColor
+  const readingColor = statusColor
 
   const getStatColor = (value: number) => bandColors[classifyMeterBand(value)]
 
