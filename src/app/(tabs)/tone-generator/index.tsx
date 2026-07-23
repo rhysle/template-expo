@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import {
   type AccessibilityActionEvent,
   type LayoutChangeEvent,
+  Platform,
   useWindowDimensions,
   View,
 } from 'react-native'
@@ -23,6 +24,7 @@ import {
   InlineNotice,
   MorphingNumber,
   NativeSlider,
+  Slider,
   StatusBadge,
   Text,
 } from '@/components/base'
@@ -41,6 +43,7 @@ import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/them
 const PRESETS = [165, 250, 440, 1_000, 5_000] as const
 const CENTER_FADE_INTENSITY = 0.3
 const EDGE_FADE_INTENSITY = 1
+const FrequencySlider = Platform.OS === 'ios' ? NativeSlider : Slider
 
 export default function ToneGeneratorScreen() {
   const { i18n, t } = useTranslation()
@@ -276,7 +279,7 @@ export default function ToneGeneratorScreen() {
         </GestureDetector>
 
         <View style={styles.sliderBlock}>
-          <NativeSlider
+          <FrequencySlider
             min={0}
             max={1}
             value={normalizeFrequency(frequencyHz)}
