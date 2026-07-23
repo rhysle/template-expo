@@ -163,7 +163,7 @@ export default function StereoTestScreen() {
         haptic={hapticsEnabled}
       />
 
-      <Text variant="body" tone="secondary" align="center" style={styles.helperText}>
+      <Text variant="caption" tone="secondary" align="center" style={styles.helperText}>
         {t('audioTools.stereo.tapToChange')}
       </Text>
 
