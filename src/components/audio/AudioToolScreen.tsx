@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from 'react'
-import { ScrollView, type StyleProp, View, type ViewStyle } from 'react-native'
+import { type StyleProp, View, type ViewStyle } from 'react-native'
 
 import { TabScreen, useTabBarContentInset } from '@/components/base'
 import { createThemedStyles, useTheme, useThemedStyles } from '@/theme'
@@ -21,34 +21,27 @@ export const AudioToolScreen = ({
 
   return (
     <TabScreen contentUnderTabBar={!isFocused}>
-      <ScrollView
-        style={styles.scroll}
-        contentInsetAdjustmentBehavior="never"
-        contentContainerStyle={[
-          styles.scrollContent,
-          isFocused && styles.focusedScrollContent,
+      <View
+        style={[
+          styles.container,
+          isFocused && styles.focusedContainer,
           { paddingBottom: isFocused ? spacing.lg : spacing['4xl'] + bottomInset },
-        ]}
-        scrollIndicatorInsets={isFocused ? undefined : { bottom: bottomInset }}
-        showsVerticalScrollIndicator={false}>
+        ]}>
         <View style={[styles.content, isFocused && styles.focusedContent, contentStyle]}>
           {children}
         </View>
-      </ScrollView>
+      </View>
     </TabScreen>
   )
 }
 
 const createStyles = createThemedStyles((t) => ({
-  scroll: {
+  container: {
     flex: 1,
-  },
-  scrollContent: {
-    flexGrow: 1,
     paddingHorizontal: t.spacing.lg,
     paddingTop: t.spacing.lg,
   },
-  focusedScrollContent: {
+  focusedContainer: {
     paddingTop: t.spacing.md,
   },
   content: {
@@ -58,7 +51,8 @@ const createStyles = createThemedStyles((t) => ({
     gap: t.spacing.xl,
   },
   focusedContent: {
-    flexGrow: 1,
+    flex: 1,
+    minHeight: 0,
     gap: t.spacing.lg,
   },
 }))

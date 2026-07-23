@@ -155,6 +155,7 @@ export default function StereoTestScreen() {
         rightActive={rightActive}
         playing={isRunning}
         compact={isCompactLayout}
+        fillAvailableSpace
         leftLabel={t('audioTools.stereo.left')}
         rightLabel={t('audioTools.stereo.right')}
         onToggleLeft={() => toggleChannel('left')}

@@ -1,7 +1,8 @@
 import { Image } from 'expo-image'
-import { useEffect } from 'react'
+import { useIsFocused } from 'expo-router'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { type StyleProp, View, type ViewStyle } from 'react-native'
+import { type LayoutChangeEvent, type StyleProp, View, type ViewStyle } from 'react-native'
 import Animated, {
   cancelAnimation,
   Easing,
@@ -17,6 +18,8 @@ import Animated, {
 import { createThemedStyles, useTheme, useThemedStyles } from '@/theme'
 import { withAlpha } from '@/utils/color'
 
+import { getMascotLayout, isMascotLayoutReady, type MascotLayout } from './mascot-layout'
+
 const IMAGE_FRAME_SIZE = 208
 const IMAGE_FRAME_COMPACT_SIZE = 156
 const IMAGE_FRAME_PLAIN_SIZE = 336
@@ -27,6 +30,7 @@ interface MascotHeroProps {
   active?: boolean
   accentColor?: string
   compact?: boolean
+  fillAvailableSpace?: boolean
   showWaves?: boolean
   style?: StyleProp<ViewStyle>
 }
@@ -35,6 +39,7 @@ export const MascotHero = ({
   active = false,
   accentColor,
   compact = false,
+  fillAvailableSpace = false,
   showWaves = true,
   style,
 }: MascotHeroProps) => {
@@ -43,14 +48,39 @@ export const MascotHero = ({
   const styles = useThemedStyles(createStyles)
   const reducedMotion = useReducedMotion()
   const pulse = useSharedValue(0)
+  const containerRef = useRef<View>(null)
+  const [fluidLayout, setFluidLayout] = useState<MascotLayout>()
   const resolvedAccent = accentColor ?? theme.colors.primary.main
-  const imageSize = showWaves
-    ? compact
-      ? IMAGE_FRAME_COMPACT_SIZE
-      : IMAGE_FRAME_SIZE
-    : compact
-      ? IMAGE_FRAME_PLAIN_COMPACT_SIZE
-      : IMAGE_FRAME_PLAIN_SIZE
+  const useFluidLayout = fillAvailableSpace && !showWaves
+  const isFocused = useIsFocused()
+  const isImageFrameReady = isMascotLayoutReady(useFluidLayout, fluidLayout)
+
+  const handleLayout = ({ nativeEvent }: LayoutChangeEvent) => {
+    if (!useFluidLayout || !isFocused) return
+
+    const nextLayout = getMascotLayout(nativeEvent.layout.width, nativeEvent.layout.height)
+    setFluidLayout((currentLayout) =>
+      currentLayout?.frameWidth === nextLayout.frameWidth &&
+      currentLayout.frameHeight === nextLayout.frameHeight
+        ? currentLayout
+        : nextLayout
+    )
+  }
+
+  useLayoutEffect(() => {
+    if (!useFluidLayout) return
+    if (!isFocused) return
+
+    containerRef.current?.measure((_x, _y, width, height) => {
+      const nextLayout = getMascotLayout(width, height)
+      setFluidLayout((currentLayout) =>
+        currentLayout?.frameWidth === nextLayout.frameWidth &&
+        currentLayout.frameHeight === nextLayout.frameHeight
+          ? currentLayout
+          : nextLayout
+      )
+    })
+  }, [isFocused, useFluidLayout])
 
   useEffect(() => {
     cancelAnimation(pulse)
@@ -69,10 +99,9 @@ export const MascotHero = ({
     return () => cancelAnimation(pulse)
   }, [active, pulse, reducedMotion])
 
-  const imageStyle = useAnimatedStyle(() => {
-    const animatedSize = imageSize * (1 + pulse.value * IMAGE_PULSE_SCALE)
-    return { width: animatedSize, height: animatedSize }
-  })
+  const imageFrameStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: 1 + pulse.value * IMAGE_PULSE_SCALE }],
+  }))
   const innerWaveStyle = useAnimatedStyle(() => ({
     opacity: 0.42 - pulse.value * 0.18,
     transform: [{ scale: 0.92 + pulse.value * 0.18 }],
@@ -83,7 +112,15 @@ export const MascotHero = ({
   }))
 
   return (
-    <View style={[styles.container, compact && styles.containerCompact, style]}>
+    <View
+      ref={containerRef}
+      onLayout={handleLayout}
+      style={[
+        styles.container,
+        compact && styles.containerCompact,
+        fillAvailableSpace && styles.containerFill,
+        style,
+      ]}>
       {showWaves ? (
         <>
           <Animated.View
@@ -106,23 +143,37 @@ export const MascotHero = ({
           />
         </>
       ) : null}
-      <Animated.View
-        style={[
-          styles.imageFrame,
-          !showWaves && styles.imageFramePlain,
-          compact && styles.imageFrameCompact,
-          !showWaves && compact && styles.imageFramePlainCompact,
-          imageStyle,
-        ]}>
-        <Image
-          accessibilityLabel={t('audioTools.common.mascot')}
-          source={require('@/assets/images/mascot.png')}
-          allowDownscaling={false}
-          contentFit="cover"
-          transition={180}
-          style={styles.image}
-        />
-      </Animated.View>
+      {isImageFrameReady ? (
+        <View pointerEvents="box-none" style={useFluidLayout && styles.fluidImageFrameHost}>
+          <Animated.View
+            style={[
+              styles.imageFrame,
+              !showWaves && styles.imageFramePlain,
+              compact && styles.imageFrameCompact,
+              !showWaves && compact && styles.imageFramePlainCompact,
+              fluidLayout && { width: fluidLayout.frameWidth, height: fluidLayout.frameHeight },
+              imageFrameStyle,
+            ]}>
+            <Image
+              accessibilityLabel={t('audioTools.common.mascot')}
+              source={require('@/assets/images/mascot.png')}
+              allowDownscaling={false}
+              contentFit={fluidLayout ? 'fill' : 'cover'}
+              transition={180}
+              style={[
+                styles.image,
+                fluidLayout && {
+                  position: 'absolute',
+                  top: fluidLayout.imageTop,
+                  left: fluidLayout.imageLeft,
+                  width: fluidLayout.imageWidth,
+                  height: fluidLayout.imageHeight,
+                },
+              ]}
+            />
+          </Animated.View>
+        </View>
+      ) : null}
     </View>
   )
 }
@@ -138,6 +189,18 @@ const createStyles = createThemedStyles((t) => ({
   containerCompact: {
     width: 184,
     height: 184,
+  },
+  containerFill: {
+    minHeight: 0,
+    flex: 1,
+    width: '100%',
+    height: 'auto',
+  },
+  fluidImageFrameHost: {
+    position: 'absolute',
+    inset: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   imageFrame: {
     width: IMAGE_FRAME_SIZE,

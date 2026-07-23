@@ -22,6 +22,7 @@ interface StereoStageProps {
   rightActive: boolean
   playing: boolean
   compact?: boolean
+  fillAvailableSpace?: boolean
   leftLabel: string
   rightLabel: string
   onToggleLeft: () => void
@@ -33,6 +34,7 @@ interface SpeakerControlProps {
   active: boolean
   playing: boolean
   compact: boolean
+  fillAvailableSpace: boolean
   label: string
   accessibilityLabel: string
   onPress: () => void
@@ -89,6 +91,7 @@ const SpeakerControl = ({
   active,
   playing,
   compact,
+  fillAvailableSpace,
   label,
   accessibilityLabel,
   onPress,
@@ -162,19 +165,21 @@ const SpeakerControl = ({
       onPress={onPress}
       style={({ pressed }) => [
         styles.speakerPressable,
-        compact && styles.speakerPressableCompact,
+        fillAvailableSpace
+          ? styles.speakerPressableFill
+          : compact
+            ? styles.speakerPressableCompact
+            : styles.speakerPressableDefault,
         pressed && styles.speakerPressed,
       ]}>
       <Animated.View
-        pointerEvents="none"
-        style={[styles.pulseRing, compact && styles.pulseRingCompact, pulseStyle]}
-      />
-      <Animated.View
-        pointerEvents="none"
-        style={[styles.pulseRing, compact && styles.pulseRingCompact, delayedPulseStyle]}
-      />
-
-      <Animated.View style={[styles.speakerIllustration, speakerStyle]}>
+        style={[
+          styles.speakerIllustration,
+          fillAvailableSpace && styles.speakerIllustrationFill,
+          speakerStyle,
+        ]}>
+        <Animated.View pointerEvents="none" style={[styles.pulseRing, pulseStyle]} />
+        <Animated.View pointerEvents="none" style={[styles.pulseRing, delayedPulseStyle]} />
         <Svg width="100%" height="100%" viewBox="0 0 148 260">
           <Rect
             x={3}
@@ -224,17 +229,24 @@ export const StereoStage = ({
   rightActive,
   playing,
   compact = false,
+  fillAvailableSpace = false,
   leftLabel,
   rightLabel,
   onToggleLeft,
   onToggleRight,
   haptic = true,
 }: StereoStageProps) => (
-  <View style={[stageStyles.row, compact && stageStyles.rowCompact]}>
+  <View
+    style={[
+      stageStyles.row,
+      compact && stageStyles.rowCompact,
+      fillAvailableSpace && stageStyles.rowFill,
+    ]}>
     <SpeakerControl
       active={leftActive}
       playing={playing}
       compact={compact}
+      fillAvailableSpace={fillAvailableSpace}
       label={leftLabel}
       accessibilityLabel={leftLabel}
       onPress={onToggleLeft}
@@ -244,6 +256,7 @@ export const StereoStage = ({
       active={rightActive}
       playing={playing}
       compact={compact}
+      fillAvailableSpace={fillAvailableSpace}
       label={rightLabel}
       accessibilityLabel={rightLabel}
       onPress={onToggleRight}
@@ -263,19 +276,29 @@ const stageStyles = {
   rowCompact: {
     gap: 12,
   },
+  rowFill: {
+    minHeight: 0,
+    flex: 1,
+    alignItems: 'stretch' as const,
+  },
 }
 
 const createStyles = createThemedStyles((t) => ({
   speakerPressable: {
     flex: 1,
-    maxWidth: 188,
     minWidth: 0,
     alignItems: 'center',
     gap: t.spacing.sm,
     overflow: 'visible',
   },
+  speakerPressableDefault: {
+    maxWidth: 188,
+  },
   speakerPressableCompact: {
     maxWidth: 164,
+  },
+  speakerPressableFill: {
+    height: '100%',
   },
   speakerPressed: {
     transform: [{ scale: 0.98 }],
@@ -284,25 +307,26 @@ const createStyles = createThemedStyles((t) => ({
     zIndex: 1,
     width: '100%',
     aspectRatio: 148 / 260,
+    overflow: 'visible',
+  },
+  speakerIllustrationFill: {
+    minHeight: 0,
+    flex: 1,
+    width: 'auto',
+    maxWidth: '100%',
+    alignSelf: 'center',
   },
   pulseRing: {
     position: 'absolute',
     zIndex: 2,
-    top: 96,
-    left: '50%',
-    width: 180,
-    height: 180,
-    marginLeft: -90,
+    top: '29.5%',
+    left: '2%',
+    width: '96%',
+    aspectRatio: 1,
     borderRadius: t.borderRadius.full,
     borderWidth: 3,
     borderColor: t.colors.primary.main,
     backgroundColor: withAlpha(t.colors.primary.main, 0.035),
-  },
-  pulseRingCompact: {
-    top: 78,
-    width: 154,
-    height: 154,
-    marginLeft: -77,
   },
   levelBars: {
     height: 28,
