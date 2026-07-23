@@ -24,6 +24,7 @@ export interface ToggleProps {
   disabled?: boolean
   haptic?: boolean
   style?: StyleProp<ViewStyle>
+  testID?: string
 }
 
 export const Toggle = ({
@@ -32,6 +33,7 @@ export const Toggle = ({
   disabled = false,
   haptic = true,
   style,
+  testID,
 }: ToggleProps) => {
   const { colors } = useTheme()
   const styles = useThemedStyles(createStyles)
@@ -73,6 +75,7 @@ export const Toggle = ({
       disabled={disabled}
       accessibilityRole="switch"
       accessibilityState={{ checked: value, disabled }}
+      testID={testID}
       style={[disabled && styles.disabled, style]}>
       <Animated.View style={[styles.track, trackAnimatedStyle]}>
         <Animated.View style={[styles.thumb, thumbAnimatedStyle]} />

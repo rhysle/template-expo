@@ -1,4 +1,5 @@
-import { Toggle, type ToggleProps } from '../Toggle'
+import { NativeToggle } from '../NativeUI'
+import { type ToggleProps } from '../Toggle'
 import { ListItem, type ListItemProps } from './ListItem'
 import { ListItemInfo } from './ListItemInfo'
 import type { ListItemInfoProps } from './types'
@@ -23,7 +24,11 @@ export const ToggleListItem = ({
     {...listItemProps}
     left={<ListItemInfo icon={icon} title={title} subtitle={subtitle} />}
     right={
-      <Toggle value={value} onValueChange={onValueChange} disabled={disabled} haptic={haptic} />
+      <NativeToggle
+        value={value}
+        onValueChange={onValueChange ?? (() => undefined)}
+        disabled={disabled}
+      />
     }
   />
 )
