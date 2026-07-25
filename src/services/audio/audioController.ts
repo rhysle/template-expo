@@ -1,3 +1,4 @@
+import { Platform } from 'react-native'
 import {
   AudioContext,
   type AudioEventSubscription,
@@ -8,6 +9,7 @@ import {
   type PermissionStatus,
   type StereoPannerNode,
 } from 'react-native-audio-api'
+import { VolumeManager } from 'react-native-volume-manager'
 
 import { AnalyticsAppEvents, trackEvent } from '@/services/firebase/analytics'
 
@@ -33,6 +35,7 @@ const EJECT_CYCLE_SECONDS = 2.5
 const METER_SAMPLE_RATE = 16_000
 const METER_BUFFER_LENGTH = 1_600
 const AUTO_STEREO_DURATION_SECONDS = 8
+const TOOL_SYSTEM_VOLUME = 0.5
 
 const getDurationBucket = (elapsedSeconds: number): string => {
   if (elapsedSeconds < 10) return 'under_10s'
@@ -181,6 +184,16 @@ class AudioController {
     })
     AudioManager.observeAudioInterruptions('gainTransient')
     await AudioManager.setAudioSessionActivity(true)
+    if (Platform.OS !== 'web') {
+      const { volume } = await VolumeManager.getVolume()
+      if (volume < TOOL_SYSTEM_VOLUME) {
+        await VolumeManager.setVolume(TOOL_SYSTEM_VOLUME, {
+          type: 'music',
+          showUI: true,
+          playSound: false,
+        })
+      }
+    }
     await this.refreshOutputRoute()
   }
 

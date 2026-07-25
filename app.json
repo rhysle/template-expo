@@ -27,6 +27,7 @@
       "predictiveBackGestureEnabled": false,
       "package": "com.rhysle.expo",
       "googleServicesFile": "./google-services.json",
+      "permissions": ["android.permission.MODIFY_AUDIO_SETTINGS"],
       "blockedPermissions": [
         "android.permission.SYSTEM_ALERT_WINDOW",
         "android.permission.READ_EXTERNAL_STORAGE",
