@@ -16,6 +16,10 @@ import { normalizeFrequency } from '@/services/audio'
 import { createThemedStyles, useTheme, useThemedStyles } from '@/theme'
 import { withAlpha } from '@/utils/color'
 
+const PRIMARY_CYCLE_RANGE = 2.1
+const SECONDARY_CYCLE_RANGE = 3.7
+const DETAIL_CYCLE_RANGE = 5.75
+
 interface FrequencyWaveformProps {
   frequencyHz: number
   active: boolean
@@ -92,7 +96,7 @@ export const FrequencyWaveform = ({
     if (canvasWidth <= 0 || canvasHeight <= 0) return
 
     const centerY = canvasHeight / 2
-    const cycles = 2.15 + normalizedFrequency.value * 1.7
+    const cycles = 2.15 + normalizedFrequency.value * PRIMARY_CYCLE_RANGE
     const wavePhase = 0.35 + phase.value / 560
     const amplitude = canvasHeight * 0.25
     const points = Math.max(Math.round(canvasWidth / 3), 64)
@@ -114,7 +118,7 @@ export const FrequencyWaveform = ({
     if (canvasWidth <= 0 || canvasHeight <= 0) return
 
     const centerY = canvasHeight / 2
-    const cycles = 3.1 + normalizedFrequency.value * 2.5
+    const cycles = 3.1 + normalizedFrequency.value * SECONDARY_CYCLE_RANGE
     const wavePhase = 1.4 - phase.value / 820
     const amplitude = canvasHeight * 0.16
     const points = Math.max(Math.round(canvasWidth / 3), 64)
@@ -136,7 +140,7 @@ export const FrequencyWaveform = ({
     if (canvasWidth <= 0 || canvasHeight <= 0) return
 
     const centerY = canvasHeight / 2
-    const cycles = 4.3 + normalizedFrequency.value * 3
+    const cycles = 4.3 + normalizedFrequency.value * DETAIL_CYCLE_RANGE
     const wavePhase = 2.1 + phase.value / 470
     const amplitude = canvasHeight * 0.1
     const points = Math.max(Math.round(canvasWidth / 3), 64)

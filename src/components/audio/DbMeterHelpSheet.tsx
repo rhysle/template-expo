@@ -274,7 +274,7 @@ const createStyles = createThemedStyles((t) => ({
     gap: t.spacing.xl,
     paddingHorizontal: t.spacing.xl,
     paddingTop: 60 + t.spacing['3xl'],
-    paddingBottom: 156,
+    paddingBottom: t.spacing['6xl'],
   },
   sheetHeader: {
     alignSelf: 'stretch',
