@@ -1,9 +1,10 @@
-import { ShieldCheckIcon, WarningCircleIcon } from 'phosphor-react-native'
+import { MicrophoneIcon, ShieldCheckIcon, WarningCircleIcon } from 'phosphor-react-native'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Linking, useWindowDimensions, View } from 'react-native'
 
 import { AudioToolScreen, CircularAudioButton, DbMeterGauge, MascotHero } from '@/components/audio'
-import { InlineNotice, StatusBadge, Text } from '@/components/base'
+import { InlineNotice, PermissionSheet, StatusBadge, Text } from '@/components/base'
 import {
   audioController,
   classifyMeterBand,
@@ -21,6 +22,8 @@ export default function DbMeterScreen() {
   const { height } = useWindowDimensions()
   const snapshot = useAudioController()
   const { hapticsEnabled } = useAudioPreferencesState()
+  const [permissionSheetVisible, setPermissionSheetVisible] = useState(false)
+  const [isCheckingPermission, setIsCheckingPermission] = useState(false)
   useAudioToolLifecycle()
 
   const isRunning = snapshot.activeTool === 'meter' && snapshot.status === 'running'
@@ -67,7 +70,27 @@ export default function DbMeterScreen() {
       return
     }
 
-    await audioController.startMeter()
+    if (isCheckingPermission) return
+
+    setIsCheckingPermission(true)
+    try {
+      const wasDenied = snapshot.microphonePermission === 'Denied'
+      const permission = await audioController.checkMicrophonePermission()
+
+      if (permission === 'Denied' || (wasDenied && permission !== 'Granted')) {
+        setPermissionSheetVisible(true)
+        return
+      }
+
+      await audioController.startMeter()
+    } finally {
+      setIsCheckingPermission(false)
+    }
+  }
+
+  const handleOpenSettings = () => {
+    setPermissionSheetVisible(false)
+    void Linking.openSettings()
   }
 
   return (
@@ -145,6 +168,7 @@ export default function DbMeterScreen() {
       <View style={[styles.controls, isCompactLayout && styles.controlsCompact]}>
         <CircularAudioButton
           active={isActive}
+          loading={isCheckingPermission}
           haptic={hapticsEnabled}
           accessibilityLabel={isActive ? t('audioTools.meter.stop') : t('audioTools.meter.start')}
           onPress={() => void handleMainPress()}
@@ -158,21 +182,19 @@ export default function DbMeterScreen() {
         </Text>
       </View>
 
-      {snapshot.microphonePermission === 'Denied' ? (
-        <InlineNotice
-          title={t('audioTools.meter.permissionTitle')}
-          tone="warning"
-          action={{
-            label: t('common.openSettings'),
-            onPress: () => void Linking.openSettings(),
-          }}>
-          {t('audioTools.meter.permissionBody')}
-        </InlineNotice>
-      ) : null}
-
       {snapshot.status === 'error' && isLastMeterSession ? (
         <InlineNotice tone="error">{t('audioTools.common.error')}</InlineNotice>
       ) : null}
+
+      <PermissionSheet
+        visible={permissionSheetVisible}
+        icon={MicrophoneIcon}
+        title={t('audioTools.meter.permissionTitle')}
+        description={t('audioTools.meter.permissionBody')}
+        actionLabel={t('common.openSettings')}
+        onAction={handleOpenSettings}
+        onDismiss={() => setPermissionSheetVisible(false)}
+      />
     </AudioToolScreen>
   )
 }

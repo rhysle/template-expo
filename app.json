@@ -135,7 +135,7 @@
         "react-native-audio-api",
         {
           "iosBackgroundMode": false,
-          "iosMicrophonePermission": "Water Eject uses the microphone only while the dB Meter is running to estimate nearby sound levels. Audio is processed on your device and is never saved.",
+          "iosMicrophonePermission": "Microphone access is used only while the dB Meter is running to estimate nearby sound levels. Audio is processed on your device and is never saved or uploaded.",
           "androidPermissions": ["android.permission.RECORD_AUDIO"],
           "androidForegroundService": false,
           "androidFSTypes": []

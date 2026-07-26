@@ -126,7 +126,7 @@
       "start": "Start measuring",
       "stop": "Stop measuring",
       "permissionTitle": "Microphone access is off",
-      "permissionBody": "Allow microphone access in system settings to estimate nearby sound levels.",
+      "permissionBody": "Microphone access is used only while the dB Meter is running to estimate nearby sound levels. Audio is processed on your device and is never saved or uploaded.",
       "minimum": "Minimum",
       "average": "Average",
       "maximum": "Maximum",

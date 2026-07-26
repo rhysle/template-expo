@@ -64,7 +64,12 @@ export default function StereoTestTabLayout() {
             ))}
           </View>
 
-          <Button label={t('common.done')} fullWidth onPress={() => setHelpVisible(false)} />
+          <Button
+            label={t('common.done')}
+            fullWidth
+            size="lg"
+            onPress={() => setHelpVisible(false)}
+          />
         </View>
       </NativeBottomSheet>
     </>
@@ -82,6 +87,7 @@ const createStyles = createThemedStyles((t) => ({
     gap: t.spacing.xl,
     paddingHorizontal: t.spacing.xl,
     paddingTop: t.spacing.md,
+    paddingBottom: t.spacing.xl,
   },
   sheetHero: {
     alignItems: 'center',
