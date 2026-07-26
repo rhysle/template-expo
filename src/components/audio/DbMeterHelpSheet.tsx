@@ -129,7 +129,7 @@ export const DbMeterHelpSheet = ({ visible, currentDb, onDismiss }: DbMeterHelpS
             style={styles.footerFade}
           />
           <View style={styles.footerMaterial}>
-            <Button label={t('common.done')} fullWidth onPress={onDismiss} />
+            <Button label={t('common.done')} fullWidth size="lg" onPress={onDismiss} />
           </View>
         </View>
       }>
@@ -274,7 +274,7 @@ const createStyles = createThemedStyles((t) => ({
     gap: t.spacing.xl,
     paddingHorizontal: t.spacing.xl,
     paddingTop: 60 + t.spacing['3xl'],
-    paddingBottom: t.spacing['6xl'],
+    paddingBottom: t.spacing['7xl'],
   },
   sheetHeader: {
     alignSelf: 'stretch',
