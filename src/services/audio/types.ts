@@ -16,6 +16,7 @@ export type AudioResultState = 'completed' | 'interrupted' | 'idle'
 export type OutputRouteKind = 'device' | 'external' | 'unknown'
 export type StereoMode = 'manual' | 'auto'
 export type MeterBand = 'veryQuiet' | 'normal' | 'loud' | 'danger'
+export type EjectPhase = 'water' | 'debris' | 'finish'
 
 export interface MeterStats {
   currentDb: number
@@ -35,6 +36,7 @@ export interface AudioSnapshot {
   elapsedSeconds: number
   durationSeconds: number | null
   frequencyHz: number
+  ejectPhase: EjectPhase | null
   stereoPan: number
   stereoMode: StereoMode | null
   meter: MeterStats

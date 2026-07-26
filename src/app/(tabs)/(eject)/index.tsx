@@ -1,9 +1,11 @@
 import {
+  BroomIcon,
   CheckCircleIcon,
   DeviceMobileSpeakerIcon,
+  DropIcon,
   ShieldCheckIcon,
+  SparkleIcon,
   SpeakerSlashIcon,
-  WaveformIcon,
 } from 'phosphor-react-native'
 import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -54,6 +56,21 @@ export default function EjectScreen() {
   const formattedRemaining = formatDuration(remainingSeconds)
   const remainingText = t('audioTools.eject.remaining', { time: formattedRemaining })
   const remainingLabel = remainingText.replace(formattedRemaining, '').trim()
+  const phase = snapshot.ejectPhase ?? 'water'
+  const phaseStatus = {
+    water: {
+      label: t('audioTools.eject.phase.water'),
+      icon: DropIcon,
+    },
+    debris: {
+      label: t('audioTools.eject.phase.debris'),
+      icon: BroomIcon,
+    },
+    finish: {
+      label: t('audioTools.eject.phase.finish'),
+      icon: SparkleIcon,
+    },
+  }[phase]
   const progress = isActive
     ? calculateProgress(snapshot.elapsedSeconds, durationSeconds)
     : resultState === 'completed'
@@ -83,7 +100,7 @@ export default function EjectScreen() {
   }
 
   const status = isActive
-    ? { label: t('audioTools.eject.running'), tone: 'accent' as const, icon: WaveformIcon }
+    ? { ...phaseStatus, tone: 'accent' as const }
     : resultState === 'completed'
       ? {
           label: t('audioTools.eject.completed'),

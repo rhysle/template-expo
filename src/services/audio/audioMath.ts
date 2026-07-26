@@ -1,4 +1,4 @@
-import type { AudioResultState, AudioStopReason, MeterBand } from './types'
+import type { AudioResultState, AudioStopReason, EjectPhase, MeterBand } from './types'
 
 export const MIN_FREQUENCY_HZ = 20
 export const MAX_FREQUENCY_HZ = 20_000
@@ -9,6 +9,19 @@ export const METER_BAND_THRESHOLDS = {
   loud: 70,
   danger: 100,
 } as const
+export const EJECT_WAVEFORM_TYPE = 'sine' as const
+export const EJECT_DEBRIS_FREQUENCY_HZ = 280
+export const EJECT_DEBRIS_PULSE_SECONDS = 0.7
+export const EJECT_DEBRIS_GAIN_SCALE = 0.62
+export const EJECT_PHASE_DURATION_SECONDS = {
+  water: 3,
+  debris: 2.5,
+  finish: 2,
+} as const satisfies Record<EjectPhase, number>
+export const EJECT_CYCLE_DURATION_SECONDS = Object.values(EJECT_PHASE_DURATION_SECONDS).reduce(
+  (total, duration) => total + duration,
+  0
+)
 
 export const clamp = (value: number, minimum: number, maximum: number): number =>
   Math.min(Math.max(value, minimum), maximum)
@@ -75,4 +88,15 @@ export const getAudioResultState = (reason: AudioStopReason | null): AudioResult
   if (reason === 'completed') return 'completed'
   if (reason && reason !== 'manual' && reason !== 'replaced') return 'interrupted'
   return 'idle'
+}
+
+export const getEjectPhase = (elapsedSeconds: number): EjectPhase => {
+  const safeElapsed = Number.isFinite(elapsedSeconds) ? Math.max(elapsedSeconds, 0) : 0
+  const cycleElapsed = safeElapsed % EJECT_CYCLE_DURATION_SECONDS
+
+  if (cycleElapsed < EJECT_PHASE_DURATION_SECONDS.water) return 'water'
+  if (cycleElapsed < EJECT_PHASE_DURATION_SECONDS.water + EJECT_PHASE_DURATION_SECONDS.debris) {
+    return 'debris'
+  }
+  return 'finish'
 }
