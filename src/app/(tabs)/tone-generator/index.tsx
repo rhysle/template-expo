@@ -21,7 +21,6 @@ import {
   ToneWaveformPicker,
 } from '@/components/audio'
 import {
-  ChoiceChip,
   InlineNotice,
   MorphingNumber,
   NativeSlider,
@@ -41,7 +40,6 @@ import {
 import { useAudioPreferencesState } from '@/stores/features/audioPreferences'
 import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
 
-const PRESETS = [165, 250, 440, 1_000, 5_000] as const
 const CENTER_FADE_INTENSITY = 0.3
 const EDGE_FADE_INTENSITY = 1
 const FrequencySlider = Platform.OS === 'ios' ? NativeSlider : Slider
@@ -60,7 +58,6 @@ export default function ToneGeneratorScreen() {
     setLastToneWaveform,
   } = useAudioPreferencesState()
   const [frequencyHz, setFrequencyHz] = useState(lastToneFrequencyHz)
-  const [presetSelectionFrequencyHz, setPresetSelectionFrequencyHz] = useState(lastToneFrequencyHz)
   const gestureWidth = useSharedValue(1)
   const gestureStart = useSharedValue(normalizeFrequency(lastToneFrequencyHz))
   const currentPosition = useSharedValue(normalizeFrequency(lastToneFrequencyHz))
@@ -113,7 +110,6 @@ export default function ToneGeneratorScreen() {
     const nextFrequency = frequencyFromNormalized(position)
     currentPosition.value = position
     setFrequencyHz(nextFrequency)
-    setPresetSelectionFrequencyHz(nextFrequency)
     if (isRunning) audioController.setToneFrequency(nextFrequency)
   }
 
@@ -122,15 +118,7 @@ export default function ToneGeneratorScreen() {
     const nextFrequency = Math.min(Math.max(Math.round(frequencyHz * multiplier), 20), 20_000)
     currentPosition.value = normalizeFrequency(nextFrequency)
     setFrequencyHz(nextFrequency)
-    setPresetSelectionFrequencyHz(nextFrequency)
     if (isRunning) audioController.setToneFrequency(nextFrequency)
-  }
-
-  const selectPreset = (preset: (typeof PRESETS)[number]) => {
-    currentPosition.value = normalizeFrequency(preset)
-    setFrequencyHz(preset)
-    setPresetSelectionFrequencyHz(preset)
-    if (isRunning) audioController.setToneFrequency(preset)
   }
 
   const panGesture = Gesture.Pan()
@@ -298,9 +286,6 @@ export default function ToneGeneratorScreen() {
             max={1}
             value={normalizeFrequency(frequencyHz)}
             onValueChange={applyFrequencyPosition}
-            onValueChangeFinished={() => {
-              setPresetSelectionFrequencyHz(frequencyFromNormalized(currentPosition.value))
-            }}
           />
           <View style={styles.rangeLabels}>
             <Text variant="caption" tone="muted">
@@ -311,19 +296,6 @@ export default function ToneGeneratorScreen() {
             </Text>
           </View>
         </View>
-      </View>
-
-      <View style={styles.presetRow}>
-        {PRESETS.map((preset) => (
-          <ChoiceChip
-            key={preset}
-            label={`${numberFormatter.format(preset)} Hz`}
-            selected={presetSelectionFrequencyHz === preset}
-            haptic={hapticsEnabled}
-            onPress={() => selectPreset(preset)}
-            style={styles.quickPreset}
-          />
-        ))}
       </View>
 
       <ToneWaveformPicker
@@ -402,20 +374,6 @@ const createStyles = createThemedStyles((t) => ({
   rangeLabels: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-  },
-  presetRow: {
-    width: '100%',
-    flexDirection: 'row',
-    alignItems: 'stretch',
-    gap: t.spacing.xs,
-  },
-  quickPreset: {
-    minHeight: 0,
-    minWidth: 0,
-    flex: 1,
-    alignSelf: 'stretch',
-    paddingHorizontal: t.spacing.xs,
-    paddingVertical: t.spacing.sm,
   },
   actionDock: {
     alignItems: 'center',
