@@ -24,6 +24,7 @@ import {
   EJECT_PHASE_DURATION_SECONDS,
   EJECT_WAVEFORM_TYPE,
   getEjectPhase,
+  getEjectScheduleWindows,
   rmsToDbfs,
   smoothMeterValue,
 } from './audioMath'
@@ -111,6 +112,7 @@ class AudioController {
   private recorder: AudioRecorder | null = null
   private ticker: ReturnType<typeof setInterval> | null = null
   private completionTimer: ReturnType<typeof setTimeout> | null = null
+  private ejectScheduleTimer: ReturnType<typeof setTimeout> | null = null
   private startedAtMs: number | null = null
   private interruptionSubscription: AudioEventSubscription | null = null
   private routeSubscription: AudioEventSubscription | null = null
@@ -229,13 +231,14 @@ class AudioController {
     return { context, oscillator, gain }
   }
 
-  private scheduleEjectCycle = (
+  private scheduleEjectWindow = (
     oscillator: OscillatorNode,
     gain: GainNode,
     startTime: number,
-    durationSeconds: number
+    startOffsetSeconds: number,
+    endOffsetSeconds: number
   ) => {
-    const sessionEnd = startTime + durationSeconds
+    const windowEnd = startTime + endOffsetSeconds
 
     const scheduleEnvelope = (
       gain: GainNode,
@@ -283,22 +286,78 @@ class AudioController {
     }
 
     for (
-      let cycleOffset = 0;
-      cycleOffset < durationSeconds;
+      let cycleOffset = startOffsetSeconds;
+      cycleOffset < endOffsetSeconds;
       cycleOffset += EJECT_CYCLE_DURATION_SECONDS
     ) {
       const waterStart = startTime + cycleOffset
-      const waterEnd = Math.min(waterStart + EJECT_PHASE_DURATION_SECONDS.water, sessionEnd)
+      const waterEnd = Math.min(waterStart + EJECT_PHASE_DURATION_SECONDS.water, windowEnd)
       if (waterStart < waterEnd) scheduleWater(waterStart, waterEnd)
 
       const debrisStart = waterStart + EJECT_PHASE_DURATION_SECONDS.water
-      const debrisEnd = Math.min(debrisStart + EJECT_PHASE_DURATION_SECONDS.debris, sessionEnd)
+      const debrisEnd = Math.min(debrisStart + EJECT_PHASE_DURATION_SECONDS.debris, windowEnd)
       if (debrisStart < debrisEnd) scheduleDebris(debrisStart, debrisEnd)
 
       const finishStart = debrisStart + EJECT_PHASE_DURATION_SECONDS.debris
-      const finishEnd = Math.min(finishStart + EJECT_PHASE_DURATION_SECONDS.finish, sessionEnd)
+      const finishEnd = Math.min(finishStart + EJECT_PHASE_DURATION_SECONDS.finish, windowEnd)
       if (finishStart < finishEnd) scheduleFinish(finishStart, finishEnd)
     }
+  }
+
+  private scheduleEjectSession = (
+    context: AudioContext,
+    oscillator: OscillatorNode,
+    gain: GainNode,
+    startTime: number,
+    durationSeconds: number
+  ) => {
+    const windows = getEjectScheduleWindows(durationSeconds)
+    const initialWindow = windows[0]
+    if (!initialWindow) return
+
+    this.scheduleEjectWindow(
+      oscillator,
+      gain,
+      startTime,
+      initialWindow.startSeconds,
+      initialWindow.endSeconds
+    )
+
+    let nextWindowIndex = 1
+
+    const scheduleTimer = () => {
+      const nextWindow = windows[nextWindowIndex]
+      if (!nextWindow) {
+        this.ejectScheduleTimer = null
+        return
+      }
+
+      const delayMilliseconds = Math.max(
+        0,
+        (startTime + nextWindow.scheduleAtSeconds - context.currentTime) * 1_000
+      )
+      this.ejectScheduleTimer = setTimeout(scheduleNextWindow, delayMilliseconds)
+    }
+
+    const scheduleNextWindow = () => {
+      const window = windows[nextWindowIndex]
+      if (
+        !window ||
+        this.snapshot.activeTool !== 'eject' ||
+        this.context !== context ||
+        this.oscillator !== oscillator ||
+        this.gain !== gain
+      ) {
+        this.ejectScheduleTimer = null
+        return
+      }
+
+      this.scheduleEjectWindow(oscillator, gain, startTime, window.startSeconds, window.endSeconds)
+      nextWindowIndex += 1
+      scheduleTimer()
+    }
+
+    scheduleTimer()
   }
 
   private createPlaybackGraph = async (
@@ -351,7 +410,7 @@ class AudioController {
         await this.preparePlayback(EJECT_SYSTEM_VOLUME)
         const { context, oscillator, gain } = await this.createEjectGraph()
         const startTime = context.currentTime + EJECT_SCHEDULE_LEAD_SECONDS
-        this.scheduleEjectCycle(oscillator, gain, startTime, durationSeconds)
+        this.scheduleEjectSession(context, oscillator, gain, startTime, durationSeconds)
         oscillator.start(startTime)
 
         this.startedAtMs = Date.now()
@@ -620,8 +679,10 @@ class AudioController {
   private clearTimers = () => {
     if (this.ticker) clearInterval(this.ticker)
     if (this.completionTimer) clearTimeout(this.completionTimer)
+    if (this.ejectScheduleTimer) clearTimeout(this.ejectScheduleTimer)
     this.ticker = null
     this.completionTimer = null
+    this.ejectScheduleTimer = null
     this.startedAtMs = null
   }
 

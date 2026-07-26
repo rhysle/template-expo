@@ -22,6 +22,14 @@ export const EJECT_CYCLE_DURATION_SECONDS = Object.values(EJECT_PHASE_DURATION_S
   (total, duration) => total + duration,
   0
 )
+// react-native-audio-api caps each AudioParam queue at 64 events; one cycle uses 28 gain events.
+const EJECT_INITIAL_SCHEDULE_CYCLES = 2
+
+export interface EjectScheduleWindow {
+  scheduleAtSeconds: number
+  startSeconds: number
+  endSeconds: number
+}
 
 export const clamp = (value: number, minimum: number, maximum: number): number =>
   Math.min(Math.max(value, minimum), maximum)
@@ -99,4 +107,34 @@ export const getEjectPhase = (elapsedSeconds: number): EjectPhase => {
     return 'debris'
   }
   return 'finish'
+}
+
+export const getEjectScheduleWindows = (durationSeconds: number): EjectScheduleWindow[] => {
+  if (!Number.isFinite(durationSeconds) || durationSeconds <= 0) return []
+
+  const initialEnd = Math.min(
+    durationSeconds,
+    EJECT_CYCLE_DURATION_SECONDS * EJECT_INITIAL_SCHEDULE_CYCLES
+  )
+  const windows: EjectScheduleWindow[] = [
+    {
+      scheduleAtSeconds: 0,
+      startSeconds: 0,
+      endSeconds: initialEnd,
+    },
+  ]
+
+  for (
+    let startSeconds = initialEnd;
+    startSeconds < durationSeconds;
+    startSeconds += EJECT_CYCLE_DURATION_SECONDS
+  ) {
+    windows.push({
+      scheduleAtSeconds: startSeconds - EJECT_CYCLE_DURATION_SECONDS,
+      startSeconds,
+      endSeconds: Math.min(startSeconds + EJECT_CYCLE_DURATION_SECONDS, durationSeconds),
+    })
+  }
+
+  return windows
 }

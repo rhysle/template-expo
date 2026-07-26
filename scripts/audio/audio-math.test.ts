@@ -13,6 +13,7 @@ import {
   frequencyFromNormalized,
   getAudioResultState,
   getEjectPhase,
+  getEjectScheduleWindows,
   getFrequencyBand,
   normalizeFrequency,
   rmsToDbfs,
@@ -80,4 +81,22 @@ test('eject cleaning phases cycle through water, debris, and finish profiles', (
   assert.equal(getEjectPhase(7.5), 'water')
   assert.equal(getEjectPhase(-1), 'water')
   assert.equal(getEjectPhase(Number.NaN), 'water')
+})
+
+test('long eject sessions use bounded rolling schedule windows', () => {
+  assert.deepEqual(getEjectScheduleWindows(30), [
+    { scheduleAtSeconds: 0, startSeconds: 0, endSeconds: 15 },
+    { scheduleAtSeconds: 7.5, startSeconds: 15, endSeconds: 22.5 },
+    { scheduleAtSeconds: 15, startSeconds: 22.5, endSeconds: 30 },
+  ])
+
+  const windows = getEjectScheduleWindows(90)
+  assert.equal(windows[0]?.endSeconds, 15)
+  assert.equal(windows.at(-1)?.endSeconds, 90)
+  assert.ok(
+    windows.every(
+      ({ startSeconds, endSeconds }, index) =>
+        endSeconds - startSeconds <= (index === 0 ? 15 : 7.5)
+    )
+  )
 })
