@@ -18,6 +18,7 @@ import {
   CircularAudioButton,
   FrequencyWaveform,
   MascotHero,
+  ToneWaveformPicker,
 } from '@/components/audio'
 import {
   ChoiceChip,
@@ -51,7 +52,13 @@ export default function ToneGeneratorScreen() {
   const styles = useThemedStyles(createStyles)
   const { height, width } = useWindowDimensions()
   const snapshot = useAudioController()
-  const { hapticsEnabled, lastToneFrequencyHz, setLastToneFrequencyHz } = useAudioPreferencesState()
+  const {
+    hapticsEnabled,
+    lastToneFrequencyHz,
+    lastToneWaveform,
+    setLastToneFrequencyHz,
+    setLastToneWaveform,
+  } = useAudioPreferencesState()
   const [frequencyHz, setFrequencyHz] = useState(lastToneFrequencyHz)
   const [presetSelectionFrequencyHz, setPresetSelectionFrequencyHz] = useState(lastToneFrequencyHz)
   const gestureWidth = useSharedValue(1)
@@ -157,7 +164,12 @@ export default function ToneGeneratorScreen() {
 
   const handleMainPress = () => {
     if (isActive) void audioController.stop('manual')
-    else void audioController.startTone(frequencyHz)
+    else void audioController.startTone(frequencyHz, lastToneWaveform)
+  }
+
+  const handleWaveformChange = (waveform: typeof lastToneWaveform) => {
+    setLastToneWaveform(waveform)
+    if (isRunning) audioController.setToneWaveform(waveform)
   }
 
   const actionDock = (
@@ -252,10 +264,12 @@ export default function ToneGeneratorScreen() {
             style={[styles.waveformAdjuster, { width }]}>
             <FrequencyWaveform
               frequencyHz={frequencyHz}
+              waveform={lastToneWaveform}
               active={isRunning}
               color={theme.colors.primary.main}
               accessibilityLabel={t('audioTools.tone.waveformLabel', {
                 frequency: formattedFrequency,
+                waveform: t(`audioTools.tone.waveform.${lastToneWaveform}`),
               })}
               centerFadeIntensity={CENTER_FADE_INTENSITY}
               edgeFadeIntensity={EDGE_FADE_INTENSITY}
@@ -311,6 +325,13 @@ export default function ToneGeneratorScreen() {
           />
         ))}
       </View>
+
+      <ToneWaveformPicker
+        value={lastToneWaveform}
+        disabled={isStarting}
+        haptic={hapticsEnabled}
+        onValueChange={handleWaveformChange}
+      />
 
       {actionDock}
 

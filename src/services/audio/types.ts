@@ -1,6 +1,7 @@
 import type { PermissionStatus } from 'react-native-audio-api'
 
 export type AudioTool = 'eject' | 'tone' | 'stereo' | 'meter'
+export type ToneWaveform = 'sine' | 'square' | 'triangle' | 'sawtooth'
 export type AudioRuntimeStatus = 'idle' | 'starting' | 'running' | 'stopping' | 'error'
 export type AudioStopReason =
   | 'completed'

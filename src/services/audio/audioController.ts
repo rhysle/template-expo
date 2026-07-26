@@ -33,6 +33,7 @@ import type {
   MeterStartResult,
   MeterStats,
   OutputRouteKind,
+  ToneWaveform,
 } from './types'
 
 const EJECT_GAIN = 0.82
@@ -300,14 +301,19 @@ class AudioController {
     }
   }
 
-  private createPlaybackGraph = async (frequencyHz: number, gainValue: number, pan = 0) => {
+  private createPlaybackGraph = async (
+    frequencyHz: number,
+    gainValue: number,
+    pan = 0,
+    waveform: ToneWaveform = 'sine'
+  ) => {
     const context = new AudioContext()
     await context.resume()
     const oscillator = context.createOscillator()
     const gain = context.createGain()
     const panner = context.createStereoPanner()
 
-    oscillator.type = 'sine'
+    oscillator.type = waveform
     oscillator.frequency.value = frequencyHz
     gain.gain.value = 0
     panner.pan.value = pan
@@ -364,7 +370,7 @@ class AudioController {
       }
     })
 
-  startTone = (frequencyHz: number): Promise<void> =>
+  startTone = (frequencyHz: number, waveform: ToneWaveform = 'sine'): Promise<void> =>
     this.enqueue(async () => {
       await this.performStop('replaced')
       this.update({
@@ -380,10 +386,10 @@ class AudioController {
 
       try {
         await this.preparePlayback()
-        await this.createPlaybackGraph(frequencyHz, TOOL_GAIN)
+        await this.createPlaybackGraph(frequencyHz, TOOL_GAIN, 0, waveform)
         this.startedAtMs = Date.now()
         this.update({ status: 'running' })
-        trackEvent(AnalyticsAppEvents.AUDIO_TOOL_STARTED, { tool: 'tone', mode: 'sine' })
+        trackEvent(AnalyticsAppEvents.AUDIO_TOOL_STARTED, { tool: 'tone', mode: waveform })
         this.startTicker()
       } catch (error) {
         await this.fail(error)
@@ -397,6 +403,11 @@ class AudioController {
     const now = this.context.currentTime
     this.oscillator.frequency.cancelAndHoldAtTime(now)
     this.oscillator.frequency.setTargetAtTime(frequencyHz, now, 0.015)
+  }
+
+  setToneWaveform = (waveform: ToneWaveform) => {
+    if (this.snapshot.activeTool !== 'tone' || !this.oscillator) return
+    this.oscillator.type = waveform
   }
 
   startStereoManual = (pan: number): Promise<void> => {

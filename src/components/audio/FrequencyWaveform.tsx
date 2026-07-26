@@ -12,9 +12,11 @@ import {
   withTiming,
 } from 'react-native-reanimated'
 
-import { normalizeFrequency } from '@/services/audio'
+import { normalizeFrequency, type ToneWaveform } from '@/services/audio'
 import { createThemedStyles, useTheme, useThemedStyles } from '@/theme'
 import { withAlpha } from '@/utils/color'
+
+import { appendFrequencyWaveformPath } from './frequency-waveform-path'
 
 const PRIMARY_CYCLE_RANGE = 2.1
 const SECONDARY_CYCLE_RANGE = 3.7
@@ -22,6 +24,7 @@ const DETAIL_CYCLE_RANGE = 5.75
 
 interface FrequencyWaveformProps {
   frequencyHz: number
+  waveform: ToneWaveform
   active: boolean
   color: string
   accessibilityLabel: string
@@ -34,6 +37,7 @@ interface FrequencyWaveformProps {
 
 export const FrequencyWaveform = ({
   frequencyHz,
+  waveform,
   active,
   color,
   accessibilityLabel,
@@ -47,6 +51,7 @@ export const FrequencyWaveform = ({
   const width = useSharedValue(0)
   const height = useSharedValue(0)
   const normalizedFrequency = useSharedValue(normalizeFrequency(frequencyHz))
+  const waveformType = useSharedValue<ToneWaveform>(waveform)
   const motion = useSharedValue(active && !reducedMotion ? 1 : 0)
   const phase = useSharedValue(0)
   const resolvedFadeIntensity = Math.min(Math.max(centerFadeIntensity, 0), 1)
@@ -70,6 +75,10 @@ export const FrequencyWaveform = ({
   useEffect(() => {
     normalizedFrequency.value = withTiming(normalizeFrequency(frequencyHz), { duration: 180 })
   }, [frequencyHz, normalizedFrequency])
+
+  useEffect(() => {
+    waveformType.value = waveform
+  }, [waveform, waveformType])
 
   useEffect(() => {
     const shouldMove = active && !reducedMotion
@@ -99,15 +108,14 @@ export const FrequencyWaveform = ({
     const cycles = 2.15 + normalizedFrequency.value * PRIMARY_CYCLE_RANGE
     const wavePhase = 0.35 + phase.value / 560
     const amplitude = canvasHeight * 0.25
-    const points = Math.max(Math.round(canvasWidth / 3), 64)
-
-    for (let index = 0; index <= points; index += 1) {
-      const progress = index / points
-      const x = progress * canvasWidth
-      const y = centerY + Math.sin(progress * Math.PI * 2 * cycles + wavePhase) * amplitude
-      if (index === 0) builder.moveTo(x, y)
-      else builder.lineTo(x, y)
-    }
+    appendFrequencyWaveformPath(builder, {
+      waveform: waveformType.value,
+      width: canvasWidth,
+      centerY,
+      cycles,
+      phase: wavePhase,
+      amplitude,
+    })
   })
 
   const secondaryPath = usePathValue((builder) => {
@@ -121,15 +129,14 @@ export const FrequencyWaveform = ({
     const cycles = 3.1 + normalizedFrequency.value * SECONDARY_CYCLE_RANGE
     const wavePhase = 1.4 - phase.value / 820
     const amplitude = canvasHeight * 0.16
-    const points = Math.max(Math.round(canvasWidth / 3), 64)
-
-    for (let index = 0; index <= points; index += 1) {
-      const progress = index / points
-      const x = progress * canvasWidth
-      const y = centerY + Math.sin(progress * Math.PI * 2 * cycles + wavePhase) * amplitude
-      if (index === 0) builder.moveTo(x, y)
-      else builder.lineTo(x, y)
-    }
+    appendFrequencyWaveformPath(builder, {
+      waveform: waveformType.value,
+      width: canvasWidth,
+      centerY,
+      cycles,
+      phase: wavePhase,
+      amplitude,
+    })
   })
 
   const detailPath = usePathValue((builder) => {
@@ -143,15 +150,14 @@ export const FrequencyWaveform = ({
     const cycles = 4.3 + normalizedFrequency.value * DETAIL_CYCLE_RANGE
     const wavePhase = 2.1 + phase.value / 470
     const amplitude = canvasHeight * 0.1
-    const points = Math.max(Math.round(canvasWidth / 3), 64)
-
-    for (let index = 0; index <= points; index += 1) {
-      const progress = index / points
-      const x = progress * canvasWidth
-      const y = centerY + Math.sin(progress * Math.PI * 2 * cycles + wavePhase) * amplitude
-      if (index === 0) builder.moveTo(x, y)
-      else builder.lineTo(x, y)
-    }
+    appendFrequencyWaveformPath(builder, {
+      waveform: waveformType.value,
+      width: canvasWidth,
+      centerY,
+      cycles,
+      phase: wavePhase,
+      amplitude,
+    })
   })
 
   const handleLayout = ({ nativeEvent }: LayoutChangeEvent) => {

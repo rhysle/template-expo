@@ -1,46 +1,49 @@
-# Eject tab design QA
+# Tone Generator waveform selector design QA
 
 ## Evidence
 
-- Source visual truth: `/Users/tailt/.codex/generated_images/019f88bf-cf8e-7251-b525-8f07fbb4a85c/exec-fb048441-94d1-46b8-82de-0519a8a1c643.png`
-- Implementation capture: `/Users/tailt/Development/Projects/template-expo/.codex/qa/eject-active-revised.png`
-- Full normalized comparison: `/Users/tailt/Development/Projects/template-expo/.codex/qa/eject-comparison.png`
-- Focused control comparison: `/Users/tailt/Development/Projects/template-expo/.codex/qa/eject-controls-comparison.png`
-- Source dimensions: 853 × 1844 px
-- Implementation dimensions: 1320 × 2868 px from an iPhone 17 Pro Max simulator at 3× density (440 × 956 pt)
-- Comparison normalization: both images resized to 660 × 1434 px; aspect-ratio drift is under 0.6%.
-- State tested: active 60-second cleaning session.
+- Source visual truth: `/Users/tailt/.codex/visualizations/2026/07/26/019f9c86-b8cd-7e73-8d61-f9bc9eb08900/tone-waveform-qa/source.png`
+- Implementation capture: `/Users/tailt/.codex/visualizations/2026/07/26/019f9c86-b8cd-7e73-8d61-f9bc9eb08900/tone-waveform-qa/implementation.png`
+- Full normalized comparison: `/Users/tailt/.codex/visualizations/2026/07/26/019f9c86-b8cd-7e73-8d61-f9bc9eb08900/tone-waveform-qa/full-comparison.png`
+- Focused selector comparison: `/Users/tailt/.codex/visualizations/2026/07/26/019f9c86-b8cd-7e73-8d61-f9bc9eb08900/tone-waveform-qa/selector-comparison.png`
+- Source dimensions: 852 × 1846 px.
+- Implementation dimensions: 1320 × 2868 px from an iPhone 17 Pro Max simulator at 3× density (440 × 956 pt).
+- Comparison normalization: the implementation was proportionally scaled and center-cropped to 852 × 1846 px; the aspect-ratio difference was under 0.3%.
+- State: idle, light appearance, Sine selected. The source's illustrative 149 Hz value and the persisted implementation value of 152 Hz are intentionally treated as equivalent content states.
 
-## Approved overrides
+## Approved override
 
-The implementation intentionally supersedes two details in the source concept based on the user's later direction:
+The user's final direction explicitly supersedes the source selector size. The implementation reduces the selector from a nearly full-width four-segment control to a centered 184-point pill while preserving four 44-point tap targets. Individual waveform labels remain accessibility-only and are not visible.
 
-- Unselected durations are borderless and the outer duration container is fully rounded.
-- The active `Stop cleaning` label is red to match the stop button and progress ring.
+## Findings
 
-The source concept's small `Duration` lock label was omitted because the selected state is preserved while the entire control is disabled during playback, giving the same interaction constraint with less visual noise.
+No actionable P0, P1, or P2 differences remain.
 
-## Comparison findings
-
-| Surface | Result | Notes |
+| Surface | Result | Evidence |
 | --- | --- | --- |
-| Typography | Pass | Timer uses tabular numerals with strong blue hierarchy; stop label uses the semantic error tone. |
-| Spacing and layout | Pass | Mascot remains visible; timer, stop control, duration pill, guidance, and tab bar all clear one another at the tested viewport. |
-| Colors and tokens | Pass | Primary blue, semantic red, subtle pill surface, and secondary text all use project theme tokens. |
-| Image fidelity | Pass | Existing mascot artwork remains sharp, centered, and uncropped in the active state. |
-| Copy and content | Pass | Remaining time and guidance remain localized; the background-interruption notice is absent. |
-| Interaction | Pass | The selected duration is a filled circle; unselected values are borderless; duration changes are disabled while cleaning. |
-| Accessibility | Pass | Duration group exposes radio roles and selected/disabled state; the countdown exposes a timer role and value. |
+| Fonts and typography | Pass | Existing title, frequency readout, preset labels, action label, and safety copy retain the app's established font weights and hierarchy. No waveform text is visible. |
+| Spacing and layout rhythm | Pass | The new 184-point selector fits between presets and the action dock without scrolling, overlap, clipping, or loss of the persistent tab bar. The smaller mascot on the 440 × 956 pt simulator is an expected responsive result of preserving every control. |
+| Colors and visual tokens | Pass | The selected Sine circle uses the theme primary and inverse colors; unselected icons use primary on the subtle background surface. |
+| Image quality and asset fidelity | Pass | The existing mascot and waveform ornaments remain sharp, correctly cropped, and unchanged. Phosphor's native waveform icons are used for all four selector glyphs. |
+| Copy and content | Pass | The subtitle now describes all tone types; visible waveform labels were removed as requested. Accessibility labels identify Sine, Square, Triangle, and Sawtooth. |
+| Interaction | Pass | Sine, Square, Triangle, and Sawtooth selection all update the rendered waveform. Playback starts with the selected oscillator type, and switching type during active playback works. The final tested state was restored to Sine. |
+| Accessibility | Pass | The control exposes a named radio group, 44-point options, selected/disabled state, localized waveform names, and selection haptics. |
 
-## Iteration history
+## Comparison history
 
-1. Initial active-state capture found two P2 issues: the guidance text collided with the tab-bar region, and the selected duration became too faint when disabled.
-2. Reduced the compact active hero/control heights and mascot scale, then kept the disabled selected circle at full opacity.
-3. Revised capture confirmed the guidance clears the tab bar and all duration states remain legible.
-4. Final user feedback changed `Stop cleaning` from accent blue to semantic red; the revised capture confirms it matches the stop control.
+1. The selected concept used a wide icon-only segmented control.
+2. The user requested smaller selections and explicitly waived another design generation.
+3. The implementation introduced a compact centered selector with unchanged accessible target sizes.
+4. Full-view and focused comparisons found no P0/P1/P2 mismatch after applying that approved override, so no additional visual-fix iteration was required.
 
-## Remaining issues
+## Verification
 
-No P0, P1, or P2 visual issues remain in the tested active state.
+- iOS build succeeded on the iPhone 17 Pro Max simulator.
+- Primary interactions tested: select all four waveform types, start a Triangle tone, switch live to Sawtooth, stop playback, and restore Sine.
+- Recent simulator error/fault logs contained only unrelated Foundation and Accessibility platform messages; no waveform or JavaScript runtime errors were observed.
+
+## Follow-up polish
+
+- P3: Consider cross-fading oscillator gain during future live waveform changes if physical-device testing reveals an audible click.
 
 final result: passed
