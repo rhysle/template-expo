@@ -1,9 +1,5 @@
 {
   "common": {
-    "openSettings": "Mở Cài đặt",
-    "reset": "Đặt lại",
-    "start": "Bắt đầu",
-    "stop": "Dừng",
     "back": "Quay lại",
     "cancel": "Hủy",
     "close": "Đóng",
@@ -13,10 +9,19 @@
     "getStarted": "Bắt đầu",
     "next": "Tiếp theo",
     "ok": "OK",
+    "openSettings": "Mở Cài đặt",
+    "reset": "Đặt lại",
     "retry": "Thử lại",
     "restart": "Khởi động lại",
     "save": "Lưu",
-    "skip": "Bỏ qua"
+    "skip": "Bỏ qua",
+    "start": "Bắt đầu",
+    "stop": "Dừng"
+  },
+  "premium": {
+    "lockedHint": "Mở màn hình nâng cấp Premium",
+    "accessChecking": "Đang kiểm tra quyền truy cập Premium…",
+    "accessUnknown": "Kết nối Internet để kiểm tra quyền truy cập Premium."
   },
   "tabs": {
     "eject": "Đẩy nước",
@@ -26,8 +31,7 @@
   },
   "settings": {
     "title": "Cài đặt",
-    "subtitle": "Tùy chỉnh ứng dụng chuyển đổi tiền tệ",
-    "preferences": "Tùy chọn",
+    "subtitle": "Điều chỉnh công cụ loa và máy đo âm thanh của bạn",
     "support": "Hỗ trợ",
     "contactSupport": "Liên hệ hỗ trợ",
     "contactSupportSubtitle": "Chúng tôi luôn sẵn sàng hỗ trợ bạn",
@@ -46,19 +50,159 @@
     "otaUpdateId": "Cập nhật: {{updateId}}",
     "upgradeBanner": {
       "title": "Nâng cấp lên Premium",
-      "subtitle": "Cập nhật tỷ giá thường xuyên, không quảng cáo & biểu đồ đầy đủ"
+      "subtitle": "Mở khóa Water Eject, điều khiển âm thanh nâng cao và trải nghiệm không có quảng cáo"
+    },
+    "audio": {
+      "section": "Âm thanh & Máy đo",
+      "ejectDuration": "Thời gian vệ sinh",
+      "durationValue": "{{count}} giây",
+      "haptics": "Kiểm soát xúc giác",
+      "hapticsSubtitle": "Sử dụng phản hồi xúc giác trong công cụ âm thanh",
+      "safety": "An toàn và quyền riêng tư về âm thanh",
+      "safetySubtitle": "Phát lại, micrô và hướng dẫn đo lường"
+    }
+  },
+  "audioTools": {
+    "common": {
+      "mascot": "Linh vật đẩy nước",
+      "error": "Âm thanh không thể bắt đầu. Kiểm tra đầu ra hiện tại và thử lại."
+    },
+    "eject": {
+      "subtitle": "Chu kỳ âm thanh 3 giai đoạn mạnh mẽ nhắm vào nước bị mắc kẹt, bụi bẩn và mảnh vụn.",
+      "safe": "Sẵn sàng dọn dẹp",
+      "completed": "Chu trình làm sạch đã hoàn tất",
+      "remaining": "{{time}} còn lại",
+      "start": "Bắt đầu dọn dẹp",
+      "stop": "Dừng dọn dẹp",
+      "idleHint": "Đặt loa của thiết bị úp xuống trước khi bắt đầu.",
+      "runningHint": "Giữ cố định thiết bị và cách xa tai bạn.",
+      "completedHint": "Kiểm tra loa của bạn và lặp lại chu trình nếu âm thanh vẫn bị bóp nghẹt.",
+      "externalTitle": "Ngắt kết nối âm thanh bên ngoài",
+      "externalBody": "Quá trình làm sạch loa diễn ra thông qua loa của thiết bị chứ không phải tai nghe hoặc đầu ra Bluetooth.",
+      "phase": {
+        "water": "Xung đẩy nước",
+        "debris": "Bụi và mảnh vụn lắc lư",
+        "finish": "Quét xong"
+      }
+    },
+    "tone": {
+      "currentFrequency": "Tần số hiện tại",
+      "frequencyValue": "{{frequency}} Hz",
+      "waveformLabel": "{{waveform}} dạng sóng ở {{frequency}} hertz",
+      "waveform": {
+        "label": "Dạng sóng",
+        "sine": "Sin",
+        "square": "Hình vuông",
+        "triangle": "Tam giác",
+        "sawtooth": "Răng cưa"
+      },
+      "play": "Phát giai điệu",
+      "stop": "Dừng âm",
+      "volumeHint": "Để âm lượng ở mức thấp và loa cách xa tai bạn.",
+      "band": {
+        "veryLow": "Rất thấp",
+        "low": "Thấp",
+        "midLow": "Trung bình thấp",
+        "mid": "Giữa",
+        "high": "Cao",
+        "veryHigh": "Rất cao"
+      }
+    },
+    "stereo": {
+      "auto": "Tự động thay thế",
+      "autoHint": "Xoay trái, phải và cả hai",
+      "tapToChange": "Nhấn vào loa để thay đổi kênh",
+      "start": "Bắt đầu kiểm tra",
+      "helpTitle": "Cách sử dụng Kiểm tra âm thanh nổi",
+      "helpTap": "Nhấn vào loa bên trái hoặc bên phải để kiểm tra kênh đó ngay lập tức.",
+      "helpBoth": "Bật cả hai loa để phát âm thử qua cả hai kênh.",
+      "helpAuto": "Sử dụng Tự động thay thế để chuyển đổi giữa các kênh trái, phải và cả hai kênh.",
+      "helpStop": "Sử dụng tính năng Kiểm tra dừng bất cứ khi nào bạn muốn kết thúc quá trình phát lại.",
+      "left": "Còn lại",
+      "right": "Đúng",
+      "positionLeft": "Đang phát kênh bên trái",
+      "positionCenter": "Cả hai kênh đang phát",
+      "positionRight": "Đang phát đúng kênh",
+      "idlePosition": "Nhấn vào loa để bắt đầu",
+      "stop": "Dừng kiểm tra"
+    },
+    "meter": {
+      "estimated": "dB ước tính",
+      "start": "Bắt đầu đo",
+      "stop": "Dừng đo",
+      "permissionTitle": "Quyền truy cập micrô bị tắt",
+      "permissionBody": "Quyền truy cập micrô chỉ được sử dụng khi Máy đo dB đang chạy để ước tính mức âm thanh ở gần. Âm thanh được xử lý trên thiết bị của bạn và không bao giờ được lưu hoặc tải lên.",
+      "minimum": "Tối thiểu",
+      "average": "Trung bình",
+      "maximum": "Tối đa",
+      "unlockStats": "Mở khóa số liệu thống kê phiên dB chi tiết",
+      "status": {
+        "veryQuiet": "Rất yên tĩnh",
+        "normal": "Bình thường",
+        "loud": "Ồn ào",
+        "danger": "Nguy hiểm"
+      },
+      "description": {
+        "veryQuiet": "Thư viện, hơi thở nhẹ nhàng",
+        "normal": "Cuộc trò chuyện, văn phòng",
+        "loud": "Đường phố tấp nập, tiếng nhạc ầm ĩ",
+        "danger": "Hòa nhạc, còi báo động"
+      },
+      "help": {
+        "title": "Hướng dẫn về máy đo dB",
+        "howToMeasure": "Cách đo",
+        "stepPlace": "Đặt điện thoại ở nơi bạn muốn kiểm tra âm thanh.",
+        "stepUncovered": "Không che micrô.",
+        "stepStart": "Nhấn vào Bắt đầu đo và xem ước tính trực tiếp.",
+        "everydayLevels": "Mức âm thanh hàng ngày",
+        "examplesApproximate": "Các ví dụ mang tính tương đối và thay đổi theo khoảng cách.",
+        "currentEstimate": "Ước tính hiện tại",
+        "exposureTitle": "Thời gian phơi sáng đóng vai trò quan trọng",
+        "exposureDescription": "NIOSH hướng dẫn nghề nghiệp; mỗi +3 dB giảm một nửa thời gian khuyến nghị.",
+        "useItWell": "Hãy sử dụng nó thật tốt",
+        "tipMicrophoneTitle": "Không che micrô",
+        "tipMicrophoneBody": "Tránh dùng tay hoặc hộp đựng che điện thoại.",
+        "tipPositionTitle": "Đo nơi bạn nghe",
+        "tipPositionBody": "Di chuyển thiết bị đến vị trí bạn muốn đánh giá.",
+        "tipProtectTitle": "Nếu bạn cảm thấy quá ồn, hãy bảo vệ đôi tai của bạn",
+        "tipProtectBody": "Tránh xa nguồn phát hoặc sử dụng thiết bị bảo vệ thính giác.",
+        "reference": {
+          "concertSpeaker": "Diễn giả buổi hòa nhạc",
+          "sirenNightclub": "Còi báo động hoặc hộp đêm",
+          "lawnMower": "Máy cắt cỏ",
+          "busyStreet": "Phố đông đúc",
+          "conversation": "Cuộc trò chuyện",
+          "quietHome": "Ngôi nhà yên tĩnh",
+          "whisper": "Thì thầm",
+          "hearingThreshold": "Ngưỡng nghe"
+        }
+      }
+    },
+    "safety": {
+      "title": "An toàn và quyền riêng tư về âm thanh",
+      "intro": "Hãy sử dụng những công cụ này một cách cẩn thận và hiểu rõ những gì điện thoại của bạn có thể—và không thể—đo lường được.",
+      "playbackTitle": "Phát lại an toàn",
+      "playbackBody": "Bắt đầu ở mức âm lượng thấp, tăng dần âm lượng, để loa cách xa tai bạn và dừng lại nếu cảm thấy khó chịu.",
+      "routingTitle": "Định tuyến âm thanh",
+      "routingBody": "Âm thanh vệ sinh loa phải sử dụng loa của thiết bị. Việc tách âm thanh nổi phụ thuộc vào loa hoặc tai nghe được kết nối.",
+      "estimateTitle": "Mức âm thanh ước tính",
+      "estimateBody": "Micrô của điện thoại báo cáo mức tín hiệu kỹ thuật số thay vì SPL trong phòng thí nghiệm. Ứng dụng áp dụng ước tính khác nhau tùy theo thiết bị.",
+      "privacyTitle": "Quyền riêng tư của micrô",
+      "privacyBody": "Micrô chỉ chạy khi Đồng hồ đo dB đang hoạt động. Các mẫu được xử lý trong bộ nhớ và không bao giờ được lưu hoặc tải lên.",
+      "limitationsTitle": "Hạn chế quan trọng",
+      "limitationsBody": "Ứng dụng này không thể đảm bảo loại bỏ nước hoặc bụi. Không nhét đồ vật vào loa và không sử dụng các công cụ này để thay thế cho việc sửa chữa chuyên nghiệp, thiết bị hiệu chuẩn, tư vấn y tế hoặc hướng dẫn bảo vệ thính giác."
     }
   },
   "paywall": {
-    "title": "Mở khóa Premium",
-    "subtitle": "Tận dụng tối đa Currency Converter",
+    "title": "Mở khóa Bộ công cụ âm thanh hoàn chỉnh của bạn",
+    "subtitle": "Làm sạch loa của bạn, truy cập các điều khiển nâng cao và xóa mọi quảng cáo.",
     "ctaFreeTrial": "Dùng thử miễn phí",
-    "restore": "Khôi phục giao dịch",
+    "restore": "Khôi phục giao dịch mua",
     "terms": "Điều khoản dịch vụ",
     "privacy": "Chính sách bảo mật",
-    "then": "sau đó",
-    "trial": "Dùng thử {{count}} {{unit}} miễn phí",
-    "save": "Tiết kiệm {{percent}}%",
+    "then": "rồi",
+    "trial": "{{count}}-{{unit}} dùng thử miễn phí",
+    "save": "Lưu {{percent}}%",
     "trialUnit": {
       "day": "ngày",
       "week": "tuần",
@@ -73,29 +217,33 @@
       "lifetime": "Mua một lần"
     },
     "features": {
-      "liveRates": {
-        "title": "Tỷ giá luôn mới nhất",
-        "description": "Tỷ giá cập nhật gần như thời gian thực, không bị trễ."
+      "waterEject": {
+        "title": "Đẩy nước hoàn toàn",
+        "description": "Chạy các chu trình làm sạch loa 30, 60 và 90 giây theo hướng dẫn."
       },
-      "unlimited": {
-        "title": "Hơn 150 loại tiền tệ, không giới hạn",
-        "description": "Thêm tất cả loại tiền tệ bạn cần, không có giới hạn."
+      "waveforms": {
+        "title": "Dạng sóng âm nâng cao",
+        "description": "Sử dụng âm hình vuông, hình tam giác và răng cưa trên toàn bộ dải tần."
       },
-      "charts": {
-        "title": "Toàn bộ lịch sử tỷ giá",
-        "description": "Biểu đồ tương tác để tìm thời điểm tốt nhất để chuyển đổi."
+      "stereoAuto": {
+        "title": "Kiểm tra âm thanh nổi tự động",
+        "description": "Chuyển đổi giữa kênh trái, phải và cả hai kênh rảnh tay."
+      },
+      "dbStats": {
+        "title": "Thống kê dB chi tiết",
+        "description": "Xem ước tính tối thiểu, trung bình và tối đa cho mỗi phiên."
       },
       "adFree": {
-        "title": "Không gián đoạn",
-        "description": "Không quảng cáo. Trải nghiệm tập trung, gọn gàng."
+        "title": "Không bị gián đoạn quảng cáo",
+        "description": "Sử dụng mọi công cụ âm thanh mà không cần biểu ngữ hoặc quảng cáo toàn màn hình."
       }
     },
     "feedback": {
-      "subscribeSuccess": "Chào mừng! Quyền truy cập Premium của bạn đã được kích hoạt.",
+      "subscribeSuccess": "Chào mừng bạn! Quyền truy cập cao cấp của bạn đang hoạt động.",
       "subscribeError": "Đã xảy ra lỗi. Vui lòng thử lại.",
-      "restoreSuccess": "Khôi phục gói đăng ký thành công!",
-      "restoreNotFound": "Không tìm thấy gói đăng ký nào.",
-      "restoreError": "Không thể khôi phục giao dịch. Vui lòng thử lại."
+      "restoreSuccess": "Đã khôi phục thành công quyền truy cập cao cấp!",
+      "restoreNotFound": "Không tìm thấy giao dịch mua Premium nào đang hoạt động.",
+      "restoreError": "Không thể khôi phục giao dịch mua hàng. Vui lòng thử lại."
     },
     "packageTitle": {
       "day": "Hàng ngày",
@@ -129,9 +277,5 @@
       "title": "Riêng tư và trên thiết bị",
       "description": "Việc xử lý âm thanh diễn ra trên điện thoại của bạn, kèm hướng dẫn rõ ràng về an toàn và micrô."
     }
-  },
-  "premium": {
-    "accessChecking": "Đang kiểm tra quyền truy cập Premium…",
-    "accessUnknown": "Kết nối Internet để kiểm tra quyền truy cập Premium."
   }
 }

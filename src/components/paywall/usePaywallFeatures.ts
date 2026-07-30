@@ -1,8 +1,9 @@
 import {
-  GlobeHemisphereWestIcon,
-  LightningIcon,
+  DropIcon,
+  GaugeIcon,
   ProhibitIcon,
-  TrendUpIcon,
+  SpeakerHifiIcon,
+  WaveformIcon,
 } from 'phosphor-react-native'
 import { useTranslation } from 'react-i18next'
 
@@ -13,19 +14,24 @@ export const usePaywallFeatures = (): PaywallFeatureItem[] => {
 
   return [
     {
-      icon: LightningIcon,
-      title: t('paywall.features.liveRates.title'),
-      description: t('paywall.features.liveRates.description'),
+      icon: DropIcon,
+      title: t('paywall.features.waterEject.title'),
+      description: t('paywall.features.waterEject.description'),
     },
     {
-      icon: GlobeHemisphereWestIcon,
-      title: t('paywall.features.unlimited.title'),
-      description: t('paywall.features.unlimited.description'),
+      icon: WaveformIcon,
+      title: t('paywall.features.waveforms.title'),
+      description: t('paywall.features.waveforms.description'),
     },
     {
-      icon: TrendUpIcon,
-      title: t('paywall.features.charts.title'),
-      description: t('paywall.features.charts.description'),
+      icon: SpeakerHifiIcon,
+      title: t('paywall.features.stereoAuto.title'),
+      description: t('paywall.features.stereoAuto.description'),
+    },
+    {
+      icon: GaugeIcon,
+      title: t('paywall.features.dbStats.title'),
+      description: t('paywall.features.dbStats.description'),
     },
     {
       icon: ProhibitIcon,

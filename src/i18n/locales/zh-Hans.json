@@ -1,9 +1,5 @@
 {
   "common": {
-    "openSettings": "打开设置",
-    "reset": "重置",
-    "start": "开始",
-    "stop": "停止",
     "back": "返回",
     "cancel": "取消",
     "close": "关闭",
@@ -13,10 +9,19 @@
     "getStarted": "开始使用",
     "next": "下一步",
     "ok": "好的",
+    "openSettings": "打开设置",
+    "reset": "重置",
     "retry": "重试",
     "restart": "重启",
     "save": "保存",
-    "skip": "跳过"
+    "skip": "跳过",
+    "start": "开始",
+    "stop": "停止"
+  },
+  "premium": {
+    "lockedHint": "打开高级升级屏幕",
+    "accessChecking": "正在检查 Premium 访问权限…",
+    "accessUnknown": "请连接互联网以检查 Premium 访问权限。"
   },
   "tabs": {
     "eject": "排水",
@@ -26,8 +31,7 @@
   },
   "settings": {
     "title": "设置",
-    "subtitle": "自定义您的货币换算器",
-    "preferences": "偏好设置",
+    "subtitle": "调整扬声器工具和声音计",
     "support": "支持",
     "contactSupport": "联系支持",
     "contactSupportSubtitle": "我们随时为您服务",
@@ -45,24 +49,164 @@
     "version": "版本 {{version}}",
     "otaUpdateId": "更新: {{updateId}}",
     "upgradeBanner": {
-      "title": "升级至高级版",
-      "subtitle": "更频繁的汇率更新、无广告及完整图表"
+      "title": "升级到高级版",
+      "subtitle": "解锁扬声器排水、高级音频控制和无广告体验"
+    },
+    "audio": {
+      "section": "音频与测量",
+      "ejectDuration": "清洁持续时间",
+      "durationValue": "{{count}} 秒",
+      "haptics": "控制触觉",
+      "hapticsSubtitle": "在声音工具中使用触觉反馈",
+      "safety": "音频安全和隐私",
+      "safetySubtitle": "播放、麦克风和测量指南"
+    }
+  },
+  "audioTools": {
+    "common": {
+      "mascot": "扬声器排水吉祥物",
+      "error": "音频无法启动。检查当前输出，然后重试。"
+    },
+    "eject": {
+      "subtitle": "强劲的三阶段声音循环，帮助清除扬声器中残留的水分、松动的灰尘和碎屑。",
+      "safe": "可以开始清理",
+      "completed": "清洁循环完成",
+      "remaining": "剩余 {{time}}",
+      "start": "开始清理",
+      "stop": "停止清洁",
+      "idleHint": "在开始之前，将设备扬声器一侧向下放置。",
+      "runningHint": "保持设备静止，远离耳朵。",
+      "completedHint": "测试您的扬声器，如果声音仍然低沉，请重复该循环。",
+      "externalTitle": "断开外部音频连接",
+      "externalBody": "扬声器清洁通过设备扬声器进行，而不是通过耳机或蓝牙输出。",
+      "phase": {
+        "water": "水喷射脉冲",
+        "debris": "粉尘和碎屑震动",
+        "finish": "整理扫描"
+      }
+    },
+    "tone": {
+      "currentFrequency": "泵的当前频率",
+      "frequencyValue": "{{frequency}} Hz",
+      "waveformLabel": "{{frequency}}赫兹{{waveform}}波形",
+      "waveform": {
+        "label": "波形",
+        "sine": "正弦",
+        "square": "正方形",
+        "triangle": "B型图案",
+        "sawtooth": "锯齿"
+      },
+      "play": "播放提示音",
+      "stop": "停止提示音",
+      "volumeHint": "保持低音量，并使扬声器远离耳朵。",
+      "band": {
+        "veryLow": "极低",
+        "low": "低",
+        "midLow": "低中",
+        "mid": "中",
+        "high": "高",
+        "veryHigh": "非常"
+      }
+    },
+    "stereo": {
+      "auto": "自动替换",
+      "autoHint": "左右循环，两者兼而有之",
+      "tapToChange": "轻触扬声器以更改频道",
+      "start": "开始测试",
+      "helpTitle": "如何使用立体声测试",
+      "helpTap": "轻触左侧或右侧扬声器以立即测试该频道。",
+      "helpBoth": "打开两个扬声器，通过两个频道播放测试音。",
+      "helpAuto": "使用Auto alternate在左通道、右通道和两个通道之间循环。",
+      "helpStop": "每当您想结束播放时，请使用停止测试。",
+      "left": "Left",
+      "right": "右边",
+      "positionLeft": "左声道播放",
+      "positionCenter": "两个频道都在播放",
+      "positionRight": "右声道播放",
+      "idlePosition": "轻触扬声器以开始",
+      "stop": "停止测试"
+    },
+    "meter": {
+      "estimated": "估计dB",
+      "start": "开始测量",
+      "stop": "停止测量",
+      "permissionTitle": "麦克风访问已关闭",
+      "permissionBody": "麦克风访问仅在分贝计运行时使用，以估计附近的声级。音频会在您的设备上进行处理，不会保存或上传。",
+      "minimum": "Minimun",
+      "average": "一般",
+      "maximum": "最大次数",
+      "unlockStats": "解锁详细的dB会话统计",
+      "status": {
+        "veryQuiet": "很安静",
+        "normal": "普通",
+        "loud": "大声",
+        "danger": "危险"
+      },
+      "description": {
+        "veryQuiet": "库，呼吸柔和",
+        "normal": "对话，办公室",
+        "loud": "繁忙的街道，嘈杂的音乐",
+        "danger": "音乐会、警笛"
+      },
+      "help": {
+        "title": "dB仪表导轨",
+        "howToMeasure": "测量方法",
+        "stepPlace": "将手机放在要检查声音的位置。",
+        "stepUncovered": "保持麦克风未被遮盖。",
+        "stepStart": "轻触开始测量并观看实时预估。",
+        "everydayLevels": "日常声级",
+        "examplesApproximate": "示例为近似值，因距离而异。",
+        "currentEstimate": "当前估计数",
+        "exposureTitle": "曝光时间很重要",
+        "exposureDescription": "NIOSH职业指导；每+3 dB将推荐时间减半。",
+        "useItWell": "好好使用",
+        "tipMicrophoneTitle": "保持麦克风未被遮盖",
+        "tipMicrophoneBody": "避免用手或外壳遮盖。",
+        "tipPositionTitle": "衡量您倾听的地方",
+        "tipPositionBody": "将设备移动到要评估的位置。",
+        "tipProtectTitle": "如果感觉太大声，请保护您的耳朵",
+        "tipProtectBody": "远离源头或使用听力保护装置。",
+        "reference": {
+          "concertSpeaker": "音乐会演讲者",
+          "sirenNightclub": "警笛或夜总会",
+          "lawnMower": "割草机",
+          "busyStreet": "车水马龙",
+          "conversation": "询盘",
+          "quietHome": "安静的房源",
+          "whisper": "低语",
+          "hearingThreshold": "听力阈值"
+        }
+      }
+    },
+    "safety": {
+      "title": "音频安全和隐私",
+      "intro": "请谨慎使用这些工具，了解您的手机可以测量和不能测量的内容。",
+      "playbackTitle": "安全播放",
+      "playbackBody": "从低音量开始，逐渐提高音量，让扬声器远离耳朵，如果声音不舒服，请停止。",
+      "routingTitle": "通话音频发送 ",
+      "routingBody": "扬声器清洁声音必须使用设备扬声器。立体声分离取决于连接的扬声器或耳机。",
+      "estimateTitle": "估计声级",
+      "estimateBody": "手机麦克风报告数字信号电平，而不是实验室SPL。车主端应用的预估车费因设备而异。",
+      "privacyTitle": "麦克风隐私",
+      "privacyBody": "麦克风仅在dB仪表处于活动状态时运行。样本在内存中处理，从不保存或上传。",
+      "limitationsTitle": "重要限制",
+      "limitationsBody": "此应用程序无法保证除水或除尘。请勿将物体插入扬声器，也不要将这些工具用作专业维修、校准设备、医疗建议或听力保护指南的替代品。"
     }
   },
   "paywall": {
-    "title": "解锁高级版",
-    "subtitle": "充分利用货币换算器",
+    "title": "解锁完整的音频工具包",
+    "subtitle": "清洁扬声器，访问高级控件，并删除每个广告。",
     "ctaFreeTrial": "免费试用",
     "restore": "恢复购买",
-    "terms": "服务条款",
-    "privacy": "隐私政策",
-    "then": "之后",
-    "trial": "{{count}}{{unit}}免费试用",
-    "save": "节省 {{percent}}%",
+    "terms": "服務條款",
+    "privacy": "隐私条款",
+    "then": "then",
+    "trial": "{{count}} - {{unit}}免费试用",
+    "save": "节省{{percent}} %",
     "trialUnit": {
       "day": "天",
-      "week": "周",
-      "month": "个月",
+      "week": "星期",
+      "month": "月",
       "year": "年"
     },
     "period": {
@@ -73,36 +217,40 @@
       "lifetime": "一次性购买"
     },
     "features": {
-      "liveRates": {
-        "title": "始终最新汇率",
-        "description": "汇率近实时更新，无延迟。"
+      "waterEject": {
+        "title": "完成水喷射",
+        "description": "运行30、60和90秒的扬声器清洁周期。"
       },
-      "unlimited": {
-        "title": "150+种货币，无上限",
-        "description": "添加所需的所有货币，没有限制。"
+      "waveforms": {
+        "title": "高级色调波形",
+        "description": "在整个频率范围内使用正方形、三角形和锯齿形音调。"
       },
-      "charts": {
-        "title": "完整汇率历史",
-        "description": "交互式图表帮您找到最佳换汇时机。"
+      "stereoAuto": {
+        "title": "自动立体声测试",
+        "description": "在左通道、右通道和两个通道之间免提循环。"
+      },
+      "dbStats": {
+        "title": "详细分贝统计",
+        "description": "查看每个会话的最小值、平均值和最大值。"
       },
       "adFree": {
-        "title": "零干扰",
-        "description": "无广告。纯净、专注的换算体验。"
+        "title": "零广告中断",
+        "description": "使用没有横幅或全屏广告的所有音频工具。"
       }
     },
     "feedback": {
-      "subscribeSuccess": "欢迎！您的高级版使用权限已激活。",
-      "subscribeError": "出现错误，请重试。",
-      "restoreSuccess": "订阅恢复成功！",
-      "restoreNotFound": "未找到有效订阅。",
-      "restoreError": "无法恢复购买，请重试。"
+      "subscribeSuccess": "欢迎！您的高级访问权限已激活。",
+      "subscribeError": "出错了。请重试。",
+      "restoreSuccess": "高级访问权限已成功恢复！",
+      "restoreNotFound": "未找到有效的高级购买。",
+      "restoreError": "无法恢复购买。请重试。"
     },
     "packageTitle": {
-      "day": "每日",
+      "day": "每天",
       "week": "每周",
       "month": "每月",
       "year": "每年",
-      "lifetime": "永久"
+      "lifetime": "終身"
     }
   },
   "otaUpdate": {
@@ -129,9 +277,5 @@
       "title": "私密且仅在设备上处理",
       "description": "音频处理始终在您的手机上进行，并提供清晰的安全和麦克风使用指引。"
     }
-  },
-  "premium": {
-    "accessChecking": "正在检查 Premium 访问权限…",
-    "accessUnknown": "请连接互联网以检查 Premium 访问权限。"
   }
 }

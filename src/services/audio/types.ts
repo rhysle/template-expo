@@ -1,0 +1,52 @@
+import type { PermissionStatus } from 'react-native-audio-api'
+
+export type AudioTool = 'eject' | 'tone' | 'stereo' | 'meter'
+export type ToneWaveform = 'sine' | 'square' | 'triangle' | 'sawtooth'
+export type AudioRuntimeStatus = 'idle' | 'starting' | 'running' | 'stopping' | 'error'
+export type AudioStopReason =
+  | 'completed'
+  | 'manual'
+  | 'blur'
+  | 'background'
+  | 'interruption'
+  | 'route-change'
+  | 'replaced'
+  | 'error'
+
+export type AudioResultState = 'completed' | 'interrupted' | 'idle'
+export type OutputRouteKind = 'device' | 'external' | 'unknown'
+export type StereoMode = 'manual' | 'auto'
+export type MeterBand = 'veryQuiet' | 'normal' | 'loud' | 'danger'
+export type EjectPhase = 'water' | 'debris' | 'finish'
+
+export interface MeterStats {
+  currentDb: number
+  minimumDb: number
+  averageDb: number
+  maximumDb: number
+  sampleCount: number
+  band: MeterBand
+}
+
+export interface AudioSnapshot {
+  status: AudioRuntimeStatus
+  activeTool: AudioTool | null
+  lastTool: AudioTool | null
+  stopReason: AudioStopReason | null
+  errorMessage: string | null
+  elapsedSeconds: number
+  durationSeconds: number | null
+  frequencyHz: number
+  ejectPhase: EjectPhase | null
+  stereoPan: number
+  stereoMode: StereoMode | null
+  meter: MeterStats
+  microphonePermission: PermissionStatus
+  outputRouteKind: OutputRouteKind
+  outputRouteName: string | null
+}
+
+export interface MeterStartResult {
+  permission: PermissionStatus
+  started: boolean
+}

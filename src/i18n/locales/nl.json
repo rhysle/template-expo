@@ -1,9 +1,5 @@
 {
   "common": {
-    "openSettings": "Instellingen openen",
-    "reset": "Opnieuw instellen",
-    "start": "Starten",
-    "stop": "Stoppen",
     "back": "Terug",
     "cancel": "Annuleren",
     "close": "Sluiten",
@@ -13,10 +9,19 @@
     "getStarted": "Aan de slag",
     "next": "Volgende",
     "ok": "OK",
+    "openSettings": "Instellingen openen",
+    "reset": "Opnieuw instellen",
     "retry": "Opnieuw proberen",
     "restart": "Herstart",
     "save": "Opslaan",
-    "skip": "Overslaan"
+    "skip": "Overslaan",
+    "start": "Starten",
+    "stop": "Stoppen"
+  },
+  "premium": {
+    "lockedHint": "Opent het Premium-upgradescherm",
+    "accessChecking": "Premium-toegang controleren…",
+    "accessUnknown": "Maak verbinding met internet om Premium-toegang te controleren."
   },
   "tabs": {
     "eject": "Uitwerpen",
@@ -26,8 +31,7 @@
   },
   "settings": {
     "title": "Instellingen",
-    "subtitle": "Uw valutaomrekener aanpassen",
-    "preferences": "Voorkeuren",
+    "subtitle": "Stem je luidsprekerapparatuur en geluidsmeter af",
     "support": "Ondersteuning",
     "contactSupport": "Contact opnemen",
     "contactSupportSubtitle": "We helpen u graag",
@@ -46,18 +50,158 @@
     "otaUpdateId": "Update: {{updateId}}",
     "upgradeBanner": {
       "title": "Upgrade naar Premium",
-      "subtitle": "Frequente koersupdates, geen advertenties en volledige grafiekinzage"
+      "subtitle": "Ontgrendel Water Eject, geavanceerde audiobediening en een advertentievrije ervaring"
+    },
+    "audio": {
+      "section": "Audio en meter",
+      "ejectDuration": "Reinigingsduur",
+      "durationValue": "{{count}} seconden",
+      "haptics": "Controle van de haptiek",
+      "hapticsSubtitle": "Gebruik tactiele feedback in geluidstools",
+      "safety": "Audioveiligheid en privacy",
+      "safetySubtitle": "Afspelen, microfoon en meetbegeleiding"
+    }
+  },
+  "audioTools": {
+    "common": {
+      "mascot": "Wateruitwerpmascotte",
+      "error": "Audio kon niet starten. Controleer de huidige uitvoer en probeer het opnieuw."
+    },
+    "eject": {
+      "subtitle": "Een krachtige geluidscyclus in drie fasen richt zich op opgesloten water, los stof en vuil.",
+      "safe": "Klaar om schoon te maken",
+      "completed": "Reinigingscyclus voltooid",
+      "remaining": "{{time}} resterend",
+      "start": "Beginnen met schoonmaken",
+      "stop": "Stoppen met schoonmaken",
+      "idleHint": "Plaats het apparaat met de luidsprekerzijde naar beneden voordat u begint.",
+      "runningHint": "Houd het apparaat stil en uit de buurt van uw oren.",
+      "completedHint": "Test je luidspreker en herhaal de cyclus als het geluid nog steeds gedempt is.",
+      "externalTitle": "Externe audio loskoppelen",
+      "externalBody": "Het reinigen van de luidsprekers gebeurt via de luidspreker van het apparaat, niet via de hoofdtelefoon of Bluetooth-uitgangen.",
+      "phase": {
+        "water": "Wateruitstootpuls",
+        "debris": "Stof- en vuilschudden",
+        "finish": "Afwerkingsveeg"
+      }
+    },
+    "tone": {
+      "currentFrequency": "Huidige frequentie",
+      "frequencyValue": "{{frequency}} Hz",
+      "waveformLabel": "{{waveform}} golfvorm bij {{frequency}} hertz",
+      "waveform": {
+        "label": "Golfvorm",
+        "sine": "Sinus",
+        "square": "Vierkant",
+        "triangle": "Driehoek",
+        "sawtooth": "Zaagtand"
+      },
+      "play": "Speeltoon",
+      "stop": "Stoptoon",
+      "volumeHint": "Houd het volume laag en de luidspreker uit de buurt van uw oren.",
+      "band": {
+        "veryLow": "Zeer laag",
+        "low": "Laag",
+        "midLow": "Laag-midden",
+        "mid": "Midden",
+        "high": "Hoog",
+        "veryHigh": "Zeer hoog"
+      }
+    },
+    "stereo": {
+      "auto": "Automatisch alternatief",
+      "autoHint": "Fiets naar links, rechts en beide",
+      "tapToChange": "Tik op luidsprekers om van kanaal te wisselen",
+      "start": "Test starten",
+      "helpTitle": "Stereotest gebruiken",
+      "helpTap": "Tik op de linker- of rechterluidspreker om dat kanaal onmiddellijk te testen.",
+      "helpBoth": "Schakel beide luidsprekers in om de testtoon via beide kanalen af te spelen.",
+      "helpAuto": "Gebruik Automatisch afwisselend om te schakelen tussen links, rechts en beide kanalen.",
+      "helpStop": "Gebruik Stoptest wanneer u het afspelen wilt beëindigen.",
+      "left": "Links",
+      "right": "Rechts",
+      "positionLeft": "Linkerkanaal speelt",
+      "positionCenter": "Beide kanalen spelen",
+      "positionRight": "Rechterkanaal speelt",
+      "idlePosition": "Tik op een luidspreker om te beginnen",
+      "stop": "Test stoppen"
+    },
+    "meter": {
+      "estimated": "Geschatte dB",
+      "start": "Begin met meten",
+      "stop": "Stop met meten",
+      "permissionTitle": "Microfoontoegang is uitgeschakeld",
+      "permissionBody": "Microfoontoegang wordt alleen gebruikt terwijl de dB-meter loopt om geluidsniveaus in de buurt te schatten. Audio wordt verwerkt op uw apparaat en wordt nooit opgeslagen of geüpload.",
+      "minimum": "Minimaal",
+      "average": "Gemiddeld",
+      "maximum": "Maximaal",
+      "unlockStats": "Ontgrendel gedetailleerde dB-sessiestatistieken",
+      "status": {
+        "veryQuiet": "Zeer stil",
+        "normal": "Normaal",
+        "loud": "Luid",
+        "danger": "Gevaar"
+      },
+      "description": {
+        "veryQuiet": "Bibliotheek, zachte ademhaling",
+        "normal": "Gesprek, kantoor",
+        "loud": "Drukke straat, luide muziek",
+        "danger": "Concert, sirene"
+      },
+      "help": {
+        "title": "dB Metergids",
+        "howToMeasure": "Hoe te meten",
+        "stepPlace": "Plaats de telefoon waar je het geluid wilt controleren.",
+        "stepUncovered": "Houd de microfoon onbedekt.",
+        "stepStart": "Tik op Start meten en bekijk de live schatting.",
+        "everydayLevels": "Dagelijkse geluidsniveaus",
+        "examplesApproximate": "Voorbeelden zijn bij benadering en variëren afhankelijk van de afstand.",
+        "currentEstimate": "Huidige schatting",
+        "exposureTitle": "Belichtingstijd is belangrijk",
+        "exposureDescription": "NIOSH beroepsmatige begeleiding; elke +3 dB halveert de aanbevolen tijd.",
+        "useItWell": "Gebruik het goed",
+        "tipMicrophoneTitle": "Houd de microfoon onbedekt",
+        "tipMicrophoneBody": "Bedek het apparaat niet met uw hand of tas.",
+        "tipPositionTitle": "Meet waar je luistert",
+        "tipPositionBody": "Verplaats het apparaat naar de locatie die u wilt beoordelen.",
+        "tipProtectTitle": "Als het te luid aanvoelt, bescherm dan je oren",
+        "tipProtectBody": "Ga weg van de bron of gebruik gehoorbescherming.",
+        "reference": {
+          "concertSpeaker": "Concertspreker",
+          "sirenNightclub": "Sirene of nachtclub",
+          "lawnMower": "Grasmaaier",
+          "busyStreet": "Drukke straat",
+          "conversation": "Gesprek",
+          "quietHome": "Rustig huis",
+          "whisper": "Fluisteren",
+          "hearingThreshold": "Gehoordrempel"
+        }
+      }
+    },
+    "safety": {
+      "title": "Audioveiligheid en privacy",
+      "intro": "Gebruik deze hulpmiddelen zorgvuldig en begrijp wat uw telefoon wel en niet kan meten.",
+      "playbackTitle": "Veilig afspelen",
+      "playbackBody": "Begin met een laag volume, verhoog het geleidelijk, houd de luidspreker uit de buurt van uw oren en stop als een geluid onaangenaam is.",
+      "routingTitle": "Audioroutering",
+      "routingBody": "Het luidsprekerreinigingsgeluid moet gebruik maken van de luidspreker van het apparaat. Stereoscheiding is afhankelijk van de aangesloten luidspreker of hoofdtelefoon.",
+      "estimateTitle": "Geschatte geluidsniveaus",
+      "estimateBody": "Telefoonmicrofoons rapporteren het digitale signaalniveau in plaats van laboratorium-SPL. De app hanteert een schatting die per apparaat verschilt.",
+      "privacyTitle": "Microfoonprivacy",
+      "privacyBody": "De microfoon werkt alleen als de dB-meter actief is. Monsters worden in het geheugen verwerkt en worden nooit opgeslagen of geüpload.",
+      "limitationsTitle": "Belangrijke beperkingen",
+      "limitationsBody": "Deze app kan geen water- of stofverwijdering garanderen. Steek geen voorwerpen in de luidspreker en gebruik deze gereedschappen niet als vervanging voor professionele reparaties, gekalibreerde apparatuur, medisch advies of begeleiding voor gehoorbescherming."
     }
   },
   "paywall": {
-    "title": "Premium ontgrendelen",
-    "subtitle": "Haal het maximale uit Currency Converter",
-    "ctaFreeTrial": "Gratis proberen",
+    "title": "Ontgrendel uw complete audiotoolkit",
+    "subtitle": "Maak uw luidspreker schoon, krijg toegang tot geavanceerde bedieningselementen en verwijder elke advertentie.",
+    "ctaFreeTrial": "Gratis uitproberen",
     "restore": "Aankopen herstellen",
     "terms": "Servicevoorwaarden",
     "privacy": "Privacybeleid",
-    "then": "dan",
-    "trial": "{{count}}-{{unit}} gratis proberen",
+    "then": "en vervolgens",
+    "trial": "{{count}}-{{unit}} gratis proefperiode",
     "save": "Bespaar {{percent}}%",
     "trialUnit": {
       "day": "dag",
@@ -73,36 +217,40 @@
       "lifetime": "Eenmalige aankoop"
     },
     "features": {
-      "liveRates": {
-        "title": "Altijd verse koersen",
-        "description": "Koersen worden bijna in realtime vernieuwd, zonder vertraging."
+      "waterEject": {
+        "title": "Volledige wateruitworp",
+        "description": "Voer begeleide luidsprekerreinigingscycli van 30, 60 en 90 seconden uit."
       },
-      "unlimited": {
-        "title": "Alle 150+ valuta's, geen limiet",
-        "description": "Voeg elke valuta toe die u nodig hebt, zonder beperkingen."
+      "waveforms": {
+        "title": "Geavanceerde toongolfvormen",
+        "description": "Gebruik vierkante, driehoekige en zaagtandtonen over het volledige frequentiebereik."
       },
-      "charts": {
-        "title": "Volledige koershistorie",
-        "description": "Interactieve grafieken om het beste conversiemoment te vinden."
+      "stereoAuto": {
+        "title": "Automatische stereotests",
+        "description": "Handsfree schakelen tussen links, rechts en beide kanalen."
+      },
+      "dbStats": {
+        "title": "Gedetailleerde dB-statistieken",
+        "description": "Bekijk minimum-, gemiddelde- en maximumschattingen voor elke sessie."
       },
       "adFree": {
-        "title": "Nul onderbrekingen",
-        "description": "Geen advertenties. Gewoon clean, gefocust omrekenen."
+        "title": "Geen advertentie-onderbrekingen",
+        "description": "Gebruik elke audiotool zonder banners of advertenties op volledig scherm."
       }
     },
     "feedback": {
-      "subscribeSuccess": "Welkom! Uw Premium-toegang is actief.",
-      "subscribeError": "Er ging iets fout. Probeer het opnieuw.",
-      "restoreSuccess": "Abonnement succesvol hersteld!",
-      "restoreNotFound": "Geen actief abonnement gevonden.",
-      "restoreError": "Aankopen konden niet worden hersteld. Probeer het opnieuw."
+      "subscribeSuccess": "Welkom! Uw premium toegang is actief.",
+      "subscribeError": "Er is iets misgegaan. Probeer het opnieuw.",
+      "restoreSuccess": "Premiumtoegang succesvol hersteld!",
+      "restoreNotFound": "Geen actieve Premium-aankoop gevonden.",
+      "restoreError": "Kon aankopen niet herstellen. Probeer het opnieuw."
     },
     "packageTitle": {
       "day": "Dagelijks",
       "week": "Wekelijks",
       "month": "Maandelijks",
       "year": "Jaarlijks",
-      "lifetime": "Levenslang"
+      "lifetime": "Levensduur"
     }
   },
   "otaUpdate": {
@@ -129,9 +277,5 @@
       "title": "Privé en op je apparaat",
       "description": "Audioverwerking blijft op je telefoon, met duidelijke veiligheids- en microfoonrichtlijnen."
     }
-  },
-  "premium": {
-    "accessChecking": "Premium-toegang controleren…",
-    "accessUnknown": "Maak verbinding met internet om Premium-toegang te controleren."
   }
 }

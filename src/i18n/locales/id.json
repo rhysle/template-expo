@@ -1,9 +1,5 @@
 {
   "common": {
-    "openSettings": "Buka Pengaturan",
-    "reset": "Atur Ulang",
-    "start": "Mulai",
-    "stop": "Berhenti",
     "back": "Kembali",
     "cancel": "Batal",
     "close": "Tutup",
@@ -13,10 +9,19 @@
     "getStarted": "Mulai",
     "next": "Berikutnya",
     "ok": "OK",
+    "openSettings": "Buka Pengaturan",
+    "reset": "Atur Ulang",
     "retry": "Coba lagi",
     "restart": "Mulai Ulang",
     "save": "Simpan",
-    "skip": "Lewati"
+    "skip": "Lewati",
+    "start": "Mulai",
+    "stop": "Berhenti"
+  },
+  "premium": {
+    "lockedHint": "Membuka layar peningkatan Premium",
+    "accessChecking": "Memeriksa akses Premium…",
+    "accessUnknown": "Sambungkan ke internet untuk memeriksa akses Premium."
   },
   "tabs": {
     "eject": "Keluarkan",
@@ -26,8 +31,7 @@
   },
   "settings": {
     "title": "Pengaturan",
-    "subtitle": "Sesuaikan konverter mata uang Anda",
-    "preferences": "Preferensi",
+    "subtitle": "Sesuaikan alat speaker dan pengukur suara Anda",
     "support": "Dukungan",
     "contactSupport": "Hubungi Dukungan",
     "contactSupportSubtitle": "Kami siap membantu",
@@ -45,19 +49,159 @@
     "version": "Versi {{version}}",
     "otaUpdateId": "Pembaruan: {{updateId}}",
     "upgradeBanner": {
-      "title": "Upgrade ke Premium",
-      "subtitle": "Pembaruan kurs lebih sering, tanpa iklan & akses grafik penuh"
+      "title": "Tingkatkan ke Premium",
+      "subtitle": "Buka Water Eject, kontrol audio tingkat lanjut, dan pengalaman bebas iklan"
+    },
+    "audio": {
+      "section": "Audio & Pengukur",
+      "ejectDuration": "Durasi pembersihan",
+      "durationValue": "{{count}} detik",
+      "haptics": "Kontrol haptik",
+      "hapticsSubtitle": "Gunakan umpan balik sentuhan pada alat suara",
+      "safety": "Keamanan & Privasi Audio",
+      "safetySubtitle": "Panduan pemutaran, mikrofon, dan pengukuran"
+    }
+  },
+  "audioTools": {
+    "common": {
+      "mascot": "Maskot Pelontar Air",
+      "error": "Audio tidak dapat dimulai. Periksa keluaran saat ini dan coba lagi."
+    },
+    "eject": {
+      "subtitle": "Siklus suara 3 tahap yang kuat menargetkan air yang terperangkap, debu lepas, dan serpihan.",
+      "safe": "Siap dibersihkan",
+      "completed": "Siklus pembersihan selesai",
+      "remaining": "{{time}} tersisa",
+      "start": "Mulai membersihkan",
+      "stop": "Berhenti membersihkan",
+      "idleHint": "Tempatkan speaker perangkat menghadap ke bawah sebelum memulai.",
+      "runningHint": "Jaga perangkat tetap diam dan jauh dari telinga Anda.",
+      "completedHint": "Uji speaker Anda dan ulangi siklus ini jika suaranya masih teredam.",
+      "externalTitle": "Putuskan sambungan audio eksternal",
+      "externalBody": "Pembersihan speaker dilakukan melalui speaker perangkat, bukan headphone atau output Bluetooth.",
+      "phase": {
+        "water": "Pulsa pelepas air",
+        "debris": "Debu & serpihan terguncang",
+        "finish": "Sapuan akhir"
+      }
+    },
+    "tone": {
+      "currentFrequency": "Frekuensi saat ini",
+      "frequencyValue": "{{frequency}} Hz",
+      "waveformLabel": "{{waveform}} bentuk gelombang pada {{frequency}} hertz",
+      "waveform": {
+        "label": "Bentuk Gelombang",
+        "sine": "Sinus",
+        "square": "Kotak",
+        "triangle": "Segitiga",
+        "sawtooth": "Gigi Gergaji"
+      },
+      "play": "Memutar nada",
+      "stop": "Hentikan nada",
+      "volumeHint": "Jaga volume tetap rendah dan jauhkan speaker dari telinga Anda.",
+      "band": {
+        "veryLow": "Sangat rendah",
+        "low": "Rendah",
+        "midLow": "Rendah-menengah",
+        "mid": "Pertengahan",
+        "high": "Tinggi",
+        "veryHigh": "Sangat tinggi"
+      }
+    },
+    "stereo": {
+      "auto": "Alternatif otomatis",
+      "autoHint": "Putar ke kiri, kanan, dan keduanya",
+      "tapToChange": "Ketuk speaker untuk mengganti saluran",
+      "start": "Mulai pengujian",
+      "helpTitle": "Cara menggunakan Tes Stereo",
+      "helpTap": "Ketuk speaker kiri atau kanan untuk segera menguji saluran tersebut.",
+      "helpBoth": "Nyalakan kedua speaker untuk memutar nada uji melalui kedua saluran.",
+      "helpAuto": "Gunakan Alternatif otomatis untuk beralih antara saluran kiri, kanan, dan kedua.",
+      "helpStop": "Gunakan tes Berhenti kapan pun Anda ingin mengakhiri pemutaran.",
+      "left": "Kiri",
+      "right": "Benar",
+      "positionLeft": "Saluran kiri diputar",
+      "positionCenter": "Kedua saluran diputar",
+      "positionRight": "Pemutaran saluran kanan",
+      "idlePosition": "Ketuk speaker untuk memulai",
+      "stop": "Hentikan pengujian"
+    },
+    "meter": {
+      "estimated": "Perkiraan dB",
+      "start": "Mulai mengukur",
+      "stop": "Berhenti mengukur",
+      "permissionTitle": "Akses mikrofon nonaktif",
+      "permissionBody": "Akses mikrofon hanya digunakan saat dB Meter berjalan untuk memperkirakan tingkat suara di sekitar. Audio diproses di perangkat Anda dan tidak pernah disimpan atau diunggah.",
+      "minimum": "Minimal",
+      "average": "Rata-rata",
+      "maximum": "Maksimal",
+      "unlockStats": "Buka statistik sesi dB mendetail",
+      "status": {
+        "veryQuiet": "Sangat sepi",
+        "normal": "Biasa",
+        "loud": "Keras",
+        "danger": "Bahaya"
+      },
+      "description": {
+        "veryQuiet": "Perpustakaan, nafas lembut",
+        "normal": "Percakapan, kantor",
+        "loud": "Jalanan sibuk, musik keras",
+        "danger": "Konser, sirene"
+      },
+      "help": {
+        "title": "panduan pengukur dB",
+        "howToMeasure": "Cara mengukur",
+        "stepPlace": "Letakkan ponsel di tempat yang ingin Anda periksa suaranya.",
+        "stepUncovered": "Biarkan mikrofon tetap terbuka.",
+        "stepStart": "Ketuk Mulai mengukur dan tonton perkiraan langsungnya.",
+        "everydayLevels": "Tingkat suara sehari-hari",
+        "examplesApproximate": "Contohnya merupakan perkiraan dan bervariasi menurut jarak.",
+        "currentEstimate": "Perkiraan saat ini",
+        "exposureTitle": "Waktu pemaparan penting",
+        "exposureDescription": "bimbingan kerja NIOSH; setiap +3 dB mengurangi separuh waktu yang disarankan.",
+        "useItWell": "Gunakan dengan baik",
+        "tipMicrophoneTitle": "Biarkan mikrofon tetap terbuka",
+        "tipMicrophoneBody": "Hindari menutupinya dengan tangan atau tas Anda.",
+        "tipPositionTitle": "Ukur di mana Anda mendengarkan",
+        "tipPositionBody": "Pindahkan perangkat ke lokasi yang ingin Anda nilai.",
+        "tipProtectTitle": "Jika terasa terlalu keras, lindungi telinga Anda",
+        "tipProtectBody": "Menjauhlah dari sumbernya atau gunakan pelindung pendengaran.",
+        "reference": {
+          "concertSpeaker": "Pembicara konser",
+          "sirenNightclub": "Sirene atau klub malam",
+          "lawnMower": "Mesin pemotong rumput",
+          "busyStreet": "Jalan yang sibuk",
+          "conversation": "Percakapan",
+          "quietHome": "Rumah yang tenang",
+          "whisper": "Bisikan",
+          "hearingThreshold": "Ambang batas pendengaran"
+        }
+      }
+    },
+    "safety": {
+      "title": "Keamanan & Privasi Audio",
+      "intro": "Gunakan alat ini dengan hati-hati dan pahami apa yang dapat—dan tidak bisa—diukur oleh ponsel Anda.",
+      "playbackTitle": "Pemutaran aman",
+      "playbackBody": "Mulailah dengan volume rendah, naikkan secara bertahap, jauhkan speaker dari telinga Anda, dan hentikan jika terdengar suara yang tidak nyaman.",
+      "routingTitle": "Perutean audio",
+      "routingBody": "Suara pembersih speaker harus menggunakan speaker perangkat. Pemisahan stereo tergantung pada speaker atau headphone yang terhubung.",
+      "estimateTitle": "Perkiraan tingkat suara",
+      "estimateBody": "Mikrofon ponsel melaporkan tingkat sinyal digital, bukan SPL laboratorium. Aplikasi ini menerapkan perkiraan yang bervariasi berdasarkan perangkat.",
+      "privacyTitle": "Privasi mikrofon",
+      "privacyBody": "Mikrofon hanya bekerja saat dB Meter aktif. Sampel diproses dalam memori dan tidak pernah disimpan atau diunggah.",
+      "limitationsTitle": "Batasan penting",
+      "limitationsBody": "Aplikasi ini tidak dapat menjamin penghilangan air atau debu. Jangan memasukkan benda ke dalam speaker, dan jangan gunakan alat ini sebagai pengganti perbaikan profesional, peralatan yang dikalibrasi, nasihat medis, atau panduan perlindungan pendengaran."
     }
   },
   "paywall": {
-    "title": "Buka Kunci Premium",
-    "subtitle": "Manfaatkan Currency Converter sepenuhnya",
+    "title": "Buka Kunci Perangkat Audio Lengkap Anda",
+    "subtitle": "Bersihkan speaker Anda, akses kontrol lanjutan, dan hapus setiap iklan.",
     "ctaFreeTrial": "Coba Gratis",
     "restore": "Pulihkan Pembelian",
-    "terms": "Syarat Layanan",
+    "terms": "Persyaratan Layanan",
     "privacy": "Kebijakan Privasi",
     "then": "lalu",
-    "trial": "Uji coba gratis {{count}} {{unit}}",
+    "trial": "{{count}}-{{unit}} uji coba gratis",
     "save": "Hemat {{percent}}%",
     "trialUnit": {
       "day": "hari",
@@ -70,35 +214,39 @@
       "week": "per minggu",
       "month": "per bulan",
       "year": "per tahun",
-      "lifetime": "Pembelian sekali bayar"
+      "lifetime": "Pembelian satu kali"
     },
     "features": {
-      "liveRates": {
-        "title": "Kurs Selalu Segar",
-        "description": "Kurs diperbarui hampir real-time, tanpa keterlambatan."
+      "waterEject": {
+        "title": "Selesaikan Pengeluaran Air",
+        "description": "Jalankan siklus pembersihan speaker terpandu selama 30, 60, dan 90 detik."
       },
-      "unlimited": {
-        "title": "Semua 150+ Mata Uang, Tanpa Batas",
-        "description": "Tambahkan semua mata uang yang Anda butuhkan, tanpa batasan."
+      "waveforms": {
+        "title": "Bentuk Gelombang Nada Tingkat Lanjut",
+        "description": "Gunakan nada persegi, segitiga, dan gigi gergaji pada seluruh rentang frekuensi."
       },
-      "charts": {
-        "title": "Riwayat Kurs Lengkap",
-        "description": "Grafik interaktif untuk menemukan waktu terbaik untuk mengkonversi."
+      "stereoAuto": {
+        "title": "Pengujian Stereo Otomatis",
+        "description": "Beralih antara kiri, kanan, dan kedua saluran secara handsfree."
+      },
+      "dbStats": {
+        "title": "Statistik dB Terperinci",
+        "description": "Lihat perkiraan minimum, rata-rata, dan maksimum untuk setiap sesi."
       },
       "adFree": {
-        "title": "Tanpa Gangguan",
-        "description": "Tanpa iklan. Hanya konversi yang bersih dan terfokus."
+        "title": "Tanpa Gangguan Iklan",
+        "description": "Gunakan semua alat audio tanpa spanduk atau iklan layar penuh."
       }
     },
     "feedback": {
-      "subscribeSuccess": "Selamat datang! Akses Premium Anda aktif.",
-      "subscribeError": "Terjadi kesalahan. Silakan coba lagi.",
-      "restoreSuccess": "Langganan berhasil dipulihkan!",
-      "restoreNotFound": "Tidak ada langganan aktif yang ditemukan.",
+      "subscribeSuccess": "Selamat datang! Akses premium Anda aktif.",
+      "subscribeError": "Ada yang tidak beres. Silakan coba lagi.",
+      "restoreSuccess": "Akses premium berhasil dipulihkan!",
+      "restoreNotFound": "Tidak ditemukan pembelian Premium aktif.",
       "restoreError": "Tidak dapat memulihkan pembelian. Silakan coba lagi."
     },
     "packageTitle": {
-      "day": "Harian",
+      "day": "Setiap hari",
       "week": "Mingguan",
       "month": "Bulanan",
       "year": "Tahunan",
@@ -129,9 +277,5 @@
       "title": "Pribadi dan di perangkat Anda",
       "description": "Pemrosesan audio tetap di ponsel Anda, dengan panduan keselamatan dan mikrofon yang jelas."
     }
-  },
-  "premium": {
-    "accessChecking": "Memeriksa akses Premium…",
-    "accessUnknown": "Sambungkan ke internet untuk memeriksa akses Premium."
   }
 }

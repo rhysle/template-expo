@@ -1,9 +1,5 @@
 {
   "common": {
-    "openSettings": "Beállítások megnyitása",
-    "reset": "Visszaállítás",
-    "start": "Indítás",
-    "stop": "Leállítás",
     "back": "Vissza",
     "cancel": "Mégse",
     "close": "Bezárás",
@@ -13,10 +9,19 @@
     "getStarted": "Kezdjük el",
     "next": "Következő",
     "ok": "OK",
+    "openSettings": "Beállítások megnyitása",
+    "reset": "Visszaállítás",
     "retry": "Újrapróbálás",
     "restart": "Újraindítás",
     "save": "Mentés",
-    "skip": "Kihagyás"
+    "skip": "Kihagyás",
+    "start": "Indítás",
+    "stop": "Leállítás"
+  },
+  "premium": {
+    "lockedHint": "Megnyitja a Premium frissítési képernyőt",
+    "accessChecking": "Premium-hozzáférés ellenőrzése…",
+    "accessUnknown": "Csatlakozz az internethez a Premium-hozzáférés ellenőrzéséhez."
   },
   "tabs": {
     "eject": "Kilökés",
@@ -26,8 +31,7 @@
   },
   "settings": {
     "title": "Beállítások",
-    "subtitle": "Valutaváltójának testreszabása",
-    "preferences": "Beállítások",
+    "subtitle": "Hangolja be hangszóróit és hangmérőjét",
     "support": "Támogatás",
     "contactSupport": "Kapcsolatfelvétel a támogatással",
     "contactSupportSubtitle": "Segítségre készen állunk",
@@ -45,20 +49,160 @@
     "version": "{{version}} verzió",
     "otaUpdateId": "Frissítés: {{updateId}}",
     "upgradeBanner": {
-      "title": "Frissítsen Prémiumra",
-      "subtitle": "Gyakori árfolyamfrissítések, nincs reklám és teljes grafikonhozzáférés"
+      "title": "Frissítés Premiumra",
+      "subtitle": "Oldja fel a vízkidobást, a fejlett hangvezérlést és a reklámmentes élményt"
+    },
+    "audio": {
+      "section": "Hang és mérő",
+      "ejectDuration": "A tisztítás időtartama",
+      "durationValue": "{{count}} másodperc",
+      "haptics": "A haptika szabályozása",
+      "hapticsSubtitle": "Használjon tapintható visszajelzést a hangeszközökben",
+      "safety": "Hangbiztonság és adatvédelem",
+      "safetySubtitle": "Lejátszási, mikrofon- és mérési útmutató"
+    }
+  },
+  "audioTools": {
+    "common": {
+      "mascot": "Vízkidobó kabalája",
+      "error": "A hangot nem sikerült elindítani. Ellenőrizze az aktuális kimenetet, és próbálja újra."
+    },
+    "eject": {
+      "subtitle": "Egy erőteljes, 3 fokozatú hangciklus a beszorult vizet, laza port és törmeléket célozza meg.",
+      "safe": "Tisztításra kész",
+      "completed": "A tisztítási ciklus befejeződött",
+      "remaining": "{{time}} maradt",
+      "start": "Kezdje el a takarítást",
+      "stop": "Hagyja abba a takarítást",
+      "idleHint": "Indítás előtt helyezze az eszközt a hangszóróval lefelé.",
+      "runningHint": "Tartsa a készüléket mozdulatlanul, távol a fülétől.",
+      "completedHint": "Tesztelje a hangszórót, és ismételje meg a ciklust, ha a hang továbbra is tompa.",
+      "externalTitle": "A külső hang leválasztása",
+      "externalBody": "A hangszórók tisztítása az eszköz hangszóróján keresztül működik, nem a fejhallgatón vagy a Bluetooth-kimeneteken keresztül.",
+      "phase": {
+        "water": "Vízkidobó impulzus",
+        "debris": "Por és törmelék rázása",
+        "finish": "Seprés befejezése"
+      }
+    },
+    "tone": {
+      "currentFrequency": "Aktuális frekvencia",
+      "frequencyValue": "{{frequency}} Hz",
+      "waveformLabel": "{{waveform}} hullámforma {{frequency}} hertznél",
+      "waveform": {
+        "label": "Hullámforma",
+        "sine": "Sine",
+        "square": "Négyzet",
+        "triangle": "Háromszög",
+        "sawtooth": "Fűrészfog"
+      },
+      "play": "Lejátszási hang",
+      "stop": "Leállító hang",
+      "volumeHint": "Tartsa alacsonyan a hangerőt, és tartsa távol a hangszórót a fülétől.",
+      "band": {
+        "veryLow": "Nagyon alacsony",
+        "low": "Alacsony",
+        "midLow": "Alacsony-közép",
+        "mid": "Közép",
+        "high": "Magas",
+        "veryHigh": "Nagyon magas"
+      }
+    },
+    "stereo": {
+      "auto": "Automatikus alternatíva",
+      "autoHint": "Biciklizés balra, jobbra és mindkettőre",
+      "tapToChange": "Koppintson a hangszórókra a csatornaváltáshoz",
+      "start": "Teszt indítása",
+      "helpTitle": "A sztereóteszt használata",
+      "helpTap": "Koppintson a bal vagy jobb hangszóróra a csatorna azonnali teszteléséhez.",
+      "helpBoth": "Kapcsolja be mindkét hangszórót a teszthang mindkét csatornán történő lejátszásához.",
+      "helpAuto": "Használja az Automatikus váltakozást a bal, jobb és mindkét csatorna közötti váltáshoz.",
+      "helpStop": "Használja a Teszt leállítása funkciót, amikor le szeretné állítani a lejátszást.",
+      "left": "Balra",
+      "right": "Jobbra",
+      "positionLeft": "Lejátszás a bal csatornáról",
+      "positionCenter": "Mindkét csatorna lejátszása",
+      "positionRight": "A megfelelő csatorna lejátszása",
+      "idlePosition": "A kezdéshez koppintson egy hangszóróra",
+      "stop": "Teszt leállítása"
+    },
+    "meter": {
+      "estimated": "Becsült dB",
+      "start": "Kezdje el a mérést",
+      "stop": "A mérés leállítása",
+      "permissionTitle": "A mikrofon hozzáférés ki van kapcsolva",
+      "permissionBody": "A mikrofonhoz való hozzáférés csak a dB-mérő működése közben használható a közeli hangszintek becslésére. A hangot az eszközöd dolgozza fel, és soha nem menti vagy tölti fel.",
+      "minimum": "Minimum",
+      "average": "Átlagos",
+      "maximum": "Maximum",
+      "unlockStats": "Részletes dB munkamenet-statisztikák feloldása",
+      "status": {
+        "veryQuiet": "Nagyon csendes",
+        "normal": "Normál",
+        "loud": "Hangos",
+        "danger": "Veszély"
+      },
+      "description": {
+        "veryQuiet": "Könyvtár, lágy légzés",
+        "normal": "Beszélgetés, iroda",
+        "loud": "Forgalmas utca, hangos zene",
+        "danger": "Koncert, sziréna"
+      },
+      "help": {
+        "title": "dB mérőműszer",
+        "howToMeasure": "A mérés módja",
+        "stepPlace": "Helyezze a telefont oda, ahol ellenőrizni szeretné a hangot.",
+        "stepUncovered": "Tartsa fedetlenül a mikrofont.",
+        "stepStart": "Koppintson a Mérés indítása elemre, és nézze meg az élő becslést.",
+        "everydayLevels": "Mindennapi hangszintek",
+        "examplesApproximate": "A példák hozzávetőlegesek, és a távolság függvényében változnak.",
+        "currentEstimate": "Jelenlegi becslés",
+        "exposureTitle": "Az expozíciós idő számít",
+        "exposureDescription": "NIOSH foglalkozási tanácsadás; minden +3 dB felére csökkenti az ajánlott időt.",
+        "useItWell": "Használd jól",
+        "tipMicrophoneTitle": "Tartsa fedetlenül a mikrofont",
+        "tipMicrophoneBody": "Ne takarja el a kezével vagy a tokkal.",
+        "tipPositionTitle": "Mérje meg, hol hallgat",
+        "tipPositionBody": "Vigye az eszközt arra a helyre, amelyet értékelni szeretne.",
+        "tipProtectTitle": "Ha túl hangosnak érzi magát, védje a fülét",
+        "tipProtectBody": "Menjen távolabb a forrástól, vagy használjon hallásvédőt.",
+        "reference": {
+          "concertSpeaker": "Koncert hangszóró",
+          "sirenNightclub": "Sziréna vagy szórakozóhely",
+          "lawnMower": "Fűnyíró",
+          "busyStreet": "Forgalmas utca",
+          "conversation": "Beszélgetés",
+          "quietHome": "Csendes otthon",
+          "whisper": "Suttogás",
+          "hearingThreshold": "Hallásküszöb"
+        }
+      }
+    },
+    "safety": {
+      "title": "Hangbiztonság és adatvédelem",
+      "intro": "Használja ezeket az eszközöket körültekintően, és értse meg, mit képes és mit nem mér a telefonja.",
+      "playbackTitle": "Biztonságos lejátszás",
+      "playbackBody": "Kezdje alacsony hangerővel, fokozatosan emelje fel, tartsa távol a hangszórót a fülétől, és hagyja abba, ha egy hang kellemetlen.",
+      "routingTitle": "Hangtovábbítás",
+      "routingBody": "A hangszóró-tisztító hangnak az eszköz hangszóróját kell használnia. A sztereó szétválasztás a csatlakoztatott hangszórótól vagy fejhallgatótól függ.",
+      "estimateTitle": "Becsült hangszintek",
+      "estimateBody": "A telefonmikrofonok digitális jelszintet jeleznek, nem pedig laboratóriumi SPL-t. Az alkalmazás eszközönként változó becslést alkalmaz.",
+      "privacyTitle": "Mikrofon adatvédelem",
+      "privacyBody": "A mikrofon csak akkor működik, ha a dB-mérő aktív. A mintákat a memóriában dolgozzák fel, és soha nem mentik vagy töltik fel.",
+      "limitationsTitle": "Fontos korlátozások",
+      "limitationsBody": "Ez az alkalmazás nem garantálja a víz és a por eltávolítását. Ne helyezzen tárgyakat a hangszóróba, és ne használja ezeket az eszközöket professzionális javítások, kalibrált berendezések, orvosi tanácsadás vagy hallásvédelmi útmutatás helyett."
     }
   },
   "paywall": {
-    "title": "Prémium feloldása",
-    "subtitle": "Hozza ki a legtöbbet a Currency Converterből",
-    "ctaFreeTrial": "Próbálja ki ingyen",
+    "title": "Oldja fel a teljes audioeszközkészletet",
+    "subtitle": "Tisztítsa meg a hangszórót, érje el a speciális vezérlőket, és távolítson el minden hirdetést.",
+    "ctaFreeTrial": "Próbáld ki ingyen",
     "restore": "Vásárlások visszaállítása",
-    "terms": "Felhasználási feltételek",
+    "terms": "Általános Szerződési Feltételek",
     "privacy": "Adatvédelmi irányelvek",
     "then": "majd",
     "trial": "{{count}}-{{unit}} ingyenes próbaverzió",
-    "save": "{{percent}}% megtakarítás",
+    "save": "Mentés {{percent}}%",
     "trialUnit": {
       "day": "nap",
       "week": "hét",
@@ -73,36 +217,40 @@
       "lifetime": "Egyszeri vásárlás"
     },
     "features": {
-      "liveRates": {
-        "title": "Mindig friss árfolyamok",
-        "description": "Az árfolyamok közel valós időben frissülnek, késedelem nélkül."
+      "waterEject": {
+        "title": "Teljes vízkidobás",
+        "description": "Futtasson irányított 30, 60 és 90 másodperces hangszóró-tisztítási ciklusokat."
       },
-      "unlimited": {
-        "title": "Minden 150+ valuta, korlát nélkül",
-        "description": "Adjon hozzá minden szükséges valutát, korlátozás nélkül."
+      "waveforms": {
+        "title": "Speciális hanghullámformák",
+        "description": "Használjon négyzet, háromszög és fűrészfog hangokat a teljes frekvenciatartományban."
       },
-      "charts": {
-        "title": "Teljes árfolyamtörténet",
-        "description": "Interaktív grafikonok a legjobb átváltási idő megtalálásához."
+      "stereoAuto": {
+        "title": "Automatikus sztereóteszt",
+        "description": "Váltson a bal, jobb és mindkét csatorna között kihangosítva."
+      },
+      "dbStats": {
+        "title": "Részletes dB statisztika",
+        "description": "Tekintse meg a minimális, átlagos és maximális becsléseket minden munkamenethez."
       },
       "adFree": {
-        "title": "Nulla megszakítás",
-        "description": "Nincs reklám. Csak tiszta, koncentrált átváltás."
+        "title": "Zéró hirdetésmegszakítás",
+        "description": "Használjon minden hangeszközt szalaghirdetések vagy teljes képernyős hirdetések nélkül."
       }
     },
     "feedback": {
-      "subscribeSuccess": "Üdvözöljük! A prémium hozzáférése aktív.",
-      "subscribeError": "Valami hiba történt. Kérjük, próbálja újra.",
-      "restoreSuccess": "Az előfizetés sikeresen visszaállítva!",
-      "restoreNotFound": "Nem található aktív előfizetés.",
+      "subscribeSuccess": "Üdvözlünk! Prémium hozzáférése aktív.",
+      "subscribeError": "Hiba történt. Kérjük, próbálja újra.",
+      "restoreSuccess": "A prémium hozzáférés sikeresen visszaállítva!",
+      "restoreNotFound": "Nem található aktív prémium vásárlás.",
       "restoreError": "Nem sikerült visszaállítani a vásárlásokat. Kérjük, próbálja újra."
     },
     "packageTitle": {
-      "day": "Napi",
-      "week": "Heti",
+      "day": "Naponta",
+      "week": "Hetente",
       "month": "Havi",
-      "year": "Éves",
-      "lifetime": "Élethosszig"
+      "year": "Évente",
+      "lifetime": "Élettartam"
     }
   },
   "otaUpdate": {
@@ -129,9 +277,5 @@
       "title": "Privát és az eszközén marad",
       "description": "A hangfeldolgozás a telefonján marad, egyértelmű biztonsági és mikrofonhasználati útmutatóval."
     }
-  },
-  "premium": {
-    "accessChecking": "Premium-hozzáférés ellenőrzése…",
-    "accessUnknown": "Csatlakozz az internethez a Premium-hozzáférés ellenőrzéséhez."
   }
 }

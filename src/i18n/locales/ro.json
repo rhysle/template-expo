@@ -1,9 +1,5 @@
 {
   "common": {
-    "openSettings": "Deschide setările",
-    "reset": "Resetează",
-    "start": "Pornește",
-    "stop": "Oprește",
     "back": "Înapoi",
     "cancel": "Anulează",
     "close": "Închide",
@@ -13,10 +9,19 @@
     "getStarted": "Începe",
     "next": "Înainte",
     "ok": "OK",
+    "openSettings": "Deschide setările",
+    "reset": "Resetează",
     "retry": "Încearcă din nou",
     "restart": "Repornește",
     "save": "Salvează",
-    "skip": "Omite"
+    "skip": "Omite",
+    "start": "Pornește",
+    "stop": "Oprește"
+  },
+  "premium": {
+    "lockedHint": "Deschide ecranul de upgrade Premium",
+    "accessChecking": "Se verifică accesul Premium…",
+    "accessUnknown": "Conectează-te la internet pentru a verifica accesul Premium."
   },
   "tabs": {
     "eject": "Elimină",
@@ -26,8 +31,7 @@
   },
   "settings": {
     "title": "Setări",
-    "subtitle": "Personalizează convertorul tău de valute",
-    "preferences": "Preferințe",
+    "subtitle": "Reglați instrumentele difuzoarelor și sunetmetrul",
     "support": "Suport",
     "contactSupport": "Contactează suportul",
     "contactSupportSubtitle": "Suntem aici să ajutăm",
@@ -45,20 +49,160 @@
     "version": "Versiunea {{version}}",
     "otaUpdateId": "Actualizare: {{updateId}}",
     "upgradeBanner": {
-      "title": "Fă upgrade la Premium",
-      "subtitle": "Actualizări frecvente ale cursurilor, fără reclame și acces complet la grafice"
+      "title": "Faceți upgrade la Premium",
+      "subtitle": "Deblocați evacuarea apei, comenzile audio avansate și o experiență fără anunțuri"
+    },
+    "audio": {
+      "section": "Audio și contor",
+      "ejectDuration": "Durata curățării",
+      "durationValue": "{{count}} secunde",
+      "haptics": "Controlați tactila",
+      "hapticsSubtitle": "Utilizați feedbackul tactil în instrumentele de sunet",
+      "safety": "Siguranță și confidențialitate audio",
+      "safetySubtitle": "Îndrumări pentru redare, microfon și măsurare"
+    }
+  },
+  "audioTools": {
+    "common": {
+      "mascot": "Mascota de evacuare a apei",
+      "error": "Audio nu a putut porni. Verificați ieșirea curentă și încercați din nou."
+    },
+    "eject": {
+      "subtitle": "Un ciclu sonor puternic în 3 etape vizează apa prinsă, praful slăbit și resturile.",
+      "safe": "Gata de curățat",
+      "completed": "Ciclul de curățare finalizat",
+      "remaining": "{{time}} rămas",
+      "start": "Începeți curățarea",
+      "stop": "Opriți curățarea",
+      "idleHint": "Așezați dispozitivul cu difuzorul în jos înainte de a începe.",
+      "runningHint": "Țineți dispozitivul nemișcat și departe de urechi.",
+      "completedHint": "Testați difuzorul și repetați ciclul dacă sunetul este încă înăbușit.",
+      "externalTitle": "Deconectați sunetul extern",
+      "externalBody": "Curățarea difuzoarelor funcționează prin difuzorul dispozitivului, nu prin căști sau prin ieșirile Bluetooth.",
+      "phase": {
+        "water": "Puls de evacuare a apei",
+        "debris": "Se agită praf și resturi",
+        "finish": "Finalizare măturare"
+      }
+    },
+    "tone": {
+      "currentFrequency": "Frecvența curentă",
+      "frequencyValue": "{{frequency}} Hz",
+      "waveformLabel": "{{waveform}} formă de undă la {{frequency}} hertzi",
+      "waveform": {
+        "label": "Formă de undă",
+        "sine": "Sine",
+        "square": "Pătrat",
+        "triangle": "Triunghi",
+        "sawtooth": "Dinți de ferăstrău"
+      },
+      "play": "Ton de redare",
+      "stop": "Ton de oprire",
+      "volumeHint": "Țineți volumul scăzut și difuzorul departe de urechi.",
+      "band": {
+        "veryLow": "Foarte scăzut",
+        "low": "Scăzut",
+        "midLow": "joasă-medie",
+        "mid": "mijlocul",
+        "high": "Mare",
+        "veryHigh": "Foarte mare"
+      }
+    },
+    "stereo": {
+      "auto": "Alternare automată",
+      "autoHint": "Mergeți la stânga, la dreapta și ambele",
+      "tapToChange": "Atingeți difuzoare pentru a schimba canalele",
+      "start": "Începe testul",
+      "helpTitle": "Cum se utilizează Testul stereo",
+      "helpTap": "Atingeți difuzorul din stânga sau din dreapta pentru a testa canalul respectiv imediat.",
+      "helpBoth": "Porniți ambele difuzoare pentru a reda tonul de testare prin ambele canale.",
+      "helpAuto": "Utilizați Alternarea automată pentru a comuta între stânga, dreapta și ambele canale.",
+      "helpStop": "Folosiți Opriți testul oricând doriți să opriți redarea.",
+      "left": "Stânga",
+      "right": "Corect",
+      "positionLeft": "Canal stânga în redare",
+      "positionCenter": "Se redă ambele canale",
+      "positionRight": "Se redă canalul din dreapta",
+      "idlePosition": "Atingeți un difuzor pentru a începe",
+      "stop": "Opriți testul"
+    },
+    "meter": {
+      "estimated": "dB estimat",
+      "start": "Începeți măsurarea",
+      "stop": "Nu mai măsurați",
+      "permissionTitle": "Accesul la microfon este dezactivat",
+      "permissionBody": "Accesul la microfon este utilizat numai în timp ce dB Meter funcționează pentru a estima nivelurile de sunet din apropiere. Audio este procesat pe dispozitivul dvs. și nu este niciodată salvat sau încărcat.",
+      "minimum": "Minimum",
+      "average": "Medie",
+      "maximum": "Maxim",
+      "unlockStats": "Deblocați statistici detaliate privind sesiunile dB",
+      "status": {
+        "veryQuiet": "Foarte silențios",
+        "normal": "Normal",
+        "loud": "Tare",
+        "danger": "Pericol"
+      },
+      "description": {
+        "veryQuiet": "Bibliotecă, respirație blândă",
+        "normal": "Conversație, birou",
+        "loud": "Stradă aglomerată, muzică tare",
+        "danger": "Concert, sirenă"
+      },
+      "help": {
+        "title": "Ghid pentru contorul dB",
+        "howToMeasure": "Cum se măsoară",
+        "stepPlace": "Plasați telefonul unde doriți să verificați sunetul.",
+        "stepUncovered": "Țineți microfonul descoperit.",
+        "stepStart": "Atingeți Începeți măsurarea și urmăriți estimarea în direct.",
+        "everydayLevels": "Nivelurile de sunet zilnice",
+        "examplesApproximate": "Exemplele sunt aproximative și variază în funcție de distanță.",
+        "currentEstimate": "Estimarea curentă",
+        "exposureTitle": "Timpul de expunere contează",
+        "exposureDescription": "NIOSH orientare ocupațională; fiecare +3 dB înjumătăţeşte timpul recomandat.",
+        "useItWell": "Folosește-l bine",
+        "tipMicrophoneTitle": "Păstrați microfonul descoperit",
+        "tipMicrophoneBody": "Evitați să-l acoperiți cu mâna sau cu carcasa.",
+        "tipPositionTitle": "Măsurați unde ascultați",
+        "tipPositionBody": "Mutați dispozitivul în locația pe care doriți să o evaluați.",
+        "tipProtectTitle": "Dacă se simte prea tare, protejează-ți urechile",
+        "tipProtectBody": "Îndepărtați-vă de sursă sau folosiți protecție pentru auz.",
+        "reference": {
+          "concertSpeaker": "Difuzor concert",
+          "sirenNightclub": "Sirenă sau club de noapte",
+          "lawnMower": "Mașină de tuns iarba",
+          "busyStreet": "Stradă aglomerată",
+          "conversation": "Conversație",
+          "quietHome": "Acasă liniștită",
+          "whisper": "Şoaptă",
+          "hearingThreshold": "Pragul de auz"
+        }
+      }
+    },
+    "safety": {
+      "title": "Siguranță audio și confidențialitate",
+      "intro": "Folosiți aceste instrumente cu atenție și înțelegeți ce poate și ce nu poate măsura telefonul dvs.",
+      "playbackTitle": "Redare sigură",
+      "playbackBody": "Începeți la volum scăzut, ridicați-l treptat, țineți difuzorul departe de urechi și opriți-vă dacă un sunet este inconfortabil.",
+      "routingTitle": "Dirijare audio",
+      "routingBody": "Sunetul de curățare a difuzoarelor trebuie să utilizeze difuzorul dispozitivului. Separarea stereo depinde de difuzorul sau căștile conectate.",
+      "estimateTitle": "Niveluri de sunet estimate",
+      "estimateBody": "Microfoanele telefonului raportează nivelul semnalului digital mai degrabă decât SPL de laborator. Aplicația aplică o estimare care variază în funcție de dispozitiv.",
+      "privacyTitle": "Confidențialitatea microfonului",
+      "privacyBody": "Microfonul funcționează numai când dB Meter este activ. Mostrele sunt procesate în memorie și nu sunt niciodată salvate sau încărcate.",
+      "limitationsTitle": "Limitări importante",
+      "limitationsBody": "Această aplicație nu poate garanta eliminarea apei sau a prafului. Nu introduceți obiecte în difuzor și nu utilizați aceste instrumente ca înlocuitor pentru reparații profesionale, echipamente calibrate, sfaturi medicale sau îndrumări de protecție a auzului."
     }
   },
   "paywall": {
-    "title": "Deblochează Premium",
-    "subtitle": "Profită la maximum de Currency Converter",
-    "ctaFreeTrial": "Încearcă gratuit",
-    "restore": "Restaurează achizițiile",
-    "terms": "Termeni de serviciu",
-    "privacy": "Politică de confidențialitate",
+    "title": "Deblocați setul dvs. complet de instrumente audio",
+    "subtitle": "Curățați-vă difuzorul, accesați comenzi avansate și eliminați fiecare anunț.",
+    "ctaFreeTrial": "Încercați gratuit",
+    "restore": "Restabiliți achizițiile",
+    "terms": "Termeni și condiții",
+    "privacy": "Politica de confidențialitate",
     "then": "apoi",
-    "trial": "Perioadă de probă gratuită {{count}}-{{unit}}",
-    "save": "Economisește {{percent}} %",
+    "trial": "{{count}}-{{unit}} încercare gratuită",
+    "save": "Salvați {{percent}}%",
     "trialUnit": {
       "day": "zi",
       "week": "săptămână",
@@ -73,36 +217,40 @@
       "lifetime": "Achiziție unică"
     },
     "features": {
-      "liveRates": {
-        "title": "Cursuri întotdeauna proaspete",
-        "description": "Cursurile se actualizează aproape în timp real, fără întârziere."
+      "waterEject": {
+        "title": "Evacuarea completă a apei",
+        "description": "Rulați cicluri ghidate de curățare a difuzoarelor de 30, 60 și 90 de secunde."
       },
-      "unlimited": {
-        "title": "Toate cele 150+ valute, fără limită",
-        "description": "Adaugă orice valută ai nevoie, fără restricții."
+      "waveforms": {
+        "title": "Forme de undă ton avansate",
+        "description": "Folosiți tonuri pătrate, triunghiulare și dinți de ferăstrău pe întregul interval de frecvență."
       },
-      "charts": {
-        "title": "Istoricul complet al cursurilor",
-        "description": "Grafice interactive pentru a găsi cel mai bun moment de conversie."
+      "stereoAuto": {
+        "title": "Testare stereo automată",
+        "description": "Comutați între stânga, dreapta și ambele canale fără mâini."
+      },
+      "dbStats": {
+        "title": "Statistici detaliate dB",
+        "description": "Vedeți estimările minime, medii și maxime pentru fiecare sesiune."
       },
       "adFree": {
-        "title": "Zero întreruperi",
-        "description": "Fără reclame. Doar conversie curată și concentrată."
+        "title": "Zero întreruperi publicitare",
+        "description": "Folosiți fiecare instrument audio fără bannere sau anunțuri pe ecran complet."
       }
     },
     "feedback": {
-      "subscribeSuccess": "Bun venit! Accesul tău Premium este activ.",
-      "subscribeError": "Ceva a mers greșit. Te rugăm să încerci din nou.",
-      "restoreSuccess": "Abonament restaurat cu succes!",
-      "restoreNotFound": "Nu s-a găsit niciun abonament activ.",
-      "restoreError": "Nu s-au putut restaura achizițiile. Te rugăm să încerci din nou."
+      "subscribeSuccess": "Bun venit! Accesul dvs. premium este activ.",
+      "subscribeError": "A apărut o eroare. Vă rugăm să încercați din nou.",
+      "restoreSuccess": "Accesul Premium a fost restabilit cu succes!",
+      "restoreNotFound": "Nu a fost găsită nicio achiziție Premium activă.",
+      "restoreError": "Nu s-au putut restabili achizițiile. Vă rugăm să încercați din nou."
     },
     "packageTitle": {
       "day": "Zilnic",
       "week": "Săptămânal",
       "month": "Lunar",
       "year": "Anual",
-      "lifetime": "Pe viață"
+      "lifetime": "Durată de viață"
     }
   },
   "otaUpdate": {
@@ -129,9 +277,5 @@
       "title": "Privat și pe dispozitivul tău",
       "description": "Procesarea audio rămâne pe telefonul tău, cu îndrumări clare despre siguranță și microfon."
     }
-  },
-  "premium": {
-    "accessChecking": "Se verifică accesul Premium…",
-    "accessUnknown": "Conectează-te la internet pentru a verifica accesul Premium."
   }
 }
