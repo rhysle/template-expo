@@ -48,7 +48,6 @@ const createStyles = createThemedStyles((t) => ({
   },
   variantDefault: {
     backgroundColor: t.colors.background.card,
-    ...t.shadows.sm,
   },
   variantSubtle: {
     backgroundColor: t.colors.background.subtle,

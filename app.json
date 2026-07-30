@@ -27,6 +27,7 @@
       "predictiveBackGestureEnabled": false,
       "package": "com.rhysle.expo",
       "googleServicesFile": "./google-services.json",
+      "permissions": ["android.permission.MODIFY_AUDIO_SETTINGS"],
       "blockedPermissions": [
         "android.permission.SYSTEM_ALERT_WINDOW",
         "android.permission.READ_EXTERNAL_STORAGE",
@@ -106,10 +107,7 @@
           },
           "ios": {
             "useFrameworks": "static",
-            "forceStaticLinking": [
-              "RNFBApp",
-              "RNFBAnalytics"
-            ]
+            "forceStaticLinking": ["RNFBApp", "RNFBAnalytics"]
           }
         }
       ],
@@ -132,7 +130,17 @@
       "expo-status-bar",
       "expo-web-browser",
       "@react-native-firebase/app",
-      "./plugins/withRNFirebaseStaticFramework.js"
+      "./plugins/withRNFirebaseStaticFramework.js",
+      [
+        "react-native-audio-api",
+        {
+          "iosBackgroundMode": false,
+          "iosMicrophonePermission": "Microphone access is used only while the dB Meter is running to estimate nearby sound levels. Audio is processed on your device and is never saved or uploaded.",
+          "androidPermissions": ["android.permission.RECORD_AUDIO"],
+          "androidForegroundService": false,
+          "androidFSTypes": []
+        }
+      ]
     ],
     "runtimeVersion": {
       "policy": "appVersion"

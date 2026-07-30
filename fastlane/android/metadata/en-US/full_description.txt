@@ -1,0 +1,17 @@
+Water Eject – Speaker Cleaner brings four focused audio tools together in one private, on-device toolkit.
+
+FREE AUDIO TOOLS
+• Generate precise sine tones from 20 to 20,000 Hz
+• Test left, right, and both stereo channels manually
+• View a live estimated dB level with clear safety bands and guidance
+
+PREMIUM
+• Run guided 30, 60, and 90-second Water Eject cleaning cycles
+• Use square, triangle, and sawtooth tone waveforms
+• Automatically alternate stereo channels
+• See minimum, average, and maximum dB session estimates
+• Remove banner and full-screen ads
+
+Audio processing stays on your device. Microphone samples used by the dB Meter are processed in memory and are never saved or uploaded.
+
+Water Eject cannot guarantee water or debris removal, and the dB Meter is not calibrated professional or medical equipment.
