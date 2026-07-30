@@ -1,9 +1,5 @@
 {
   "common": {
-    "openSettings": "설정 열기",
-    "reset": "재설정",
-    "start": "시작",
-    "stop": "중지",
     "back": "뒤로",
     "cancel": "취소",
     "close": "닫기",
@@ -13,10 +9,19 @@
     "getStarted": "시작하기",
     "next": "다음",
     "ok": "확인",
+    "openSettings": "설정 열기",
+    "reset": "재설정",
     "retry": "다시 시도",
     "restart": "재시작",
     "save": "저장",
-    "skip": "건너뛰기"
+    "skip": "건너뛰기",
+    "start": "시작",
+    "stop": "중지"
+  },
+  "premium": {
+    "lockedHint": "프리미엄 업그레이드 화면을 엽니다",
+    "accessChecking": "Premium 이용 권한 확인 중…",
+    "accessUnknown": "Premium 이용 권한을 확인하려면 인터넷에 연결하세요."
   },
   "tabs": {
     "eject": "물 빼기",
@@ -26,8 +31,7 @@
   },
   "settings": {
     "title": "설정",
-    "subtitle": "환율 변환기 맞춤 설정",
-    "preferences": "기본 설정",
+    "subtitle": "스피커 도구 및 소음 측정기 조정",
     "support": "지원",
     "contactSupport": "고객 지원 문의",
     "contactSupportSubtitle": "도움이 필요하시면 언제든지",
@@ -46,63 +50,207 @@
     "otaUpdateId": "업데이트: {{updateId}}",
     "upgradeBanner": {
       "title": "프리미엄으로 업그레이드",
-      "subtitle": "잦은 환율 업데이트, 광고 없음 및 전체 차트 접근"
+      "subtitle": "물 배출, 고급 오디오 제어 및 광고 없는 경험을 잠금 해제하세요"
+    },
+    "audio": {
+      "section": "오디오 및 측정기",
+      "ejectDuration": "청소 시간",
+      "durationValue": "{{count}}초",
+      "haptics": "햅틱 제어",
+      "hapticsSubtitle": "사운드 도구에서 촉각 피드백 사용",
+      "safety": "오디오 안전 및 개인정보 보호",
+      "safetySubtitle": "재생, 마이크 및 측정 안내"
+    }
+  },
+  "audioTools": {
+    "common": {
+      "mascot": "워터 이젝트 마스코트",
+      "error": "오디오를 시작할 수 없습니다. 현재 출력을 확인하고 다시 시도하십시오."
+    },
+    "eject": {
+      "subtitle": "강력한 3단계 사운드 사이클은 갇힌 물, 느슨한 먼지 및 잔해를 대상으로 합니다.",
+      "safe": "청소 준비 완료",
+      "completed": "청소 주기 완료",
+      "remaining": "{{time}} 남음",
+      "start": "청소 시작",
+      "stop": "청소 중지",
+      "idleHint": "시작하기 전에 기기의 스피커 쪽이 아래로 향하도록 놓습니다.",
+      "runningHint": "기기를 귀에 닿지 않게 가만히 두세요.",
+      "completedHint": "스피커를 테스트하고 소리가 여전히 약하면 주기를 반복하세요.",
+      "externalTitle": "외부 오디오 연결 해제",
+      "externalBody": "스피커 청소는 헤드폰이나 Bluetooth 출력이 아닌 기기 스피커를 통해 작동합니다.",
+      "phase": {
+        "water": "물 배출 펄스",
+        "debris": "먼지 및 잔해물 흔들림",
+        "finish": "마무리 청소"
+      }
+    },
+    "tone": {
+      "currentFrequency": "현재 빈도",
+      "frequencyValue": "{{frequency}} Hz",
+      "waveformLabel": "{{waveform}} {{frequency}} 헤르츠의 파형",
+      "waveform": {
+        "label": "파형",
+        "sine": "사인",
+        "square": "정사각형",
+        "triangle": "삼각형",
+        "sawtooth": "톱니"
+      },
+      "play": "재생음",
+      "stop": "신호음 중지",
+      "volumeHint": "볼륨을 낮게 유지하고 스피커를 귀에서 멀리 두세요.",
+      "band": {
+        "veryLow": "매우 낮음",
+        "low": "낮음",
+        "midLow": "중저음",
+        "mid": "중반",
+        "high": "높음",
+        "veryHigh": "매우 높음"
+      }
+    },
+    "stereo": {
+      "auto": "자동 대체",
+      "autoHint": "왼쪽, 오른쪽 및 둘 다 순환",
+      "tapToChange": "채널을 변경하려면 스피커를 탭하세요.",
+      "start": "테스트 시작",
+      "helpTitle": "스테레오 테스트 사용 방법",
+      "helpTap": "해당 채널을 즉시 테스트하려면 왼쪽 또는 오른쪽 스피커를 탭하세요.",
+      "helpBoth": "두 채널을 통해 테스트 톤을 재생하려면 두 스피커를 모두 켜세요.",
+      "helpAuto": "자동 대체를 사용하여 왼쪽, 오른쪽 및 두 채널 사이를 순환합니다.",
+      "helpStop": "재생을 끝내고 싶을 때마다 중지 테스트를 사용하세요.",
+      "left": "왼쪽",
+      "right": "맞습니다",
+      "positionLeft": "왼쪽 채널 재생 중",
+      "positionCenter": "두 채널 모두 재생 중",
+      "positionRight": "오른쪽 채널 재생 중",
+      "idlePosition": "시작하려면 스피커를 탭하세요.",
+      "stop": "테스트 중지"
+    },
+    "meter": {
+      "estimated": "예상 dB",
+      "start": "측정 시작",
+      "stop": "측정 중지",
+      "permissionTitle": "마이크 액세스가 꺼져 있습니다.",
+      "permissionBody": "마이크 액세스는 주변 소음 수준을 추정하기 위해 dB 측정기가 실행되는 동안에만 사용됩니다. 오디오는 장치에서 처리되며 저장되거나 업로드되지 않습니다.",
+      "minimum": "최소",
+      "average": "평균",
+      "maximum": "최대",
+      "unlockStats": "자세한 dB 세션 통계 잠금 해제",
+      "status": {
+        "veryQuiet": "매우 조용함",
+        "normal": "정상",
+        "loud": "시끄러운",
+        "danger": "위험"
+      },
+      "description": {
+        "veryQuiet": "도서관, 부드러운 호흡",
+        "normal": "대화, 사무실",
+        "loud": "분주한 거리, 시끄러운 음악",
+        "danger": "콘서트, 사이렌"
+      },
+      "help": {
+        "title": "dB 미터 가이드",
+        "howToMeasure": "측정 방법",
+        "stepPlace": "소리를 확인하고 싶은 곳에 휴대폰을 놓아보세요.",
+        "stepUncovered": "마이크를 덮지 않은 상태로 유지하세요.",
+        "stepStart": "측정 시작을 탭하고 실시간 추정치를 시청하세요.",
+        "everydayLevels": "일상적인 소음 수준",
+        "examplesApproximate": "예시는 대략적인 것이며 거리에 따라 다릅니다.",
+        "currentEstimate": "현재 추정치",
+        "exposureTitle": "노출 시간이 중요합니다",
+        "exposureDescription": "NIOSH 직업 지도; +3dB마다 권장 시간이 절반으로 줄어듭니다.",
+        "useItWell": "잘 활용하세요",
+        "tipMicrophoneTitle": "마이크를 덮지 않은 상태로 유지하세요",
+        "tipMicrophoneBody": "손이나 케이스로 덮지 마세요.",
+        "tipPositionTitle": "듣는 위치를 측정하세요",
+        "tipPositionBody": "평가하려는 위치로 장치를 이동하세요.",
+        "tipProtectTitle": "소리가 너무 크다면 귀를 보호하세요",
+        "tipProtectBody": "음원에서 멀리 떨어지거나 청력 보호구를 사용하세요.",
+        "reference": {
+          "concertSpeaker": "콘서트 연설자",
+          "sirenNightclub": "사이렌 또는 나이트클럽",
+          "lawnMower": "잔디 깎는 기계",
+          "busyStreet": "분주한 거리",
+          "conversation": "대화",
+          "quietHome": "조용한 집",
+          "whisper": "속삭임",
+          "hearingThreshold": "청각 임계값"
+        }
+      }
+    },
+    "safety": {
+      "title": "오디오 안전 및 개인정보 보호",
+      "intro": "이러한 도구를 주의 깊게 사용하고 휴대전화로 측정할 수 있는 것과 측정할 수 없는 것을 이해하세요.",
+      "playbackTitle": "안전한 재생",
+      "playbackBody": "낮은 볼륨에서 시작하여 점차적으로 볼륨을 높이고 스피커를 귀에서 멀리 두고 소리가 불편하면 중지하세요.",
+      "routingTitle": "오디오 라우팅",
+      "routingBody": "스피커 청소음은 기기 스피커를 사용해야 합니다. 스테레오 분리는 연결된 스피커나 헤드폰에 따라 다릅니다.",
+      "estimateTitle": "예상 소음 수준",
+      "estimateBody": "전화 마이크는 실험실 SPL이 아닌 디지털 신호 레벨을 보고합니다. 앱은 기기에 따라 다른 추정치를 적용합니다.",
+      "privacyTitle": "마이크 개인정보 보호",
+      "privacyBody": "마이크는 dB 측정기가 활성화된 동안에만 실행됩니다. 샘플은 메모리에서 처리되며 저장되거나 업로드되지 않습니다.",
+      "limitationsTitle": "중요한 제한사항",
+      "limitationsBody": "이 앱은 물이나 먼지 제거를 보장할 수 없습니다. 스피커에 물체를 삽입하지 마십시오. 전문적인 수리, 보정된 장비, 의학적 조언 또는 청력 보호 지침의 대체 도구로 이러한 도구를 사용하지 마십시오."
     }
   },
   "paywall": {
-    "title": "프리미엄 잠금 해제",
-    "subtitle": "환율 변환기를 최대한 활용하세요",
-    "ctaFreeTrial": "무료로 시작",
+    "title": "완전한 오디오 도구 키트 잠금 해제",
+    "subtitle": "스피커를 청소하고, 고급 제어 기능에 액세스하고, 모든 광고를 제거하세요.",
+    "ctaFreeTrial": "무료로 사용해 보세요",
     "restore": "구매 복원",
     "terms": "서비스 약관",
-    "privacy": "개인정보 처리방침",
-    "then": "이후",
-    "trial": "{{count}}{{unit}} 무료 체험",
-    "save": "{{percent}}% 절약",
+    "privacy": "개인정보 보호정책",
+    "then": "다음",
+    "trial": "{{count}}-{{unit}} 무료 평가판",
+    "save": "저장 {{percent}}%",
     "trialUnit": {
       "day": "일",
       "week": "주",
-      "month": "개월",
+      "month": "월",
       "year": "년"
     },
     "period": {
       "day": "하루",
-      "week": "주당",
-      "month": "월",
-      "year": "연",
+      "week": "매주",
+      "month": "매월",
+      "year": "연간",
       "lifetime": "일회성 구매"
     },
     "features": {
-      "liveRates": {
-        "title": "항상 최신 환율",
-        "description": "환율이 거의 실시간으로 업데이트되어 지연 없음."
+      "waterEject": {
+        "title": "물 배출 완료",
+        "description": "안내에 따라 30초, 60초, 90초 스피커 청소 주기를 실행하세요."
       },
-      "unlimited": {
-        "title": "150개 이상 통화, 제한 없음",
-        "description": "필요한 모든 통화 추가, 제한 없음."
+      "waveforms": {
+        "title": "고급 톤 파형",
+        "description": "전체 주파수 범위에서 정사각형, 삼각형 및 톱니형 톤을 사용하세요."
       },
-      "charts": {
-        "title": "전체 환율 기록",
-        "description": "최적의 환전 타이밍을 찾는 인터랙티브 차트."
+      "stereoAuto": {
+        "title": "자동 스테레오 테스트",
+        "description": "핸즈프리로 왼쪽, 오른쪽 및 두 채널 간을 전환합니다."
+      },
+      "dbStats": {
+        "title": "자세한 dB 통계",
+        "description": "모든 세션의 최소, 평균, 최대 추정치를 확인하세요."
       },
       "adFree": {
-        "title": "방해 없는 사용",
-        "description": "광고 없음. 깔끔하고 집중된 환전 경험."
+        "title": "광고 중단 없음",
+        "description": "배너나 전체 화면 광고 없이 모든 오디오 도구를 사용하세요."
       }
     },
     "feedback": {
-      "subscribeSuccess": "환영합니다! 프리미엄 이용 권한이 활성화되었습니다.",
+      "subscribeSuccess": "환영합니다! 프리미엄 액세스가 활성화되었습니다.",
       "subscribeError": "문제가 발생했습니다. 다시 시도해 주세요.",
-      "restoreSuccess": "구독이 복원되었습니다!",
-      "restoreNotFound": "활성 구독을 찾을 수 없습니다.",
+      "restoreSuccess": "프리미엄 액세스가 성공적으로 복원되었습니다!",
+      "restoreNotFound": "활성 프리미엄 구매가 없습니다.",
       "restoreError": "구매를 복원할 수 없습니다. 다시 시도해 주세요."
     },
     "packageTitle": {
-      "day": "일일",
-      "week": "주간",
+      "day": "매일",
+      "week": "매주",
       "month": "월간",
-      "year": "연간",
-      "lifetime": "평생"
+      "year": "매년",
+      "lifetime": "수명"
     }
   },
   "otaUpdate": {
@@ -129,9 +277,5 @@
       "title": "비공개, 기기 내에서 처리",
       "description": "오디오 처리는 휴대폰 안에서 이루어지며, 안전 및 마이크 사용 안내를 명확히 제공합니다."
     }
-  },
-  "premium": {
-    "accessChecking": "Premium 이용 권한 확인 중…",
-    "accessUnknown": "Premium 이용 권한을 확인하려면 인터넷에 연결하세요."
   }
 }

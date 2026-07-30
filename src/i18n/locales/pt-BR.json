@@ -1,9 +1,5 @@
 {
   "common": {
-    "openSettings": "Abrir Ajustes",
-    "reset": "Redefinir",
-    "start": "Iniciar",
-    "stop": "Parar",
     "back": "Voltar",
     "cancel": "Cancelar",
     "close": "Fechar",
@@ -13,10 +9,19 @@
     "getStarted": "Começar",
     "next": "Próximo",
     "ok": "OK",
+    "openSettings": "Abrir Ajustes",
+    "reset": "Redefinir",
     "retry": "Tentar novamente",
     "restart": "Reiniciar",
     "save": "Salvar",
-    "skip": "Pular"
+    "skip": "Pular",
+    "start": "Iniciar",
+    "stop": "Parar"
+  },
+  "premium": {
+    "lockedHint": "Abre a tela de atualização Premium",
+    "accessChecking": "Verificando o acesso Premium…",
+    "accessUnknown": "Conecte-se à internet para verificar o acesso Premium."
   },
   "tabs": {
     "eject": "Ejetar",
@@ -26,8 +31,7 @@
   },
   "settings": {
     "title": "Configurações",
-    "subtitle": "Personalize seu conversor de moedas",
-    "preferences": "Preferências",
+    "subtitle": "Ajuste suas ferramentas de alto-falante e medidor de som",
     "support": "Suporte",
     "contactSupport": "Contatar suporte",
     "contactSupportSubtitle": "Estamos aqui para ajudar",
@@ -45,19 +49,159 @@
     "version": "Versão {{version}}",
     "otaUpdateId": "Atualização: {{updateId}}",
     "upgradeBanner": {
-      "title": "Upgrade para Premium",
-      "subtitle": "Atualizações frequentes de taxas, sem anúncios e acesso completo a gráficos"
+      "title": "Atualize para Premium",
+      "subtitle": "Desbloqueie o Water Eject, controles de áudio avançados e uma experiência sem anúncios"
+    },
+    "audio": {
+      "section": "Áudio e medidor",
+      "ejectDuration": "Duração da limpeza",
+      "durationValue": "{{count}} segundos",
+      "haptics": "Controle tátil",
+      "hapticsSubtitle": "Use feedback tátil em ferramentas de som",
+      "safety": "Segurança e privacidade de áudio",
+      "safetySubtitle": "Orientações sobre reprodução, microfone e medição"
+    }
+  },
+  "audioTools": {
+    "common": {
+      "mascot": "Mascote de ejeção de água",
+      "error": "O áudio não pôde ser iniciado. Verifique a saída atual e tente novamente."
+    },
+    "eject": {
+      "subtitle": "Um poderoso ciclo de som de 3 estágios tem como alvo água presa, poeira solta e detritos.",
+      "safe": "Pronto para limpar",
+      "completed": "Ciclo de limpeza concluído",
+      "remaining": "{{time}} restantes",
+      "start": "Comece a limpar",
+      "stop": "Pare de limpar",
+      "idleHint": "Coloque o dispositivo com o alto-falante voltado para baixo antes de começar.",
+      "runningHint": "Mantenha o dispositivo imóvel e longe dos ouvidos.",
+      "completedHint": "Teste seu alto-falante e repita o ciclo se o som ainda estiver abafado.",
+      "externalTitle": "Desconecte o áudio externo",
+      "externalBody": "A limpeza dos alto-falantes funciona através do alto-falante do dispositivo, não dos fones de ouvido ou das saídas Bluetooth.",
+      "phase": {
+        "water": "Pulso de ejeção de água",
+        "debris": "Poeira e detritos sacodem",
+        "finish": "Varredura final"
+      }
+    },
+    "tone": {
+      "currentFrequency": "Frequência atual",
+      "frequencyValue": "{{frequency}} Hz",
+      "waveformLabel": "{{waveform}} forma de onda em {{frequency}} hertz",
+      "waveform": {
+        "label": "Forma de onda",
+        "sine": "Seno",
+        "square": "Quadrado",
+        "triangle": "Triângulo",
+        "sawtooth": "Dente de serra"
+      },
+      "play": "Tocar tom",
+      "stop": "Tom de parada",
+      "volumeHint": "Mantenha o volume baixo e o alto-falante longe de seus ouvidos.",
+      "band": {
+        "veryLow": "Muito baixo",
+        "low": "Baixo",
+        "midLow": "Baixo-médio",
+        "mid": "Meados de",
+        "high": "Alto",
+        "veryHigh": "Muito alto"
+      }
+    },
+    "stereo": {
+      "auto": "Alternativa automática",
+      "autoHint": "Ciclo para esquerda, direita e ambos",
+      "tapToChange": "Toque nos alto-falantes para mudar de canal",
+      "start": "Iniciar teste",
+      "helpTitle": "Como usar o teste estéreo",
+      "helpTap": "Toque no alto-falante esquerdo ou direito para testar esse canal imediatamente.",
+      "helpBoth": "Ligue os dois alto-falantes para reproduzir o tom de teste nos dois canais.",
+      "helpAuto": "Use a alternância automática para alternar entre os canais esquerdo, direito e ambos.",
+      "helpStop": "Use Parar teste sempre que desejar encerrar a reprodução.",
+      "left": "Esquerda",
+      "right": "Certo",
+      "positionLeft": "Saiu do canal em reprodução",
+      "positionCenter": "Ambos os canais reproduzindo",
+      "positionRight": "Canal certo tocando",
+      "idlePosition": "Toque em um alto-falante para começar",
+      "stop": "Parar teste"
+    },
+    "meter": {
+      "estimated": "dB estimado",
+      "start": "Comece a medir",
+      "stop": "Pare de medir",
+      "permissionTitle": "O acesso ao microfone está desativado",
+      "permissionBody": "O acesso ao microfone é usado somente enquanto o medidor de dB está em execução para estimar os níveis de som próximos. O áudio é processado no seu dispositivo e nunca é salvo ou carregado.",
+      "minimum": "Mínimo",
+      "average": "Média",
+      "maximum": "Máximo",
+      "unlockStats": "Desbloqueie estatísticas detalhadas da sessão em dB",
+      "status": {
+        "veryQuiet": "Muito silencioso",
+        "normal": "Normal",
+        "loud": "Alto",
+        "danger": "Perigo"
+      },
+      "description": {
+        "veryQuiet": "Biblioteca, respiração suave",
+        "normal": "Conversa, escritório",
+        "loud": "Rua movimentada, música alta",
+        "danger": "Concerto, sirene"
+      },
+      "help": {
+        "title": "Guia do medidor de dB",
+        "howToMeasure": "Como medir",
+        "stepPlace": "Coloque o telefone onde deseja verificar o som.",
+        "stepUncovered": "Mantenha o microfone descoberto.",
+        "stepStart": "Toque em Iniciar medição e assista à estimativa ao vivo.",
+        "everydayLevels": "Níveis de som diários",
+        "examplesApproximate": "Os exemplos são aproximados e variam com a distância.",
+        "currentEstimate": "Estimativa atual",
+        "exposureTitle": "O tempo de exposição é importante",
+        "exposureDescription": "Orientação ocupacional do NIOSH; cada +3 dB reduz pela metade o tempo recomendado.",
+        "useItWell": "Use-o bem",
+        "tipMicrophoneTitle": "Mantenha o microfone descoberto",
+        "tipMicrophoneBody": "Evite cobri-lo com a mão ou com o estojo.",
+        "tipPositionTitle": "Avalie onde você ouve",
+        "tipPositionBody": "Mova o dispositivo para o local que deseja avaliar.",
+        "tipProtectTitle": "Se parecer muito alto, proteja seus ouvidos",
+        "tipProtectBody": "Afaste-se da fonte ou use proteção auditiva.",
+        "reference": {
+          "concertSpeaker": "Palestrante de concerto",
+          "sirenNightclub": "Sirene ou boate",
+          "lawnMower": "Cortador de grama",
+          "busyStreet": "Rua movimentada",
+          "conversation": "Conversa",
+          "quietHome": "Casa tranquila",
+          "whisper": "Sussurro",
+          "hearingThreshold": "Limiar de audição"
+        }
+      }
+    },
+    "safety": {
+      "title": "Segurança e privacidade de áudio",
+      "intro": "Use essas ferramentas com cuidado e entenda o que seu telefone pode ou não pode medir.",
+      "playbackTitle": "Reprodução segura",
+      "playbackBody": "Comece com o volume baixo, aumente-o gradualmente, mantenha o alto-falante longe dos ouvidos e pare se algum som for desconfortável.",
+      "routingTitle": "Roteamento de áudio",
+      "routingBody": "O som de limpeza do alto-falante deve usar o alto-falante do dispositivo. A separação estéreo depende do alto-falante ou dos fones de ouvido conectados.",
+      "estimateTitle": "Níveis de som estimados",
+      "estimateBody": "Microfones de telefone reportam nível de sinal digital em vez de SPL de laboratório. O aplicativo aplica uma estimativa que varia de acordo com o dispositivo.",
+      "privacyTitle": "Privacidade do microfone",
+      "privacyBody": "O microfone funciona apenas enquanto o medidor de dB está ativo. As amostras são processadas na memória e nunca são salvas ou carregadas.",
+      "limitationsTitle": "Limitações importantes",
+      "limitationsBody": "Este aplicativo não pode garantir a remoção de água ou poeira. Não insira objetos no alto-falante e não use essas ferramentas como substitutos para reparos profissionais, equipamentos calibrados, orientação médica ou orientação sobre proteção auditiva."
     }
   },
   "paywall": {
-    "title": "Desbloquear Premium",
-    "subtitle": "Aproveite ao máximo o Conversor de Moedas",
-    "ctaFreeTrial": "Experimentar grátis",
+    "title": "Desbloqueie seu kit de ferramentas de áudio completo",
+    "subtitle": "Limpe seu alto-falante, acesse controles avançados e remova todos os anúncios.",
+    "ctaFreeTrial": "Experimente gratuitamente",
     "restore": "Restaurar compras",
-    "terms": "Termos de serviço",
-    "privacy": "Política de privacidade",
-    "then": "depois",
-    "trial": "{{count}} {{unit}} de teste grátis",
+    "terms": "Termos de Serviço",
+    "privacy": "Política de Privacidade",
+    "then": "então",
+    "trial": "{{count}}-{{unit}} teste gratuito",
     "save": "Economize {{percent}}%",
     "trialUnit": {
       "day": "dia",
@@ -73,34 +217,38 @@
       "lifetime": "Compra única"
     },
     "features": {
-      "liveRates": {
-        "title": "Taxas sempre atualizadas",
-        "description": "Taxas atualizadas em tempo quase real, sem atrasos."
+      "waterEject": {
+        "title": "Ejeção completa de água",
+        "description": "Execute ciclos guiados de limpeza de alto-falantes de 30, 60 e 90 segundos."
       },
-      "unlimited": {
-        "title": "Mais de 150 moedas, sem limites",
-        "description": "Adicione todas as moedas que precisar, sem restrições."
+      "waveforms": {
+        "title": "Formas de onda de tons avançados",
+        "description": "Use tons quadrados, triangulares e dente de serra em toda a faixa de frequência."
       },
-      "charts": {
-        "title": "Histórico completo de taxas",
-        "description": "Gráficos interativos para encontrar o melhor momento para converter."
+      "stereoAuto": {
+        "title": "Teste estéreo automático",
+        "description": "Alterna entre os canais esquerdo, direito e ambos os canais com viva-voz."
+      },
+      "dbStats": {
+        "title": "Estatísticas detalhadas em dB",
+        "description": "Veja estimativas mínimas, médias e máximas para cada sessão."
       },
       "adFree": {
-        "title": "Zero interrupções",
-        "description": "Sem anúncios. Só conversão limpa e focada."
+        "title": "Zero interrupções de anúncios",
+        "description": "Use todas as ferramentas de áudio sem banners ou anúncios em tela cheia."
       }
     },
     "feedback": {
-      "subscribeSuccess": "Boas-vindas! Seu acesso Premium está ativo.",
+      "subscribeSuccess": "Bem vindo! Seu acesso premium está ativo.",
       "subscribeError": "Algo deu errado. Por favor, tente novamente.",
-      "restoreSuccess": "Assinatura restaurada com sucesso!",
-      "restoreNotFound": "Nenhuma assinatura ativa encontrada.",
+      "restoreSuccess": "Acesso Premium restaurado com sucesso!",
+      "restoreNotFound": "Nenhuma compra Premium ativa encontrada.",
       "restoreError": "Não foi possível restaurar as compras. Por favor, tente novamente."
     },
     "packageTitle": {
-      "day": "Diário",
-      "week": "Semanal",
-      "month": "Mensal",
+      "day": "Diariamente",
+      "week": "Semanalmente",
+      "month": "Mensalmente",
       "year": "Anual",
       "lifetime": "Vitalício"
     }
@@ -129,9 +277,5 @@
       "title": "Privado e no seu dispositivo",
       "description": "O processamento de áudio fica no seu telefone, com orientações claras sobre segurança e microfone."
     }
-  },
-  "premium": {
-    "accessChecking": "Verificando o acesso Premium…",
-    "accessUnknown": "Conecte-se à internet para verificar o acesso Premium."
   }
 }

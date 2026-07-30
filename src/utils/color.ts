@@ -17,3 +17,20 @@ export const hexToRgb = (hex: string) => {
 
   return [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)] as const
 }
+
+/**
+ * Mixes two six-digit hex colors. `amount` is the share of `toHex` in the result.
+ * Returns `fromHex` unchanged when either color cannot be parsed.
+ */
+export const mixHexColors = (fromHex: string, toHex: string, amount: number): string => {
+  const from = hexToRgb(fromHex)
+  const to = hexToRgb(toHex)
+  if (!from || !to) return fromHex
+
+  const boundedAmount = Math.min(Math.max(amount, 0), 1)
+  const channels = from.map((channel, index) =>
+    Math.round(channel + (to[index] - channel) * boundedAmount)
+  )
+
+  return `#${channels.map((channel) => channel.toString(16).padStart(2, '0')).join('')}`
+}

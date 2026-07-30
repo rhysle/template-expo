@@ -1,9 +1,5 @@
 {
   "common": {
-    "openSettings": "設定を開く",
-    "reset": "リセット",
-    "start": "開始",
-    "stop": "停止",
     "back": "戻る",
     "cancel": "キャンセル",
     "close": "閉じる",
@@ -13,10 +9,19 @@
     "getStarted": "始める",
     "next": "次へ",
     "ok": "OK",
+    "openSettings": "設定を開く",
+    "reset": "リセット",
     "retry": "再試行",
     "restart": "再起動",
     "save": "保存",
-    "skip": "スキップ"
+    "skip": "スキップ",
+    "start": "開始",
+    "stop": "停止"
+  },
+  "premium": {
+    "lockedHint": "プレミアム アップグレード画面を開きます",
+    "accessChecking": "Premium アクセスを確認中…",
+    "accessUnknown": "Premium アクセスを確認するにはインターネットに接続してください。"
   },
   "tabs": {
     "eject": "排水",
@@ -26,8 +31,7 @@
   },
   "settings": {
     "title": "設定",
-    "subtitle": "通貨換算アプリをカスタマイズ",
-    "preferences": "設定",
+    "subtitle": "スピーカー ツールとサウンド メーターを調整します",
     "support": "サポート",
     "contactSupport": "サポートに連絡",
     "contactSupportSubtitle": "お気軽にどうぞ",
@@ -46,63 +50,207 @@
     "otaUpdateId": "更新: {{updateId}}",
     "upgradeBanner": {
       "title": "プレミアムにアップグレード",
-      "subtitle": "頻繁なレート更新、広告なし、フルチャートアクセス"
+      "subtitle": "ウォーター エジェクト、高度なオーディオ コントロール、広告なしのエクスペリエンスのロックを解除します"
+    },
+    "audio": {
+      "section": "オーディオとメーター",
+      "ejectDuration": "クリーニング期間",
+      "durationValue": "{{count}} 秒",
+      "haptics": "触覚の制御",
+      "hapticsSubtitle": "サウンド ツールで触覚フィードバックを使用する",
+      "safety": "オーディオの安全性とプライバシー",
+      "safetySubtitle": "再生、マイク、測定ガイダンス"
+    }
+  },
+  "audioTools": {
+    "common": {
+      "mascot": "ウォーター イジェクト マスコット",
+      "error": "オーディオを開始できませんでした。現在の出力を確認して、再試行してください。"
+    },
+    "eject": {
+      "subtitle": "強力な 3 段階のサウンド サイクルが、閉じ込められた水、浮遊塵、破片をターゲットにします。",
+      "safe": "掃除の準備完了",
+      "completed": "クリーニング サイクルが完了しました",
+      "remaining": "{{time}} 残り",
+      "start": "掃除を開始",
+      "stop": "掃除をやめる",
+      "idleHint": "開始する前に、デバイスのスピーカー面を下にして置きます。",
+      "runningHint": "デバイスを耳から離して動かさないでください。",
+      "completedHint": "スピーカーをテストし、音がまだこもっている場合は、このサイクルを繰り返します。",
+      "externalTitle": "外部オーディオの接続を切断する",
+      "externalBody": "スピーカーのクリーニングは、ヘッドフォンや Bluetooth 出力ではなく、デバイスのスピーカーを通じて行われます。",
+      "phase": {
+        "water": "水噴射パルス",
+        "debris": "塵や破片が揺れる",
+        "finish": "仕上げスイープ"
+      }
+    },
+    "tone": {
+      "currentFrequency": "現在の頻度",
+      "frequencyValue": "{{frequency}} Hz",
+      "waveformLabel": "{{waveform}} 波形、{{frequency}} ヘルツ",
+      "waveform": {
+        "label": "波形",
+        "sine": "正弦波",
+        "square": "正方形",
+        "triangle": "三角形",
+        "sawtooth": "ノコギリ歯"
+      },
+      "play": "トーンを再生する",
+      "stop": "停止音",
+      "volumeHint": "音量を低くし、スピーカーを耳から離してください。",
+      "band": {
+        "veryLow": "非常に低い",
+        "low": "低い",
+        "midLow": "低中速",
+        "mid": "中旬",
+        "high": "高",
+        "veryHigh": "非常に高い"
+      }
+    },
+    "stereo": {
+      "auto": "自動代替",
+      "autoHint": "左、右、両方に循環します",
+      "tapToChange": "スピーカーをタップしてチャンネルを変更します",
+      "start": "テストを開始",
+      "helpTitle": "ステレオ テストの使用方法",
+      "helpTap": "左または右のスピーカーをタップして、そのチャンネルをすぐにテストします。",
+      "helpBoth": "両方のスピーカーをオンにして、両方のチャンネルからテスト トーンを再生します。",
+      "helpAuto": "自動交互を使用して、左、右、および両方のチャンネルを循環します。",
+      "helpStop": "再生を終了したい場合は、必ず「テストの停止」を使用してください。",
+      "left": "左",
+      "right": "そうです",
+      "positionLeft": "左チャンネルが再生中",
+      "positionCenter": "両方のチャンネルが再生中",
+      "positionRight": "右チャンネルが再生中",
+      "idlePosition": "スピーカーをタップして開始します",
+      "stop": "テストを停止"
+    },
+    "meter": {
+      "estimated": "推定 dB",
+      "start": "測定を開始",
+      "stop": "測定を停止",
+      "permissionTitle": "マイクへのアクセスがオフになっています",
+      "permissionBody": "マイクへのアクセスは、近くの騒音レベルを推定するために dB メーターが動作しているときにのみ使用されます。音声はデバイス上で処理され、保存またはアップロードされることはありません。",
+      "minimum": "最小値",
+      "average": "平均",
+      "maximum": "最大",
+      "unlockStats": "詳細な dB セッション統計のロックを解除します",
+      "status": {
+        "veryQuiet": "とても静かです",
+        "normal": "通常",
+        "loud": "大声",
+        "danger": "危険"
+      },
+      "description": {
+        "veryQuiet": "図書館、穏やかな呼吸",
+        "normal": "会話、オフィス",
+        "loud": "賑やかな通り、大音量の音楽",
+        "danger": "コンサート、サイレン"
+      },
+      "help": {
+        "title": "dB メーターガイド",
+        "howToMeasure": "測定方法",
+        "stepPlace": "音を確認したい場所に電話を置きます。",
+        "stepUncovered": "マイクは覆わないでください。",
+        "stepStart": "[測定を開始] をタップして、ライブ推定値を確認します。",
+        "everydayLevels": "日常の騒音レベル",
+        "examplesApproximate": "例はおおよそのものであり、距離によって異なります。",
+        "currentEstimate": "現在の推定値",
+        "exposureTitle": "露光時間は重要です",
+        "exposureDescription": "NIOSH の職業指導。 +3 dB ごとに推奨時間が半分になります。",
+        "useItWell": "上手に活用しましょう",
+        "tipMicrophoneTitle": "マイクは覆わないでください",
+        "tipMicrophoneBody": "手やケースで覆わないでください。",
+        "tipPositionTitle": "どこで聴いているかを測定します",
+        "tipPositionBody": "評価したい場所にデバイスを移動します。",
+        "tipProtectTitle": "音が大きすぎると感じる場合は、耳を保護してください",
+        "tipProtectBody": "発生源から離れるか、聴覚保護具を使用してください。",
+        "reference": {
+          "concertSpeaker": "コンサート スピーカー",
+          "sirenNightclub": "サイレンまたはナイトクラブ",
+          "lawnMower": "芝刈り機",
+          "busyStreet": "賑やかな通り",
+          "conversation": "会話",
+          "quietHome": "静かな家",
+          "whisper": "ささやき",
+          "hearingThreshold": "聴力閾値"
+        }
+      }
+    },
+    "safety": {
+      "title": "オーディオの安全性とプライバシー",
+      "intro": "これらのツールを慎重に使用し、携帯電話で何が測定できるのか、何が測定できないのかを理解してください。",
+      "playbackTitle": "安全な再生",
+      "playbackBody": "小さな音量から始めて徐々に上げ、スピーカーを耳から遠ざけ、音が不快な場合は停止します。",
+      "routingTitle": "オーディオルーティング",
+      "routingBody": "スピーカーのクリーニング音にはデバイスのスピーカーを使用する必要があります。ステレオ分離は、接続されたスピーカーまたはヘッドフォンによって異なります。",
+      "estimateTitle": "推定騒音レベル",
+      "estimateBody": "電話のマイクは実験室の SPL ではなくデジタル信号レベルを報告します。アプリはデバイスごとに異なる推定値を適用します。",
+      "privacyTitle": "マイクのプライバシー",
+      "privacyBody": "マイクは、dB メーターがアクティブな間のみ動作します。サンプルはメモリ内で処理され、保存またはアップロードされることはありません。",
+      "limitationsTitle": "重要な制限事項",
+      "limitationsBody": "このアプリは水や埃の除去を保証するものではありません。スピーカーに物を挿入したり、これらのツールを専門家による修理、校正された機器、医学的アドバイス、または聴覚保護指導の代わりとして使用したりしないでください。"
     }
   },
   "paywall": {
-    "title": "プレミアムを解除",
-    "subtitle": "通貨換算をフル活用",
-    "ctaFreeTrial": "無料で試す",
-    "restore": "購入を復元",
+    "title": "完全なオーディオ ツールキットのロックを解除します",
+    "subtitle": "スピーカーを掃除し、高度なコントロールにアクセスし、すべての広告を削除します。",
+    "ctaFreeTrial": "無料でお試しください",
+    "restore": "購入を復元する",
     "terms": "利用規約",
-    "privacy": "プライバシーポリシー",
-    "then": "その後",
-    "trial": "{{count}}{{unit}}無料トライアル",
-    "save": "{{percent}}％お得",
+    "privacy": "プライバシー ポリシー",
+    "then": "、その後",
+    "trial": "{{count}}-{{unit}} 無料トライアル",
+    "save": "{{percent}}% 節約",
     "trialUnit": {
       "day": "日",
       "week": "週",
-      "month": "ヶ月",
+      "month": "月",
       "year": "年"
     },
     "period": {
-      "day": "1日あたり",
-      "week": "1週間あたり",
-      "month": "1ヶ月あたり",
-      "year": "1年あたり",
-      "lifetime": "買い切り"
+      "day": "/日",
+      "week": "/週",
+      "month": "/月",
+      "year": "/年",
+      "lifetime": "1 回限りの購入"
     },
     "features": {
-      "liveRates": {
-        "title": "常に最新のレート",
-        "description": "レートはリアルタイムに近い形で更新され、遅延なし。"
+      "waterEject": {
+        "title": "完全な水の排出",
+        "description": "ガイド付きの 30、60、90 秒のスピーカー クリーニング サイクルを実行します。"
       },
-      "unlimited": {
-        "title": "150以上の通貨、制限なし",
-        "description": "必要なすべての通貨を追加、制限なし。"
+      "waveforms": {
+        "title": "高度なトーン波形",
+        "description": "全周波数範囲にわたって方形波、三角波、ノコギリ波トーンを使用します。"
       },
-      "charts": {
-        "title": "全レート履歴",
-        "description": "最適な換算タイミングを見つけるためのインタラクティブチャート。"
+      "stereoAuto": {
+        "title": "自動ステレオテスト",
+        "description": "左チャンネル、右チャンネル、および両方のチャンネルをハンズフリーで切り替えます。"
+      },
+      "dbStats": {
+        "title": "詳細な dB 統計",
+        "description": "すべてのセッションの最小、平均、最大の推定値を確認します。"
       },
       "adFree": {
-        "title": "中断なし",
-        "description": "広告なし。クリーンで集中した換算体験。"
+        "title": "広告中断ゼロ",
+        "description": "バナーや全画面広告を表示せずに、すべてのオーディオ ツールを使用します。"
       }
     },
     "feedback": {
-      "subscribeSuccess": "ようこそ！プレミアムアクセスが有効になりました。",
-      "subscribeError": "エラーが発生しました。もう一度お試しください。",
-      "restoreSuccess": "サブスクリプションを復元しました！",
-      "restoreNotFound": "有効なサブスクリプションが見つかりませんでした。",
-      "restoreError": "購入を復元できませんでした。もう一度お試しください。"
+      "subscribeSuccess": "ようこそ!プレミアム アクセスは有効です。",
+      "subscribeError": "問題が発生しました。もう一度試してください。",
+      "restoreSuccess": "プレミアム アクセスが正常に復元されました。",
+      "restoreNotFound": "有効なプレミアム購入が見つかりません。",
+      "restoreError": "購入を復元できませんでした。もう一度試してください。"
     },
     "packageTitle": {
       "day": "毎日",
       "week": "毎週",
       "month": "毎月",
       "year": "毎年",
-      "lifetime": "永久"
+      "lifetime": "生涯"
     }
   },
   "otaUpdate": {
@@ -129,9 +277,5 @@
       "title": "非公開、端末内で完結",
       "description": "音声処理はスマートフォン内にとどまり、安全性とマイクに関する明確な案内を提供します。"
     }
-  },
-  "premium": {
-    "accessChecking": "Premium アクセスを確認中…",
-    "accessUnknown": "Premium アクセスを確認するにはインターネットに接続してください。"
   }
 }

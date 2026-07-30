@@ -1,9 +1,5 @@
 {
   "common": {
-    "openSettings": "Ayarları Aç",
-    "reset": "Sıfırla",
-    "start": "Başlat",
-    "stop": "Durdur",
     "back": "Geri",
     "cancel": "İptal",
     "close": "Kapat",
@@ -13,10 +9,19 @@
     "getStarted": "Başla",
     "next": "İleri",
     "ok": "Tamam",
+    "openSettings": "Ayarları Aç",
+    "reset": "Sıfırla",
     "retry": "Tekrar dene",
     "restart": "Yeniden Başlat",
     "save": "Kaydet",
-    "skip": "Atla"
+    "skip": "Atla",
+    "start": "Başlat",
+    "stop": "Durdur"
+  },
+  "premium": {
+    "lockedHint": "Premium yükseltme ekranını açar",
+    "accessChecking": "Premium erişimi kontrol ediliyor…",
+    "accessUnknown": "Premium erişimini kontrol etmek için internete bağlanın."
   },
   "tabs": {
     "eject": "Çıkar",
@@ -26,8 +31,7 @@
   },
   "settings": {
     "title": "Ayarlar",
-    "subtitle": "Döviz çeviricinizi özelleştirin",
-    "preferences": "Tercihler",
+    "subtitle": "Hoparlör araçlarınızı ve ses ölçerinizi ayarlayın",
     "support": "Destek",
     "contactSupport": "Destekle İletişime Geç",
     "contactSupportSubtitle": "Yardım etmek için buradayız",
@@ -45,20 +49,160 @@
     "version": "Sürüm {{version}}",
     "otaUpdateId": "Güncelleme: {{updateId}}",
     "upgradeBanner": {
-      "title": "Premium'a Yükselt",
-      "subtitle": "Sık kur güncellemeleri, reklamsız & tam grafik erişimi"
+      "title": "Premium'a Yükseltin",
+      "subtitle": "Su Çıkarma, gelişmiş ses kontrolleri ve reklamsız bir deneyimin kilidini açın"
+    },
+    "audio": {
+      "section": "Ses ve Ölçer",
+      "ejectDuration": "Temizleme süresi",
+      "durationValue": "{{count}} saniye",
+      "haptics": "Dokunsal kontrolü kontrol edin",
+      "hapticsSubtitle": "Ses araçlarında dokunsal geri bildirimi kullanın",
+      "safety": "Ses Güvenliği ve Gizliliği",
+      "safetySubtitle": "Oynatma, mikrofon ve ölçüm kılavuzu"
+    }
+  },
+  "audioTools": {
+    "common": {
+      "mascot": "Su Çıkarma maskotu",
+      "error": "Ses başlatılamadı. Mevcut çıkışı kontrol edin ve tekrar deneyin."
+    },
+    "eject": {
+      "subtitle": "Güçlü bir 3 aşamalı ses döngüsü, sıkışan suyu, gevşek tozu ve döküntüleri hedef alır.",
+      "safe": "Temizlemeye hazır",
+      "completed": "Temizleme döngüsü tamamlandı",
+      "remaining": "{{time}} kaldı",
+      "start": "Temizlemeye başlayın",
+      "stop": "Temizlemeyi bırakın",
+      "idleHint": "Başlamadan önce cihazı hoparlör tarafı aşağı bakacak şekilde yerleştirin.",
+      "runningHint": "Cihazı hareketsiz ve kulaklarınızdan uzak tutun.",
+      "completedHint": "Hoparlörünüzü test edin ve ses hâlâ boğuksa döngüyü tekrarlayın.",
+      "externalTitle": "Harici ses bağlantısını kesin",
+      "externalBody": "Hoparlör temizliği, kulaklık veya Bluetooth çıkışları üzerinden değil, cihazın hoparlörü üzerinden yapılır.",
+      "phase": {
+        "water": "Su çıkarma darbesi",
+        "debris": "Toz ve döküntü sarsıntısı",
+        "finish": "Taramayı bitirme"
+      }
+    },
+    "tone": {
+      "currentFrequency": "Mevcut frekans",
+      "frequencyValue": "{{frequency}} Hz",
+      "waveformLabel": "{{waveform}} {{frequency}} hertz'de dalga biçimi",
+      "waveform": {
+        "label": "Dalga Formu",
+        "sine": "Sinüs",
+        "square": "Kare",
+        "triangle": "Üçgen",
+        "sawtooth": "Testere dişi"
+      },
+      "play": "Sesi çal",
+      "stop": "Durdurma sesi",
+      "volumeHint": "Sesi düşük tutun ve hoparlörü kulaklarınızdan uzak tutun.",
+      "band": {
+        "veryLow": "Çok düşük",
+        "low": "Düşük",
+        "midLow": "Düşük-orta",
+        "mid": "Orta",
+        "high": "Yüksek",
+        "veryHigh": "Çok yüksek"
+      }
+    },
+    "stereo": {
+      "auto": "Otomatik alternatif",
+      "autoHint": "Sola, sağa ve her ikisine de git",
+      "tapToChange": "Kanalları değiştirmek için hoparlörlere dokunun",
+      "start": "Testi başlat",
+      "helpTitle": "Stereo Testi nasıl kullanılır",
+      "helpTap": "Kanalı hemen test etmek için sol veya sağ hoparlöre dokunun.",
+      "helpBoth": "Test tonunu her iki kanaldan da çalmak için her iki hoparlörü de açın.",
+      "helpAuto": "Sol, sağ ve her iki kanal arasında geçiş yapmak için Otomatik alternatifi kullanın.",
+      "helpStop": "Oynatmayı sonlandırmak istediğinizde Durdurma testini kullanın.",
+      "left": "Sol",
+      "right": "Sağ",
+      "positionLeft": "Sol kanal oynatılıyor",
+      "positionCenter": "Her iki kanal da oynatılıyor",
+      "positionRight": "Sağ kanal oynatılıyor",
+      "idlePosition": "Başlamak için bir hoparlöre dokunun",
+      "stop": "Testi durdur"
+    },
+    "meter": {
+      "estimated": "Tahmini dB",
+      "start": "Ölçmeye başlayın",
+      "stop": "Ölçümü durdurun",
+      "permissionTitle": "Mikrofon erişimi kapalı",
+      "permissionBody": "Mikrofon erişimi yalnızca dB Ölçer çalışırken yakındaki ses seviyelerini tahmin etmek için kullanılır. Ses cihazınızda işlenir ve hiçbir zaman kaydedilmez veya yüklenmez.",
+      "minimum": "Minimum",
+      "average": "Ortalama",
+      "maximum": "Maksimum",
+      "unlockStats": "Ayrıntılı dB oturumu istatistiklerinin kilidini açın",
+      "status": {
+        "veryQuiet": "Çok sessiz",
+        "normal": "Normal",
+        "loud": "Yüksek sesle",
+        "danger": "Tehlike"
+      },
+      "description": {
+        "veryQuiet": "Kitaplık, yumuşak nefes alma",
+        "normal": "Görüşme, ofis",
+        "loud": "Kalabalık cadde, yüksek sesli müzik",
+        "danger": "Konser, siren"
+      },
+      "help": {
+        "title": "dB Ölçme kılavuzu",
+        "howToMeasure": "Nasıl ölçülür",
+        "stepPlace": "Telefonu, sesi kontrol etmek istediğiniz yere yerleştirin.",
+        "stepUncovered": "Mikrofonu açık tutun.",
+        "stepStart": "Ölçmeyi başlat'a dokunun ve canlı tahmini izleyin.",
+        "everydayLevels": "Günlük ses seviyeleri",
+        "examplesApproximate": "Örnekler yaklaşıktır ve mesafeye göre değişir.",
+        "currentEstimate": "Mevcut tahmin",
+        "exposureTitle": "Maruz kalma süresi önemlidir",
+        "exposureDescription": "NIOSH mesleki rehberliği; her +3 dB önerilen süreyi yarıya indirir.",
+        "useItWell": "İyi kullanın",
+        "tipMicrophoneTitle": "Mikrofonu açık tutun",
+        "tipMicrophoneBody": "Elinizle veya kılıfınızla kapatmaktan kaçının.",
+        "tipPositionTitle": "Nerede dinlediğinizi ölçün",
+        "tipPositionBody": "Cihazı değerlendirmek istediğiniz konuma taşıyın.",
+        "tipProtectTitle": "Çok gürültülü geliyorsa kulaklarınızı koruyun",
+        "tipProtectBody": "Kaynaktan uzaklaşın veya işitme koruması kullanın.",
+        "reference": {
+          "concertSpeaker": "Konser konuşmacısı",
+          "sirenNightclub": "Siren veya gece kulübü",
+          "lawnMower": "Çim biçme makinesi",
+          "busyStreet": "Kalabalık cadde",
+          "conversation": "Konuşma",
+          "quietHome": "Sessiz ev",
+          "whisper": "Fısıltı",
+          "hearingThreshold": "İşitme eşiği"
+        }
+      }
+    },
+    "safety": {
+      "title": "Ses Güvenliği ve Gizliliği",
+      "intro": "Bu araçları dikkatli kullanın ve telefonunuzun neyi ölçebileceğini ve neyi ölçemeyeceğini anlayın.",
+      "playbackTitle": "Güvenli oynatma",
+      "playbackBody": "Düşük ses seviyesinde başlayın, yavaş yavaş yükseltin, hoparlörü kulaklarınızdan uzak tutun ve ses rahatsız ediciyse durun.",
+      "routingTitle": "Ses yönlendirme",
+      "routingBody": "Hoparlör temizleme sesi cihazın hoparlörünü kullanmalıdır. Stereo ayrımı bağlı hoparlöre veya kulaklığa bağlıdır.",
+      "estimateTitle": "Tahmini ses seviyeleri",
+      "estimateBody": "Telefon mikrofonları laboratuvar SPL'si yerine dijital sinyal seviyesini bildirir. Uygulama, cihaza göre değişen bir tahmin uygular.",
+      "privacyTitle": "Mikrofon gizliliği",
+      "privacyBody": "Mikrofon yalnızca dB Ölçer etkinken çalışır. Örnekler hafızada işlenir ve hiçbir zaman kaydedilmez veya yüklenmez.",
+      "limitationsTitle": "Önemli sınırlamalar",
+      "limitationsBody": "Bu uygulama su veya toz gidermeyi garanti edemez. Hoparlörün içine nesneler sokmayın ve bu araçları profesyonel onarım, kalibre edilmiş ekipman, tıbbi tavsiye veya işitme koruması kılavuzunun yerine kullanmayın."
     }
   },
   "paywall": {
-    "title": "Premium'u Aç",
-    "subtitle": "Döviz Çeviriciden en iyi şekilde yararlanın",
-    "ctaFreeTrial": "Ücretsiz Dene",
-    "restore": "Satın Almaları Geri Yükle",
-    "terms": "Hizmet Koşulları",
+    "title": "Eksiksiz Ses Araç Setinizin Kilidini Açın",
+    "subtitle": "Hoparlörünüzü temizleyin, gelişmiş kontrollere erişin ve tüm reklamları kaldırın.",
+    "ctaFreeTrial": "Ücretsiz Deneyin",
+    "restore": "Satın Alınanları Geri Yükle",
+    "terms": "Hizmet Şartları",
     "privacy": "Gizlilik Politikası",
     "then": "sonra",
-    "trial": "{{count}} {{unit}} ücretsiz deneme",
-    "save": "%{{percent}} tasarruf",
+    "trial": "{{count}}-{{unit}} ücretsiz deneme",
+    "save": "Tasarruf edin {{percent}}%",
     "trialUnit": {
       "day": "gün",
       "week": "hafta",
@@ -67,42 +211,46 @@
     },
     "period": {
       "day": "günlük",
-      "week": "haftalık",
+      "week": "haftada",
       "month": "aylık",
       "year": "yıllık",
       "lifetime": "Tek seferlik satın alma"
     },
     "features": {
-      "liveRates": {
-        "title": "Her Zaman Taze Kurlar",
-        "description": "Kurlar gerçek zamanlıya yakın güncellenir, gecikmesiz."
+      "waterEject": {
+        "title": "Su Tahliyesini Tamamlayın",
+        "description": "Kılavuzlu 30, 60 ve 90 saniyelik hoparlör temizleme döngülerini çalıştırın."
       },
-      "unlimited": {
-        "title": "Tüm 150+ Döviz, Sınır Yok",
-        "description": "İhtiyacınız olan her dövizi ekleyin, sınırsız."
+      "waveforms": {
+        "title": "Gelişmiş Ton Dalga Formları",
+        "description": "Tam frekans aralığında kare, üçgen ve testere dişi tonlarını kullanın."
       },
-      "charts": {
-        "title": "Tam Kur Geçmişi",
-        "description": "Dönüştürmek için en iyi zamanı bulmak üzere etkileşimli grafikler."
+      "stereoAuto": {
+        "title": "Otomatik Stereo Testi",
+        "description": "Eller serbest olarak sol, sağ ve her iki kanal arasında geçiş yapın."
+      },
+      "dbStats": {
+        "title": "Ayrıntılı dB İstatistikleri",
+        "description": "Her oturum için minimum, ortalama ve maksimum tahminleri görün."
       },
       "adFree": {
-        "title": "Sıfır Kesinti",
-        "description": "Reklam yok. Sadece temiz, odaklanmış dönüştürme."
+        "title": "Sıfır Reklam Kesintisi",
+        "description": "Tüm ses araçlarını banner'lar veya tam ekran reklamlar olmadan kullanın."
       }
     },
     "feedback": {
-      "subscribeSuccess": "Hoş geldiniz! Premium erişiminiz etkin.",
+      "subscribeSuccess": "Hoş geldiniz! Premium erişiminiz aktif.",
       "subscribeError": "Bir şeyler ters gitti. Lütfen tekrar deneyin.",
-      "restoreSuccess": "Abonelik başarıyla geri yüklendi!",
-      "restoreNotFound": "Aktif abonelik bulunamadı.",
-      "restoreError": "Satın almalar geri yüklenemedi. Lütfen tekrar deneyin."
+      "restoreSuccess": "Premium erişimi başarıyla geri yüklendi!",
+      "restoreNotFound": "Aktif Premium satın alımı bulunamadı.",
+      "restoreError": "Satın alınanlar geri yüklenemedi. Lütfen tekrar deneyin."
     },
     "packageTitle": {
       "day": "Günlük",
       "week": "Haftalık",
       "month": "Aylık",
       "year": "Yıllık",
-      "lifetime": "Ömür Boyu"
+      "lifetime": "Ömür boyu"
     }
   },
   "otaUpdate": {
@@ -129,9 +277,5 @@
       "title": "Özel ve cihazınızda",
       "description": "Ses işleme, açık güvenlik ve mikrofon yönergeleriyle telefonunuzda kalır."
     }
-  },
-  "premium": {
-    "accessChecking": "Premium erişimi kontrol ediliyor…",
-    "accessUnknown": "Premium erişimini kontrol etmek için internete bağlanın."
   }
 }

@@ -1,0 +1,1 @@
+sauber,handy,stereo,test,frequenz,hertz,audio,klang,lärm,staub,feuchtigkeit,ton,dezibel

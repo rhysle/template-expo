@@ -1,0 +1,43 @@
+1) SCREEN RECORDING
+Attachment: Uploaded separately in App Store Connect (Review Info -> Attachment).
+Device: Filmed on iPhone 15 Pro Max running iOS 26.6.1.
+Coverage: onboarding/paywall, all four tabs, tone/waveform controls, manual/automatic stereo tests, microphone permission, and dB results.
+
+2) DEVICES & OS TESTED
+iPhone 15 Pro Max (iOS 26.6.1)
+
+3) PURPOSE & AUDIENCE
+Speaker Cleaner guides users through speaker-cleaning sound cycles, tone generation, stereo-channel checks, and nearby sound-level estimates.
+It is for people checking a muffled phone after moisture/debris exposure, testing headphones, or monitoring noise without switching apps.
+Unlike typical single-tone eject apps, Speaker Cleaner shows a three-stage water-pulse, debris-shake, and finishing-sweep workflow followed by tools for checking the result.
+Shipped features include 30/60/90-second cycles, 20-20,000 Hz tones with four waveforms, manual/automatic left-right-both stereo testing, and live estimated dB with session minimum/average/maximum.
+
+4) SETUP
+No account or demo credentials are required.
+Complete or skip onboarding and dismiss the paywall; Eject, Tone Generator, Stereo Test, and dB Meter are in the tab bar.
+Open Premium by starting cleaning, choosing an advanced waveform, enabling automatic stereo testing, viewing detailed dB statistics, or tapping Upgrade in Settings.
+Subscriptions and lifetime access use Apple In-App Purchase; RevenueCat manages offerings and the Premium entitlement, and no external payment is offered.
+Restore Purchases is on the paywall.
+
+5) EXTERNAL SERVICES
+- Apple In-App Purchase / RevenueCat -- purchases, restore, Premium entitlement
+- Google Firebase Analytics -- screen and feature-usage analytics
+- Google AdMob / User Messaging Platform -- ads and consent for free users; iOS may show App Tracking Transparency
+- Sentry -- production crash and error reporting
+Privacy: microphone samples stay in device memory and are never saved/uploaded. A locally stored anonymous install UUID is shared with Firebase, Sentry, and RevenueCat; AdMob follows consent/tracking choices.
+
+6) REGIONAL DIFFERENCES
+Core functionality is consistent across regions. 33 locales: ar, bn, cs, da, de, el, en, es, fi, fr, he, hi, hr, hu, id, it, ja, ko, ms, nb, nl, pl, pt, pt-BR, ro, ru, sv, th, tr, uk, vi, zh-Hans, zh-Hant; ar/he use RTL. Consent/ads may vary by territory. Apple In-App Purchase pricing uses localized App Store price points.
+
+7) REGULATED INDUSTRY / PROTECTED MATERIAL
+The app is not a medical device, calibrated meter, repair service, or other regulated product; dB values are estimates and cleaning is not guaranteed. It has no user-generated content or intentionally protected third-party material.
+
+8) IN-APP PURCHASES
+Premium Weekly -- Auto-renewable weekly subscription with an eligible 3-day free trial; unlocks all Premium features.
+Premium Yearly -- Auto-renewable yearly subscription; unlocks all Premium features.
+Premium Lifetime -- One-time non-consumable purchase; unlocks all Premium features permanently.
+Premium features: 30/60/90-second cleaning cycles, square/triangle/sawtooth tones, automatic stereo testing, detailed dB statistics, and ad-free use.
+Navigation (new user): Launch -> complete or skip onboarding -> Premium paywall.
+Navigation (existing user): Any tab -> gear icon -> Upgrade to Premium.
+Other purchase locations: Eject -> Start Cleaning or duration; Tone Generator -> square/triangle/sawtooth; Stereo Test -> Automatic; dB Meter -> locked statistics. Each opens the same Premium paywall with all three products.
+Purchase system: Apple In-App Purchase only; Restore Purchases is at the bottom of the paywall.

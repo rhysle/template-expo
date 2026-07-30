@@ -19,6 +19,7 @@
     "stop": "Stop"
   },
   "premium": {
+    "lockedHint": "Opens the Premium upgrade screen",
     "accessChecking": "Checking Premium access…",
     "accessUnknown": "Connect to the internet to check Premium access."
   },
@@ -30,8 +31,7 @@
   },
   "settings": {
     "title": "Settings",
-    "subtitle": "Customize your currency converter",
-    "preferences": "Preferences",
+    "subtitle": "Tune your speaker tools and sound meter",
     "support": "Support",
     "contactSupport": "Contact Support",
     "contactSupportSubtitle": "We're here to help",
@@ -50,12 +50,152 @@
     "otaUpdateId": "Update: {{updateId}}",
     "upgradeBanner": {
       "title": "Upgrade to Premium",
-      "subtitle": "Frequent rate updates, no ads & full chart access"
+      "subtitle": "Unlock Water Eject, advanced audio controls, and an ad-free experience"
+    },
+    "audio": {
+      "section": "Audio & Meter",
+      "ejectDuration": "Cleaning duration",
+      "durationValue": "{{count}} seconds",
+      "haptics": "Control haptics",
+      "hapticsSubtitle": "Use tactile feedback in sound tools",
+      "safety": "Audio Safety & Privacy",
+      "safetySubtitle": "Playback, microphone, and measurement guidance"
+    }
+  },
+  "audioTools": {
+    "common": {
+      "mascot": "Water Eject mascot",
+      "error": "Audio could not start. Check the current output and try again."
+    },
+    "eject": {
+      "subtitle": "A powerful 3-stage sound cycle targets trapped water, loose dust, and debris.",
+      "safe": "Ready to clean",
+      "completed": "Cleaning cycle complete",
+      "remaining": "{{time}} remaining",
+      "start": "Start cleaning",
+      "stop": "Stop cleaning",
+      "idleHint": "Place the device speaker-side down before starting.",
+      "runningHint": "Keep the device still and away from your ears.",
+      "completedHint": "Test your speaker and repeat the cycle if the sound is still muffled.",
+      "externalTitle": "Disconnect external audio",
+      "externalBody": "Speaker cleaning works through the device speaker, not headphones or Bluetooth outputs.",
+      "phase": {
+        "water": "Water eject pulse",
+        "debris": "Dust & debris shake",
+        "finish": "Finishing sweep"
+      }
+    },
+    "tone": {
+      "currentFrequency": "Current frequency",
+      "frequencyValue": "{{frequency}} Hz",
+      "waveformLabel": "{{waveform}} waveform at {{frequency}} hertz",
+      "waveform": {
+        "label": "Waveform",
+        "sine": "Sine",
+        "square": "Square",
+        "triangle": "Triangle",
+        "sawtooth": "Sawtooth"
+      },
+      "play": "Play tone",
+      "stop": "Stop tone",
+      "volumeHint": "Keep volume low and the speaker away from your ears.",
+      "band": {
+        "veryLow": "Very low",
+        "low": "Low",
+        "midLow": "Low-mid",
+        "mid": "Mid",
+        "high": "High",
+        "veryHigh": "Very high"
+      }
+    },
+    "stereo": {
+      "auto": "Auto alternate",
+      "autoHint": "Cycle left, right, and both",
+      "tapToChange": "Tap speakers to change channels",
+      "start": "Start test",
+      "helpTitle": "How to use Stereo Test",
+      "helpTap": "Tap the left or right speaker to test that channel immediately.",
+      "helpBoth": "Turn on both speakers to play the test tone through both channels.",
+      "helpAuto": "Use Auto alternate to cycle between left, right, and both channels.",
+      "helpStop": "Use Stop test whenever you want to end playback.",
+      "left": "Left",
+      "right": "Right",
+      "positionLeft": "Left channel playing",
+      "positionCenter": "Both channels playing",
+      "positionRight": "Right channel playing",
+      "idlePosition": "Tap a speaker to begin",
+      "stop": "Stop test"
+    },
+    "meter": {
+      "estimated": "Estimated dB",
+      "start": "Start measuring",
+      "stop": "Stop measuring",
+      "permissionTitle": "Microphone access is off",
+      "permissionBody": "Microphone access is used only while the dB Meter is running to estimate nearby sound levels. Audio is processed on your device and is never saved or uploaded.",
+      "minimum": "Minimum",
+      "average": "Average",
+      "maximum": "Maximum",
+      "unlockStats": "Unlock detailed dB session statistics",
+      "status": {
+        "veryQuiet": "Very quiet",
+        "normal": "Normal",
+        "loud": "Loud",
+        "danger": "Danger"
+      },
+      "description": {
+        "veryQuiet": "Library, soft breathing",
+        "normal": "Conversation, office",
+        "loud": "Busy street, loud music",
+        "danger": "Concert, siren"
+      },
+      "help": {
+        "title": "dB Meter guide",
+        "howToMeasure": "How to measure",
+        "stepPlace": "Place the phone where you want to check the sound.",
+        "stepUncovered": "Keep the microphone uncovered.",
+        "stepStart": "Tap Start measuring and watch the live estimate.",
+        "everydayLevels": "Everyday sound levels",
+        "examplesApproximate": "Examples are approximate and vary with distance.",
+        "currentEstimate": "Current estimate",
+        "exposureTitle": "Exposure time matters",
+        "exposureDescription": "NIOSH occupational guidance; every +3 dB halves the recommended time.",
+        "useItWell": "Use it well",
+        "tipMicrophoneTitle": "Keep the microphone uncovered",
+        "tipMicrophoneBody": "Avoid covering it with your hand or case.",
+        "tipPositionTitle": "Measure where you listen",
+        "tipPositionBody": "Move the device to the location you want to assess.",
+        "tipProtectTitle": "If it feels too loud, protect your ears",
+        "tipProtectBody": "Move away from the source or use hearing protection.",
+        "reference": {
+          "concertSpeaker": "Concert speaker",
+          "sirenNightclub": "Siren or nightclub",
+          "lawnMower": "Lawn mower",
+          "busyStreet": "Busy street",
+          "conversation": "Conversation",
+          "quietHome": "Quiet home",
+          "whisper": "Whisper",
+          "hearingThreshold": "Threshold of hearing"
+        }
+      }
+    },
+    "safety": {
+      "title": "Audio Safety & Privacy",
+      "intro": "Use these tools carefully and understand what your phone can—and cannot—measure.",
+      "playbackTitle": "Safe playback",
+      "playbackBody": "Start at low volume, raise it gradually, keep the speaker away from your ears, and stop if a sound is uncomfortable.",
+      "routingTitle": "Audio routing",
+      "routingBody": "Speaker-cleaning sound must use the device speaker. Stereo separation depends on the connected speaker or headphones.",
+      "estimateTitle": "Estimated sound levels",
+      "estimateBody": "Phone microphones report digital signal level rather than laboratory SPL. The app applies an estimate that varies by device.",
+      "privacyTitle": "Microphone privacy",
+      "privacyBody": "The microphone runs only while the dB Meter is active. Samples are processed in memory and are never saved or uploaded.",
+      "limitationsTitle": "Important limitations",
+      "limitationsBody": "This app cannot guarantee water or dust removal. Do not insert objects into the speaker, and do not use these tools as a replacement for professional repair, calibrated equipment, medical advice, or hearing protection guidance."
     }
   },
   "paywall": {
-    "title": "Unlock Premium",
-    "subtitle": "Get the most out of Currency Converter",
+    "title": "Unlock Your Complete Audio Toolkit",
+    "subtitle": "Clean your speaker, access advanced controls, and remove every ad.",
     "ctaFreeTrial": "Try for Free",
     "restore": "Restore Purchases",
     "terms": "Terms of Service",
@@ -77,21 +217,25 @@
       "lifetime": "One-time purchase"
     },
     "features": {
-      "liveRates": {
-        "title": "Always-Fresh Rates",
-        "description": "Rates refresh in near real-time, not delayed."
+      "waterEject": {
+        "title": "Complete Water Eject",
+        "description": "Run guided 30, 60, and 90-second speaker-cleaning cycles."
       },
-      "unlimited": {
-        "title": "All 150+ Currencies, No Cap",
-        "description": "Add every currency you need, no limits."
+      "waveforms": {
+        "title": "Advanced Tone Waveforms",
+        "description": "Use square, triangle, and sawtooth tones across the full frequency range."
       },
-      "charts": {
-        "title": "Full Rate History",
-        "description": "Interactive charts to find the best time to convert."
+      "stereoAuto": {
+        "title": "Automatic Stereo Testing",
+        "description": "Cycle between left, right, and both channels hands-free."
+      },
+      "dbStats": {
+        "title": "Detailed dB Statistics",
+        "description": "See minimum, average, and maximum estimates for every session."
       },
       "adFree": {
-        "title": "Zero Interruptions",
-        "description": "No ads. Just clean, focused converting."
+        "title": "Zero Ad Interruptions",
+        "description": "Use every audio tool without banners or full-screen ads."
       }
     },
     "feedback": {

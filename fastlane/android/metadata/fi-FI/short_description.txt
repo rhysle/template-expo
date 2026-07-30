@@ -1,0 +1,1 @@
+Poista vettä, puhdista kaiutin ja testaa äänet, stereo sekä melutaso.

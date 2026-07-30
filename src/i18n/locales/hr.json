@@ -1,9 +1,5 @@
 {
   "common": {
-    "openSettings": "Otvori postavke",
-    "reset": "Poništi",
-    "start": "Pokreni",
-    "stop": "Zaustavi",
     "back": "Natrag",
     "cancel": "Odustani",
     "close": "Zatvori",
@@ -13,10 +9,19 @@
     "getStarted": "Počni",
     "next": "Dalje",
     "ok": "U redu",
+    "openSettings": "Otvori postavke",
+    "reset": "Poništi",
     "retry": "Pokušaj ponovo",
     "restart": "Ponovo pokreni",
     "save": "Spremi",
-    "skip": "Preskoči"
+    "skip": "Preskoči",
+    "start": "Pokreni",
+    "stop": "Zaustavi"
+  },
+  "premium": {
+    "lockedHint": "Otvara zaslon za nadogradnju na Premium",
+    "accessChecking": "Provjera Premium pristupa…",
+    "accessUnknown": "Povežite se s internetom da biste provjerili Premium pristup."
   },
   "tabs": {
     "eject": "Izbaci",
@@ -26,8 +31,7 @@
   },
   "settings": {
     "title": "Postavke",
-    "subtitle": "Prilagodite pretvarač valuta",
-    "preferences": "Postavke",
+    "subtitle": "Podesite alate za zvučnike i mjerač zvuka",
     "support": "Podrška",
     "contactSupport": "Kontaktiraj podršku",
     "contactSupportSubtitle": "Ovdje smo da pomognemo",
@@ -45,20 +49,160 @@
     "version": "Verzija {{version}}",
     "otaUpdateId": "Ažuriranje: {{updateId}}",
     "upgradeBanner": {
-      "title": "Nadogradi na Premium",
-      "subtitle": "Česta ažuriranja tečajeva, bez reklama i potpuni pristup grafovima"
+      "title": "Nadogradite na Premium",
+      "subtitle": "Otključajte Water Eject, napredne audio kontrole i iskustvo bez oglasa"
+    },
+    "audio": {
+      "section": "Audio i mjerač",
+      "ejectDuration": "Trajanje čišćenja",
+      "durationValue": "{{count}} sekundi",
+      "haptics": "Upravljajte dodirnim elementima",
+      "hapticsSubtitle": "Koristite taktilnu povratnu informaciju u zvučnim alatima",
+      "safety": "Audio Sigurnost i privatnost",
+      "safetySubtitle": "Reprodukcija, mikrofon i upute za mjerenje"
+    }
+  },
+  "audioTools": {
+    "common": {
+      "mascot": "Maskota za izbacivanje vode",
+      "error": "Audio se nije mogao pokrenuti. Provjerite trenutni izlaz i pokušajte ponovno."
+    },
+    "eject": {
+      "subtitle": "Snažni zvučni ciklus u 3 stupnja cilja na zarobljenu vodu, prašinu i krhotine.",
+      "safe": "Spremno za čišćenje",
+      "completed": "Ciklus čišćenja završen",
+      "remaining": "{{time}} preostalo",
+      "start": "Započnite čišćenje",
+      "stop": "Prekini čišćenje",
+      "idleHint": "Postavite uređaj sa zvučnikom prema dolje prije početka.",
+      "runningHint": "Držite uređaj mirno i dalje od ušiju.",
+      "completedHint": "Testirajte svoj zvučnik i ponovite ciklus ako je zvuk i dalje prigušen.",
+      "externalTitle": "Odspojite vanjski zvuk",
+      "externalBody": "Čišćenje zvučnika radi preko zvučnika uređaja, a ne slušalica ili Bluetooth izlaza.",
+      "phase": {
+        "water": "Puls izbacivanja vode",
+        "debris": "Potres prašine i krhotina",
+        "finish": "Završno čišćenje"
+      }
+    },
+    "tone": {
+      "currentFrequency": "Trenutna frekvencija",
+      "frequencyValue": "{{frequency}} Hz",
+      "waveformLabel": "{{waveform}} valni oblik na {{frequency}} herca",
+      "waveform": {
+        "label": "Valni oblik",
+        "sine": "Sinus",
+        "square": "Kvadrat",
+        "triangle": "Trokut",
+        "sawtooth": "Zupčasti zub"
+      },
+      "play": "Pusti ton",
+      "stop": "Stop ton",
+      "volumeHint": "Neka glasnoća bude tiha i zvučnik dalje od ušiju.",
+      "band": {
+        "veryLow": "Vrlo nisko",
+        "low": "Nisko",
+        "midLow": "Nisko-srednje",
+        "mid": "Sredina",
+        "high": "Visoko",
+        "veryHigh": "Vrlo visoko"
+      }
+    },
+    "stereo": {
+      "auto": "Automatski alternativni",
+      "autoHint": "Kružite lijevo, desno i oboje",
+      "tapToChange": "Dodirnite zvučnike za promjenu kanala",
+      "start": "Započni test",
+      "helpTitle": "Kako koristiti Stereo Test",
+      "helpTap": "Dodirnite lijevi ili desni zvučnik da odmah testirate taj kanal.",
+      "helpBoth": "Uključite oba zvučnika za reprodukciju ispitnog tona na oba kanala.",
+      "helpAuto": "Koristite Auto alternate za izmjenu između lijevog, desnog i oba kanala.",
+      "helpStop": "Koristite Zaustavi test kad god želite prekinuti reprodukciju.",
+      "left": "Lijevo",
+      "right": "Desno",
+      "positionLeft": "Lijevi kanal svira",
+      "positionCenter": "Oba kanala sviraju",
+      "positionRight": "Desni kanal svira",
+      "idlePosition": "Dodirnite zvučnik za početak",
+      "stop": "Zaustavi test"
+    },
+    "meter": {
+      "estimated": "Procijenjeni dB",
+      "start": "Počnite mjeriti",
+      "stop": "Prekini mjerenje",
+      "permissionTitle": "Pristup mikrofonu je isključen",
+      "permissionBody": "Pristup mikrofonu koristi se samo dok dB mjerač radi za procjenu razine zvuka u blizini. Audio se obrađuje na vašem uređaju i nikada se ne sprema niti prenosi.",
+      "minimum": "Minimalno",
+      "average": "Prosječno",
+      "maximum": "Maksimalno",
+      "unlockStats": "Otključajte detaljnu statistiku dB sesije",
+      "status": {
+        "veryQuiet": "Vrlo tiho",
+        "normal": "Normalno",
+        "loud": "Glasno",
+        "danger": "Opasnost"
+      },
+      "description": {
+        "veryQuiet": "Knjižnica, lagano disanje",
+        "normal": "Razgovor, ured",
+        "loud": "Prometna ulica, glasna glazba",
+        "danger": "Koncert, sirena"
+      },
+      "help": {
+        "title": "vodič za mjerenje dB",
+        "howToMeasure": "Kako mjeriti",
+        "stepPlace": "Postavite telefon na mjesto gdje želite provjeriti zvuk.",
+        "stepUncovered": "Držite mikrofon nepokrivenim.",
+        "stepStart": "Dodirnite Započni mjerenje i gledajte procjenu uživo.",
+        "everydayLevels": "Svakodnevne razine zvuka",
+        "examplesApproximate": "Primjeri su približni i razlikuju se ovisno o udaljenosti.",
+        "currentEstimate": "Trenutna procjena",
+        "exposureTitle": "Vrijeme ekspozicije je važno",
+        "exposureDescription": "NIOSH profesionalno usmjeravanje; svaka +3 dB prepolovljuje preporučeno vrijeme.",
+        "useItWell": "Dobro ga koristite",
+        "tipMicrophoneTitle": "Držite mikrofon nepokrivenim",
+        "tipMicrophoneBody": "Izbjegavajte ga prekrivati rukom ili kućištem.",
+        "tipPositionTitle": "Mjerite gdje slušate",
+        "tipPositionBody": "Premjestite uređaj na mjesto koje želite procijeniti.",
+        "tipProtectTitle": "Ako vam se čini preglasno, zaštitite uši",
+        "tipProtectBody": "Udaljite se od izvora ili koristite zaštitu za sluh.",
+        "reference": {
+          "concertSpeaker": "Koncertni govornik",
+          "sirenNightclub": "Sirena ili noćni klub",
+          "lawnMower": "Kosilica za travu",
+          "busyStreet": "Prometna ulica",
+          "conversation": "Razgovor",
+          "quietHome": "Miran dom",
+          "whisper": "šapat",
+          "hearingThreshold": "Prag sluha"
+        }
+      }
+    },
+    "safety": {
+      "title": "Audio Sigurnost i privatnost",
+      "intro": "Pažljivo koristite ove alate i shvatite što vaš telefon može, a što ne može mjeriti.",
+      "playbackTitle": "Sigurna reprodukcija",
+      "playbackBody": "Počnite s niskom glasnoćom, postupno je povećavajte, držite zvučnik dalje od ušiju i prestanite ako vam je zvuk neugodan.",
+      "routingTitle": "Usmjeravanje zvuka",
+      "routingBody": "Zvuk za čišćenje zvučnika mora koristiti zvučnik uređaja. Stereo odvajanje ovisi o spojenom zvučniku ili slušalicama.",
+      "estimateTitle": "Procijenjene razine zvuka",
+      "estimateBody": "Telefonski mikrofoni prijavljuju razinu digitalnog signala, a ne laboratorijski SPL. Aplikacija primjenjuje procjenu koja se razlikuje ovisno o uređaju.",
+      "privacyTitle": "Privatnost mikrofona",
+      "privacyBody": "Mikrofon radi samo dok je dB mjerač aktivan. Uzorci se obrađuju u memoriji i nikada se ne spremaju ili učitavaju.",
+      "limitationsTitle": "Važna ograničenja",
+      "limitationsBody": "Ova aplikacija ne može jamčiti uklanjanje vode ili prašine. Nemojte umetati predmete u zvučnik i nemojte koristiti ove alate kao zamjenu za profesionalni popravak, kalibriranu opremu, liječnički savjet ili upute za zaštitu sluha."
     }
   },
   "paywall": {
-    "title": "Otključaj Premium",
-    "subtitle": "Iskoristite sve mogućnosti Currency Convertera",
-    "ctaFreeTrial": "Isprobaj besplatno",
-    "restore": "Obnovi kupnje",
+    "title": "Otključajte kompletan audio alat",
+    "subtitle": "Očistite svoj zvučnik, pristupite naprednim kontrolama i uklonite sve oglase.",
+    "ctaFreeTrial": "Isprobajte besplatno",
+    "restore": "Vrati kupnje",
     "terms": "Uvjeti usluge",
     "privacy": "Pravila o privatnosti",
     "then": "zatim",
     "trial": "{{count}}-{{unit}} besplatno probno razdoblje",
-    "save": "Uštedite {{percent}} %",
+    "save": "Uštedite {{percent}}%",
     "trialUnit": {
       "day": "dan",
       "week": "tjedan",
@@ -73,36 +217,40 @@
       "lifetime": "Jednokratna kupnja"
     },
     "features": {
-      "liveRates": {
-        "title": "Uvijek svježi tečajevi",
-        "description": "Tečajevi se osvježavaju gotovo u stvarnom vremenu, bez kašnjenja."
+      "waterEject": {
+        "title": "Potpuno izbacivanje vode",
+        "description": "Pokrenite vođene cikluse čišćenja zvučnika od 30, 60 i 90 sekundi."
       },
-      "unlimited": {
-        "title": "Svih 150+ valuta, bez ograničenja",
-        "description": "Dodajte bilo koju valutu, bez ograničenja."
+      "waveforms": {
+        "title": "Napredni tonski valni oblici",
+        "description": "Koristite kvadratne, trokutaste i pilaste tonove u cijelom frekvencijskom rasponu."
       },
-      "charts": {
-        "title": "Kompletna povijest tečajeva",
-        "description": "Interaktivni grafovi za pronalaženje najboljeg vremena za konverziju."
+      "stereoAuto": {
+        "title": "Automatsko stereo testiranje",
+        "description": "Mijenjajte lijevi, desni i oba kanala bez ruku."
+      },
+      "dbStats": {
+        "title": "Detaljna dB statistika",
+        "description": "Pogledajte minimalne, prosječne i maksimalne procjene za svaku sesiju."
       },
       "adFree": {
-        "title": "Nula prekida",
-        "description": "Bez reklama. Samo čista, fokusirana konverzija."
+        "title": "Nula prekida oglasa",
+        "description": "Koristite sve audio alate bez bannera ili oglasa preko cijelog zaslona."
       }
     },
     "feedback": {
-      "subscribeSuccess": "Dobro došli! Vaš Premium pristup je aktivan.",
-      "subscribeError": "Nešto je pošlo po krivu. Molimo pokušajte ponovo.",
-      "restoreSuccess": "Pretplata uspješno obnovljena!",
-      "restoreNotFound": "Nije pronađena aktivna pretplata.",
-      "restoreError": "Nije moguće obnoviti kupnje. Molimo pokušajte ponovo."
+      "subscribeSuccess": "Dobro došli! Vaš premium pristup je aktivan.",
+      "subscribeError": "Nešto nije u redu. Molimo pokušajte ponovo.",
+      "restoreSuccess": "Premium pristup uspješno vraćen!",
+      "restoreNotFound": "Nije pronađena aktivna Premium kupnja.",
+      "restoreError": "Nije moguće vratiti kupnje. Molimo pokušajte ponovo."
     },
     "packageTitle": {
       "day": "Dnevno",
       "week": "Tjedno",
       "month": "Mjesečno",
-      "year": "Godišnje",
-      "lifetime": "Doživotno"
+      "year": "godišnje",
+      "lifetime": "Životni vijek"
     }
   },
   "otaUpdate": {
@@ -129,9 +277,5 @@
       "title": "Privatno i na uređaju",
       "description": "Obrada zvuka ostaje na telefonu uz jasne upute o sigurnosti i mikrofonu."
     }
-  },
-  "premium": {
-    "accessChecking": "Provjera Premium pristupa…",
-    "accessUnknown": "Povežite se s internetom da biste provjerili Premium pristup."
   }
 }

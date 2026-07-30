@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Template Expo",
-    "slug": "template-expo",
+    "name": "Speaker Cleaner",
+    "slug": "speaker-cleaner",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icons/ios-icon.png",
-    "scheme": "com.rhysle.expo",
+    "scheme": "com.rhysle.speakercleaner",
     "userInterfaceStyle": "light",
     "ios": {
       "icon": {
@@ -14,7 +14,7 @@
         "tinted": "./assets/icons/ios-icon-tinted.png"
       },
       "supportsTablet": true,
-      "bundleIdentifier": "com.rhysle.expo",
+      "bundleIdentifier": "com.rhysle.speakercleaner",
       "googleServicesFile": "./GoogleService-Info.plist",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
@@ -24,8 +24,13 @@
       "allowBackup": false,
       "icon": "./assets/icons/android-icon.png",
       "predictiveBackGestureEnabled": false,
-      "package": "com.rhysle.expo",
+      "package": "com.rhysle.speakercleaner",
       "googleServicesFile": "./google-services.json",
+      "permissions": [
+        "android.permission.MODIFY_AUDIO_SETTINGS",
+        "com.google.android.gms.permission.AD_ID",
+        "android.permission.RECORD_AUDIO"
+      ],
       "blockedPermissions": [
         "android.permission.SYSTEM_ALERT_WINDOW",
         "android.permission.READ_EXTERNAL_STORAGE",
@@ -135,7 +140,7 @@
         "@sentry/react-native/expo",
         {
           "url": "https://sentry.io/",
-          "project": "template-expo",
+          "project": "speaker-cleaner",
           "organization": "rhysle"
         }
       ],
@@ -158,8 +163,8 @@
       [
         "react-native-google-mobile-ads",
         {
-          "androidAppId": "ca-app-pub-4662625232077043~8614004722",
-          "iosAppId": "ca-app-pub-4662625232077043~6949204305",
+          "androidAppId": "ca-app-pub-4662625232077043~6286804764",
+          "iosAppId": "ca-app-pub-4662625232077043~6468386134",
           "delayAppMeasurementInit": true
         }
       ],
@@ -173,7 +178,19 @@
       "expo-status-bar",
       "expo-web-browser",
       "@react-native-firebase/app",
-      "./plugins/withRNFirebaseStaticFramework.js"
+      "./plugins/withRNFirebaseStaticFramework.js",
+      [
+        "react-native-audio-api",
+        {
+          "iosBackgroundMode": false,
+          "iosMicrophonePermission": "Microphone access is used only while the dB Meter is running to estimate nearby sound levels. Audio is processed on your device and is never saved or uploaded.",
+          "androidPermissions": [
+            "android.permission.RECORD_AUDIO"
+          ],
+          "androidForegroundService": false,
+          "androidFSTypes": []
+        }
+      ]
     ],
     "runtimeVersion": {
       "policy": "appVersion"
@@ -185,12 +202,12 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "6399fac2-52c4-4cde-81f1-14c928819922"
+        "projectId": "c7ee0090-40e2-48e0-b7f1-2774c6df510b"
       }
     },
     "owner": "rhysle",
     "updates": {
-      "url": "https://u.expo.dev/6399fac2-52c4-4cde-81f1-14c928819922"
+      "url": "https://u.expo.dev/c7ee0090-40e2-48e0-b7f1-2774c6df510b"
     }
   }
 }

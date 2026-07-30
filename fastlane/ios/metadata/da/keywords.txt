@@ -1,0 +1,1 @@
+ren,telefon,stereo,test,frekvens,hertz,lyd,støj,støv,fugt,audio,tone,decibel

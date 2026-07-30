@@ -1,0 +1,1 @@
+limpeza,celular,estéreo,teste,frequência,hertz,áudio,som,ruído,poeira,umidade,tom,decibel

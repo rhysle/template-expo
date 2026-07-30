@@ -1,0 +1,1 @@
+temizle,telefon,stereo,test,frekans,hertz,ses,gürültü,toz,nem,kir,audio,ton,desibel

@@ -1,9 +1,5 @@
 {
   "common": {
-    "openSettings": "Åbn indstillinger",
-    "reset": "Nulstil",
-    "start": "Start",
-    "stop": "Stop",
     "back": "Tilbage",
     "cancel": "Annuller",
     "close": "Luk",
@@ -13,10 +9,19 @@
     "getStarted": "Kom i gang",
     "next": "Næste",
     "ok": "OK",
+    "openSettings": "Åbn indstillinger",
+    "reset": "Nulstil",
     "retry": "Prøv igen",
     "restart": "Genstart",
     "save": "Gem",
-    "skip": "Spring over"
+    "skip": "Spring over",
+    "start": "Start",
+    "stop": "Stop"
+  },
+  "premium": {
+    "lockedHint": "Åbner Premium-opgraderingsskærmen",
+    "accessChecking": "Kontrollerer Premium-adgang…",
+    "accessUnknown": "Opret forbindelse til internettet for at kontrollere Premium-adgang."
   },
   "tabs": {
     "eject": "Udtøm",
@@ -26,8 +31,7 @@
   },
   "settings": {
     "title": "Indstillinger",
-    "subtitle": "Tilpas din valutaomregner",
-    "preferences": "Præferencer",
+    "subtitle": "Indstil dine højttalerværktøjer og lydmåler",
     "support": "Support",
     "contactSupport": "Kontakt support",
     "contactSupportSubtitle": "Vi er her for at hjælpe",
@@ -46,19 +50,159 @@
     "otaUpdateId": "Opdatering: {{updateId}}",
     "upgradeBanner": {
       "title": "Opgrader til Premium",
-      "subtitle": "Hyppige kursopdateringer, ingen annoncer og fuld grafadgang"
+      "subtitle": "Lås op for Water Eject, avancerede lydkontroller og en reklamefri oplevelse"
+    },
+    "audio": {
+      "section": "Lyd og måler",
+      "ejectDuration": "Rengøringsvarighed",
+      "durationValue": "{{count}} sekunder",
+      "haptics": "Styr haptik",
+      "hapticsSubtitle": "Brug taktil feedback i lydværktøjer",
+      "safety": "Lydsikkerhed og privatliv",
+      "safetySubtitle": "Afspilnings-, mikrofon- og målevejledning"
+    }
+  },
+  "audioTools": {
+    "common": {
+      "mascot": "Water Eject-maskot",
+      "error": "Lyden kunne ikke starte. Kontroller det aktuelle output, og prøv igen."
+    },
+    "eject": {
+      "subtitle": "En kraftfuld 3-trins lydcyklus retter sig mod indespærret vand, løst støv og snavs.",
+      "safe": "Klar til at rengøre",
+      "completed": "Rengøringscyklus fuldført",
+      "remaining": "{{time}} tilbage",
+      "start": "Begynd at rense",
+      "stop": "Stop rengøring",
+      "idleHint": "Placer enhedens højttalerside nedad, før du starter.",
+      "runningHint": "Hold enheden stille og væk fra dine ører.",
+      "completedHint": "Test din højttaler, og gentag cyklussen, hvis lyden stadig er dæmpet.",
+      "externalTitle": "Afbryd ekstern lyd",
+      "externalBody": "Højttalerrensning fungerer via enhedens højttaler, ikke hovedtelefoner eller Bluetooth-udgange.",
+      "phase": {
+        "water": "Vandudstødningspuls",
+        "debris": "Støv- og affaldsrystelser",
+        "finish": "Afslutter sweep"
+      }
+    },
+    "tone": {
+      "currentFrequency": "Aktuel frekvens",
+      "frequencyValue": "{{frequency}} Hz",
+      "waveformLabel": "{{waveform}} kurveform ved {{frequency}} hertz",
+      "waveform": {
+        "label": "Bølgeform",
+        "sine": "Sinus",
+        "square": "Kvadrat",
+        "triangle": "Trekant",
+        "sawtooth": "Savtand"
+      },
+      "play": "Afspil tone",
+      "stop": "Stoptone",
+      "volumeHint": "Hold lydstyrken lav og højttaleren væk fra dine ører.",
+      "band": {
+        "veryLow": "Meget lav",
+        "low": "Lav",
+        "midLow": "Lav-midt",
+        "mid": "Midt",
+        "high": "Høj",
+        "veryHigh": "Meget høj"
+      }
+    },
+    "stereo": {
+      "auto": "Automatisk alternativ",
+      "autoHint": "Cykle til venstre, højre og begge dele",
+      "tapToChange": "Tryk på højttalere for at skifte kanal",
+      "start": "Start test",
+      "helpTitle": "Sådan bruger du Stereo Test",
+      "helpTap": "Tryk på venstre eller højre højttaler for at teste den kanal med det samme.",
+      "helpBoth": "Tænd for begge højttalere for at afspille testtonen gennem begge kanaler.",
+      "helpAuto": "Brug Auto alternering til at skifte mellem venstre, højre og begge kanaler.",
+      "helpStop": "Brug Stop test, når du vil afslutte afspilningen.",
+      "left": "Venstre",
+      "right": "Højre",
+      "positionLeft": "Venstre kanal afspilles",
+      "positionCenter": "Begge kanaler spiller",
+      "positionRight": "Højre kanal afspiller",
+      "idlePosition": "Tryk på en højttaler for at begynde",
+      "stop": "Stop test"
+    },
+    "meter": {
+      "estimated": "Estimeret dB",
+      "start": "Begynd at måle",
+      "stop": "Stop med at måle",
+      "permissionTitle": "Mikrofonadgang er slået fra",
+      "permissionBody": "Mikrofonadgang bruges kun, mens dB-måleren kører for at estimere lydniveauer i nærheden. Lyden behandles på din enhed og gemmes eller uploades aldrig.",
+      "minimum": "Minimum",
+      "average": "Gennemsnit",
+      "maximum": "Maksimum",
+      "unlockStats": "Lås op for detaljeret dB-sessionsstatistik",
+      "status": {
+        "veryQuiet": "Meget stille",
+        "normal": "Normal",
+        "loud": "Højt",
+        "danger": "Fare"
+      },
+      "description": {
+        "veryQuiet": "Bibliotek, blød vejrtrækning",
+        "normal": "Samtale, kontor",
+        "loud": "Travl gade, høj musik",
+        "danger": "Koncert, sirene"
+      },
+      "help": {
+        "title": "dB Meter guide",
+        "howToMeasure": "Sådan måler du",
+        "stepPlace": "Placer telefonen, hvor du vil tjekke lyden.",
+        "stepUncovered": "Hold mikrofonen åben.",
+        "stepStart": "Tryk på Begynd at måle, og se liveestimatet.",
+        "everydayLevels": "Hverdagslydniveauer",
+        "examplesApproximate": "Eksempler er omtrentlige og varierer med afstanden.",
+        "currentEstimate": "Aktuelt estimat",
+        "exposureTitle": "Eksponeringstid betyder noget",
+        "exposureDescription": "NIOSH erhvervsvejledning; hver +3 dB halverer den anbefalede tid.",
+        "useItWell": "Brug det godt",
+        "tipMicrophoneTitle": "Hold mikrofonen åben",
+        "tipMicrophoneBody": "Undgå at dække det med din hånd eller etui.",
+        "tipPositionTitle": "Mål, hvor du lytter",
+        "tipPositionBody": "Flyt enheden til den placering, du vil vurdere.",
+        "tipProtectTitle": "Hvis det føles for højt, beskyt dine ører",
+        "tipProtectBody": "Flyt dig væk fra kilden, eller brug høreværn.",
+        "reference": {
+          "concertSpeaker": "Koncerthøjttaler",
+          "sirenNightclub": "Sirene eller natklub",
+          "lawnMower": "Plæneklipper",
+          "busyStreet": "Travl gade",
+          "conversation": "Samtale",
+          "quietHome": "Stille hjem",
+          "whisper": "Hvisken",
+          "hearingThreshold": "Høregrænse"
+        }
+      }
+    },
+    "safety": {
+      "title": "Lydsikkerhed og privatliv",
+      "intro": "Brug disse værktøjer omhyggeligt og forstå, hvad din telefon kan – og ikke kan – måle.",
+      "playbackTitle": "Sikker afspilning",
+      "playbackBody": "Start ved lav lydstyrke, løft den gradvist, hold højttaleren væk fra dine ører, og stop, hvis en lyd er ubehagelig.",
+      "routingTitle": "Audio routing",
+      "routingBody": "Lyd til rensning af højttalere skal bruge enhedens højttaler. Stereoadskillelse afhænger af den tilsluttede højttaler eller hovedtelefoner.",
+      "estimateTitle": "Anslåede lydniveauer",
+      "estimateBody": "Telefonmikrofoner rapporterer digitalt signalniveau i stedet for laboratorie-SPL. Appen anvender et estimat, der varierer fra enhed til enhed.",
+      "privacyTitle": "Mikrofonbeskyttelse",
+      "privacyBody": "Mikrofonen kører kun, mens dB-måleren er aktiv. Prøver behandles i hukommelsen og gemmes eller uploades aldrig.",
+      "limitationsTitle": "Vigtige begrænsninger",
+      "limitationsBody": "Denne app kan ikke garantere fjernelse af vand eller støv. Indsæt ikke genstande i højttaleren, og brug ikke disse værktøjer som erstatning for professionel reparation, kalibreret udstyr, medicinsk rådgivning eller høreværn."
     }
   },
   "paywall": {
-    "title": "Lås op for Premium",
-    "subtitle": "Få det meste ud af Currency Converter",
+    "title": "Lås dit komplette lydværktøjssæt op",
+    "subtitle": "Rens din højttaler, få adgang til avancerede kontroller, og fjern hver annonce.",
     "ctaFreeTrial": "Prøv gratis",
     "restore": "Gendan køb",
     "terms": "Servicevilkår",
     "privacy": "Privatlivspolitik",
     "then": "derefter",
     "trial": "{{count}}-{{unit}} gratis prøveperiode",
-    "save": "Spar {{percent}} %",
+    "save": "Gem {{percent}} %",
     "trialUnit": {
       "day": "dag",
       "week": "uge",
@@ -68,41 +212,45 @@
     "period": {
       "day": "pr. dag",
       "week": "pr. uge",
-      "month": "pr. måned",
-      "year": "pr. år",
-      "lifetime": "Engangskøb"
+      "month": "per month",
+      "year": "per year",
+      "lifetime": "One-time purchase"
     },
     "features": {
-      "liveRates": {
-        "title": "Altid friske kurser",
-        "description": "Kurser opdateres næsten i realtid, uden forsinkelse."
+      "waterEject": {
+        "title": "Complete Water Eject",
+        "description": "Kør guidede 30, 60 og 90 sekunders højttalerrensningscyklusser."
       },
-      "unlimited": {
-        "title": "Alle 150+ valutaer, ingen begrænsning",
-        "description": "Tilføj enhver valuta du har brug for, uden begrænsninger."
+      "waveforms": {
+        "title": "Avancerede tonebølgeformer",
+        "description": "Brug firkant-, trekant- og savtand-toner over hele frekvensområdet."
       },
-      "charts": {
-        "title": "Komplet kurshistorik",
-        "description": "Interaktive grafer til at finde det bedste tidspunkt at konvertere."
+      "stereoAuto": {
+        "title": "Automatisk stereotest",
+        "description": "Skift mellem venstre, højre og begge kanaler håndfrit."
+      },
+      "dbStats": {
+        "title": "Detailed dB Statistics",
+        "description": "Se minimum, gennemsnit og maksimum estimater for hver session."
       },
       "adFree": {
-        "title": "Nul afbrydelser",
-        "description": "Ingen annoncer. Bare ren, fokuseret konvertering."
+        "title": "Zero Ad Interruptions",
+        "description": "Brug alle lydværktøjer uden bannere eller fuldskærmsannoncer."
       }
     },
     "feedback": {
-      "subscribeSuccess": "Velkommen! Din premiumadgang er aktiv.",
-      "subscribeError": "Noget gik galt. Prøv venligst igen.",
-      "restoreSuccess": "Abonnement genoprettet!",
-      "restoreNotFound": "Intet aktivt abonnement fundet.",
-      "restoreError": "Kunne ikke gendanne køb. Prøv venligst igen."
+      "subscribeSuccess": "Velkommen! Din premium-adgang er aktiv.",
+      "subscribeError": "Something went wrong. Prøv venligst igen.",
+      "restoreSuccess": "Premium-adgang gendannet med succes!",
+      "restoreNotFound": "No active Premium purchase found.",
+      "restoreError": "Could not restore purchases. Prøv venligst igen."
     },
     "packageTitle": {
-      "day": "Dagligt",
-      "week": "Ugentligt",
-      "month": "Månedligt",
-      "year": "Årligt",
-      "lifetime": "Livstid"
+      "day": "Daily",
+      "week": "Weekly",
+      "month": "Monthly",
+      "year": "Yearly",
+      "lifetime": "Lifetime"
     }
   },
   "otaUpdate": {
@@ -129,9 +277,5 @@
       "title": "Privat og på din enhed",
       "description": "Lydbehandlingen bliver på din telefon med tydelig vejledning om sikkerhed og mikrofonen."
     }
-  },
-  "premium": {
-    "accessChecking": "Kontrollerer Premium-adgang…",
-    "accessUnknown": "Opret forbindelse til internettet for at kontrollere Premium-adgang."
   }
 }
