@@ -19,6 +19,7 @@
     "stop": "Stoppen"
   },
   "premium": {
+    "lockedHint": "Öffnet den Premium-Upgrade-Bildschirm",
     "accessChecking": "Premium-Zugang wird geprüft…",
     "accessUnknown": "Stelle eine Internetverbindung her, um den Premium-Zugang zu prüfen."
   },
@@ -50,6 +51,164 @@
     "upgradeBanner": {
       "title": "Upgrade auf Premium",
       "subtitle": "Längere Turbo-Reinigung, erweiterte Audiosteuerung und eine werbefreie Nutzung freischalten"
+    },
+    "audio": {
+      "section": "Audio und Messgerät",
+      "ejectDuration": "Reinigungsdauer",
+      "durationValue": "{{count}} Sekunden",
+      "haptics": "Bedienhaptik",
+      "hapticsSubtitle": "taktiles Feedback in Klangwerkzeugen nutzen",
+      "safety": "Audiosicherheit und Datenschutz",
+      "safetySubtitle": "Wiedergabe, Mikrofon und Messanleitung"
+    },
+    "activity": {
+      "section": "Aktivitätsdaten",
+      "saved": "Gespeicherte Aktivität",
+      "clear": "Aktivitätsverlauf löschen",
+      "clearSubtitle": "Entfernen Sie lokal gespeicherte Reinigungs- und Soundsitzungen",
+      "clearConfirmTitle": "Alle Aktivitäten löschen?",
+      "clearConfirmBody": "Dadurch werden gespeicherte Reinigungs- und Soundsitzungen dauerhaft von diesem Gerät entfernt. Ihre nächste kostenlose Reinigungszeit ändert sich nicht.",
+      "cleared": "Aktivitätsverlauf gelöscht"
+    }
+  },
+  "audioTools": {
+    "common": {
+      "mascot": "Wasserauswurf-Maskottchen",
+      "error": "Audio konnte nicht gestartet werden. Überprüfen Sie die aktuelle Ausgabe und versuchen Sie es erneut."
+    },
+    "eject": {
+      "start": "Beginnen Sie mit der Reinigung",
+      "stop": "Hören Sie auf zu putzen",
+      "externalTitle": "Externe Audioverbindung trennen",
+      "externalBody": "Die Lautsprecherreinigung erfolgt über den Gerätelautsprecher, nicht über Kopfhörer oder Bluetooth-Ausgänge.",
+      "turbo": {
+        "title": "Turbo-Modus",
+        "guide": {
+          "title": "Turbo-Modus",
+          "description": "Ein stärkerer Reinigungszyklus für hartnäckiges Wasser und Schmutz.",
+          "frequency": "Verwendet fünf verschiedene Dual-Frequenz-Stufen, die sich über den gesamten Zyklus hinweg weiterentwickeln.",
+          "duration": "Turbo kann kurzzeitig die Systemlautstärkegrenze überschreiten. Benutzen Sie es nur für kurze Reinigungszyklen.",
+          "cta": "Turbo aktivieren"
+        }
+      },
+      "help": {
+        "title": "Wie zu verwenden",
+        "disconnect": "Trennen Sie Kopfhörer und Bluetooth-Geräte, damit der Reinigungston über dieses Gerät abgespielt wird.",
+        "position": "Legen Sie das Gerät mit der Lautsprecherseite nach unten auf eine trockene Oberfläche und halten Sie die Lautsprecheröffnungen frei.",
+        "start": "Erhöhen Sie die Lautstärke des Geräts, tippen Sie auf Reinigung starten und halten Sie das Gerät ruhig, bis der Zyklus abgeschlossen ist.",
+        "hearingTitle": "Schützen Sie Ihr Gehör",
+        "hearingWarning": "Tragen Sie beim Testen von Eject keine Kopfhörer. Die lauten Reinigungstöne der Lautsprecher können zu Gehörschäden führen."
+      },
+      "routine": {
+        "standard": "Standard",
+        "turbo": "Turbo"
+      }
+    },
+    "tone": {
+      "currentFrequency": "Aktuelle Frequenz",
+      "frequencyValue": "{{frequency}} Hz",
+      "waveformLabel": "{{waveform}} bei {{frequency}} Hertz",
+      "waveform": {
+        "label": "Wellenform",
+        "sine": "Sinuswelle",
+        "square": "Rechteckwelle",
+        "triangle": "Dreieckswelle",
+        "sawtooth": "Sägezahnwelle"
+      },
+      "play": "Ton abspielen",
+      "stop": "Stoppton",
+      "band": {
+        "veryLow": "Sehr niedrig",
+        "low": "Niedrig",
+        "midLow": "Niedrig-Mittel",
+        "mid": "Mitte",
+        "high": "Hoch",
+        "veryHigh": "Sehr hoch"
+      }
+    },
+    "stereo": {
+      "auto": "Automatischer Wechsel",
+      "autoHint": "Zwischen links, rechts und beiden Kanälen wechseln",
+      "tapToChange": "Auf Lautsprecher tippen, um den Kanal zu wechseln",
+      "start": "Test starten",
+      "helpTitle": "So verwenden Sie den Stereotest",
+      "helpTap": "Tippen Sie auf den linken oder rechten Lautsprecher, um diesen Kanal sofort zu testen.",
+      "helpBoth": "Schalten Sie beide Lautsprecher ein, um den Testton über beide Kanäle abzuspielen.",
+      "helpAuto": "Verwenden Sie den automatischen Wechsel, um zwischen dem linken, dem rechten und beiden Kanälen zu wechseln.",
+      "helpStop": "Verwenden Sie den Stop-Test, wann immer Sie die Wiedergabe beenden möchten.",
+      "left": "Links",
+      "right": "Rechts",
+      "positionLeft": "Linker Kanal wird wiedergegeben",
+      "positionCenter": "Beide Kanäle spielen",
+      "positionRight": "Rechter Kanal wird wiedergegeben",
+      "idlePosition": "Tippen Sie auf einen Lautsprecher, um zu beginnen",
+      "stop": "Test stoppen"
+    },
+    "meter": {
+      "estimated": "Geschätzter dB",
+      "start": "Beginnen Sie mit der Messung",
+      "stop": "Stoppen Sie die Messung",
+      "permissionTitle": "Mikrofonzugriff ist deaktiviert",
+      "permissionBody": "Der Mikrofonzugriff wird nur bei laufendem dB-Messer verwendet, um den Schallpegel in der Umgebung zu schätzen. Audioproben werden im Arbeitsspeicher verarbeitet und niemals gespeichert oder hochgeladen. Gerundete Schätzwerte der Messsitzung werden nur auf diesem Gerät gespeichert und können in den Einstellungen gelöscht werden.",
+      "minimum": "Mindestens",
+      "average": "Durchschnitt",
+      "maximum": "Maximal",
+      "timeline": "Geschätzter Schallpegel-Zeitplan",
+      "status": {
+        "veryQuiet": "Sehr ruhig",
+        "normal": "Normal",
+        "loud": "Laut",
+        "danger": "Gefahr"
+      },
+      "description": {
+        "veryQuiet": "Bibliothek, sanftes Atmen",
+        "normal": "Gespräch, Büro",
+        "loud": "Belebte Straße, laute Musik",
+        "danger": "Konzert, Sirene"
+      },
+      "help": {
+        "title": "dB-Meter-Anleitung",
+        "howToMeasure": "So messen Sie",
+        "stepPlace": "Platzieren Sie das Telefon an der Stelle, an der Sie den Ton hören möchten.",
+        "stepUncovered": "Halten Sie das Mikrofon frei.",
+        "stepStart": "Tippen Sie auf Messung starten und sehen Sie sich die Live-Schätzung an.",
+        "everydayLevels": "Alltagsgeräuschpegel",
+        "examplesApproximate": "Beispiele sind Näherungswerte und variieren je nach Entfernung.",
+        "currentEstimate": "Aktuelle Schätzung",
+        "exposureTitle": "Die Dauer der Lärmbelastung ist wichtig",
+        "exposureDescription": "Nach den NIOSH-Richtlinien für Arbeitsplatzlärm halbiert jede Erhöhung um 3 dB die empfohlene Expositionszeit.",
+        "useItWell": "Tipps zur Messung",
+        "tipMicrophoneTitle": "Halten Sie das Mikrofon offen",
+        "tipMicrophoneBody": "Verdecken Sie das Mikrofon nicht mit der Hand oder der Handyhülle.",
+        "tipPositionTitle": "Messen Sie dort, wo Sie zuhören",
+        "tipPositionBody": "Bewegen Sie das Gerät an den Ort, den Sie beurteilen möchten.",
+        "tipProtectTitle": "Wenn es sich zu laut anfühlt, schützen Sie Ihre Ohren",
+        "tipProtectBody": "Entfernen Sie sich von der Quelle oder verwenden Sie einen Gehörschutz.",
+        "reference": {
+          "concertSpeaker": "Konzertlautsprecher",
+          "sirenNightclub": "Sirene oder Nachtclub",
+          "lawnMower": "Rasenmäher",
+          "busyStreet": "Belebte Straße",
+          "conversation": "Gespräch",
+          "quietHome": "Ruhiges Zuhause",
+          "whisper": "Flüstern",
+          "hearingThreshold": "Hörschwelle"
+        }
+      }
+    },
+    "safety": {
+      "title": "Audiosicherheit und Datenschutz",
+      "intro": "Verwenden Sie diese Tools sorgfältig und machen Sie sich bewusst, was Ihr Telefon messen kann – und was nicht.",
+      "playbackTitle": "Sichere Wiedergabe",
+      "playbackBody": "Beginnen Sie mit einer niedrigen Lautstärke, erhöhen Sie die Lautstärke schrittweise, halten Sie den Lautsprecher von Ihren Ohren fern und hören Sie auf, wenn ein Ton unangenehm ist.",
+      "routingTitle": "Audio-Routing",
+      "routingBody": "Der Lautsprecherreinigungston muss über den Gerätelautsprecher erfolgen. Die Stereotrennung hängt vom angeschlossenen Lautsprecher oder Kopfhörer ab.",
+      "estimateTitle": "Geschätzte Schallpegel",
+      "estimateBody": "Telefonmikrofone melden den digitalen Signalpegel und nicht den Labor-Schalldruckpegel. Die App wendet eine Schätzung an, die je nach Gerät variiert.",
+      "privacyTitle": "Mikrofon-Datenschutz",
+      "privacyBody": "Das Mikrofon ist nur bei aktivem dB-Messer in Betrieb. Proben werden im Arbeitsspeicher verarbeitet und niemals gespeichert oder hochgeladen. Gerundete Schätzwerte einer Messsitzung können lokal im Aktivitätsverlauf gespeichert und in den Einstellungen gelöscht werden.",
+      "limitationsTitle": "Wichtige Einschränkungen",
+      "limitationsBody": "Diese App kann keine Wasser- oder Staubentfernung garantieren. Führen Sie keine Gegenstände in den Lautsprecher ein und verwenden Sie diese Werkzeuge nicht als Ersatz für professionelle Reparaturen, kalibrierte Geräte, medizinische Beratung oder Anleitung zum Gehörschutz."
     }
   },
   "paywall": {
@@ -135,6 +294,9 @@
       }
     },
     "context": {
+      "historyTitle": "Schalten Sie Ihre gespeicherte Aktivität frei",
+      "historySubtitle": "Auf diesem Gerät sind bereits {{cleaning}} Lautsprecherreinigungen und {{db}} Schallmessungen gespeichert.",
+      "cleaningSubtitle": "Den Gerätelautsprecher jederzeit mit längeren Zyklen und der mehrstufigen Turbo-Reinigungswelle reinigen.",
       "dbSubtitle": "Schalten Sie die vollständige Analyse für diese Sitzung frei und sehen Sie sich gespeicherte Soundberichte noch einmal an."
     },
     "feedback": {
@@ -150,6 +312,87 @@
       "month": "Monatlich",
       "year": "Jährlich",
       "lifetime": "Lebenszeit"
+    }
+  },
+  "activity": {
+    "history": "Aktivitätsverlauf",
+    "cleaning": "Reinigung",
+    "soundSessions": "Sound-Sessions",
+    "savedCount": "{{cleaning}} Reinigungsaktivitäten · {{db}} Tonsitzungen gespeichert",
+    "emptyTitle": "Noch keine gespeicherte Aktivität",
+    "emptyBody": "Abgeschlossene Reinigungs- und Tonsitzungen werden hier angezeigt.",
+    "select": "Wählen",
+    "selectAll": "Wählen Sie „Alle“ aus",
+    "deselectAll": "Alle abwählen",
+    "selectedCount": "{{count}} ausgewählt",
+    "delete": "Löschen",
+    "deleteSelected": "Löschen ({{count}})",
+    "deleteConfirmTitleSingle": "Diese Aktivität löschen?",
+    "deleteConfirmTitleMultiple": "{{count}}-Aktivitäten löschen?",
+    "deleteConfirmBodySingle": "Dadurch wird die ausgewählte Aktivität dauerhaft von diesem Gerät entfernt.",
+    "deleteConfirmBodyMultiple": "Dadurch werden die {{count}} ausgewählten Aktivitäten dauerhaft von diesem Gerät entfernt.",
+    "deletedSingle": "Aktivität gelöscht",
+    "deletedMultiple": "{{count}} Aktivitäten gelöscht",
+    "dbSession": "Schallpegelsitzung",
+    "duration": "{{seconds}} Sekunden",
+    "cleaningDetail": "Reinigungstätigkeit",
+    "dbDetail": "Sound-Session",
+    "mode": "Reinigungsmodus",
+    "durationLabel": "Dauer",
+    "result": "Ergebnis",
+    "report": {
+      "title": "Schallpegelanalyse",
+      "subtitle": "Ein persönlicher Blick auf diese Sitzung",
+      "premium": "Premium",
+      "sessionSummary": "Durchschnitt {{average}} dB · Spitze {{maximum}} dB · {{seconds}} Sek",
+      "environmentRating": "Umweltbewertung",
+      "suitableFor": "Geeignet für",
+      "recommendation": "Empfehlung",
+      "unlockTitle": "Sehen Sie, was dieser Schallpegel bedeutet",
+      "unlockBody": "Schalten Sie die vollständige Umgebungsbewertung, geeignete Aktivitäten und Hörempfehlungen frei.",
+      "unlockAction": "Vollständigen Bericht freischalten",
+      "disclaimer": "Die Schätzungen für Telefonmikrofone variieren je nach Gerät und Standort. Bei diesem Bericht handelt es sich um eine allgemeine Richtlinie, nicht um eine kalibrierte Messung oder medizinische Beratung.",
+      "profile": {
+        "veryQuiet": {
+          "label": "Sehr ruhig",
+          "range": "Unter 30 dB",
+          "overview": "Diese Sitzung suggeriert eine sehr ruhige Umgebung mit wenig konkurrierenden Hintergrundgeräuschen.",
+          "suitable": "Ruhige Ruhe, Lesen, konzentriertes Schreiben, Meditation und andere Aktivitäten, die von minimaler Ablenkung profitieren.",
+          "recommendation": "Halten Sie das Mikrofon frei und messen Sie, wo Sie normalerweise sitzen oder schlafen. Sehr niedrige Schätzungen können auch bedeuten, dass das Telefonmikrofon blockiert ist."
+        },
+        "normal": {
+          "label": "Normal",
+          "range": "30–69 dB",
+          "overview": "Diese Sitzung findet in einem üblichen alltäglichen Bereich statt, ähnlich einem ruhigen Zuhause, einem Büro oder einem normalen Gespräch, je nach Entfernung.",
+          "suitable": "Konversation, Schreibtischarbeit, gelegentliches Zuhören, Lernen und die meisten täglichen Indoor-Aktivitäten.",
+          "recommendation": "Wenn Sie einen tieferen Fokus benötigen, reduzieren Sie die Stimmen in der Nähe oder entfernen Sie sich weiter von der Schallquelle und vergleichen Sie eine andere Sitzung."
+        },
+        "loud": {
+          "label": "Laut",
+          "range": "70–99 dB",
+          "overview": "In dieser Sitzung wird eine laute Umgebung vorgeschlagen, in der Geräusche mit der Zeit ermüdend oder unangenehm werden können.",
+          "suitable": "Kurze Überprüfungen von stark befahrenen Straßen, Geräten, Ereignissen oder der Musikwiedergabe, bei denen Sie sich ändernde Lautstärken verstehen möchten.",
+          "recommendation": "Verringern Sie die Lautstärke der Quelle, vergrößern Sie den Abstand, machen Sie ruhige Pausen und ziehen Sie bei anhaltender Belastung einen Gehörschutz in Betracht."
+        },
+        "danger": {
+          "label": "Potenziell gefährlich",
+          "range": "100 dB oder höher",
+          "overview": "Diese Sitzung deutet auf eine sehr intensive Klangumgebung hin, die sofortige Aufmerksamkeit verdient.",
+          "suitable": "Nur kurze Sicherheitskontrollen. Vermeiden Sie es, diese Umgebung zum Zuhören, Arbeiten, Ausruhen oder für längere Aktivitäten zu nutzen.",
+          "recommendation": "Entfernen Sie sich von der Quelle, verringern Sie die Lautstärke, wenn möglich, und tragen Sie einen geeigneten Gehörschutz. Verlassen Sie sich nicht auf eine telefonische Schätzung, um die sichere Exposition zu bestimmen."
+        }
+      }
+    },
+    "stopReason": {
+      "completed": "Vollendet",
+      "manual": "Manuell gestoppt",
+      "blur": "Nach Verlassen des Bildschirms gestoppt",
+      "background": "Im Hintergrund stehen geblieben",
+      "interruption": "Unterbrochen",
+      "route-change": "Audioroute geändert",
+      "replaced": "Durch ein anderes Werkzeug ersetzt",
+      "error": "Durch einen Fehler gestoppt",
+      "incomplete": "Unvollständig"
     }
   },
   "otaUpdate": {

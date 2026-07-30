@@ -19,6 +19,7 @@
     "stop": "Zatrzymaj"
   },
   "premium": {
+    "lockedHint": "Otwiera ekran aktualizacji Premium",
     "accessChecking": "Sprawdzanie dostępu Premium…",
     "accessUnknown": "Połącz się z internetem, aby sprawdzić dostęp Premium."
   },
@@ -50,6 +51,164 @@
     "upgradeBanner": {
       "title": "Przejdź na wersję Premium",
       "subtitle": "Odblokuj dłuższe czyszczenie Turbo, zaawansowane sterowanie dźwiękiem i korzystanie bez reklam"
+    },
+    "audio": {
+      "section": "Dźwięk i miernik",
+      "ejectDuration": "Czas czyszczenia",
+      "durationValue": "{{count}} sekund",
+      "haptics": "Sterowanie dotykiem",
+      "hapticsSubtitle": "Wykorzystaj dotykowe informacje zwrotne w narzędziach dźwiękowych",
+      "safety": "Bezpieczeństwo i prywatność dźwięku",
+      "safetySubtitle": "Wskazówki dotyczące odtwarzania, mikrofonu i pomiarów"
+    },
+    "activity": {
+      "section": "Dane dotyczące aktywności",
+      "saved": "Zapisana aktywność",
+      "clear": "Wyczyść historię aktywności",
+      "clearSubtitle": "Usuń zapisane lokalnie sesje czyszczenia i dźwięku",
+      "clearConfirmTitle": "Wyczyścić całą aktywność?",
+      "clearConfirmBody": "Spowoduje to trwałe usunięcie zapisanych sesji czyszczenia i dźwięku z tego urządzenia. Twój następny bezpłatny czas sprzątania nie ulegnie zmianie.",
+      "cleared": "Historia aktywności została wyczyszczona"
+    }
+  },
+  "audioTools": {
+    "common": {
+      "mascot": "Maskotka wyrzucająca wodę",
+      "error": "Nie można uruchomić dźwięku. Sprawdź prąd wyjściowy i spróbuj ponownie."
+    },
+    "eject": {
+      "start": "Rozpocznij sprzątanie",
+      "stop": "Przestań sprzątać",
+      "externalTitle": "Odłącz zewnętrzne audio",
+      "externalBody": "Czyszczenie głośników odbywa się poprzez głośnik urządzenia, a nie słuchawki czy wyjścia Bluetooth.",
+      "turbo": {
+        "title": "Tryb Turbo",
+        "guide": {
+          "title": "Tryb Turbo",
+          "description": "Silniejszy cykl czyszczenia uporczywej wody i zanieczyszczeń.",
+          "frequency": "Wykorzystuje pięć odrębnych stopni o podwójnej częstotliwości, które ewoluują w całym cyklu.",
+          "duration": "Turbo może na krótko przekroczyć limit głośności systemu. Używaj go tylko do krótkich cykli czyszczenia.",
+          "cta": "Włącz Turbo"
+        }
+      },
+      "help": {
+        "title": "Jak używać",
+        "disconnect": "Odłącz słuchawki i urządzenia Bluetooth, aby dźwięk czyszczenia był odtwarzany przez to urządzenie.",
+        "position": "Połóż urządzenie głośnikiem w dół na suchej powierzchni i dbaj o to, aby otwory głośników były drożne.",
+        "start": "Zwiększ głośność urządzenia, dotknij opcji Rozpocznij czyszczenie i trzymaj urządzenie nieruchomo aż do zakończenia cyklu.",
+        "hearingTitle": "Chroń swój słuch",
+        "hearingWarning": "Nie noś słuchawek podczas testowania Eject. Głośne dźwięki czyszczące głośnik mogą spowodować uszkodzenie słuchu."
+      },
+      "routine": {
+        "standard": "Standard",
+        "turbo": "Turbo"
+      }
+    },
+    "tone": {
+      "currentFrequency": "Aktualna częstotliwość",
+      "frequencyValue": "{{frequency}} Hz",
+      "waveformLabel": "{{waveform}} przebieg w {{frequency}} hercach",
+      "waveform": {
+        "label": "Przebieg",
+        "sine": "Sinus",
+        "square": "Kwadrat",
+        "triangle": "Trójkąt",
+        "sawtooth": "Ząb piłokształtny"
+      },
+      "play": "Odtwórz dźwięk",
+      "stop": "Dźwięk zatrzymania",
+      "band": {
+        "veryLow": "Bardzo niski",
+        "low": "Niski",
+        "midLow": "Niska-średnia",
+        "mid": "Środek",
+        "high": "Wysoka",
+        "veryHigh": "Bardzo wysoki"
+      }
+    },
+    "stereo": {
+      "auto": "Automatyczne przełączanie",
+      "autoHint": "Przełączaj między lewym, prawym i oboma kanałami",
+      "tapToChange": "Kliknij głośniki, aby zmienić kanały",
+      "start": "Rozpocznij test",
+      "helpTitle": "Jak korzystać z testu stereo",
+      "helpTap": "Dotknij lewego lub prawego głośnika, aby natychmiast przetestować ten kanał.",
+      "helpBoth": "Włącz oba głośniki, aby odtworzyć dźwięk testowy w obu kanałach.",
+      "helpAuto": "Użyj automatycznej zmiany, aby przełączać się pomiędzy lewym, prawym i obydwoma kanałami.",
+      "helpStop": "Użyj testu zatrzymania, jeśli chcesz zakończyć odtwarzanie.",
+      "left": "Lewy",
+      "right": "Prawy",
+      "positionLeft": "Odtwarzanie lewego kanału",
+      "positionCenter": "Odtwarzają oba kanały",
+      "positionRight": "Odtwarzanie prawego kanału",
+      "idlePosition": "Kliknij głośnik, aby rozpocząć",
+      "stop": "Zatrzymaj test"
+    },
+    "meter": {
+      "estimated": "Szacunkowe dB",
+      "start": "Rozpocznij pomiar",
+      "stop": "Przestań mierzyć",
+      "permissionTitle": "Dostęp do mikrofonu jest wyłączony",
+      "permissionBody": "Dostęp do mikrofonu jest używany tylko podczas działania miernika dB do szacowania poziomu dźwięku w otoczeniu. Próbki audio są przetwarzane w pamięci i nigdy nie są zapisywane ani przesyłane. Zaokrąglone wyniki sesji są przechowywane tylko na tym urządzeniu i można je usunąć w Ustawieniach.",
+      "minimum": "Minimum",
+      "average": "Średnia",
+      "maximum": "Maksymalnie",
+      "timeline": "Szacowany harmonogram poziomu dźwięku",
+      "status": {
+        "veryQuiet": "Bardzo cicho",
+        "normal": "Normalny",
+        "loud": "Głośno",
+        "danger": "Niebezpieczeństwo"
+      },
+      "description": {
+        "veryQuiet": "Biblioteka, delikatny oddech",
+        "normal": "Rozmowa, biuro",
+        "loud": "Ruchliwa ulica, głośna muzyka",
+        "danger": "Koncert, syrena"
+      },
+      "help": {
+        "title": "Wskaźnik miernika dB",
+        "howToMeasure": "Jak mierzyć",
+        "stepPlace": "Umieść telefon w miejscu, w którym chcesz sprawdzić dźwięk.",
+        "stepUncovered": "Trzymaj mikrofon odkryty.",
+        "stepStart": "Kliknij Rozpocznij pomiar i obejrzyj szacunkową wartość na żywo.",
+        "everydayLevels": "Poziomy dźwięku na co dzień",
+        "examplesApproximate": "Przykłady są przybliżone i różnią się w zależności od odległości.",
+        "currentEstimate": "Aktualne szacunki",
+        "exposureTitle": "Czas narażenia na hałas ma znaczenie",
+        "exposureDescription": "Zgodnie z wytycznymi NIOSH dotyczącymi hałasu w miejscu pracy każdy wzrost o 3 dB skraca zalecany czas ekspozycji o połowę.",
+        "useItWell": "Wskazówki dotyczące pomiaru",
+        "tipMicrophoneTitle": "Trzymaj mikrofon odkryty",
+        "tipMicrophoneBody": "Nie zasłaniaj mikrofonu dłonią ani etui telefonu.",
+        "tipPositionTitle": "Zmierz miejsce, w którym słuchasz",
+        "tipPositionBody": "Przenieś urządzenie do lokalizacji, którą chcesz ocenić.",
+        "tipProtectTitle": "Jeśli wydaje Ci się, że jest za głośno, chroń swoje uszy",
+        "tipProtectBody": "Odsuń się od źródła dźwięku lub użyj ochrony słuchu.",
+        "reference": {
+          "concertSpeaker": "Głośnik koncertowy",
+          "sirenNightclub": "Syrena lub klub nocny",
+          "lawnMower": "Kosiarka",
+          "busyStreet": "Ruchliwa ulica",
+          "conversation": "Rozmowa",
+          "quietHome": "Cichy dom",
+          "whisper": "Szept",
+          "hearingThreshold": "Próg słyszenia"
+        }
+      }
+    },
+    "safety": {
+      "title": "Bezpieczeństwo i prywatność dźwięku",
+      "intro": "Korzystaj z tych narzędzi ostrożnie i dowiedz się, co Twój telefon może – a czego nie może – zmierzyć.",
+      "playbackTitle": "Bezpieczne odtwarzanie",
+      "playbackBody": "Zacznij od niskiej głośności, stopniowo ją zwiększaj, trzymaj głośnik z dala od uszu i zakończ, jeśli dźwięk będzie niewygodny.",
+      "routingTitle": "Kierowanie dźwięku",
+      "routingBody": "Dźwięk czyszczenia głośników musi korzystać z głośnika urządzenia. Separacja stereo zależy od podłączonego głośnika lub słuchawek.",
+      "estimateTitle": "Szacunkowe poziomy dźwięku",
+      "estimateBody": "Mikrofony telefoniczne zgłaszają poziom sygnału cyfrowego, a nie laboratoryjne SPL. Aplikacja stosuje szacunki, które różnią się w zależności od urządzenia.",
+      "privacyTitle": "Prywatność mikrofonu",
+      "privacyBody": "Mikrofon działa tylko podczas aktywnego pomiaru miernikiem dB. Próbki są przetwarzane w pamięci i nigdy nie są zapisywane ani przesyłane. Zaokrąglone wyniki sesji mogą być przechowywane lokalnie w historii aktywności i można je usunąć w Ustawieniach.",
+      "limitationsTitle": "Ważne ograniczenia",
+      "limitationsBody": "Ta aplikacja nie gwarantuje usuwania wody ani kurzu. Nie wkładaj żadnych przedmiotów do głośnika i nie używaj tych narzędzi jako zamiennika profesjonalnej naprawy, skalibrowanego sprzętu, porady lekarskiej lub wskazówek dotyczących ochrony słuchu."
     }
   },
   "paywall": {
@@ -135,6 +294,9 @@
       }
     },
     "context": {
+      "historyTitle": "Odblokuj zapisaną aktywność",
+      "historySubtitle": "Na tym urządzeniu zapisano już {{cleaning}} czyszczeń głośnika i {{db}} pomiarów dźwięku.",
+      "cleaningSubtitle": "Czyść głośnik w dowolnym momencie dzięki dłuższym cyklom i wieloetapowej fali czyszczącej Turbo.",
       "dbSubtitle": "Odblokuj pełną analizę tej sesji i wróć do zapisanych raportów dźwiękowych."
     },
     "feedback": {
@@ -150,6 +312,87 @@
       "month": "Miesięcznie",
       "year": "Rocznie",
       "lifetime": "Dożywotnia"
+    }
+  },
+  "activity": {
+    "history": "Historia aktywności",
+    "cleaning": "Czyszczenie",
+    "soundSessions": "Sesje dźwiękowe",
+    "savedCount": "{{cleaning}} czynności czyszczenia · {{db}} sesje dźwiękowe zapisane",
+    "emptyTitle": "Nie zapisano jeszcze żadnej aktywności",
+    "emptyBody": "Tutaj pojawią się zakończone sesje czyszczenia i dźwięku.",
+    "select": "Wybierać",
+    "selectAll": "Wybierz wszystko",
+    "deselectAll": "Odznacz wszystko",
+    "selectedCount": "Wybrano {{count}}",
+    "delete": "Usuwać",
+    "deleteSelected": "Usuń ({{count}})",
+    "deleteConfirmTitleSingle": "Usunąć tę aktywność?",
+    "deleteConfirmTitleMultiple": "Usunąć działania {{count}}?",
+    "deleteConfirmBodySingle": "Spowoduje to trwałe usunięcie wybranej aktywności z tego urządzenia.",
+    "deleteConfirmBodyMultiple": "Spowoduje to trwałe usunięcie wybranych aktywności {{count}} z tego urządzenia.",
+    "deletedSingle": "Aktywność została usunięta",
+    "deletedMultiple": "Usunięto działania {{count}}",
+    "dbSession": "Sesja na poziomie dźwięku",
+    "duration": "{{seconds}} sekund",
+    "cleaningDetail": "Czynność sprzątania",
+    "dbDetail": "Sesja dźwiękowa",
+    "mode": "Tryb czyszczenia",
+    "durationLabel": "Czas trwania",
+    "result": "Wynik",
+    "report": {
+      "title": "Analiza poziomu dźwięku",
+      "subtitle": "Spersonalizowane spojrzenie na tę sesję",
+      "premium": "Premium",
+      "sessionSummary": "Średnia {{average}} dB · Szczyt {{maximum}} dB · {{seconds}} sek",
+      "environmentRating": "Ocena środowiska",
+      "suitableFor": "Nadaje się do",
+      "recommendation": "Zalecenie",
+      "unlockTitle": "Zobacz, co oznacza ten poziom dźwięku",
+      "unlockBody": "Odblokuj pełną ocenę środowiska, odpowiednie działania i zalecenia dotyczące słuchania.",
+      "unlockAction": "Odblokuj pełny raport",
+      "disclaimer": "Szacunkowe dane dotyczące mikrofonu telefonu różnią się w zależności od urządzenia i umiejscowienia. Niniejszy raport stanowi ogólne wytyczne, a nie skalibrowany pomiar lub poradę medyczną.",
+      "profile": {
+        "veryQuiet": {
+          "label": "Bardzo cicho",
+          "range": "Poniżej 30 dB",
+          "overview": "Ta sesja sugeruje bardzo spokojne otoczenie z niewielką ilością konkurencyjnych dźwięków w tle.",
+          "suitable": "Spokojny odpoczynek, czytanie, skupione pisanie, medytacja i inne czynności, które korzystają z minimalnego rozproszenia.",
+          "recommendation": "Trzymaj mikrofon odkryty i zmierz miejsce, w którym zwykle siedzisz lub śpisz. Bardzo niskie szacunki mogą również oznaczać, że mikrofon telefonu jest zasłonięty."
+        },
+        "normal": {
+          "label": "Normalny",
+          "range": "30–69 dB",
+          "overview": "Ta sesja odbywa się w typowym, codziennym zakresie, podobnym do cichego domu, biura lub normalnej rozmowy, w zależności od odległości.",
+          "suitable": "Rozmowy, praca przy biurku, swobodne słuchanie, nauka i większość codziennych zajęć w pomieszczeniach zamkniętych.",
+          "recommendation": "Jeśli potrzebujesz głębszego skupienia, zredukuj pobliskie głosy lub oddal się od źródła dźwięku i porównaj inną sesję."
+        },
+        "loud": {
+          "label": "Głośny",
+          "range": "70–99 dB",
+          "overview": "Ta sesja sugeruje głośne otoczenie, w którym dźwięk może z czasem stać się męczący lub niewygodny.",
+          "suitable": "Krótkie sprawdzenie ruchliwych ulic, urządzeń, wydarzeń lub odtwarzania muzyki, jeśli chcesz zrozumieć zmieniające się poziomy.",
+          "recommendation": "Zmniejsz głośność źródła, zwiększ odległość, rób ciche przerwy i rozważ ochronę słuchu, gdy narażenie będzie kontynuowane."
+        },
+        "danger": {
+          "label": "Potencjalnie niebezpieczne",
+          "range": "100 dB lub więcej",
+          "overview": "Ta sesja sugeruje bardzo intensywne środowisko dźwiękowe, które zasługuje na natychmiastową uwagę.",
+          "suitable": "Tylko krótkie kontrole bezpieczeństwa. Unikaj używania tego środowiska do słuchania, pracy, odpoczynku lub dłuższej aktywności.",
+          "recommendation": "Odsuń się od źródła, zmniejsz głośność, jeśli to możliwe, i używaj odpowiednich środków ochrony słuchu. Nie polegaj na szacunkach telefonicznych w celu ustalenia bezpiecznego narażenia."
+        }
+      }
+    },
+    "stopReason": {
+      "completed": "Zakończony",
+      "manual": "Zatrzymany ręcznie",
+      "blur": "Zatrzymany po opuszczeniu ekranu",
+      "background": "Zatrzymany w tle",
+      "interruption": "Przerwano",
+      "route-change": "Zmieniono trasę audio",
+      "replaced": "Zastąpione innym narzędziem",
+      "error": "Zatrzymany przez błąd",
+      "incomplete": "Niekompletny"
     }
   },
   "otaUpdate": {

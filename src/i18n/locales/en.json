@@ -19,6 +19,7 @@
     "stop": "Stop"
   },
   "premium": {
+    "lockedHint": "Opens the Premium upgrade screen",
     "accessChecking": "Checking Premium access…",
     "accessUnknown": "Connect to the internet to check Premium access."
   },
@@ -50,6 +51,164 @@
     "upgradeBanner": {
       "title": "Upgrade to Premium",
       "subtitle": "Unlock longer Turbo cleaning, advanced audio controls, and an ad-free experience"
+    },
+    "audio": {
+      "section": "Audio & Meter",
+      "ejectDuration": "Cleaning duration",
+      "durationValue": "{{count}} seconds",
+      "haptics": "Control haptics",
+      "hapticsSubtitle": "Use tactile feedback in sound tools",
+      "safety": "Audio Safety & Privacy",
+      "safetySubtitle": "Playback, microphone, and measurement guidance"
+    },
+    "activity": {
+      "section": "Activity Data",
+      "saved": "Saved Activity",
+      "clear": "Clear Activity History",
+      "clearSubtitle": "Remove locally saved cleaning and sound sessions",
+      "clearConfirmTitle": "Clear all activity?",
+      "clearConfirmBody": "This permanently removes saved cleaning and sound sessions from this device. Your next free cleaning time will not change.",
+      "cleared": "Activity history cleared"
+    }
+  },
+  "audioTools": {
+    "common": {
+      "mascot": "Water Eject mascot",
+      "error": "Audio could not start. Check the current output and try again."
+    },
+    "eject": {
+      "start": "Start cleaning",
+      "stop": "Stop cleaning",
+      "externalTitle": "Disconnect external audio",
+      "externalBody": "Speaker cleaning works through the device speaker, not headphones or Bluetooth outputs.",
+      "turbo": {
+        "title": "Turbo Mode",
+        "guide": {
+          "title": "Turbo Mode",
+          "description": "A stronger cleaning cycle for stubborn water and debris.",
+          "frequency": "Uses five distinct dual-frequency stages that keep evolving through the full cycle.",
+          "duration": "Turbo may briefly exceed the system volume limit. Use it only for short cleaning cycles.",
+          "cta": "Enable Turbo"
+        }
+      },
+      "help": {
+        "title": "How to use",
+        "disconnect": "Disconnect headphones and Bluetooth devices so the cleaning sound plays through this device.",
+        "position": "Place the device speaker-side down on a dry surface and keep the speaker openings clear.",
+        "start": "Turn up the device volume, tap Start cleaning, and keep the device still until the cycle finishes.",
+        "hearingTitle": "Protect your hearing",
+        "hearingWarning": "Do not wear headphones while testing Eject. The loud cleaning tones may cause hearing damage."
+      },
+      "routine": {
+        "standard": "Standard",
+        "turbo": "Turbo"
+      }
+    },
+    "tone": {
+      "currentFrequency": "Current frequency",
+      "frequencyValue": "{{frequency}} Hz",
+      "waveformLabel": "{{waveform}} waveform at {{frequency}} hertz",
+      "waveform": {
+        "label": "Waveform",
+        "sine": "Sine",
+        "square": "Square",
+        "triangle": "Triangle",
+        "sawtooth": "Sawtooth"
+      },
+      "play": "Play tone",
+      "stop": "Stop tone",
+      "band": {
+        "veryLow": "Very low",
+        "low": "Low",
+        "midLow": "Low-mid",
+        "mid": "Mid",
+        "high": "High",
+        "veryHigh": "Very high"
+      }
+    },
+    "stereo": {
+      "auto": "Auto switch",
+      "autoHint": "Switch among left, right, and both channels",
+      "tapToChange": "Tap speakers to change channels",
+      "start": "Start test",
+      "helpTitle": "How to use Stereo Test",
+      "helpTap": "Tap the left or right speaker to test that channel immediately.",
+      "helpBoth": "Turn on both speakers to play the test tone through both channels.",
+      "helpAuto": "Use Auto switch to test the left, right, and both channels in sequence.",
+      "helpStop": "Use Stop test whenever you want to end playback.",
+      "left": "Left",
+      "right": "Right",
+      "positionLeft": "Left channel playing",
+      "positionCenter": "Both channels playing",
+      "positionRight": "Right channel playing",
+      "idlePosition": "Tap a speaker to begin",
+      "stop": "Stop test"
+    },
+    "meter": {
+      "estimated": "Estimated dB",
+      "start": "Start measuring",
+      "stop": "Stop measuring",
+      "permissionTitle": "Microphone access is off",
+      "permissionBody": "Microphone access is used only while the dB Meter is running to estimate nearby sound levels. Audio samples are processed in memory and never saved or uploaded. Rounded session estimates are stored only on this device and can be cleared in Settings.",
+      "minimum": "Minimum",
+      "average": "Average",
+      "maximum": "Maximum",
+      "timeline": "Estimated sound level timeline",
+      "status": {
+        "veryQuiet": "Very quiet",
+        "normal": "Normal",
+        "loud": "Loud",
+        "danger": "Danger"
+      },
+      "description": {
+        "veryQuiet": "Library, soft breathing",
+        "normal": "Conversation, office",
+        "loud": "Busy street, loud music",
+        "danger": "Concert, siren"
+      },
+      "help": {
+        "title": "dB Meter guide",
+        "howToMeasure": "How to measure",
+        "stepPlace": "Place the phone where you want to check the sound.",
+        "stepUncovered": "Keep the microphone uncovered.",
+        "stepStart": "Tap Start measuring and watch the live estimate.",
+        "everydayLevels": "Everyday sound levels",
+        "examplesApproximate": "Examples are approximate and vary with distance.",
+        "currentEstimate": "Current estimate",
+        "exposureTitle": "Noise exposure time matters",
+        "exposureDescription": "NIOSH workplace-noise guidance: every 3 dB increase halves the recommended exposure time.",
+        "useItWell": "Measurement tips",
+        "tipMicrophoneTitle": "Keep the microphone uncovered",
+        "tipMicrophoneBody": "Avoid covering the microphone with your hand or phone case.",
+        "tipPositionTitle": "Measure where you listen",
+        "tipPositionBody": "Move the device to the location you want to assess.",
+        "tipProtectTitle": "If it feels too loud, protect your ears",
+        "tipProtectBody": "Move away from the source or use hearing protection.",
+        "reference": {
+          "concertSpeaker": "Concert loudspeaker",
+          "sirenNightclub": "Siren or nightclub",
+          "lawnMower": "Lawn mower",
+          "busyStreet": "Busy street",
+          "conversation": "Conversation",
+          "quietHome": "Quiet home",
+          "whisper": "Whisper",
+          "hearingThreshold": "Threshold of hearing"
+        }
+      }
+    },
+    "safety": {
+      "title": "Audio Safety & Privacy",
+      "intro": "Use these tools carefully and understand what your phone can—and cannot—measure.",
+      "playbackTitle": "Safe playback",
+      "playbackBody": "Start at low volume, raise it gradually, keep the speaker away from your ears, and stop if a sound is uncomfortable.",
+      "routingTitle": "Audio routing",
+      "routingBody": "Speaker-cleaning sound must use the device speaker. Stereo separation depends on the connected speaker or headphones.",
+      "estimateTitle": "Estimated sound levels",
+      "estimateBody": "Phone microphones report digital signal level rather than laboratory SPL. The app applies an estimate that varies by device.",
+      "privacyTitle": "Microphone privacy",
+      "privacyBody": "The microphone runs only while the dB Meter is active. Samples are processed in memory and are never saved or uploaded. Rounded session estimates may be stored locally for Activity History and can be cleared in Settings.",
+      "limitationsTitle": "Important limitations",
+      "limitationsBody": "This app cannot guarantee water or dust removal. Do not insert objects into the speaker, and do not use these tools as a replacement for professional repair, calibrated equipment, medical advice, or hearing protection guidance."
     }
   },
   "paywall": {
@@ -135,6 +294,9 @@
       }
     },
     "context": {
+      "historyTitle": "Unlock Your Saved Activity",
+      "historySubtitle": "{{cleaning}} speaker-cleaning activities and {{db}} sound measurements are already saved on this device.",
+      "cleaningSubtitle": "Clean anytime with longer cycles and Turbo's multi-stage cleaning wave.",
       "dbSubtitle": "Unlock the full analysis for this session and revisit saved sound reports."
     },
     "feedback": {
@@ -150,6 +312,87 @@
       "month": "Monthly",
       "year": "Yearly",
       "lifetime": "Lifetime"
+    }
+  },
+  "activity": {
+    "history": "Activity History",
+    "cleaning": "Cleaning",
+    "soundSessions": "Sound Sessions",
+    "savedCount": "{{cleaning}} cleaning activities · {{db}} sound sessions saved",
+    "emptyTitle": "No saved activity yet",
+    "emptyBody": "Completed cleaning and sound sessions will appear here.",
+    "select": "Select",
+    "selectAll": "Select All",
+    "deselectAll": "Deselect All",
+    "selectedCount": "{{count}} selected",
+    "delete": "Delete",
+    "deleteSelected": "Delete ({{count}})",
+    "deleteConfirmTitleSingle": "Delete this activity?",
+    "deleteConfirmTitleMultiple": "Delete {{count}} activities?",
+    "deleteConfirmBodySingle": "This permanently removes the selected activity from this device.",
+    "deleteConfirmBodyMultiple": "This permanently removes the {{count}} selected activities from this device.",
+    "deletedSingle": "Activity deleted",
+    "deletedMultiple": "{{count}} activities deleted",
+    "dbSession": "Sound-level session",
+    "duration": "{{seconds}} seconds",
+    "cleaningDetail": "Cleaning activity",
+    "dbDetail": "Sound session",
+    "mode": "Cleaning mode",
+    "durationLabel": "Duration",
+    "result": "Result",
+    "report": {
+      "title": "Sound insights",
+      "subtitle": "A personalized look at this session",
+      "premium": "Premium",
+      "sessionSummary": "Average {{average}} dB · Peak {{maximum}} dB · {{seconds}} sec",
+      "environmentRating": "Environment rating",
+      "suitableFor": "Suitable for",
+      "recommendation": "Recommendation",
+      "unlockTitle": "See what this sound level means",
+      "unlockBody": "Unlock the full environment rating, suitable activities, and listening recommendation.",
+      "unlockAction": "Unlock full report",
+      "disclaimer": "Phone microphone estimates vary by device and placement. This report is general guidance, not a calibrated measurement or medical advice.",
+      "profile": {
+        "veryQuiet": {
+          "label": "Very quiet",
+          "range": "Below 30 dB",
+          "overview": "This session suggests a very calm environment with little competing background sound.",
+          "suitable": "Quiet rest, reading, focused writing, meditation, and other activities that benefit from minimal distraction.",
+          "recommendation": "Keep the microphone uncovered and measure where you normally sit or sleep. Very low estimates can also mean the phone microphone is obstructed."
+        },
+        "normal": {
+          "label": "Everyday",
+          "range": "30–69 dB",
+          "overview": "This session sits in a common everyday range, similar to a quiet home, office, or normal conversation depending on distance.",
+          "suitable": "Conversation, desk work, casual listening, studying, and most daily indoor activities.",
+          "recommendation": "If you need deeper focus, reduce nearby voices or move farther from the sound source and compare another session."
+        },
+        "loud": {
+          "label": "Loud",
+          "range": "70–99 dB",
+          "overview": "This session suggests a loud environment where sound may become tiring or uncomfortable over time.",
+          "suitable": "Short checks of busy streets, appliances, events, or music playback where you want to understand changing levels.",
+          "recommendation": "Lower the source volume, increase your distance, take quiet breaks, and consider hearing protection when exposure continues."
+        },
+        "danger": {
+          "label": "Potentially hazardous",
+          "range": "100 dB or higher",
+          "overview": "This session suggests a very intense sound environment that deserves immediate attention.",
+          "suitable": "Brief safety checks only. Avoid using this environment for listening, work, rest, or extended activity.",
+          "recommendation": "Move away from the source, lower the volume when possible, and use appropriate hearing protection. Do not rely on a phone estimate to determine safe exposure."
+        }
+      }
+    },
+    "stopReason": {
+      "completed": "Completed",
+      "manual": "Stopped manually",
+      "blur": "Stopped after leaving the screen",
+      "background": "Stopped in the background",
+      "interruption": "Interrupted",
+      "route-change": "Audio route changed",
+      "replaced": "Replaced by another tool",
+      "error": "Stopped by an error",
+      "incomplete": "Incomplete"
     }
   },
   "otaUpdate": {

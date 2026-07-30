@@ -1,0 +1,4 @@
+Uutta versiossa 1.1:
+• Käytä maksutta rajattomasti 30 sekunnin Vakiopuhdistusjaksoja.
+• Premium sisältää nyt Turbo-tilan, laitteelle tallennetun yksityisen toimintahistorian ja yksityiskohtaiset ääniraportit aikajanoineen.
+• Kaikkien neljän äänityökalun ulkoasua ja käytettävyyttä on parannettu.

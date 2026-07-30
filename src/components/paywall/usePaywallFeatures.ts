@@ -10,6 +10,7 @@ import {
 import { useTranslation } from 'react-i18next'
 
 import type { PaywallComparisonItem, PaywallComparisonValue } from '@/components/base/Paywall'
+import { useActivityHistory } from '@/services/activity'
 
 interface PaywallHeaderContent {
   title: string
@@ -91,14 +92,31 @@ export const usePaywallComparison = (): PaywallComparisonItem[] => {
 
 export const useContextualPaywallContent = (source: string): PaywallHeaderContent => {
   const { t } = useTranslation()
+  const { counts } = useActivityHistory()
 
-  // Return different title/subtitle based on different paywall source
-  // if (source === 'db_advanced') {
-  //   return {
-  //     title: t('paywall.title'),
-  //     subtitle: t('paywall.context.dbSubtitle'),
-  //   }
-  // }
+  if (source === 'history') {
+    return {
+      title: t('paywall.context.historyTitle'),
+      subtitle: t('paywall.context.historySubtitle', {
+        cleaning: counts.cleaning,
+        db: counts.db,
+      }),
+    }
+  }
+
+  if (source.startsWith('eject_')) {
+    return {
+      title: t('paywall.title'),
+      subtitle: t('paywall.context.cleaningSubtitle'),
+    }
+  }
+
+  if (source === 'db_advanced') {
+    return {
+      title: t('paywall.title'),
+      subtitle: t('paywall.context.dbSubtitle'),
+    }
+  }
 
   return {
     title: t('paywall.title'),

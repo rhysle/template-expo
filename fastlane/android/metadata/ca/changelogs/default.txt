@@ -1,1 +1,4 @@
-
+Novetats de la versió 1.1:
+• Executa cicles de neteja Estàndard il·limitats de 30 segons de franc.
+• Premium ara inclou el Mode Turbo, un historial d’activitat privat al dispositiu i informes de so detallats amb gràfics temporals.
+• Gaudeix d’un disseny renovat i millores d’usabilitat a les quatre eines d’àudio.

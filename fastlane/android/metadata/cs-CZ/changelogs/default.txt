@@ -1,1 +1,4 @@
-
+Novinky ve verzi 1.1:
+• Spouštějte zdarma neomezený počet 30sekundových cyklů standardního čištění.
+• Premium nyní zahrnuje režim Turbo, soukromou historii aktivit uloženou v zařízení a podrobné zvukové přehledy s časovými grafy.
+• Užijte si modernizovaný vzhled a snadnější ovládání všech čtyř zvukových nástrojů.

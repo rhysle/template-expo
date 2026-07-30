@@ -1,0 +1,1 @@
+puhdas,puhelin,stereo,testi,taajuus,audio,ääni,melu,pöly,kosteus,sävel,desibeli,vaimea,märkä,korjaa

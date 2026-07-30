@@ -1,5 +1,5 @@
 export const AppConfig = {
-  iosAppStoreId: '6790683139', // Set your iOS App Store ID here (e.g., '1234567890')
+  iosAppStoreId: '6799632468', // Set your iOS App Store ID here (e.g., '1234567890')
   support: {
     email: 'support@rhysle.com',
   },
@@ -16,7 +16,7 @@ export const AppConfig = {
     enabled: true,
   },
   appReview: {
-    minActionsBeforeRequest: 1,
+    minActionsBeforeRequest: 2,
     minDaysBetweenRequests: 30,
   },
   autoPaywall: {
@@ -24,12 +24,12 @@ export const AppConfig = {
   },
   revenueCat: {
     testStoreApiKey: 'test_gnTMNDOnGFGsGAETdCbmbZggLTD',
-    iosApiKey: 'test_gnTMNDOnGFGsGAETdCbmbZggLTD',
-    androidApiKey: 'test_gnTMNDOnGFGsGAETdCbmbZggLTD',
+    iosApiKey: 'appl_NrETpPZkABRMOQQVYTPfgQBmHVP',
+    androidApiKey: 'goog_eAneirqJQripNGrjTeTIrDqHbpo',
     entitlementId: 'premium',
   },
   sentry: {
-    dsn: 'https://824c1df7aa59cca914eb2a983313744f@o4511059508461568.ingest.us.sentry.io/4511722544431104',
+    dsn: 'https://5f6bd6fc3274b224f5e082930b7283a4@o4511059508461568.ingest.us.sentry.io/4511881188212736',
   },
   ads: {
     /**
@@ -44,14 +44,14 @@ export const AppConfig = {
       enabled: true,
     },
     ios: {
-      appId: 'ca-app-pub-4662625232077043~6949204305',
-      bannerAdUnitId: '',
-      interstitialAdUnitId: '',
+      appId: 'ca-app-pub-4662625232077043~6468386134',
+      bannerAdUnitId: 'ca-app-pub-4662625232077043/2733738416',
+      interstitialAdUnitId: 'ca-app-pub-4662625232077043/6530493132',
     },
     android: {
-      appId: 'ca-app-pub-4662625232077043~8614004722',
-      bannerAdUnitId: '',
-      interstitialAdUnitId: '',
+      appId: 'ca-app-pub-4662625232077043~6286804764',
+      bannerAdUnitId: 'ca-app-pub-4662625232077043/7771276829',
+      interstitialAdUnitId: 'ca-app-pub-4662625232077043/1469738148',
     },
     interstitial: {
       enabled: true,

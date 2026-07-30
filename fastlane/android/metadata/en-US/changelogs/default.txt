@@ -1,1 +1,4 @@
-
+New in 1.1:
+• Run unlimited 30-second Standard cleaning cycles for free.
+• Premium now includes Turbo Mode, private on-device Activity History, and detailed sound reports with timelines.
+• Enjoy refreshed visuals and usability improvements across all four audio tools.

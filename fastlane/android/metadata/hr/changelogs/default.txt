@@ -1,1 +1,4 @@
-
+Novo u verziji 1.1:
+• Besplatno pokrećite neograničen broj standardnih ciklusa čišćenja od 30 sekundi.
+• Premium sada uključuje Turbo način rada, privatnu povijest aktivnosti na uređaju i detaljna izvješća o zvuku s vremenskim grafikonima.
+• Uživajte u osvježenom izgledu i lakšem korištenju sva četiri audio alata.

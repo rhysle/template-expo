@@ -1,0 +1,6 @@
+VERSION 1.1 - WHAT'S NEW
+- Water Eject now offers unlimited 30-second Standard cleaning cycles for free. Premium adds 60/90-second cycles and Turbo Mode, a stronger five-stage dual-frequency routine.
+- New Activity History stores completed cleaning and qualifying dB sessions only on the device, capped at 100 per category. Free users see saved counts; Premium users can open details. Records can be deleted individually or cleared in Settings.
+- Saved dB sessions now include minimum, average, and maximum estimates, a rounded one-point-per-second timeline, and a Premium report with an environment rating and general listening guidance.
+- The paywall now presents a clearer Free-versus-Premium feature comparison.
+Reviewer paths: Eject tab -> Turbo Mode or 60/90 sec; dB Meter -> Start/Stop -> session report; Settings -> Saved Activity.

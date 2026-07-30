@@ -19,6 +19,7 @@
     "stop": "Zastavit"
   },
   "premium": {
+    "lockedHint": "Otevře obrazovku upgradu Premium",
     "accessChecking": "Ověřování přístupu Premium…",
     "accessUnknown": "Připojte se k internetu a ověřte přístup Premium."
   },
@@ -50,6 +51,164 @@
     "upgradeBanner": {
       "title": "Upgradovat na Premium",
       "subtitle": "Odemkněte delší čištění Turbo, pokročilé ovládání zvuku a používání bez reklam"
+    },
+    "audio": {
+      "section": "Zvuk a měřič",
+      "ejectDuration": "Délka čištění",
+      "durationValue": "{{count}} sekund",
+      "haptics": "Ovládání haptiky",
+      "hapticsSubtitle": "Používejte hmatovou zpětnou vazbu ve zvukových nástrojích",
+      "safety": "Bezpečnost zvuku a soukromí",
+      "safetySubtitle": "Přehrávání, mikrofon a pokyny pro měření"
+    },
+    "activity": {
+      "section": "Údaje o činnosti",
+      "saved": "Uložená aktivita",
+      "clear": "Vymazat historii aktivit",
+      "clearSubtitle": "Odstraňte lokálně uložené relace čištění a zvuku",
+      "clearConfirmTitle": "Vymazat veškerou aktivitu?",
+      "clearConfirmBody": "Tím se z tohoto zařízení trvale odstraní uložené relace čištění a zvuku. Čas příštího bezplatného úklidu se nezmění.",
+      "cleared": "Historie aktivit byla vymazána"
+    }
+  },
+  "audioTools": {
+    "common": {
+      "mascot": "maskot Water Eject",
+      "error": "Zvuk nelze spustit. Zkontrolujte proudový výstup a zkuste to znovu."
+    },
+    "eject": {
+      "start": "Zahájit úklid",
+      "stop": "Zastavit čištění",
+      "externalTitle": "Odpojit externí zvuk",
+      "externalBody": "Čištění reproduktorů probíhá přes reproduktor zařízení, nikoli přes sluchátka nebo výstupy Bluetooth.",
+      "turbo": {
+        "title": "Turbo režim",
+        "guide": {
+          "title": "Turbo režim",
+          "description": "Silnější čisticí cyklus pro odolnou vodu a nečistoty.",
+          "frequency": "Používá pět odlišných dvoufrekvenčních stupňů, které se neustále vyvíjejí během celého cyklu.",
+          "duration": "Turbo může krátce překročit limit hlasitosti systému. Používejte jej pouze pro krátké čisticí cykly.",
+          "cta": "Povolit Turbo"
+        }
+      },
+      "help": {
+        "title": "Jak používat",
+        "disconnect": "Odpojte sluchátka a zařízení Bluetooth, aby se zvuk čištění přehrával přes toto zařízení.",
+        "position": "Umístěte reproduktor zařízení stranou dolů na suchý povrch a udržujte otvory reproduktoru volné.",
+        "start": "Zvyšte hlasitost zařízení, klepněte na Zahájit čištění a udržujte zařízení v klidu, dokud cyklus neskončí.",
+        "hearingTitle": "Chraňte svůj sluch",
+        "hearingWarning": "Při testování Eject nenoste sluchátka. Tóny pro čištění hlasitých reproduktorů mohou způsobit poškození sluchu."
+      },
+      "routine": {
+        "standard": "Norma",
+        "turbo": "Turbo"
+      }
+    },
+    "tone": {
+      "currentFrequency": "Aktuální frekvence",
+      "frequencyValue": "{{frequency}} Hz",
+      "waveformLabel": "{{waveform}} průběh {{frequency}} hertzů",
+      "waveform": {
+        "label": "Průběh",
+        "sine": "sinus",
+        "square": "Čtverec",
+        "triangle": "Trojúhelník",
+        "sawtooth": "Pilový zub"
+      },
+      "play": "Přehrát tón",
+      "stop": "Tón zastavení",
+      "band": {
+        "veryLow": "Velmi nízké",
+        "low": "Nízká",
+        "midLow": "Nízká-střední",
+        "mid": "Střed",
+        "high": "vysoká",
+        "veryHigh": "Velmi vysoká"
+      }
+    },
+    "stereo": {
+      "auto": "Automatické přepínání",
+      "autoHint": "Střídá levý, pravý a oba kanály",
+      "tapToChange": "Klepnutím na reproduktory změníte kanály",
+      "start": "Spustit test",
+      "helpTitle": "Jak používat Stereo Test",
+      "helpTap": "Klepnutím na levý nebo pravý reproduktor daný kanál okamžitě otestujete.",
+      "helpBoth": "Zapněte oba reproduktory, aby se testovací tón přehrál oběma kanály.",
+      "helpAuto": "Pomocí automatického přepínání postupně otestujete levý, pravý a oba kanály.",
+      "helpStop": "Kdykoli chcete ukončit přehrávání, použijte Stop test.",
+      "left": "vlevo",
+      "right": "vpravo",
+      "positionLeft": "Přehrává se levý kanál",
+      "positionCenter": "Oba kanály hrají",
+      "positionRight": "Přehrává se pravý kanál",
+      "idlePosition": "Začněte klepnutím na reproduktor",
+      "stop": "Zastavit test"
+    },
+    "meter": {
+      "estimated": "odhadovaný dB",
+      "start": "Začněte měřit",
+      "stop": "Zastavit měření",
+      "permissionTitle": "Přístup k mikrofonu je vypnutý",
+      "permissionBody": "Přístup k mikrofonu se používá pouze při spuštěném dB metru k odhadu okolní úrovně zvuku. Zvukové vzorky se zpracovávají v paměti a nikdy se neukládají ani neodesílají. Zaokrouhlené odhady relace se ukládají pouze v tomto zařízení a lze je vymazat v Nastavení.",
+      "minimum": "Minimum",
+      "average": "Průměr",
+      "maximum": "Maximum",
+      "timeline": "Časová osa odhadované hladiny zvuku",
+      "status": {
+        "veryQuiet": "Velmi tichý",
+        "normal": "Normální",
+        "loud": "hlasitě",
+        "danger": "Nebezpečí"
+      },
+      "description": {
+        "veryQuiet": "Knihovna, tiché dýchání",
+        "normal": "Konverzace, kancelář",
+        "loud": "Rušná ulice, hlasitá hudba",
+        "danger": "Koncert, siréna"
+      },
+      "help": {
+        "title": "dBmetrem",
+        "howToMeasure": "Jak měřit",
+        "stepPlace": "Umístěte telefon na místo, kde chcete zvuk zkontrolovat.",
+        "stepUncovered": "Nechejte mikrofon nezakrytý.",
+        "stepStart": "Klepněte na Zahájit měření a sledujte živý odhad.",
+        "everydayLevels": "Každodenní hladina zvuku",
+        "examplesApproximate": "Příklady jsou přibližné a liší se podle vzdálenosti.",
+        "currentEstimate": "Aktuální odhad",
+        "exposureTitle": "Na délce vystavení hluku záleží",
+        "exposureDescription": "Podle pokynů NIOSH pro hluk na pracovišti každé zvýšení o 3 dB zkracuje doporučenou dobu expozice na polovinu.",
+        "useItWell": "Tipy pro měření",
+        "tipMicrophoneTitle": "Nechte mikrofon nezakrytý",
+        "tipMicrophoneBody": "Nezakrývejte mikrofon rukou ani krytem telefonu.",
+        "tipPositionTitle": "Změřte, kde posloucháte",
+        "tipPositionBody": "Přesuňte zařízení na místo, které chcete vyhodnotit.",
+        "tipProtectTitle": "Pokud je to příliš hlasité, chraňte si uši",
+        "tipProtectBody": "Odejděte od zdroje nebo použijte ochranu sluchu.",
+        "reference": {
+          "concertSpeaker": "Koncertní reproduktor",
+          "sirenNightclub": "Siréna nebo noční klub",
+          "lawnMower": "Sekačka na trávu",
+          "busyStreet": "Rušná ulice",
+          "conversation": "Konverzace",
+          "quietHome": "Tichý domov",
+          "whisper": "šeptat",
+          "hearingThreshold": "Práh slyšení"
+        }
+      }
+    },
+    "safety": {
+      "title": "Bezpečnost zvuku a soukromí",
+      "intro": "Používejte tyto nástroje opatrně a pochopte, co váš telefon dokáže – a co nemůže – měřit.",
+      "playbackTitle": "Bezpečné přehrávání",
+      "playbackBody": "Začněte na nízkou hlasitost, postupně ji zvyšujte, držte reproduktor dál od uší a zastavte, pokud je zvuk nepříjemný.",
+      "routingTitle": "Směrování zvuku",
+      "routingBody": "Zvuk pro čištění reproduktoru musí používat reproduktor zařízení. Stereo oddělení závisí na připojeném reproduktoru nebo sluchátkách.",
+      "estimateTitle": "Odhadované hladiny zvuku",
+      "estimateBody": "Telefonní mikrofony hlásí spíše úroveň digitálního signálu než laboratorní SPL. Aplikace použije odhad, který se liší podle zařízení.",
+      "privacyTitle": "Ochrana soukromí mikrofonu",
+      "privacyBody": "Mikrofon je spuštěný pouze při aktivním dB metru. Vzorky se zpracovávají v paměti a nikdy se neukládají ani neodesílají. Zaokrouhlené odhady relace mohou být uloženy místně pro historii aktivity a lze je vymazat v Nastavení.",
+      "limitationsTitle": "Důležitá omezení",
+      "limitationsBody": "Tato aplikace nemůže zaručit odstranění vody nebo prachu. Nevkládejte předměty do reproduktoru a nepoužívejte tyto nástroje jako náhradu za profesionální opravu, kalibrované zařízení, lékařskou pomoc nebo pokyny k ochraně sluchu."
     }
   },
   "paywall": {
@@ -135,6 +294,9 @@
       }
     },
     "context": {
+      "historyTitle": "Odemkněte svou uloženou aktivitu",
+      "historySubtitle": "V tomto zařízení je již uloženo {{cleaning}} čištění reproduktoru a {{db}} měření zvuku.",
+      "cleaningSubtitle": "Čistěte reproduktor kdykoli pomocí delších cyklů a vícestupňové čisticí vlny Turbo.",
       "dbSubtitle": "Odemkněte úplnou analýzu této relace a znovu si prohlédněte uložené zvukové zprávy."
     },
     "feedback": {
@@ -150,6 +312,87 @@
       "month": "Měsíčně",
       "year": "ročně",
       "lifetime": "Životnost"
+    }
+  },
+  "activity": {
+    "history": "Historie aktivit",
+    "cleaning": "Čištění",
+    "soundSessions": "Zvukové relace",
+    "savedCount": "{{cleaning}} úklidové činnosti · {{db}} uložené zvukové relace",
+    "emptyTitle": "Zatím žádná uložená aktivita",
+    "emptyBody": "Zde se zobrazí dokončené relace čištění a zvuku.",
+    "select": "Vybrat",
+    "selectAll": "Vyberte Vše",
+    "deselectAll": "Zrušte výběr všech",
+    "selectedCount": "Vybráno {{count}}",
+    "delete": "Vymazat",
+    "deleteSelected": "Smazat ({{count}})",
+    "deleteConfirmTitleSingle": "Smazat tuto aktivitu?",
+    "deleteConfirmTitleMultiple": "Smazat {{count}} aktivity?",
+    "deleteConfirmBodySingle": "To trvale odstraní vybranou aktivitu z tohoto zařízení.",
+    "deleteConfirmBodyMultiple": "Tím trvale odstraníte {{count}} vybrané aktivity z tohoto zařízení.",
+    "deletedSingle": "Aktivita smazána",
+    "deletedMultiple": "{{count}} aktivit bylo smazáno",
+    "dbSession": "Sezení na úrovni zvuku",
+    "duration": "{{seconds}} sekund",
+    "cleaningDetail": "Úklidová činnost",
+    "dbDetail": "Zvuková relace",
+    "mode": "Režim čištění",
+    "durationLabel": "Trvání",
+    "result": "Výsledek",
+    "report": {
+      "title": "Analýza úrovně zvuku",
+      "subtitle": "Osobní pohled na tuto relaci",
+      "premium": "Premium",
+      "sessionSummary": "Průměr {{average}} dB · Špička {{maximum}} dB · {{seconds}} s",
+      "environmentRating": "Hodnocení prostředí",
+      "suitableFor": "Vhodné pro",
+      "recommendation": "Doporučení",
+      "unlockTitle": "Podívejte se, co tato hladina zvuku znamená",
+      "unlockBody": "Odemkněte plné hodnocení prostředí, vhodné aktivity a doporučení k poslechu.",
+      "unlockAction": "Odemknout úplný přehled",
+      "disclaimer": "Odhady mikrofonu telefonu se liší podle zařízení a umístění. Tato zpráva je obecným vodítkem, nikoli kalibrovaným měřením nebo lékařskou radou.",
+      "profile": {
+        "veryQuiet": {
+          "label": "Velmi tichý",
+          "range": "Pod 30 dB",
+          "overview": "Tato relace navrhuje velmi klidné prostředí s málo konkurenčním zvukem na pozadí.",
+          "suitable": "Klidný odpočinek, čtení, soustředěné psaní, meditace a další aktivity, které těží z minimálního rozptylování.",
+          "recommendation": "Nechte mikrofon odkrytý a měřte, kde běžně sedíte nebo spíte. Velmi nízké odhady mohou také znamenat překážku mikrofonu telefonu."
+        },
+        "normal": {
+          "label": "Normální",
+          "range": "30–69 dB",
+          "overview": "Tato relace probíhá v běžném každodenním rozsahu, podobně jako tichý domov, kancelář nebo normální konverzace v závislosti na vzdálenosti.",
+          "suitable": "Konverzace, práce u stolu, příležitostné poslouchání, studium a většina každodenních vnitřních aktivit.",
+          "recommendation": "Pokud potřebujete hlubší zaostření, snižte okolní hlasy nebo se přesuňte dále od zdroje zvuku a porovnejte jinou relaci."
+        },
+        "loud": {
+          "label": "Hlasitý",
+          "range": "70–99 dB",
+          "overview": "Tato relace navrhuje hlasité prostředí, kde může být zvuk časem únavný nebo nepříjemný.",
+          "suitable": "Krátké kontroly rušných ulic, spotřebičů, akcí nebo přehrávání hudby, kde chcete pochopit měnící se úrovně.",
+          "recommendation": "Snižte hlasitost zdroje, zvyšte vzdálenost, udělejte si tiché přestávky a zvažte ochranu sluchu, když expozice pokračuje."
+        },
+        "danger": {
+          "label": "Potenciálně nebezpečné",
+          "range": "100 dB nebo vyšší",
+          "overview": "Tato relace naznačuje velmi intenzivní zvukové prostředí, které si zaslouží okamžitou pozornost.",
+          "suitable": "Pouze krátké bezpečnostní kontroly. Nepoužívejte toto prostředí k poslechu, práci, odpočinku nebo delší činnosti.",
+          "recommendation": "Přesuňte se dále od zdroje, snižte hlasitost, je-li to možné, a používejte vhodnou ochranu sluchu. Při určení bezpečné expozice se nespoléhejte na odhad po telefonu."
+        }
+      }
+    },
+    "stopReason": {
+      "completed": "Dokončeno",
+      "manual": "Zastaveno ručně",
+      "blur": "Zastaveno po opuštění obrazovky",
+      "background": "Zastaveno na pozadí",
+      "interruption": "Přerušeno",
+      "route-change": "Zvuková trasa změněna",
+      "replaced": "Nahrazeno jiným nástrojem",
+      "error": "Zastaveno kvůli chybě",
+      "incomplete": "Neúplný"
     }
   },
   "otaUpdate": {
