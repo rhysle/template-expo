@@ -12,20 +12,20 @@ declare global {
 export interface PaywallSlice {
   autoPaywallEnabledAt: number | null
   autoPaywallLastShownAt: number | null
-  isAutoPaywallShowing: boolean
+  isPaywallShowing: boolean
   initAutoPaywallEnabled: () => void
   recordAutoPaywallShown: () => void
-  setAutoPaywallShowing: (showing: boolean) => void
+  setPaywallShowing: (showing: boolean) => void
 }
 
-export const paywallPersistExcludeKeys: ExcludeKeys<PaywallSlice> = ['isAutoPaywallShowing']
+export const paywallPersistExcludeKeys: ExcludeKeys<PaywallSlice> = ['isPaywallShowing']
 
 export const createPaywallSlice = (
   set: (updater: (state: PaywallSlice) => void) => void
 ): PaywallSlice => ({
   autoPaywallEnabledAt: null,
   autoPaywallLastShownAt: null,
-  isAutoPaywallShowing: false,
+  isPaywallShowing: false,
   initAutoPaywallEnabled: () =>
     set((state) => {
       if (state.autoPaywallEnabledAt === null) {
@@ -36,9 +36,9 @@ export const createPaywallSlice = (
     set((state) => {
       state.autoPaywallLastShownAt = Date.now()
     }),
-  setAutoPaywallShowing: (showing) =>
+  setPaywallShowing: (showing) =>
     set((state) => {
-      state.isAutoPaywallShowing = showing
+      state.isPaywallShowing = showing
     }),
 })
 
@@ -52,9 +52,9 @@ export const usePaywallState = () =>
     useShallow(({ paywall }) => ({
       autoPaywallEnabledAt: paywall.autoPaywallEnabledAt,
       autoPaywallLastShownAt: paywall.autoPaywallLastShownAt,
-      isAutoPaywallShowing: paywall.isAutoPaywallShowing,
+      isPaywallShowing: paywall.isPaywallShowing,
       initAutoPaywallEnabled: paywall.initAutoPaywallEnabled,
       recordAutoPaywallShown: paywall.recordAutoPaywallShown,
-      setAutoPaywallShowing: paywall.setAutoPaywallShowing,
+      setPaywallShowing: paywall.setPaywallShowing,
     }))
   )

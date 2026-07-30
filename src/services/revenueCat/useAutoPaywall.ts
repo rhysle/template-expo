@@ -5,47 +5,60 @@ import { AppState } from 'react-native'
 
 import { AppConfig } from '@/configs'
 import { AnalyticsGeneralEvents, trackEvent } from '@/services/firebase/analytics'
+import { useAdsState } from '@/stores/features/ads'
 import { usePaywallState } from '@/stores/features/paywall'
 import { useSubscriptionState } from '@/stores/features/subscription'
 
-const INTERVAL_MS = AppConfig.autoPaywall.intervalDays * 24 * 60 * 60 * 1000
+import { buildPaywallPath, type PaywallSource, shouldTriggerAutoPaywall } from './premiumAccess'
 
-export const useAutoPaywall = () => {
+const INTERVAL_MS = AppConfig.autoPaywall.intervalDays * 24 * 60 * 60 * 1000
+const AUTO_PAYWALL_SOURCE = 'automatic' satisfies PaywallSource
+
+export const useAutoPaywall = (shouldPreventPaywall = false) => {
   const router = useRouter()
-  const { isSubscribed, revenueCatReady } = useSubscriptionState()
+  const { premiumState } = useSubscriptionState()
+  const { interstitialAdPreventionSources, interstitialShownThisForeground } = useAdsState()
   const {
     autoPaywallEnabledAt,
     autoPaywallLastShownAt,
+    isPaywallShowing,
     initAutoPaywallEnabled,
     recordAutoPaywallShown,
-    setAutoPaywallShowing,
+    setPaywallShowing,
   } = usePaywallState()
   const isShowingRef = useRef(false)
 
   const maybeShowPaywall = useEffectEvent(() => {
     if (isShowingRef.current) return
-    if (!revenueCatReady) return
-    if (isSubscribed) return
+    if (premiumState !== 'free') return
+    if (isPaywallShowing || interstitialAdPreventionSources.length > 0) return
+    if (interstitialShownThisForeground) return
+    if (shouldPreventPaywall) return
 
     if (autoPaywallEnabledAt === null) {
       initAutoPaywallEnabled()
       return
     }
 
-    const baseline = autoPaywallLastShownAt ?? autoPaywallEnabledAt
-    if (Date.now() - baseline >= INTERVAL_MS) {
+    if (shouldTriggerAutoPaywall(autoPaywallEnabledAt, autoPaywallLastShownAt, INTERVAL_MS)) {
       isShowingRef.current = true
-      setAutoPaywallShowing(true)
+      setPaywallShowing(true)
       trackEvent(AnalyticsGeneralEvents.AUTO_PAYWALL_TRIGGERED)
       recordAutoPaywallShown()
-      router.push('/paywall')
+      router.push(buildPaywallPath(AUTO_PAYWALL_SOURCE))
     }
   })
 
-  // Run on mount (cold launch) and when RevenueCat finishes its first status check.
+  // Run when access resolves or a blocking state becomes idle.
   useEffect(() => {
     maybeShowPaywall()
-  }, [revenueCatReady])
+  }, [
+    premiumState,
+    shouldPreventPaywall,
+    isPaywallShowing,
+    interstitialShownThisForeground,
+    interstitialAdPreventionSources.length,
+  ])
 
   // Run on foreground resume
   useEffect(() => {
@@ -61,7 +74,7 @@ export const useAutoPaywall = () => {
   useFocusEffect(
     useCallback(() => {
       isShowingRef.current = false
-      setAutoPaywallShowing(false)
-    }, [setAutoPaywallShowing])
+      setPaywallShowing(false)
+    }, [setPaywallShowing])
   )
 }

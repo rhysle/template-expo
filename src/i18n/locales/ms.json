@@ -1,5 +1,9 @@
 {
   "common": {
+    "openSettings": "Buka Tetapan",
+    "reset": "Set Semula",
+    "start": "Mula",
+    "stop": "Berhenti",
     "back": "Kembali",
     "cancel": "Batal",
     "close": "Tutup",
@@ -109,17 +113,25 @@
     "message": "Ralat yang tidak dijangka berlaku. Sila cuba lagi."
   },
   "onboarding": {
-    "welcome": {
-      "title": "Satu Jumlah\nSemua Mata Wang Anda",
-      "description": "Masukkan jumlah sekali dan lihat setiap mata wang dikemas kini serta-merta."
+    "waterEject": {
+      "title": "Keluarkan air\ndan habuk dengan pantas",
+      "description": "Mainkan bunyi pembersihan yang kuat untuk membantu menolak air dan habuk yang terperangkap keluar dari pembesar suara."
     },
-    "features": {
-      "title": "Sentiasa Kadar Tepat, Di Mana-mana",
-      "description": "150+ mata wang, kadar hampir masa nyata, dan sedia sepenuhnya luar talian."
+    "toneGenerator": {
+      "title": "Jana\nnada yang betul",
+      "description": "Pilih daripada pelbagai frekuensi untuk ujian, pelarasan, penyamaran hingar atau sebarang semakan bunyi."
     },
-    "getStarted": {
-      "title": "Sejarah Kadar Sekilas Pandang",
-      "description": "Ketik mana-mana mata wang untuk meneroka sejarah kadarnya selama berminggu, berbulan atau tahun lepas."
+    "dbMeter": {
+      "title": "Ketahui betapa kuat\nbunyinya sebenarnya",
+      "description": "Gunakan Meter dB untuk menganggar tahap bunyi di sekeliling anda dan membuat keputusan mendengar yang lebih baik."
+    },
+    "privacy": {
+      "title": "Peribadi dan pada peranti anda",
+      "description": "Pemprosesan audio kekal pada telefon anda, dengan panduan keselamatan dan mikrofon yang jelas."
     }
+  },
+  "premium": {
+    "accessChecking": "Menyemak akses Premium…",
+    "accessUnknown": "Sambung ke internet untuk menyemak akses Premium."
   }
 }

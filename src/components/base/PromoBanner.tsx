@@ -1,5 +1,4 @@
 import { Canvas, Group, LinearGradient, Path, Rect, Skia, vec } from '@shopify/react-native-skia'
-import { useRouter } from 'expo-router'
 import type { ReactNode } from 'react'
 import { useEffect } from 'react'
 import {
@@ -31,6 +30,7 @@ export interface PromoBannerProps {
   icon: ReactNode
   title: string
   subtitle: string
+  onPress: () => void
   style?: StyleProp<ViewStyle>
 }
 
@@ -40,8 +40,7 @@ const STRIPE_LEAN_DEGREES = 22
 const STRIPE_MIDDLE_COLOR = 'rgba(255,255,255,0.2)'
 const STRIPE_OUTER_COLOR = 'rgba(255,255,255,0.1)'
 
-export const PromoBanner = ({ icon, title, subtitle, style }: PromoBannerProps) => {
-  const router = useRouter()
+export const PromoBanner = ({ icon, title, subtitle, onPress, style }: PromoBannerProps) => {
   const styles = useThemedStyles(createStyles)
   const isRTL = useIsRTL()
 
@@ -146,7 +145,7 @@ export const PromoBanner = ({ icon, title, subtitle, style }: PromoBannerProps) 
   return (
     <Pressable
       activeOpacity={1}
-      onPress={() => router.push('/paywall')}
+      onPress={onPress}
       onPressIn={handlePressIn}
       haptic
       style={[styles.container, style]}>

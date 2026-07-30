@@ -30,11 +30,11 @@ const isOfflineConsentFailure = async (error: unknown): Promise<boolean> => {
 // src/app/(tabs)/_layout.tsx and run npm run setup:ads.
 export const useConsentInit = () => {
   const { setCanRequestAds, setConsentGathered, setPrivacyOptionsRequired } = useAdsState()
-  const { isSubscribed } = useSubscriptionState()
+  const { premiumState } = useSubscriptionState()
 
   useEffect(() => {
-    // Subscribers see no ads - skip consent entirely.
-    if (!isAdsEnabled() || isSubscribed) {
+    // Premium and unresolved users see no ads, so skip consent until access is confirmed free.
+    if (!isAdsEnabled() || premiumState !== 'free') {
       setCanRequestAds(false)
       setConsentGathered(true)
       return
@@ -95,5 +95,5 @@ export const useConsentInit = () => {
     return () => {
       cancelled = true
     }
-  }, [isSubscribed, setCanRequestAds, setConsentGathered, setPrivacyOptionsRequired])
+  }, [premiumState, setCanRequestAds, setConsentGathered, setPrivacyOptionsRequired])
 }

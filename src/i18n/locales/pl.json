@@ -1,5 +1,9 @@
 {
   "common": {
+    "openSettings": "Otwórz ustawienia",
+    "reset": "Resetuj",
+    "start": "Rozpocznij",
+    "stop": "Zatrzymaj",
     "back": "Wstecz",
     "cancel": "Anuluj",
     "close": "Zamknij",
@@ -109,17 +113,25 @@
     "message": "Wystąpił nieoczekiwany błąd. Spróbuj ponownie."
   },
   "onboarding": {
-    "welcome": {
-      "title": "Jedna kwota\nWszystkie Twoje waluty",
-      "description": "Wpisz kwotę raz i obserwuj, jak każda waluta aktualizuje się natychmiast."
+    "waterEject": {
+      "title": "Szybko usuń\nwodę i kurz",
+      "description": "Odtwórz silny dźwięk czyszczący, aby pomóc usunąć ze głośnika uwięzioną wodę i kurz."
     },
-    "features": {
-      "title": "Zawsze właściwy kurs, wszędzie",
-      "description": "150+ walut, prawie aktualne kursy w czasie rzeczywistym i w pełni gotowe offline."
+    "toneGenerator": {
+      "title": "Wygeneruj\nwłaściwy ton",
+      "description": "Wybieraj spośród różnych częstotliwości do testowania, strojenia, maskowania hałasu lub dowolnej kontroli dźwięku."
     },
-    "getStarted": {
-      "title": "Historia kursów na pierwszy rzut oka",
-      "description": "Dotknij dowolnej waluty, aby przejrzeć historię jej kursów przez tygodnie, miesiące lub ostatni rok."
+    "dbMeter": {
+      "title": "Sprawdź, jak głośno\nnaprawdę jest",
+      "description": "Użyj miernika dB, aby oszacować poziom hałasu wokół siebie i podejmować lepsze decyzje dotyczące słuchania."
+    },
+    "privacy": {
+      "title": "Prywatnie i na urządzeniu",
+      "description": "Przetwarzanie dźwięku pozostaje w telefonie, wraz z jasnymi wskazówkami dotyczącymi bezpieczeństwa i mikrofonu."
     }
+  },
+  "premium": {
+    "accessChecking": "Sprawdzanie dostępu Premium…",
+    "accessUnknown": "Połącz się z internetem, aby sprawdzić dostęp Premium."
   }
 }

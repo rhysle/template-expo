@@ -1,5 +1,9 @@
 {
   "common": {
+    "openSettings": "Beállítások megnyitása",
+    "reset": "Visszaállítás",
+    "start": "Indítás",
+    "stop": "Leállítás",
     "back": "Vissza",
     "cancel": "Mégse",
     "close": "Bezárás",
@@ -109,17 +113,25 @@
     "message": "Váratlan hiba lépett fel. Kérjük, próbálja újra."
   },
   "onboarding": {
-    "welcome": {
-      "title": "Egy összeg\nAz összes valutája",
-      "description": "Adjon meg egy összeget egyszer, és figyelje, ahogy minden valuta azonnal frissül."
+    "waterEject": {
+      "title": "Távolítsa el gyorsan\na vizet és a port",
+      "description": "Játsszon le erőteljes tisztító hangot, hogy segítsen kinyomni a hangszóróból a bennrekedt vizet és port."
     },
-    "features": {
-      "title": "Mindig a megfelelő árfolyam, mindenhol",
-      "description": "150+ valuta, közel valós idejű árfolyamok, és teljesen offline-kész."
+    "toneGenerator": {
+      "title": "Hozza létre\na megfelelő hangot",
+      "description": "Válasszon különböző frekvenciák közül teszteléshez, hangoláshoz, zajelfedéshez vagy bármilyen hangellenőrzéshez."
     },
-    "getStarted": {
-      "title": "Árfolyamtörténet egy pillantásra",
-      "description": "Koppintson bármelyik valutára, hogy feltárja az árfolyamtörténetét heteken, hónapokon vagy az elmúlt éven át."
+    "dbMeter": {
+      "title": "Tudja meg, milyen\nhangos valójában",
+      "description": "A dB-mérővel becsülje meg a környezet zajszintjét, és hozzon okosabb hallgatási döntéseket."
+    },
+    "privacy": {
+      "title": "Privát és az eszközén marad",
+      "description": "A hangfeldolgozás a telefonján marad, egyértelmű biztonsági és mikrofonhasználati útmutatóval."
     }
+  },
+  "premium": {
+    "accessChecking": "Premium-hozzáférés ellenőrzése…",
+    "accessUnknown": "Csatlakozz az internethez a Premium-hozzáférés ellenőrzéséhez."
   }
 }

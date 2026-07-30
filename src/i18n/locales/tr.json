@@ -1,5 +1,9 @@
 {
   "common": {
+    "openSettings": "Ayarları Aç",
+    "reset": "Sıfırla",
+    "start": "Başlat",
+    "stop": "Durdur",
     "back": "Geri",
     "cancel": "İptal",
     "close": "Kapat",
@@ -109,17 +113,25 @@
     "message": "Beklenmeyen bir hata oluştu. Lütfen tekrar deneyin."
   },
   "onboarding": {
-    "welcome": {
-      "title": "Bir Miktar\nTüm Dövizleriniz",
-      "description": "Bir kez miktar girin ve tüm dövizlerin anında güncellendiğini görün."
+    "waterEject": {
+      "title": "Suyu ve tozu\nhızla çıkarın",
+      "description": "Hoparlörde sıkışan suyu ve tozu dışarı itmeye yardımcı olmak için güçlü bir temizleme sesi çalın."
     },
-    "features": {
-      "title": "Her Zaman Doğru Kur, Her Yerde",
-      "description": "150'den fazla döviz, gerçek zamanlıya yakın kurlar ve tamamen çevrimdışı kullanıma hazır."
+    "toneGenerator": {
+      "title": "Doğru tonu\noluşturun",
+      "description": "Test, ayarlama, gürültü maskeleme veya her türlü ses kontrolü için farklı frekanslardan seçim yapın."
     },
-    "getStarted": {
-      "title": "Kur Geçmişi Bir Bakışta",
-      "description": "Haftalar, aylar veya geçen yıl boyunca kur geçmişini keşfetmek için herhangi bir dövize dokunun."
+    "dbMeter": {
+      "title": "Sesin gerçekten\nne kadar yüksek olduğunu bilin",
+      "description": "Çevrenizdeki gürültü düzeylerini tahmin etmek ve daha akıllı dinleme kararları vermek için dB Ölçeri kullanın."
+    },
+    "privacy": {
+      "title": "Özel ve cihazınızda",
+      "description": "Ses işleme, açık güvenlik ve mikrofon yönergeleriyle telefonunuzda kalır."
     }
+  },
+  "premium": {
+    "accessChecking": "Premium erişimi kontrol ediliyor…",
+    "accessUnknown": "Premium erişimini kontrol etmek için internete bağlanın."
   }
 }

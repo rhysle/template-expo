@@ -1,4 +1,4 @@
-import { useRouter } from 'expo-router'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useTranslation } from 'react-i18next'
 
 import { PaywallScreen } from '@/components/base/Paywall'
@@ -9,8 +9,10 @@ import { haptics } from '@/utils/haptics'
 export default function AutoPaywallScreen() {
   const { t } = useTranslation()
   const router = useRouter()
+  const { source: sourceParam } = useLocalSearchParams<{ source?: string }>()
   const { showSnackbar } = useSnackbarState()
   const features = usePaywallFeatures()
+  const source = sourceParam ?? 'direct'
 
   const handleDone = () => {
     router.back()
@@ -21,6 +23,7 @@ export default function AutoPaywallScreen() {
       title={t('paywall.title')}
       subtitle={t('paywall.subtitle')}
       features={features}
+      source={source}
       onComplete={handleDone}
       onDismiss={handleDone}
       onSubscribeSuccess={() => {

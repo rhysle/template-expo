@@ -1,5 +1,9 @@
 {
   "common": {
+    "openSettings": "Öppna inställningar",
+    "reset": "Återställ",
+    "start": "Starta",
+    "stop": "Stoppa",
     "back": "Tillbaka",
     "cancel": "Avbryt",
     "close": "Stäng",
@@ -109,17 +113,25 @@
     "message": "Ett oväntat fel inträffade. Försök igen."
   },
   "onboarding": {
-    "welcome": {
-      "title": "Ett belopp\nAlla dina valutor",
-      "description": "Ange ett belopp en gång och se varje valuta uppdateras direkt."
+    "waterEject": {
+      "title": "Ta bort vatten\noch damm snabbt",
+      "description": "Spela upp ett kraftfullt rengöringsljud som hjälper till att pressa ut fastnat vatten och damm ur högtalaren."
     },
-    "features": {
-      "title": "Alltid rätt kurs, överallt",
-      "description": "150+ valutor, nästan realtidskurser och helt offline-klar."
+    "toneGenerator": {
+      "title": "Skapa\nrätt ton",
+      "description": "Välj bland olika frekvenser för testning, justering, brusmaskering eller annan ljudkontroll."
     },
-    "getStarted": {
-      "title": "Kurshistorik på ett ögonblick",
-      "description": "Tryck på en valuta för att utforska kurshistoriken över veckor, månader eller det senaste året."
+    "dbMeter": {
+      "title": "Vet hur högt\ndet verkligen är",
+      "description": "Använd dB-mätaren för att uppskatta ljudnivåerna omkring dig och fatta smartare lyssningsbeslut."
+    },
+    "privacy": {
+      "title": "Privat och på din enhet",
+      "description": "Ljudbehandlingen stannar på din telefon, med tydlig vägledning om säkerhet och mikrofon."
     }
+  },
+  "premium": {
+    "accessChecking": "Kontrollerar Premium-åtkomst…",
+    "accessUnknown": "Anslut till internet för att kontrollera Premium-åtkomst."
   }
 }

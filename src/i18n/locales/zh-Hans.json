@@ -1,5 +1,9 @@
 {
   "common": {
+    "openSettings": "打开设置",
+    "reset": "重置",
+    "start": "开始",
+    "stop": "停止",
     "back": "返回",
     "cancel": "取消",
     "close": "关闭",
@@ -109,17 +113,25 @@
     "message": "发生意外错误，请重试。"
   },
   "onboarding": {
-    "welcome": {
-      "title": "一个金额\n所有货币",
-      "description": "输入一次金额，所有货币即时更新。"
+    "waterEject": {
+      "title": "快速清除\n水和灰尘",
+      "description": "播放强劲的清洁声音，帮助将困在扬声器中的水和灰尘推出。"
     },
-    "features": {
-      "title": "随时随地获取正确汇率",
-      "description": "150+种货币、近实时汇率，完全支持离线使用。"
+    "toneGenerator": {
+      "title": "生成\n合适的音调",
+      "description": "可选择不同频率，用于测试、调音、掩蔽噪声或任何声音检查。"
     },
-    "getStarted": {
-      "title": "一览汇率历史",
-      "description": "点击任意货币，查看按周、月或过去一年的汇率历史。"
+    "dbMeter": {
+      "title": "了解声音\n实际有多响",
+      "description": "使用分贝仪估计身边的噪声水平，做出更明智的聆听决定。"
+    },
+    "privacy": {
+      "title": "私密且仅在设备上处理",
+      "description": "音频处理始终在您的手机上进行，并提供清晰的安全和麦克风使用指引。"
     }
+  },
+  "premium": {
+    "accessChecking": "正在检查 Premium 访问权限…",
+    "accessUnknown": "请连接互联网以检查 Premium 访问权限。"
   }
 }

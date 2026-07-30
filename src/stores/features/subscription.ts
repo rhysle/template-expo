@@ -9,34 +9,28 @@ declare global {
   }
 }
 
+export type PremiumState = 'loading' | 'free' | 'premium' | 'unknown'
+
 export interface SubscriptionSlice {
-  isSubscribed: boolean
+  premiumState: PremiumState
   activeEntitlementId: string | null
-  revenueCatReady: boolean
-  setSubscriptionStatus: (isActive: boolean, entitlementId: string | null) => void
-  setRevenueCatReady: (ready: boolean) => void
+  setPremiumStatus: (state: PremiumState, entitlementId: string | null) => void
 }
 
 export const subscriptionPersistExcludeKeys: ExcludeKeys<SubscriptionSlice> = [
-  'isSubscribed',
+  'premiumState',
   'activeEntitlementId',
-  'revenueCatReady',
 ]
 
 export const createSubscriptionSlice = (
   set: (updater: (state: SubscriptionSlice) => void) => void
 ): SubscriptionSlice => ({
-  isSubscribed: false,
+  premiumState: 'loading',
   activeEntitlementId: null,
-  revenueCatReady: false,
-  setSubscriptionStatus: (isActive, entitlementId) =>
+  setPremiumStatus: (premiumState, entitlementId) =>
     set((state) => {
-      state.isSubscribed = isActive
+      state.premiumState = premiumState
       state.activeEntitlementId = entitlementId
-    }),
-  setRevenueCatReady: (ready) =>
-    set((state) => {
-      state.revenueCatReady = ready
     }),
 })
 
@@ -48,10 +42,8 @@ export const sliceConfig = {
 export const useSubscriptionState = () =>
   getUseAppStore()(
     useShallow(({ subscription }) => ({
-      isSubscribed: subscription.isSubscribed,
+      premiumState: subscription.premiumState,
       activeEntitlementId: subscription.activeEntitlementId,
-      revenueCatReady: subscription.revenueCatReady,
-      setSubscriptionStatus: subscription.setSubscriptionStatus,
-      setRevenueCatReady: subscription.setRevenueCatReady,
+      setPremiumStatus: subscription.setPremiumStatus,
     }))
   )

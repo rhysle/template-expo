@@ -14,7 +14,7 @@ export interface BannerAdDimensions {
 export interface BannerAdProps {
   /** Override the ad unit ID. Defaults to AppConfig banner unit for current platform. */
   unitId?: string
-  /** Ad size. Defaults to the compact anchored adaptive format. */
+  /** Ad size. Defaults to the compact fixed banner format. */
   size?: BannerAdSize
   /** Wrapper style - use to control margins and positioning around the ad. */
   style?: StyleProp<ViewStyle>
@@ -25,7 +25,7 @@ export interface BannerAdProps {
 
 export const BannerAd = ({
   unitId,
-  size = BannerAdSize.ANCHORED_ADAPTIVE_BANNER,
+  size = BannerAdSize.BANNER,
   style,
   onAdLoaded,
   onAdFailedToLoad,

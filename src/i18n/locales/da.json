@@ -1,5 +1,9 @@
 {
   "common": {
+    "openSettings": "Åbn indstillinger",
+    "reset": "Nulstil",
+    "start": "Start",
+    "stop": "Stop",
     "back": "Tilbage",
     "cancel": "Annuller",
     "close": "Luk",
@@ -109,17 +113,25 @@
     "message": "Der opstod en uventet fejl. Prøv venligst igen."
   },
   "onboarding": {
-    "welcome": {
-      "title": "Ét beløb\nAlle dine valutaer",
-      "description": "Indtast et beløb én gang og se hver valuta opdatere øjeblikkeligt."
+    "waterEject": {
+      "title": "Fjern vand\nog støv hurtigt",
+      "description": "Afspil en kraftig rengøringslyd, som hjælper med at skubbe fanget vand og støv ud af din højttaler."
     },
-    "features": {
-      "title": "Altid den rigtige kurs, overalt",
-      "description": "150+ valutaer, næsten realtidskurser og fuldt offline-klar."
+    "toneGenerator": {
+      "title": "Skab den\nrigtige tone",
+      "description": "Vælg mellem forskellige frekvenser til test, justering, støjmaskering eller enhver lydkontrol."
     },
-    "getStarted": {
-      "title": "Kurshistorik på ét blik",
-      "description": "Tryk på en valuta for at udforske dens kurshistorik over uger, måneder eller det seneste år."
+    "dbMeter": {
+      "title": "Se, hvor højt\ndet virkelig er",
+      "description": "Brug dB-måleren til at anslå støjniveauet omkring dig og træffe bedre lyttevalg."
+    },
+    "privacy": {
+      "title": "Privat og på din enhed",
+      "description": "Lydbehandlingen bliver på din telefon med tydelig vejledning om sikkerhed og mikrofonen."
     }
+  },
+  "premium": {
+    "accessChecking": "Kontrollerer Premium-adgang…",
+    "accessUnknown": "Opret forbindelse til internettet for at kontrollere Premium-adgang."
   }
 }

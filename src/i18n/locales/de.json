@@ -1,5 +1,9 @@
 {
   "common": {
+    "openSettings": "Einstellungen öffnen",
+    "reset": "Zurücksetzen",
+    "start": "Starten",
+    "stop": "Stoppen",
     "back": "Zurück",
     "cancel": "Abbrechen",
     "close": "Schließen",
@@ -109,17 +113,25 @@
     "message": "Ein unerwarteter Fehler ist aufgetreten. Bitte erneut versuchen."
   },
   "onboarding": {
-    "welcome": {
-      "title": "Ein Betrag\nAlle Währungen",
-      "description": "Betrag einmal eingeben und alle Währungen sofort aktualisiert sehen."
+    "waterEject": {
+      "title": "Wasser und Staub\nschnell entfernen",
+      "description": "Spiele einen kraftvollen Reinigungston ab, um eingeschlossenes Wasser und Staub aus deinem Lautsprecher zu drücken."
     },
-    "features": {
-      "title": "Immer der richtige Kurs, überall",
-      "description": "150+ Währungen, nahezu Echtzeit-Kurse und vollständig offline verfügbar."
+    "toneGenerator": {
+      "title": "Den richtigen\nTon erzeugen",
+      "description": "Wähle aus verschiedenen Frequenzen zum Testen, Abstimmen, Maskieren von Geräuschen oder für jeden Soundcheck."
     },
-    "getStarted": {
-      "title": "Kurshistorie auf einen Blick",
-      "description": "Tippe auf eine Währung, um die Kurshistorie über Wochen, Monate oder das vergangene Jahr zu erkunden."
+    "dbMeter": {
+      "title": "Wissen, wie laut\nes wirklich ist",
+      "description": "Nutze das dB-Messgerät, um Geräuschpegel in deiner Umgebung zu schätzen und klüger zu hören."
+    },
+    "privacy": {
+      "title": "Privat und auf deinem Gerät",
+      "description": "Die Audioverarbeitung bleibt auf deinem Telefon – mit klaren Sicherheits- und Mikrofonhinweisen."
     }
+  },
+  "premium": {
+    "accessChecking": "Premium-Zugang wird geprüft…",
+    "accessUnknown": "Stelle eine Internetverbindung her, um den Premium-Zugang zu prüfen."
   }
 }

@@ -1,3 +1,5 @@
+export type { PaywallSource } from './premiumAccess'
+export { buildPaywallPath, hasPaywallPrecedence, shouldTriggerAutoPaywall } from './premiumAccess'
 export {
   addCustomerInfoListener,
   checkEntitlement,

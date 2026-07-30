@@ -28,7 +28,7 @@ import {
  */
 export const useRevenueCatInit = (): void => {
   const { userId } = useUserIdentityState()
-  const { setSubscriptionStatus, setRevenueCatReady } = useSubscriptionState()
+  const { setPremiumStatus } = useSubscriptionState()
   const appState = useRef(AppState.currentState)
 
   useEffect(() => {
@@ -40,10 +40,11 @@ export const useRevenueCatInit = (): void => {
       try {
         const customerInfo = await getCustomerInfo()
         const isActive = checkEntitlement(customerInfo)
-        setSubscriptionStatus(isActive, getActiveEntitlementId(customerInfo))
-        setAnalyticsUserProperties({ is_subscribed: isActive ? 'true' : 'false' })
+        setPremiumStatus(isActive ? 'premium' : 'free', getActiveEntitlementId(customerInfo))
+        setAnalyticsUserProperties({ premium_state: isActive ? 'premium' : 'free' })
       } catch (error) {
-        // Subscription state stays as default (false) - app remains functional.
+        setPremiumStatus('unknown', null)
+        setAnalyticsUserProperties({ premium_state: 'unknown' })
         // RevenueCat exposes stable error codes, so expected connectivity failures can be
         // filtered without relying on localized native error messages.
         if (!isRevenueCatConnectivityError(error)) {
@@ -53,8 +54,6 @@ export const useRevenueCatInit = (): void => {
             getRevenueCatErrorDetails(error)
           )
         }
-      } finally {
-        setRevenueCatReady(true)
       }
     }
 
@@ -62,8 +61,8 @@ export const useRevenueCatInit = (): void => {
 
     const removeListener = addCustomerInfoListener((customerInfo) => {
       const isActive = checkEntitlement(customerInfo)
-      setSubscriptionStatus(isActive, getActiveEntitlementId(customerInfo))
-      setAnalyticsUserProperties({ is_subscribed: isActive ? 'true' : 'false' })
+      setPremiumStatus(isActive ? 'premium' : 'free', getActiveEntitlementId(customerInfo))
+      setAnalyticsUserProperties({ premium_state: isActive ? 'premium' : 'free' })
     })
 
     const appStateSubscription = AppState.addEventListener(
@@ -80,5 +79,5 @@ export const useRevenueCatInit = (): void => {
       removeListener()
       appStateSubscription.remove()
     }
-  }, [userId, setSubscriptionStatus, setRevenueCatReady])
+  }, [userId, setPremiumStatus])
 }

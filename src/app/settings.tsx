@@ -22,6 +22,7 @@ import { AppConfig } from '@/configs'
 import { AdsConsent, isAdsEnabled } from '@/services/ads'
 import { AnalyticsGeneralEvents, trackEvent } from '@/services/firebase/analytics'
 import { getCurrentOtaUpdateId } from '@/services/otaUpdate'
+import { type PaywallSource, usePremiumGate } from '@/services/revenueCat'
 import { recordError } from '@/services/sentry'
 import { openWriteReview } from '@/services/storeReview'
 import { useAdsState } from '@/stores/features/ads'
@@ -32,17 +33,20 @@ import { createThemedStyles, iconSizes, useCommonStyles, useTheme, useThemedStyl
 import { useContactSupport } from '@/utils/useContactSupport'
 import { useShareApp } from '@/utils/useShareApp'
 
+const SETTINGS_PAYWALL_SOURCE = 'settings' satisfies PaywallSource
+
 export default function SettingsScreen() {
   const { t } = useTranslation()
   const theme = useTheme()
   const commonStyles = useCommonStyles()
   const styles = useThemedStyles(createStyles)
   const router = useRouter()
-  const { isSubscribed } = useSubscriptionState()
+  const { premiumState } = useSubscriptionState()
+  const { openPaywall } = usePremiumGate()
   const { userId } = useUserIdentityState()
   const { privacyOptionsRequired } = useAdsState()
   const { showSnackbar } = useSnackbarState()
-  const showPrivacyConsentItem = isAdsEnabled() && !isSubscribed && privacyOptionsRequired
+  const showPrivacyConsentItem = isAdsEnabled() && premiumState === 'free' && privacyOptionsRequired
   const currentOtaUpdateId = getCurrentOtaUpdateId()
   const appName = Constants.expoConfig?.name ?? 'App'
 
@@ -85,11 +89,12 @@ export default function SettingsScreen() {
         {t('settings.subtitle')}
       </Text>
 
-      {!isSubscribed && (
+      {premiumState === 'free' && (
         <PromoBanner
           icon={<DiamondsFourIcon size={iconSizes.lg} color={theme.colors.text.inverse} />}
           title={t('settings.upgradeBanner.title')}
           subtitle={t('settings.upgradeBanner.subtitle')}
+          onPress={() => openPaywall(SETTINGS_PAYWALL_SOURCE)}
           style={styles.upgradeBanner}
         />
       )}

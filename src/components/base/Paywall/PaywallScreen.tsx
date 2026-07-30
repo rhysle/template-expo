@@ -12,6 +12,8 @@ import { SpinArcLoader } from '@/components/base/Loader'
 import { Text } from '@/components/base/Text'
 import { AppConfig } from '@/configs'
 import { AnalyticsGeneralEvents, trackEvent } from '@/services/firebase/analytics'
+import { useAdsState } from '@/stores/features/ads'
+import { usePaywallState } from '@/stores/features/paywall'
 import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
 
 import { PackageOption } from './PackageOption'
@@ -25,6 +27,7 @@ export const PaywallScreen = ({
   title,
   subtitle,
   features,
+  source,
   onComplete,
   onDismiss,
   onSubscribeSuccess,
@@ -37,6 +40,8 @@ export const PaywallScreen = ({
   const styles = useThemedStyles(createStyles)
   const { colors } = useTheme()
   const insets = useSafeAreaInsets()
+  const { setPaywallShowing } = usePaywallState()
+  const { setInterstitialAdPrevented } = useAdsState()
   const {
     packages,
     selectedPackage,
@@ -46,6 +51,7 @@ export const PaywallScreen = ({
     handleSubscribe,
     handleRestore,
   } = usePaywall({
+    source,
     onComplete,
     onSubscribeSuccess,
     onSubscribeError,
@@ -57,8 +63,14 @@ export const PaywallScreen = ({
   const hasFreeTrialSelected = selectedPackage?.product.introPrice?.price === 0
 
   useEffect(() => {
-    trackEvent(AnalyticsGeneralEvents.PAYWALL_VIEWED)
-  }, [])
+    setPaywallShowing(true)
+    setInterstitialAdPrevented('paywall', true)
+    trackEvent(AnalyticsGeneralEvents.PAYWALL_VIEWED, { source })
+    return () => {
+      setPaywallShowing(false)
+      setInterstitialAdPrevented('paywall', false)
+    }
+  }, [setInterstitialAdPrevented, setPaywallShowing, source])
 
   if (loading) {
     return (
@@ -73,7 +85,7 @@ export const PaywallScreen = ({
       <Pressable
         style={[styles.closeButton, { top: insets.top + 8 }]}
         onPress={() => {
-          trackEvent(AnalyticsGeneralEvents.PAYWALL_DISMISSED)
+          trackEvent(AnalyticsGeneralEvents.PAYWALL_DISMISSED, { source })
           onDismiss?.()
         }}
         disabled={purchasing}

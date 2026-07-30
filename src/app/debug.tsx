@@ -13,8 +13,10 @@ import type { SegmentedOption } from '@/components/base/SegmentedControl'
 import { BaseComponentGallery } from '@/components/debug/BaseComponentGallery'
 import { DesignTokenSection } from '@/components/debug/DesignTokenSection'
 import { ScreenHeader } from '@/components/ScreenHeader'
+import { usePremiumGate } from '@/services/revenueCat'
 import { clearUserId as clearUserIdService } from '@/services/userIdentity'
 import { useSnackbarState } from '@/stores/features/snackbar'
+import { type PremiumState, useSubscriptionState } from '@/stores/features/subscription'
 import { useUserIdentityState } from '@/stores/features/userIdentity'
 import { createThemedStyles, iconSizes, useCommonStyles, useTheme, useThemedStyles } from '@/theme'
 import {
@@ -40,11 +42,20 @@ const ZUSTAND_TABS: readonly SegmentedOption<ZustandTab>[] = [
   { label: 'Diff', value: 'diff' },
 ] as const
 
+const PREMIUM_STATE_OPTIONS: readonly SegmentedOption<PremiumState>[] = [
+  { label: 'Loading', value: 'loading' },
+  { label: 'Free', value: 'free' },
+  { label: 'Premium', value: 'premium' },
+  { label: 'Unknown', value: 'unknown' },
+] as const
+
 export default function DebugScreen() {
   const theme = useTheme()
   const commonStyles = useCommonStyles()
   const styles = useThemedStyles(createStyles)
   const { showSnackbar } = useSnackbarState()
+  const { premiumState, setPremiumStatus } = useSubscriptionState()
+  const { requirePremium } = usePremiumGate()
   const { userId, clearUserId: clearUserIdSlice } = useUserIdentityState()
   const [zustandTab, setZustandTab] = useState<ZustandTab>('live')
 
@@ -93,6 +104,41 @@ export default function DebugScreen() {
 
         <CollapsibleSection title="Component Gallery">
           <BaseComponentGallery />
+        </CollapsibleSection>
+
+        <CollapsibleSection title="Premium Access" defaultOpen>
+          <Card padding="md">
+            <Text variant="caption" weight="semibold" tone="muted">
+              Runtime state
+            </Text>
+            <Text variant="body" weight="semibold">
+              {premiumState}
+            </Text>
+            <View style={styles.divider} />
+            <SegmentedControl
+              options={PREMIUM_STATE_OPTIONS}
+              value={premiumState}
+              onValueChange={(state) =>
+                setPremiumStatus(state, state === 'premium' ? 'premium' : null)
+              }
+              size="sm"
+            />
+            <Button
+              variant="secondary"
+              size="sm"
+              label="Test Premium Gate"
+              style={styles.premiumGateButton}
+              onPress={() =>
+                requirePremium('debug_premium_gate', () => {
+                  showSnackbar({ title: 'Premium action allowed', variant: 'success' })
+                })
+              }
+            />
+            <Text variant="caption" tone="muted">
+              Loading and Unknown show their warning snackbar. Free opens the paywall, and Premium
+              allows the action. RevenueCat may replace this simulated state on its next refresh.
+            </Text>
+          </Card>
         </CollapsibleSection>
 
         {/* User Identity */}
@@ -442,6 +488,9 @@ const createStyles = createThemedStyles((t) => ({
   },
   segmentedControl: {
     marginBottom: t.spacing.md,
+  },
+  premiumGateButton: {
+    marginVertical: t.spacing.sm,
   },
   versionRow: {
     flexDirection: 'row',

@@ -1,5 +1,9 @@
 {
   "common": {
+    "openSettings": "設定を開く",
+    "reset": "リセット",
+    "start": "開始",
+    "stop": "停止",
     "back": "戻る",
     "cancel": "キャンセル",
     "close": "閉じる",
@@ -109,17 +113,25 @@
     "message": "予期しないエラーが発生しました。もう一度お試しください。"
   },
   "onboarding": {
-    "welcome": {
-      "title": "1つの金額\nすべての通貨",
-      "description": "金額を1回入力するだけで、すべての通貨がリアルタイムに更新されます。"
+    "waterEject": {
+      "title": "水とほこりを\nすばやく取り除く",
+      "description": "強力なクリーニング音を再生して、スピーカーに閉じ込められた水とほこりを押し出します。"
     },
-    "features": {
-      "title": "どこでも正確なレート",
-      "description": "150以上の通貨、リアルタイムに近いレート、完全オフライン対応。"
+    "toneGenerator": {
+      "title": "最適な\n音を作る",
+      "description": "テスト、調整、ノイズマスキング、その他の音の確認に、さまざまな周波数から選べます。"
     },
-    "getStarted": {
-      "title": "レート履歴を一目で",
-      "description": "通貨をタップして、週・月・過去1年のレート履歴を確認。"
+    "dbMeter": {
+      "title": "実際にどれだけ\n大きい音かを知る",
+      "description": "dB メーターで周囲の騒音レベルを見積もり、より賢く聴くための判断に役立てましょう。"
+    },
+    "privacy": {
+      "title": "非公開、端末内で完結",
+      "description": "音声処理はスマートフォン内にとどまり、安全性とマイクに関する明確な案内を提供します。"
     }
+  },
+  "premium": {
+    "accessChecking": "Premium アクセスを確認中…",
+    "accessUnknown": "Premium アクセスを確認するにはインターネットに接続してください。"
   }
 }

@@ -39,6 +39,9 @@ export const AppConfig = {
      * real ad unit IDs from AdMob for production builds.
      */
     enabled: true,
+    banner: {
+      enabled: true,
+    },
     ios: {
       appId: 'ca-app-pub-4662625232077043~6949204305',
       bannerAdUnitId: '',
@@ -50,8 +53,10 @@ export const AppConfig = {
       interstitialAdUnitId: '',
     },
     interstitial: {
-      gracePeriodSessions: 3,
-      cooldownMs: 4 * 60 * 60 * 1000, // 4 hours
+      enabled: true,
+      initialGraceCompletions: 2,
+      completionsBetweenAds: 2,
+      cooldownMs: 24 * 60 * 60 * 1000, // 24 hours
     },
   },
 } as const

@@ -33,6 +33,7 @@ Before implementing product features, fill in [`docs/PRODUCT.md`](docs/PRODUCT.m
 
 3. Choose final, globally unique iOS and Android identifiers. Update `expo.scheme`, `expo.ios.bundleIdentifier`, and `expo.android.package` in `app.json`.
 4. Replace icons, adaptive-icon layers, splash art, and favicon under `assets/images/`, then update their references and colors in `app.json`.
+5. Replace the four onboarding Lottie assets in `assets/animations/onboarding/page-1.json` through `page-4.json`. Keep those fixed filenames and the matching generic page keys so no code changes are needed.
 
 ### 2. Configure Firebase Analytics
 
@@ -49,6 +50,10 @@ Before implementing product features, fill in [`docs/PRODUCT.md`](docs/PRODUCT.m
 4. Before submitting a release to the App Store or Google Play, replace the Test Store key with the correct platform-specific production API key for each field. Never submit an app configured with a Test Store key.
 5. Set `AppConfig.revenueCat.entitlementId` to the entitlement created in step 2, then replace `src/components/paywall/usePaywallFeatures.ts` and confirm the paywall and automatic-presentation behavior fit the product.
 
+Paywall source IDs are intentionally defined beside the route or component that opens the paywall. When replacing a sample feature, replace or remove its local source ID in the same file; do not add a product-wide source registry under `src/configs/`. Route paywall navigation through `usePremiumGate` or `buildPaywallPath` so analytics attribution is retained.
+
+Subscription access is runtime-only and resolves to `loading`, `free`, `premium`, or `unknown`. Premium actions run only for `premium`; paywalls and ads are eligible only for confirmed `free` users. Keep `loading` and `unknown` fail-closed when adapting gates or monetization flows.
+
 ### 4. Configure Sentry
 
 1. Create a Sentry project for the app.
@@ -61,10 +66,12 @@ Before implementing product features, fill in [`docs/PRODUCT.md`](docs/PRODUCT.m
 1. In AdMob, create an app record for each platform and copy its app ID. Add them to `AppConfig.ads.ios.appId` and `AppConfig.ads.android.appId` in `src/configs/AppConfig.ts`.
 2. For each AdMob app, open **Ad units**, choose **Add ad unit**, and create the formats used by this template: one **Banner** unit and one **Interstitial** unit.
 3. Copy each platform's Banner and Interstitial ad-unit IDs into the matching `bannerAdUnitId` and `interstitialAdUnitId` fields in `AppConfig.ads`.
-4. Set `AppConfig.ads.enabled` to `true`, then run `npm run setup:ads` to synchronize the native configuration. Keep the ads initialization hooks in the root and tabs layouts when ads are enabled; remove them when ads are disabled.
-5. Development and preview builds automatically use Google's adaptive-banner and interstitial test ad-unit IDs. Register any physical device used to test a production variant as an AdMob test device; never click live ads during development.
+4. Set `AppConfig.ads.enabled` to `true`, choose the `banner.enabled` and `interstitial.enabled` flags, review the interstitial completion thresholds and cooldown, then run `npm run setup:ads` to synchronize the native configuration. Keep the ads initialization hooks in the root and tabs layouts when ads are enabled; remove them when ads are disabled.
+5. Development and preview builds automatically use Google's banner and interstitial test ad-unit IDs. Register any physical device used to test a production variant as an AdMob test device; never click live ads during development.
 6. The template requests UMP consent before initializing Mobile Ads or constructing ad objects. Preserve that gate and configure any required Privacy & messaging forms in AdMob before release.
 7. Run a clean prebuild after changing the ads configuration.
+
+The tab layout owns one `InterstitialAdProvider`. Product completion points request an opportunity with `useRequestInterstitialAd()`; the provider applies the configured grace/completion counts, cooldown, one-ad-per-foreground cap, paywall precedence, consent/readiness, and premium-access checks. Use `canPresent` or `usePreventInterstitialAd()` to suppress presentation during product states such as active audio, recording, or another sensitive interaction.
 
 ### 6. Configure fonts, localization, and OTA updates
 
@@ -85,7 +92,7 @@ Replace the remaining product values in `src/configs/AppConfig.ts`:
 Replace the sample tabs, routes, settings preferences, onboarding pages, paywall content, analytics events, and API/query modules:
 
 - `src/app/(tabs)/` and the tab metadata in `src/app/(tabs)/_layout.tsx`
-- `src/components/onboarding/`
+- `src/components/onboarding/` and the four local animation slots in `assets/animations/onboarding/page-1.json` through `page-4.json`; replace those files in place without changing their generic names or page keys
 - `src/components/paywall/usePaywallFeatures.ts`
 - `src/services/firebase/analytics/analyticsAppEvents.ts`
 - Product data modules under `src/services/queries/`
@@ -179,7 +186,7 @@ import { CustomTabNavigator as TabNavigator, type TabDefinition } from '@/compon
 
 `NativeTabNavigator` resolves to `CustomTabNavigator` on web, so the existing custom web UI remains unchanged. Native tabs do not provide headers, so every tab is a folder with its own `TabStack`. Keep that structure when adding detail routes.
 
-Expo Router does not expose native tab-bar height. `useTabBarHeight()` therefore returns the measured custom height or a conservative native fallback for root overlays. `TabNavigatorFrame` owns one persistent compact anchored-adaptive banner above the bottom bar for both navigator implementations, so tab changes do not remount the ad or issue new requests. It publishes the measured banner height; `TabScreen` clears the combined navigator-aware inset for non-scrolling content. Scroll roots opt into `contentUnderTabBar` and add `useTabBarContentInset()` to their scroll-content bottom padding, which lets content remain visible behind the bar while keeping the final item reachable. Change `TabBarBanner` when a product needs a different policy-appropriate placement rather than mounting banners inside individual tab routes. The native bar is intentionally fixed at the bottom: iOS minimization and iPad sidebar adaptation are disabled by default.
+Expo Router does not expose native tab-bar height. `useTabBarHeight()` therefore returns the measured custom height or a conservative native fallback for root overlays. `TabNavigatorFrame` owns one persistent compact fixed-size banner above the bottom bar for both navigator implementations, so tab changes do not remount the ad or issue new requests. It publishes the measured banner height; `TabScreen` clears the combined navigator-aware inset for non-scrolling content. Scroll roots opt into `contentUnderTabBar` and add `useTabBarContentInset()` to their scroll-content bottom padding, which lets content remain visible behind the bar while keeping the final item reachable. Change `TabBarBanner` when a product needs a different policy-appropriate placement rather than mounting banners inside individual tab routes. The native bar is intentionally fixed at the bottom: iOS minimization and iPad sidebar adaptation are disabled by default.
 
 ## UI and Theme
 

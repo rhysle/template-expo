@@ -1,5 +1,9 @@
 {
   "common": {
+    "openSettings": "Mở Cài đặt",
+    "reset": "Đặt lại",
+    "start": "Bắt đầu",
+    "stop": "Dừng",
     "back": "Quay lại",
     "cancel": "Hủy",
     "close": "Đóng",
@@ -109,17 +113,25 @@
     "message": "Có lỗi không mong muốn xảy ra. Vui lòng thử lại."
   },
   "onboarding": {
-    "welcome": {
-      "title": "Một số tiền\nTất cả tiền tệ",
-      "description": "Nhập số tiền một lần và xem tất cả tiền tệ cập nhật ngay lập tức."
+    "waterEject": {
+      "title": "Loại bỏ nước\nvà bụi nhanh chóng",
+      "description": "Phát âm thanh làm sạch mạnh mẽ để giúp đẩy nước và bụi mắc kẹt ra khỏi loa."
     },
-    "features": {
-      "title": "Luôn đúng tỷ giá, ở bất cứ đâu",
-      "description": "Hơn 150 loại tiền tệ, tỷ giá gần như thời gian thực, và hoạt động ngoại tuyến."
+    "toneGenerator": {
+      "title": "Tạo\nâm sắc phù hợp",
+      "description": "Chọn trong các tần số khác nhau để kiểm tra, điều chỉnh, che tiếng ồn hoặc kiểm tra âm thanh bất kỳ."
     },
-    "getStarted": {
-      "title": "Lịch sử tỷ giá trong tầm tay",
-      "description": "Nhấn vào bất kỳ tiền tệ nào để xem lịch sử tỷ giá theo tuần, tháng hoặc năm qua."
+    "dbMeter": {
+      "title": "Biết âm thanh\nthực sự lớn đến đâu",
+      "description": "Dùng Máy đo dB để ước tính mức tiếng ồn xung quanh và đưa ra lựa chọn nghe thông minh hơn."
+    },
+    "privacy": {
+      "title": "Riêng tư và trên thiết bị",
+      "description": "Việc xử lý âm thanh diễn ra trên điện thoại của bạn, kèm hướng dẫn rõ ràng về an toàn và micrô."
     }
+  },
+  "premium": {
+    "accessChecking": "Đang kiểm tra quyền truy cập Premium…",
+    "accessUnknown": "Kết nối Internet để kiểm tra quyền truy cập Premium."
   }
 }

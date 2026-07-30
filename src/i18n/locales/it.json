@@ -1,5 +1,9 @@
 {
   "common": {
+    "openSettings": "Apri impostazioni",
+    "reset": "Reimposta",
+    "start": "Avvia",
+    "stop": "Ferma",
     "back": "Indietro",
     "cancel": "Annulla",
     "close": "Chiudi",
@@ -109,17 +113,25 @@
     "message": "Si è verificato un errore imprevisto. Riprova."
   },
   "onboarding": {
-    "welcome": {
-      "title": "Un importo\nTutte le tue valute",
-      "description": "Inserisci un importo una volta e guarda tutte le valute aggiornarsi istantaneamente."
+    "waterEject": {
+      "title": "Rimuovi acqua\ne polvere rapidamente",
+      "description": "Riproduci un potente suono di pulizia per aiutare a espellere acqua e polvere intrappolate dall’altoparlante."
     },
-    "features": {
-      "title": "Sempre il tasso giusto, ovunque",
-      "description": "Oltre 150 valute, tassi in tempo quasi reale e completamente disponibile offline."
+    "toneGenerator": {
+      "title": "Genera\nil tono giusto",
+      "description": "Scegli tra diverse frequenze per test, regolazioni, mascheramento del rumore o qualsiasi controllo audio."
     },
-    "getStarted": {
-      "title": "Storico dei tassi a colpo d'occhio",
-      "description": "Tocca una valuta per esplorare il suo storico dei tassi su settimane, mesi o l'anno passato."
+    "dbMeter": {
+      "title": "Scopri quanto è\ndavvero forte",
+      "description": "Usa il misuratore dB per stimare i livelli di rumore intorno a te e prendere decisioni di ascolto più consapevoli."
+    },
+    "privacy": {
+      "title": "Privato e sul tuo dispositivo",
+      "description": "L’elaborazione audio rimane sul telefono, con indicazioni chiare su sicurezza e microfono."
     }
+  },
+  "premium": {
+    "accessChecking": "Verifica dell’accesso Premium…",
+    "accessUnknown": "Connettiti a Internet per verificare l’accesso Premium."
   }
 }

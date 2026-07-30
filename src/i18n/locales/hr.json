@@ -1,5 +1,9 @@
 {
   "common": {
+    "openSettings": "Otvori postavke",
+    "reset": "Poništi",
+    "start": "Pokreni",
+    "stop": "Zaustavi",
     "back": "Natrag",
     "cancel": "Odustani",
     "close": "Zatvori",
@@ -109,17 +113,25 @@
     "message": "Došlo je do neočekivane pogreške. Molimo pokušajte ponovo."
   },
   "onboarding": {
-    "welcome": {
-      "title": "Jedan iznos\nSve vaše valute",
-      "description": "Unesite iznos jednom i gledajte kako se svaka valuta trenutno ažurira."
+    "waterEject": {
+      "title": "Brzo uklonite\nvodu i prašinu",
+      "description": "Pustite snažan zvuk čišćenja kako biste pomogli izbaciti zarobljenu vodu i prašinu iz zvučnika."
     },
-    "features": {
-      "title": "Uvijek pravi tečaj, bilo gdje",
-      "description": "150+ valuta, gotovo tečajevi u stvarnom vremenu i potpuno offline."
+    "toneGenerator": {
+      "title": "Stvorite\npravi ton",
+      "description": "Odaberite različite frekvencije za testiranje, ugađanje, maskiranje buke ili bilo koju provjeru zvuka."
     },
-    "getStarted": {
-      "title": "Povijest tečajeva na prvi pogled",
-      "description": "Dodirnite bilo koju valutu za istraživanje povijesti tečajeva kroz tjedne, mjesece ili prošlu godinu."
+    "dbMeter": {
+      "title": "Saznajte koliko je\nzaista glasno",
+      "description": "Upotrijebite dB mjerač za procjenu razine buke oko sebe i pametnije odluke o slušanju."
+    },
+    "privacy": {
+      "title": "Privatno i na uređaju",
+      "description": "Obrada zvuka ostaje na telefonu uz jasne upute o sigurnosti i mikrofonu."
     }
+  },
+  "premium": {
+    "accessChecking": "Provjera Premium pristupa…",
+    "accessUnknown": "Povežite se s internetom da biste provjerili Premium pristup."
   }
 }

@@ -1,5 +1,9 @@
 {
   "common": {
+    "openSettings": "설정 열기",
+    "reset": "재설정",
+    "start": "시작",
+    "stop": "중지",
     "back": "뒤로",
     "cancel": "취소",
     "close": "닫기",
@@ -109,17 +113,25 @@
     "message": "예기치 않은 오류가 발생했습니다. 다시 시도해 주세요."
   },
   "onboarding": {
-    "welcome": {
-      "title": "하나의 금액\n모든 통화",
-      "description": "금액을 한 번 입력하면 모든 통화가 즉시 업데이트됩니다."
+    "waterEject": {
+      "title": "물과 먼지를\n빠르게 제거",
+      "description": "강력한 청소음을 재생해 스피커에 갇힌 물과 먼지가 빠져나오도록 도와줍니다."
     },
-    "features": {
-      "title": "언제 어디서나 정확한 환율",
-      "description": "150개 이상의 통화, 거의 실시간 환율, 완전 오프라인 지원."
+    "toneGenerator": {
+      "title": "알맞은\n톤 만들기",
+      "description": "테스트, 튜닝, 소음 마스킹 또는 모든 사운드 점검을 위해 다양한 주파수 중에서 선택하세요."
     },
-    "getStarted": {
-      "title": "환율 기록 한눈에",
-      "description": "통화를 탭하여 주, 월, 지난 1년간의 환율 기록을 확인하세요."
+    "dbMeter": {
+      "title": "실제로 얼마나\n큰 소리인지 확인",
+      "description": "dB 측정기를 사용해 주변 소음 수준을 추정하고 더 현명하게 청취하세요."
+    },
+    "privacy": {
+      "title": "비공개, 기기 내에서 처리",
+      "description": "오디오 처리는 휴대폰 안에서 이루어지며, 안전 및 마이크 사용 안내를 명확히 제공합니다."
     }
+  },
+  "premium": {
+    "accessChecking": "Premium 이용 권한 확인 중…",
+    "accessUnknown": "Premium 이용 권한을 확인하려면 인터넷에 연결하세요."
   }
 }

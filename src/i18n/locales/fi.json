@@ -1,5 +1,9 @@
 {
   "common": {
+    "openSettings": "Avaa asetukset",
+    "reset": "Nollaa",
+    "start": "Aloita",
+    "stop": "Pysäytä",
     "back": "Takaisin",
     "cancel": "Peruuta",
     "close": "Sulje",
@@ -109,17 +113,25 @@
     "message": "Tapahtui odottamaton virhe. Yritä uudelleen."
   },
   "onboarding": {
-    "welcome": {
-      "title": "Yksi summa\nKaikki valuuttasi",
-      "description": "Syötä summa kerran ja katso jokaisen valuutan päivittyvän välittömästi."
+    "waterEject": {
+      "title": "Poista vesi\nja pöly nopeasti",
+      "description": "Toista tehokas puhdistusääni, joka auttaa työntämään loukkuun jääneen veden ja pölyn ulos kaiuttimesta."
     },
-    "features": {
-      "title": "Aina oikea kurssi, kaikkialla",
-      "description": "150+ valuuttaa, lähes reaaliaikaiset kurssit ja täysin offline-valmis."
+    "toneGenerator": {
+      "title": "Luo\noikea ääni",
+      "description": "Valitse eri taajuuksista testausta, viritystä, melun peittämistä tai mitä tahansa äänitarkistusta varten."
     },
-    "getStarted": {
-      "title": "Kurssihistoria yhdellä silmäyksellä",
-      "description": "Napauta mitä tahansa valuuttaa tutkiaksesi sen kurssihistoriaa viikkojen, kuukausien tai viimeisen vuoden ajalta."
+    "dbMeter": {
+      "title": "Tiedä, kuinka kovaa\nääni todella on",
+      "description": "Arvioi ympäristösi melutasot dB-mittarilla ja tee harkitumpia kuuntelupäätöksiä."
+    },
+    "privacy": {
+      "title": "Yksityinen ja laitteellasi",
+      "description": "Äänenkäsittely pysyy puhelimessasi, ja saat selkeät turvallisuus- ja mikrofoniohjeet."
     }
+  },
+  "premium": {
+    "accessChecking": "Premium-käyttöoikeutta tarkistetaan…",
+    "accessUnknown": "Yhdistä internetiin tarkistaaksesi Premium-käyttöoikeuden."
   }
 }

@@ -1,5 +1,9 @@
 {
   "common": {
+    "openSettings": "Buka Pengaturan",
+    "reset": "Atur Ulang",
+    "start": "Mulai",
+    "stop": "Berhenti",
     "back": "Kembali",
     "cancel": "Batal",
     "close": "Tutup",
@@ -109,17 +113,25 @@
     "message": "Terjadi kesalahan yang tidak terduga. Silakan coba lagi."
   },
   "onboarding": {
-    "welcome": {
-      "title": "Satu Jumlah\nSemua Mata Uang Anda",
-      "description": "Masukkan jumlah sekali dan lihat setiap mata uang diperbarui seketika."
+    "waterEject": {
+      "title": "Keluarkan air\ndan debu dengan cepat",
+      "description": "Putar suara pembersih yang kuat untuk membantu mendorong air dan debu yang terperangkap keluar dari speaker."
     },
-    "features": {
-      "title": "Selalu Kurs yang Tepat, Di Mana Saja",
-      "description": "150+ mata uang, kurs hampir real-time, dan sepenuhnya siap offline."
+    "toneGenerator": {
+      "title": "Buat\nnada yang tepat",
+      "description": "Pilih dari berbagai frekuensi untuk pengujian, penyetelan, penyamaran kebisingan, atau pemeriksaan suara apa pun."
     },
-    "getStarted": {
-      "title": "Riwayat Kurs Sekilas",
-      "description": "Ketuk mata uang mana saja untuk menjelajahi riwayat kursnya selama berminggu-minggu, berbulan-bulan, atau setahun terakhir."
+    "dbMeter": {
+      "title": "Ketahui seberapa keras\nsuaranya sebenarnya",
+      "description": "Gunakan Pengukur dB untuk memperkirakan tingkat kebisingan di sekitar Anda dan membuat keputusan mendengar yang lebih baik."
+    },
+    "privacy": {
+      "title": "Pribadi dan di perangkat Anda",
+      "description": "Pemrosesan audio tetap di ponsel Anda, dengan panduan keselamatan dan mikrofon yang jelas."
     }
+  },
+  "premium": {
+    "accessChecking": "Memeriksa akses Premium…",
+    "accessUnknown": "Sambungkan ke internet untuk memeriksa akses Premium."
   }
 }

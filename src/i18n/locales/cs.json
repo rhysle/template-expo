@@ -1,5 +1,9 @@
 {
   "common": {
+    "openSettings": "Otevřít nastavení",
+    "reset": "Obnovit",
+    "start": "Spustit",
+    "stop": "Zastavit",
     "back": "Zpět",
     "cancel": "Zrušit",
     "close": "Zavřít",
@@ -109,17 +113,25 @@
     "message": "Došlo k neočekávané chybě. Zkuste to prosím znovu."
   },
   "onboarding": {
-    "welcome": {
-      "title": "Jedna částka\nVšechny vaše měny",
-      "description": "Zadejte částku jednou a sledujte, jak se každá měna okamžitě aktualizuje."
+    "waterEject": {
+      "title": "Rychle odstraňte\nvodu a prach",
+      "description": "Přehrajte silný čisticí zvuk, který pomůže vytlačit zachycenou vodu a prach z reproduktoru."
     },
-    "features": {
-      "title": "Vždy správný kurz, kdekoli",
-      "description": "150+ měn, kurzy téměř v reálném čase, a plně offline."
+    "toneGenerator": {
+      "title": "Vytvořte\nsprávný tón",
+      "description": "Vyberte si z různých frekvencí pro testování, ladění, maskování hluku nebo jakoukoli zvukovou kontrolu."
     },
-    "getStarted": {
-      "title": "Historie kurzů na první pohled",
-      "description": "Klepnutím na libovolnou měnu prozkoumáte historii jejích kurzů za týdny, měsíce nebo poslední rok."
+    "dbMeter": {
+      "title": "Zjistěte, jak hlasité\nto skutečně je",
+      "description": "Pomocí měřiče dB odhadněte hladinu hluku kolem sebe a rozhodujte se při poslechu lépe."
+    },
+    "privacy": {
+      "title": "Soukromé a v zařízení",
+      "description": "Zpracování zvuku zůstává v telefonu a doplňují ho jasné pokyny k bezpečnosti a mikrofonu."
     }
+  },
+  "premium": {
+    "accessChecking": "Ověřování přístupu Premium…",
+    "accessUnknown": "Připojte se k internetu a ověřte přístup Premium."
   }
 }

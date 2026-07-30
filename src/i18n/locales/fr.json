@@ -1,5 +1,9 @@
 {
   "common": {
+    "openSettings": "Ouvrir les réglages",
+    "reset": "Réinitialiser",
+    "start": "Démarrer",
+    "stop": "Arrêter",
     "back": "Retour",
     "cancel": "Annuler",
     "close": "Fermer",
@@ -109,17 +113,25 @@
     "message": "Une erreur inattendue s'est produite. Veuillez réessayer."
   },
   "onboarding": {
-    "welcome": {
-      "title": "Un montant\nToutes vos devises",
-      "description": "Entrez un montant une fois et voyez toutes les devises se mettre à jour instantanément."
+    "waterEject": {
+      "title": "Éliminez l’eau\net la poussière vite",
+      "description": "Lancez un puissant son de nettoyage pour aider à chasser l’eau et la poussière coincées dans votre haut-parleur."
     },
-    "features": {
-      "title": "Toujours le bon taux, partout",
-      "description": "Plus de 150 devises, taux en quasi temps réel, et entièrement disponible hors ligne."
+    "toneGenerator": {
+      "title": "Générez\nle bon son",
+      "description": "Choisissez parmi différentes fréquences pour tester, régler, masquer le bruit ou effectuer toute vérification audio."
     },
-    "getStarted": {
-      "title": "Historique des taux en un coup d'œil",
-      "description": "Appuyez sur une devise pour explorer son historique sur des semaines, des mois ou l'année passée."
+    "dbMeter": {
+      "title": "Sachez à quel point\nc’est vraiment fort",
+      "description": "Utilisez le sonomètre dB pour estimer les niveaux de bruit autour de vous et écouter plus intelligemment."
+    },
+    "privacy": {
+      "title": "Privé et sur votre appareil",
+      "description": "Le traitement audio reste sur votre téléphone, avec des conseils clairs sur la sécurité et le microphone."
     }
+  },
+  "premium": {
+    "accessChecking": "Vérification de l’accès Premium…",
+    "accessUnknown": "Connectez-vous à Internet pour vérifier l’accès Premium."
   }
 }

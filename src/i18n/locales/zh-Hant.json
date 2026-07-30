@@ -1,5 +1,9 @@
 {
   "common": {
+    "openSettings": "開啟設定",
+    "reset": "重設",
+    "start": "開始",
+    "stop": "停止",
     "back": "返回",
     "cancel": "取消",
     "close": "關閉",
@@ -109,17 +113,25 @@
     "message": "發生意外錯誤，請重試。"
   },
   "onboarding": {
-    "welcome": {
-      "title": "一個金額\n所有貨幣",
-      "description": "輸入一次金額，所有貨幣即時更新。"
+    "waterEject": {
+      "title": "快速清除\n水和灰塵",
+      "description": "播放強勁的清潔聲音，協助將困在喇叭中的水和灰塵推出。"
     },
-    "features": {
-      "title": "隨時隨地取得正確匯率",
-      "description": "150+種貨幣、近即時匯率，完全支援離線使用。"
+    "toneGenerator": {
+      "title": "產生\n合適的音調",
+      "description": "可選擇不同頻率，用於測試、調音、遮蔽噪音或任何聲音檢查。"
     },
-    "getStarted": {
-      "title": "一覽匯率歷史",
-      "description": "點選任一貨幣，查看週、月或過去一年的匯率歷史。"
+    "dbMeter": {
+      "title": "了解聲音\n實際有多大",
+      "description": "使用分貝計估計周遭的噪音程度，做出更明智的聆聽決定。"
+    },
+    "privacy": {
+      "title": "私密且僅在裝置上處理",
+      "description": "音訊處理會留在您的手機上，並提供清楚的安全與麥克風使用指引。"
     }
+  },
+  "premium": {
+    "accessChecking": "正在檢查 Premium 存取權…",
+    "accessUnknown": "請連線至網際網路以檢查 Premium 存取權。"
   }
 }

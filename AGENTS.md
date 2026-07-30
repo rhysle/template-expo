@@ -46,10 +46,10 @@ Use `npm run check` before handing off code. Run a clean prebuild and test the a
 
 Configure and replace these starter assets before treating a fork as a release candidate:
 
-- App name, identifiers, scheme, EAS values, and assets in `app.json`, `eas.json`, and `assets/images/`.
+- App name, identifiers, scheme, EAS values, and assets in `app.json`, `eas.json`, `assets/images/`, and `assets/animations/`.
 - Contact, legal URLs, store ID, RevenueCat keys/entitlement, Sentry DSN, OTA policy, and AdMob values in `src/configs/AppConfig.ts`.
 - Sample tabs and screens in `src/app/(tabs)/`.
-- Onboarding content in `src/components/onboarding/`.
+- Onboarding content in `src/components/onboarding/`, including one local Lottie animation per fixed page slot (`page-1.json` through `page-4.json`).
 - Paywall feature content in `src/components/paywall/usePaywallFeatures.ts`.
 - App analytics in `src/services/firebase/analytics/analyticsAppEvents.ts`.
 - Locale strings in `src/i18n/locales/`.
@@ -96,9 +96,11 @@ Expo UI wrappers live under `src/components/base/NativeUI/` and use the `Native*
 
 Place product-specific layouts and content under `src/components/` or the relevant route. Keep the reusable onboarding and paywall cores intact; replace the matching app-specific content folders instead.
 
+Onboarding page hero art uses local Lottie assets declared by the product-level page list. Product forks should replace the fixed animation slots in `assets/animations/onboarding/page-1.json` through `page-4.json` without changing filenames, imports, or generic page keys. Downloaded LottieFiles `.json` or `.lottie` files are supported, but onboarding must not load remote animation URLs.
+
 Tab metadata is shared by `NativeTabNavigator` and `CustomTabNavigator`; switch implementations only through the aliased import in `src/app/(tabs)/_layout.tsx`. Native tabs are the mobile default, resolve to custom tabs on web, support at most five Android tabs, and require a nested `TabStack` for each tab because they do not render headers.
 
-Use `TabScreen` for tab-root content so non-scrolling content clears either navigator and the persistent banner. Scroll roots should set `contentUnderTabBar` on `TabScreen`, render beneath the bar, and add `useTabBarContentInset()` to their scroll content's bottom padding so the final content remains reachable. `TabNavigatorFrame` owns one compact anchored-adaptive banner above the bottom bar; do not mount a banner per tab or reload it on tab focus. `FloatingTabBar` publishes its measured custom height, the banner publishes its accessory height, and native tabs use a conservative bar-height fallback because Expo Router does not expose their height. Change `TabBarBanner` when a product needs a different policy-appropriate placement. Consumers that float above navigation, such as Snackbar, should use `useTabBarHeight()` rather than `TAB_BAR_HEIGHT` directly.
+Use `TabScreen` for tab-root content so non-scrolling content clears either navigator and the persistent banner. Scroll roots should set `contentUnderTabBar` on `TabScreen`, render beneath the bar, and add `useTabBarContentInset()` to their scroll content's bottom padding so the final content remains reachable. `TabNavigatorFrame` owns one compact fixed-size banner above the bottom bar; do not mount a banner per tab or reload it on tab focus. `FloatingTabBar` publishes its measured custom height, the banner publishes its accessory height, and native tabs use a conservative bar-height fallback because Expo Router does not expose their height. Change `TabBarBanner` when a product needs a different policy-appropriate placement. Consumers that float above navigation, such as Snackbar, should use `useTabBarHeight()` rather than `TAB_BAR_HEIGHT` directly.
 
 ### RTL and localization
 
@@ -155,11 +157,17 @@ Use `OfflineError` and shared network utilities for appropriate offline behavior
 
 Set real API keys and entitlement ID before release. Product feature rows belong in `src/components/paywall/`. `usePremiumGate` and `useAutoPaywall` are available for access and timed-presentation flows; ensure their behavior fits the new product before retaining them.
 
+Premium access is modeled as `loading | free | premium | unknown`. Treat only `premium` as authorized and only confirmed `free` users as eligible for paywalls or ads; `loading` and `unknown` are unresolved states and must fail closed without presenting monetization UI.
+
+Paywall source IDs are analytics metadata owned by the entry point that presents the paywall. Define product-specific IDs next to the route or component that passes them to `usePremiumGate`; do not collect them in `src/configs/` or reusable RevenueCat services. Navigate to the paywall through `usePremiumGate` or `buildPaywallPath` so the source is always preserved. Reusable base components must receive an `onPress` callback instead of assuming that they open the paywall.
+
 ### Ads
 
 Ads are controlled by `AppConfig.ads.enabled`. The native package/plugin configuration is synchronized with `npm run setup:ads`.
 
-When enabling ads, configure real IDs and AdMob Privacy & messaging forms, run the setup script, keep the ads initialization hooks in the root and tabs layouts, run a clean prebuild, and test consent behavior. Preserve the `canRequestAds` and SDK-initialization gate before creating any ad object. Development and preview builds use Google test IDs; production-variant QA devices must be registered as test devices. When disabling ads, run the setup script and remove the relevant hooks so Metro does not bundle the ads SDK. Import ad APIs only through `@/services/ads`, never directly from `react-native-google-mobile-ads`.
+When enabling ads, configure real IDs and AdMob Privacy & messaging forms, run the setup script, keep the ads initialization hooks in the root and tabs layouts, run a clean prebuild, and test consent behavior. Preserve the confirmed-free-user, `canRequestAds`, and SDK-initialization gates before creating any ad object. Development and preview builds use Google test IDs; production-variant QA devices must be registered as test devices. When disabling ads, run the setup script and remove the relevant hooks so Metro does not bundle the ads SDK. Import ad APIs only through `@/services/ads`, never directly from `react-native-google-mobile-ads`.
+
+`InterstitialAdProvider` owns the single interstitial instance and policy for its navigation subtree. Product completion points call `useRequestInterstitialAd()`; the provider records the qualifying completion and decides whether to show based on the initial grace count, completions between ads, cooldown, one-ad-per-foreground cap, paywall precedence, consent/readiness, and the confirmed-free premium state. Use its `canPresent` prop for subtree-wide transient blockers and `usePreventInterstitialAd(source, shouldPrevent)` for overlapping component-level blockers. Do not create ad instances or duplicate policy checks in product routes.
 
 ### Firebase, Sentry, identity, and OTA
 

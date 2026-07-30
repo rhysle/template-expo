@@ -7,16 +7,19 @@ import { PaywallScreen } from '@/components/base/Paywall'
 import { useOnboardingPages } from '@/components/onboarding/onboardingPages'
 import { usePaywallFeatures } from '@/components/paywall/usePaywallFeatures'
 import { AnalyticsGeneralEvents, trackEvent } from '@/services/firebase/analytics'
+import type { PaywallSource } from '@/services/revenueCat'
 import { useOnboardingState } from '@/stores/features/onboarding'
 import { useSnackbarState } from '@/stores/features/snackbar'
 import { useSubscriptionState } from '@/stores/features/subscription'
 import { haptics } from '@/utils/haptics'
 
+const ONBOARDING_PAYWALL_SOURCE = 'onboarding' satisfies PaywallSource
+
 export default function OnboardingScreen() {
   const { t } = useTranslation()
   const [showPaywall, setShowPaywall] = useState(false)
   const { completeOnboarding } = useOnboardingState()
-  const { isSubscribed } = useSubscriptionState()
+  const { premiumState } = useSubscriptionState()
   const { showSnackbar } = useSnackbarState()
   const router = useRouter()
   const pages = useOnboardingPages()
@@ -32,7 +35,7 @@ export default function OnboardingScreen() {
     } else {
       trackEvent(AnalyticsGeneralEvents.ONBOARDING_COMPLETED)
     }
-    if (isSubscribed) {
+    if (premiumState === 'premium') {
       handlePaywallDone()
       return
     }
@@ -50,6 +53,7 @@ export default function OnboardingScreen() {
         title={t('paywall.title')}
         subtitle={t('paywall.subtitle')}
         features={features}
+        source={ONBOARDING_PAYWALL_SOURCE}
         onComplete={handlePaywallDone}
         onDismiss={handlePaywallDone}
         onSubscribeSuccess={() => {

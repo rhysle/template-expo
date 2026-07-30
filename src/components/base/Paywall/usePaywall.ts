@@ -5,6 +5,7 @@ import { AnalyticsGeneralEvents, trackEvent } from '@/services/firebase/analytic
 import {
   fetchOfferings,
   isBillingUnavailableError,
+  type PaywallSource,
   purchasePackage,
   restorePurchases,
 } from '@/services/revenueCat'
@@ -14,6 +15,7 @@ import type { PaywallCallbacks } from './types'
 
 interface UsePaywallOptions extends PaywallCallbacks {
   onComplete: () => void
+  source: PaywallSource
 }
 
 export const usePaywall = ({
@@ -23,6 +25,7 @@ export const usePaywall = ({
   onRestoreSuccess,
   onRestoreNoSubscription,
   onRestoreError,
+  source,
 }: UsePaywallOptions) => {
   const [packages, setPackages] = useState<PurchasesPackage[]>([])
   const [selectedPackage, setSelectedPackage] = useState<PurchasesPackage | null>(null)
@@ -56,6 +59,8 @@ export const usePaywall = ({
 
     trackEvent(AnalyticsGeneralEvents.PAYWALL_SUBSCRIBE, {
       package_id: selectedPackage.identifier,
+      package_type: selectedPackage.packageType,
+      source,
     })
     setPurchasing(true)
     try {
@@ -63,6 +68,8 @@ export const usePaywall = ({
       if (result.success) {
         trackEvent(AnalyticsGeneralEvents.PAYWALL_SUBSCRIBE_SUCCESS, {
           package_id: selectedPackage.identifier,
+          package_type: selectedPackage.packageType,
+          source,
         })
         onSubscribeSuccess?.()
         onComplete()
@@ -70,6 +77,8 @@ export const usePaywall = ({
         // Purchase completed but entitlement not found
         trackEvent(AnalyticsGeneralEvents.PAYWALL_SUBSCRIBE_ERROR, {
           package_id: selectedPackage.identifier,
+          package_type: selectedPackage.packageType,
+          source,
         })
         onSubscribeError?.(new Error('Entitlement not found after purchase'))
       }
@@ -77,6 +86,8 @@ export const usePaywall = ({
     } catch (error: unknown) {
       trackEvent(AnalyticsGeneralEvents.PAYWALL_SUBSCRIBE_ERROR, {
         package_id: selectedPackage.identifier,
+        package_type: selectedPackage.packageType,
+        source,
       })
       onSubscribeError?.(error)
     } finally {
@@ -85,19 +96,19 @@ export const usePaywall = ({
   }
 
   const handleRestore = async () => {
-    trackEvent(AnalyticsGeneralEvents.PAYWALL_RESTORE)
+    trackEvent(AnalyticsGeneralEvents.PAYWALL_RESTORE, { source })
     setPurchasing(true)
     try {
       const result = await restorePurchases()
       if (result.success) {
-        trackEvent(AnalyticsGeneralEvents.PAYWALL_RESTORE_SUCCESS)
+        trackEvent(AnalyticsGeneralEvents.PAYWALL_RESTORE_SUCCESS, { source })
         onRestoreSuccess?.()
         onComplete()
       } else {
         onRestoreNoSubscription?.()
       }
     } catch (error: unknown) {
-      trackEvent(AnalyticsGeneralEvents.PAYWALL_RESTORE_ERROR)
+      trackEvent(AnalyticsGeneralEvents.PAYWALL_RESTORE_ERROR, { source })
       onRestoreError?.(error)
     } finally {
       setPurchasing(false)

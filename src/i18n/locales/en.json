@@ -9,10 +9,18 @@
     "getStarted": "Get Started",
     "next": "Next",
     "ok": "OK",
+    "openSettings": "Open Settings",
+    "reset": "Reset",
     "retry": "Retry",
     "restart": "Restart",
     "save": "Save",
-    "skip": "Skip"
+    "skip": "Skip",
+    "start": "Start",
+    "stop": "Stop"
+  },
+  "premium": {
+    "accessChecking": "Checking Premium access…",
+    "accessUnknown": "Connect to the internet to check Premium access."
   },
   "tabs": {
     "eject": "Eject",
@@ -89,8 +97,8 @@
     "feedback": {
       "subscribeSuccess": "Welcome! Your subscription is active.",
       "subscribeError": "Something went wrong. Please try again.",
-      "restoreSuccess": "Subscription restored successfully!",
-      "restoreNotFound": "No active subscription found.",
+      "restoreSuccess": "Premium access restored successfully!",
+      "restoreNotFound": "No active Premium purchase found.",
       "restoreError": "Could not restore purchases. Please try again."
     },
     "packageTitle": {
@@ -109,17 +117,21 @@
     "message": "An unexpected error occurred. Please try again."
   },
   "onboarding": {
-    "welcome": {
-      "title": "One Amount\nAll Your Currencies",
-      "description": "Enter an amount once and see every currency update instantly."
+    "waterEject": {
+      "title": "Remove Water\nand Dust Fast",
+      "description": "Play powerful cleaning sound to help push trapped water and dust out of your speaker."
     },
-    "features": {
-      "title": "Always the Right Rate, Anywhere",
-      "description": "150+ currencies, near real-time rates, and fully offline-ready."
+    "toneGenerator": {
+      "title": "Generate the\nRight Tone",
+      "description": "Choose from different frequencies for testing, tuning, masking noise, or any sound check."
     },
-    "getStarted": {
-      "title": "Rate History at a Glance",
-      "description": "Tap any currency to explore its rate history over weeks, months, or the past year."
+    "dbMeter": {
+      "title": "Know How Loud\nIt Really Is",
+      "description": "Use the dB Meter to estimate noise levels around you and make smarter listening decisions."
+    },
+    "privacy": {
+      "title": "Private and On Device",
+      "description": "Audio processing stays on your phone, with clear safety and microphone guidance."
     }
   }
 }

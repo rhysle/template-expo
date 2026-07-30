@@ -1,5 +1,9 @@
 {
   "common": {
+    "openSettings": "Deschide setările",
+    "reset": "Resetează",
+    "start": "Pornește",
+    "stop": "Oprește",
     "back": "Înapoi",
     "cancel": "Anulează",
     "close": "Închide",
@@ -109,17 +113,25 @@
     "message": "A apărut o eroare neașteptată. Te rugăm să încerci din nou."
   },
   "onboarding": {
-    "welcome": {
-      "title": "O sumă\nToate valutele tale",
-      "description": "Introduce o sumă o singură dată și urmărește actualizarea imediată a fiecărei valute."
+    "waterEject": {
+      "title": "Elimină rapid\napa și praful",
+      "description": "Redă un sunet puternic de curățare pentru a ajuta la eliminarea apei și prafului blocate din difuzor."
     },
-    "features": {
-      "title": "Întotdeauna cursul corect, oriunde",
-      "description": "150+ valute, cursuri aproape în timp real și complet pregătit offline."
+    "toneGenerator": {
+      "title": "Generează\ntonul potrivit",
+      "description": "Alege dintre frecvențe diferite pentru testare, reglaj, mascarea zgomotului sau orice verificare a sunetului."
     },
-    "getStarted": {
-      "title": "Istoricul cursurilor dintr-o privire",
-      "description": "Atinge orice valută pentru a explora istoricul cursurilor pe săptămâni, luni sau ultimul an."
+    "dbMeter": {
+      "title": "Află cât de tare\neste de fapt",
+      "description": "Folosește sonometrul dB pentru a estima nivelurile de zgomot din jur și a lua decizii mai bune de ascultare."
+    },
+    "privacy": {
+      "title": "Privat și pe dispozitivul tău",
+      "description": "Procesarea audio rămâne pe telefonul tău, cu îndrumări clare despre siguranță și microfon."
     }
+  },
+  "premium": {
+    "accessChecking": "Se verifică accesul Premium…",
+    "accessUnknown": "Conectează-te la internet pentru a verifica accesul Premium."
   }
 }

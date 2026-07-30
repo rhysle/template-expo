@@ -21,10 +21,15 @@ export interface AdsSlice {
   setCanRequestAds: (canRequest: boolean) => void
   setConsentGathered: (gathered: boolean) => void
   setPrivacyOptionsRequired: (required: boolean) => void
-  // Interstitial trigger state (persisted)
+  // Runtime presentation state
+  interstitialAdPreventionSources: string[]
+  interstitialShownThisForeground: boolean
+  setInterstitialAdPrevented: (source: string, prevented: boolean) => void
+  resetInterstitialForegroundCap: () => void
+  // Interstitial completion state (persisted)
   interstitialLastShownAt: number | null
-  interstitialSessionCount: number
-  incrementInterstitialSessionCount: () => void
+  interstitialQualifyingCompletionsSinceLastAd: number
+  recordInterstitialQualifyingCompletion: () => void
   recordInterstitialShown: () => void
 }
 
@@ -34,6 +39,8 @@ export const adsPersistExcludeKeys: ExcludeKeys<AdsSlice> = [
   'canRequestAds',
   'consentGathered',
   'privacyOptionsRequired',
+  'interstitialAdPreventionSources',
+  'interstitialShownThisForeground',
 ]
 
 export const createAdsSlice = (set: (updater: (state: AdsSlice) => void) => void): AdsSlice => ({
@@ -42,6 +49,8 @@ export const createAdsSlice = (set: (updater: (state: AdsSlice) => void) => void
   canRequestAds: false,
   consentGathered: false,
   privacyOptionsRequired: false,
+  interstitialAdPreventionSources: [],
+  interstitialShownThisForeground: false,
   setAdsInitialized: (initialized) =>
     set((state) => {
       state.adsInitialized = initialized
@@ -64,15 +73,26 @@ export const createAdsSlice = (set: (updater: (state: AdsSlice) => void) => void
     set((state) => {
       state.privacyOptionsRequired = required
     }),
-  interstitialLastShownAt: null,
-  interstitialSessionCount: 0,
-  incrementInterstitialSessionCount: () =>
+  setInterstitialAdPrevented: (source, prevented) =>
     set((state) => {
-      state.interstitialSessionCount += 1
+      const sources = state.interstitialAdPreventionSources.filter((item) => item !== source)
+      state.interstitialAdPreventionSources = prevented ? [...sources, source] : sources
+    }),
+  resetInterstitialForegroundCap: () =>
+    set((state) => {
+      state.interstitialShownThisForeground = false
+    }),
+  interstitialLastShownAt: null,
+  interstitialQualifyingCompletionsSinceLastAd: 0,
+  recordInterstitialQualifyingCompletion: () =>
+    set((state) => {
+      state.interstitialQualifyingCompletionsSinceLastAd += 1
     }),
   recordInterstitialShown: () =>
     set((state) => {
       state.interstitialLastShownAt = Date.now()
+      state.interstitialQualifyingCompletionsSinceLastAd = 0
+      state.interstitialShownThisForeground = true
     }),
 })
 
@@ -94,9 +114,14 @@ export const useAdsState = () =>
       setCanRequestAds: ads.setCanRequestAds,
       setConsentGathered: ads.setConsentGathered,
       setPrivacyOptionsRequired: ads.setPrivacyOptionsRequired,
+      interstitialAdPreventionSources: ads.interstitialAdPreventionSources,
+      interstitialShownThisForeground: ads.interstitialShownThisForeground,
+      setInterstitialAdPrevented: ads.setInterstitialAdPrevented,
+      resetInterstitialForegroundCap: ads.resetInterstitialForegroundCap,
       interstitialLastShownAt: ads.interstitialLastShownAt,
-      interstitialSessionCount: ads.interstitialSessionCount,
-      incrementInterstitialSessionCount: ads.incrementInterstitialSessionCount,
+      interstitialQualifyingCompletionsSinceLastAd:
+        ads.interstitialQualifyingCompletionsSinceLastAd,
+      recordInterstitialQualifyingCompletion: ads.recordInterstitialQualifyingCompletion,
       recordInterstitialShown: ads.recordInterstitialShown,
     }))
   )

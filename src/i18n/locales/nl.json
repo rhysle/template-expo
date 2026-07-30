@@ -1,5 +1,9 @@
 {
   "common": {
+    "openSettings": "Instellingen openen",
+    "reset": "Opnieuw instellen",
+    "start": "Starten",
+    "stop": "Stoppen",
     "back": "Terug",
     "cancel": "Annuleren",
     "close": "Sluiten",
@@ -109,17 +113,25 @@
     "message": "Er is een onverwachte fout opgetreden. Probeer het opnieuw."
   },
   "onboarding": {
-    "welcome": {
-      "title": "Één bedrag\nAl uw valuta's",
-      "description": "Voer één keer een bedrag in en zie elke valuta direct updaten."
+    "waterEject": {
+      "title": "Verwijder water\nen stof snel",
+      "description": "Speel een krachtig reinigingsgeluid af om vastzittend water en stof uit je luidspreker te helpen duwen."
     },
-    "features": {
-      "title": "Altijd de juiste koers, overal",
-      "description": "150+ valuta's, bijna realtime koersen en volledig offline-klaar."
+    "toneGenerator": {
+      "title": "Genereer\nde juiste toon",
+      "description": "Kies uit verschillende frequenties voor testen, afstemmen, ruis maskeren of elke geluidscontrole."
     },
-    "getStarted": {
-      "title": "Koershistorie in één oogopslag",
-      "description": "Tik op een valuta om de koershistorie over weken, maanden of het afgelopen jaar te bekijken."
+    "dbMeter": {
+      "title": "Weet hoe hard\nhet echt is",
+      "description": "Gebruik de dB-meter om geluidsniveaus om je heen te schatten en slimmer te luisteren."
+    },
+    "privacy": {
+      "title": "Privé en op je apparaat",
+      "description": "Audioverwerking blijft op je telefoon, met duidelijke veiligheids- en microfoonrichtlijnen."
     }
+  },
+  "premium": {
+    "accessChecking": "Premium-toegang controleren…",
+    "accessUnknown": "Maak verbinding met internet om Premium-toegang te controleren."
   }
 }
