@@ -1,16 +1,19 @@
-import { WaveformIcon } from 'phosphor-react-native'
+import { LockKeyIcon, WaveformIcon } from 'phosphor-react-native'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useWindowDimensions, View } from 'react-native'
 
 import { AudioToolScreen, CircularAudioButton, StereoStage } from '@/components/audio'
 import { InlineNotice, NativeToggle, Text } from '@/components/base'
+import { useRequestInterstitialAd } from '@/services/ads'
 import { audioController, useAudioController, useAudioToolLifecycle } from '@/services/audio'
+import { type PaywallSource, usePremiumGate } from '@/services/revenueCat'
 import { useAudioPreferencesState } from '@/stores/features/audioPreferences'
 import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
 
 const AUTO_ALTERNATE_INTERVAL_MS = 1_500
 const AUTO_PANS = [-1, 1, 0] as const
+const STEREO_AUTO_PAYWALL_SOURCE = 'stereo_auto' satisfies PaywallSource
 
 interface ChannelSelection {
   left: boolean
@@ -35,6 +38,8 @@ export default function StereoTestScreen() {
   const styles = useThemedStyles(createStyles)
   const { height } = useWindowDimensions()
   const snapshot = useAudioController()
+  const requestInterstitialAd = useRequestInterstitialAd()
+  const { premiumState, requirePremium } = usePremiumGate()
   const { hapticsEnabled } = useAudioPreferencesState()
   const [selection, setSelection] = useState<ChannelSelection>({ left: false, right: false })
   const [autoAlternate, setAutoAlternate] = useState(false)
@@ -66,6 +71,14 @@ export default function StereoTestScreen() {
   }, [autoAlternate, autoStep, isRunning])
 
   useEffect(() => {
+    if (premiumState === 'premium' || !autoAlternate) return
+    setAutoAlternate(false)
+    setAutoStep(0)
+    const currentSelection = channelsForPan(snapshot.stereoPan)
+    setSelection(currentSelection)
+  }, [autoAlternate, premiumState, snapshot.stereoPan])
+
+  useEffect(() => {
     if (wasActive.current && !isActive) {
       setSelection({ left: false, right: false })
       setAutoStep(0)
@@ -73,10 +86,18 @@ export default function StereoTestScreen() {
     wasActive.current = isActive
   }, [isActive])
 
+  const stop = async () => {
+    const wasRunning = isRunning
+    setSelection({ left: false, right: false })
+    setAutoStep(0)
+    await audioController.stop('manual')
+    if (wasRunning) await requestInterstitialAd()
+  }
+
   const playChannels = (nextSelection: ChannelSelection) => {
     setSelection(nextSelection)
     if (!nextSelection.left && !nextSelection.right) {
-      void audioController.stop('manual')
+      void stop()
       return
     }
 
@@ -93,7 +114,7 @@ export default function StereoTestScreen() {
     playChannels(nextSelection)
   }
 
-  const toggleAutoAlternate = (value: boolean) => {
+  const applyAutoAlternate = (value: boolean) => {
     setAutoAlternate(value)
     setAutoStep(0)
 
@@ -108,10 +129,13 @@ export default function StereoTestScreen() {
     setSelection(currentSelection)
   }
 
-  const stop = () => {
-    setSelection({ left: false, right: false })
-    setAutoStep(0)
-    void audioController.stop('manual')
+  const toggleAutoAlternate = (value: boolean) => {
+    if (!value) {
+      applyAutoAlternate(false)
+      return
+    }
+
+    requirePremium(STEREO_AUTO_PAYWALL_SOURCE, () => applyAutoAlternate(true))
   }
 
   const start = () => {
@@ -170,9 +194,14 @@ export default function StereoTestScreen() {
       <View style={styles.controls}>
         <View style={styles.autoRow}>
           <View style={styles.autoCopy}>
-            <Text variant="body" weight="semibold">
-              {t('audioTools.stereo.auto')}
-            </Text>
+            <View style={styles.autoTitleRow}>
+              <Text variant="body" weight="semibold">
+                {t('audioTools.stereo.auto')}
+              </Text>
+              {premiumState !== 'premium' ? (
+                <LockKeyIcon size={iconSizes.xs} color={colors.text.muted} weight="fill" />
+              ) : null}
+            </View>
             <Text variant="caption" tone="muted">
               {t('audioTools.stereo.autoHint')}
             </Text>
@@ -193,7 +222,7 @@ export default function StereoTestScreen() {
             accessibilityLabel={
               isActive ? t('audioTools.stereo.stop') : t('audioTools.stereo.start')
             }
-            onPress={isActive ? stop : start}
+            onPress={isActive ? () => void stop() : start}
           />
           <Text
             variant="subtitle"
@@ -249,6 +278,12 @@ const createStyles = createThemedStyles((t) => ({
   },
   autoCopy: {
     flex: 1,
+    gap: t.spacing.xs,
+  },
+  autoTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-start',
     gap: t.spacing.xs,
   },
   nativeToggle: {

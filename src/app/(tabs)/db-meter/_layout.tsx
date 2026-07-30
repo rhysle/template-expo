@@ -6,6 +6,7 @@ import { View } from 'react-native'
 import { DbMeterHelpSheet } from '@/components/audio'
 import { Pressable, TabStack } from '@/components/base'
 import { SettingsHeaderButton } from '@/components/SettingsHeaderButton'
+import { usePreventInterstitialAd } from '@/services/ads'
 import { useAudioController } from '@/services/audio'
 import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
 
@@ -16,6 +17,7 @@ export default function DbMeterTabLayout() {
   const snapshot = useAudioController()
   const [helpVisible, setHelpVisible] = useState(false)
   const [helpReadingDb, setHelpReadingDb] = useState<number | null>(null)
+  usePreventInterstitialAd('db_meter_help', helpVisible)
 
   const openHelp = () => {
     setHelpReadingDb(snapshot.meter.sampleCount > 0 ? Math.round(snapshot.meter.currentDb) : null)

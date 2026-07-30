@@ -45,7 +45,7 @@
     "otaUpdateId": "Update: {{updateId}}",
     "upgradeBanner": {
       "title": "Upgrade to Premium",
-      "subtitle": "Remove ads for uninterrupted sound tools"
+      "subtitle": "Unlock Water Eject, advanced audio controls, and an ad-free experience"
     },
     "audio": {
       "section": "Audio & Meter",
@@ -188,8 +188,8 @@
     }
   },
   "paywall": {
-    "title": "Unlock Premium",
-    "subtitle": "Get the most out of Currency Converter",
+    "title": "Unlock Your Complete Audio Toolkit",
+    "subtitle": "Clean your speaker, access advanced controls, and remove every ad.",
     "ctaFreeTrial": "Try for Free",
     "restore": "Restore Purchases",
     "terms": "Terms of Service",

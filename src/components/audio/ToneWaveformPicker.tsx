@@ -1,5 +1,6 @@
 import type { Icon } from 'phosphor-react-native'
 import {
+  LockKeyIcon,
   WaveSawtoothIcon,
   WaveSineIcon,
   WaveSquareIcon,
@@ -40,6 +41,7 @@ interface ToneWaveformPickerProps {
   onValueChange: (waveform: ToneWaveform) => void
   disabled?: boolean
   haptic?: boolean
+  premiumLocked?: boolean
   style?: StyleProp<ViewStyle>
 }
 
@@ -48,6 +50,7 @@ interface WaveformOptionProps {
   haptic: boolean
   icon: Icon
   selected: boolean
+  locked: boolean
   value: ToneWaveform
   onValueChange: (waveform: ToneWaveform) => void
 }
@@ -57,6 +60,7 @@ const WaveformOption = ({
   haptic,
   icon: IconComponent,
   selected,
+  locked,
   value,
   onValueChange,
 }: WaveformOptionProps) => {
@@ -75,6 +79,7 @@ const WaveformOption = ({
       accessibilityLabel={waveformLabels[value]}
       accessibilityRole="radio"
       accessibilityState={{ disabled, selected }}
+      accessibilityHint={locked ? t('premium.lockedHint') : undefined}
       disabled={disabled}
       haptic={haptic && !disabled && !selected}
       hapticType="selection"
@@ -85,6 +90,14 @@ const WaveformOption = ({
         color={selected ? colors.text.inverse : colors.primary.main}
         weight="bold"
       />
+      {locked ? (
+        <LockKeyIcon
+          size={iconSizes.xs}
+          color={selected ? colors.text.inverse : colors.text.muted}
+          weight="fill"
+          style={styles.lockIcon}
+        />
+      ) : null}
     </Pressable>
   )
 }
@@ -94,6 +107,7 @@ export const ToneWaveformPicker = ({
   onValueChange,
   disabled = false,
   haptic = true,
+  premiumLocked = false,
   style,
 }: ToneWaveformPickerProps) => {
   const { t } = useTranslation()
@@ -126,6 +140,7 @@ export const ToneWaveformPicker = ({
           disabled={disabled}
           haptic={haptic}
           icon={option.icon}
+          locked={premiumLocked && option.value !== 'sine'}
           selected={option.value === value}
           value={option.value}
           onValueChange={onValueChange}
@@ -159,5 +174,10 @@ const createStyles = createThemedStyles((t) => ({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: t.borderRadius.full,
+  },
+  lockIcon: {
+    position: 'absolute',
+    right: 0,
+    top: 0,
   },
 }))

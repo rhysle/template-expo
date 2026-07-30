@@ -4,6 +4,7 @@ import { Platform } from 'react-native'
 
 import { CustomTabNavigator, NativeTabNavigator, type TabDefinition } from '@/components/base'
 import { useConsentInit } from '@/services/ads'
+import { useAudioController } from '@/services/audio'
 import { useAutoPaywall } from '@/services/revenueCat'
 
 export const unstable_settings = {
@@ -14,10 +15,12 @@ const TabNavigator = Platform.OS === 'ios' ? NativeTabNavigator : CustomTabNavig
 
 export default function TabLayout() {
   const { t } = useTranslation()
+  const snapshot = useAudioController()
+  const isAudioActive = snapshot.status !== 'idle' && snapshot.status !== 'error'
 
   // If AppConfig.ads.enabled is false, remove this call and run npm run setup:ads
   useConsentInit()
-  useAutoPaywall()
+  useAutoPaywall(isAudioActive)
 
   const tabs = [
     {

@@ -5,6 +5,7 @@ import { View } from 'react-native'
 
 import { Button, NativeBottomSheet, Pressable, TabStack, Text } from '@/components/base'
 import { SettingsHeaderButton } from '@/components/SettingsHeaderButton'
+import { usePreventInterstitialAd } from '@/services/ads'
 import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
 
 export default function StereoTestTabLayout() {
@@ -12,6 +13,7 @@ export default function StereoTestTabLayout() {
   const { colors } = useTheme()
   const styles = useThemedStyles(createStyles)
   const [helpVisible, setHelpVisible] = useState(false)
+  usePreventInterstitialAd('stereo_help', helpVisible)
   const guideSteps = [
     t('audioTools.stereo.helpTap'),
     t('audioTools.stereo.helpBoth'),

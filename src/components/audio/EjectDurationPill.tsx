@@ -10,6 +10,7 @@ import Animated, {
 } from 'react-native-reanimated'
 
 import { Pressable, Text } from '@/components/base'
+import { type PaywallSource, usePremiumGate } from '@/services/revenueCat'
 import {
   type EjectDurationSeconds,
   useAudioPreferencesState,
@@ -17,6 +18,7 @@ import {
 import { createThemedStyles, useTheme, useThemedStyles } from '@/theme'
 
 const DURATION_OPTIONS = [30, 60, 90] as const satisfies readonly EjectDurationSeconds[]
+const EJECT_DURATION_PAYWALL_SOURCE = 'eject_duration' satisfies PaywallSource
 const OPTION_SIZE = 44
 const INDICATOR_SIZE = 38
 const INDICATOR_INSET = (OPTION_SIZE - INDICATOR_SIZE) / 2
@@ -112,6 +114,7 @@ export const EjectDurationPill = ({ disabled = false, style }: EjectDurationPill
   const reducedMotion = useReducedMotion()
   const { ejectDurationSeconds, hapticsEnabled, setEjectDurationSeconds } =
     useAudioPreferencesState()
+  const { requirePremium } = usePremiumGate()
   const selectedIndex = Math.max(DURATION_OPTIONS.indexOf(ejectDurationSeconds), 0)
   const optionStride = OPTION_SIZE + theme.spacing.xs
   const indicatorY = useSharedValue(selectedIndex * optionStride)
@@ -124,6 +127,10 @@ export const EjectDurationPill = ({ disabled = false, style }: EjectDurationPill
   const indicatorStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: indicatorY.value }],
   }))
+
+  const handleSelect = (duration: EjectDurationSeconds) => {
+    requirePremium(EJECT_DURATION_PAYWALL_SOURCE, () => setEjectDurationSeconds(duration))
+  }
 
   return (
     <View
@@ -139,7 +146,7 @@ export const EjectDurationPill = ({ disabled = false, style }: EjectDurationPill
           hapticsEnabled={hapticsEnabled}
           index={index}
           indicatorY={indicatorY}
-          onSelect={setEjectDurationSeconds}
+          onSelect={handleSelect}
           optionStride={optionStride}
           selected={ejectDurationSeconds === duration}
         />

@@ -64,13 +64,12 @@ meter.
 - Guaranteed water or debris removal.
 - Calibrated SPL, medical assessment, or professional hearing-safety certification.
 - Audio recording, sample retention, cloud analysis, or background audio/recording.
-- Product-specific onboarding, finalized premium feature gates, or final store branding in this
-  feature phase.
+- Final pricing, trial configuration, and package highlighting.
 
 ### Possible later work
 
 - Product onboarding and education based on completed usability testing.
-- Premium packaging and feature limits.
+- Additional premium history, calibration, presets, and automation after V1 usage validation.
 - Cleaning history, additional waveforms, device-specific calibration profiles, and hearing-dose
   tracking after privacy and accuracy review.
 
@@ -130,17 +129,20 @@ access only when the user presses Start and explains that samples stay on-device
 
 ## Monetization
 
-- **Business model:** Existing template subscription and ads behavior remains active during this
-  phase.
-- **Free experience:** No new feature gates are added; all four tools are implemented without a
-  premium check.
-- **Premium value:** The existing subscription suppresses ads. Additional premium value is TBD.
-- **Paywall timing:** Existing automatic paywall timing remains unchanged.
-- **Restore and cancellation:** Existing RevenueCat restore/subscription behavior remains.
-- **Ads:** The existing anchored tab banner remains for eligible non-subscribers.
-
-The current onboarding and broader paywall feature copy must be redesigned when premium scope is
-decided; they are not approved release content.
+- **Business model:** Freemium with monthly, annual, and lifetime purchases sharing the `premium`
+  RevenueCat entitlement.
+- **Free experience:** Unlimited sine-wave Tone Generator, manual Stereo Test, and live dB Meter
+  with safety bands and guidance. Eject remains visible as a preview but cannot run.
+- **Premium value:** Complete 30/60/90-second Water Eject cycles, advanced tone waveforms,
+  automatic stereo alternation, dB session statistics, and no ads.
+- **Paywall timing:** Locked controls and Settings open contextual paywalls. A dismissible automatic
+  paywall is eligible every seven days but waits until audio and blocking UI are idle.
+- **Ads:** Free users may see one anchored banner on idle free-tool tabs and rare interstitials
+  after qualifying explicit Stop actions. No rewarded ads ship in V1.
+- **Interstitial policy:** The first three qualifying completions are ad-free; later impressions
+  require three completions between ads, a 24-hour cooldown, and a one-per-foreground cap.
+- **Restore and cancellation:** All active subscription and lifetime products restore the same
+  Premium access.
 
 ## Data, Privacy, and Permissions
 
@@ -197,7 +199,7 @@ decided; they are not approved release content.
 ## Product Configuration
 
 - [ ] Final app name, identifiers, scheme, EAS project, and visual assets
-- [ ] Product onboarding and premium/paywall content
+- [x] Product onboarding and premium/paywall content
 - [x] Four product tabs and audio-tool settings
 - [x] On-device microphone privacy behavior and permission copy
 - [x] Product analytics event definitions
@@ -221,15 +223,15 @@ The feature implementation is ready for product QA when:
 
 ## Open Questions
 
-| Question                                                                   | Owner      | Needed by                 | Resolution                                 |
-| -------------------------------------------------------------------------- | ---------- | ------------------------- | ------------------------------------------ |
-| What should product onboarding teach and in what order?                    | Product    | Before release candidate  | Deferred until feature usability QA        |
-| Which outcomes, if any, belong behind premium?                             | Product    | Before paywall redesign   | Deferred; no V1 implementation gates added |
-| What are the final name, identifiers, legal URLs, and store metadata?      | Product    | Before distribution build | Pending                                    |
-| Which physical reference devices define acceptable default meter behavior? | Product/QA | Before accuracy claims    | Pending device calibration study           |
+| Question                                                                   | Owner      | Needed by                 | Resolution                          |
+| -------------------------------------------------------------------------- | ---------- | ------------------------- | ----------------------------------- |
+| What should product onboarding teach and in what order?                    | Product    | Before release candidate  | Deferred until feature usability QA |
+| What are the final name, identifiers, legal URLs, and store metadata?      | Product    | Before distribution build | Pending                             |
+| Which physical reference devices define acceptable default meter behavior? | Product/QA | Before accuracy claims    | Pending device calibration study    |
 
 ## Change Log
 
 | Date       | Change                                                                                         | Reason                                                                                          |
 | ---------- | ---------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| 2026-07-27 | Defined Premium gates, contextual and weekly paywalls, and completion-based ad placement       | Monetize advanced controls while preserving useful free audio tools and uninterrupted playback  |
 | 2026-07-20 | Defined Water Eject – Speaker Cleaner V1 feature behavior, privacy, analytics, and limitations | Replace the reusable product template with an implementation reference for the four audio tools |

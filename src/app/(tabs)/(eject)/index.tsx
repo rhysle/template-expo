@@ -25,9 +25,12 @@ import {
   useAudioController,
   useAudioToolLifecycle,
 } from '@/services/audio'
+import { type PaywallSource, usePremiumGate } from '@/services/revenueCat'
 import { useAudioPreferencesState } from '@/stores/features/audioPreferences'
 import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
 import { haptics } from '@/utils/haptics'
+
+const EJECT_START_PAYWALL_SOURCE = 'eject_start' satisfies PaywallSource
 
 const formatDuration = (seconds: number) => {
   const safeSeconds = Math.max(Math.ceil(seconds), 0)
@@ -42,6 +45,7 @@ export default function EjectScreen() {
   const styles = useThemedStyles(createStyles)
   const { height } = useWindowDimensions()
   const snapshot = useAudioController()
+  const { premiumState, requirePremium } = usePremiumGate()
   const { ejectDurationSeconds, hapticsEnabled } = useAudioPreferencesState()
   const celebratedRef = useRef(false)
   useAudioToolLifecycle()
@@ -83,6 +87,12 @@ export default function EjectScreen() {
   }, [])
 
   useEffect(() => {
+    if (premiumState !== 'premium' && snapshot.activeTool === 'eject') {
+      void audioController.stop('replaced')
+    }
+  }, [premiumState, snapshot.activeTool])
+
+  useEffect(() => {
     if (resultState === 'completed' && !celebratedRef.current) {
       celebratedRef.current = true
       if (hapticsEnabled) void haptics.medium()
@@ -95,7 +105,9 @@ export default function EjectScreen() {
     if (isActive) {
       void audioController.stop('manual')
     } else {
-      void audioController.startEject(ejectDurationSeconds)
+      requirePremium(EJECT_START_PAYWALL_SOURCE, () => {
+        void audioController.startEject(ejectDurationSeconds)
+      })
     }
   }
 

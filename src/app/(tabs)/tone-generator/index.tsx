@@ -28,6 +28,7 @@ import {
   StatusBadge,
   Text,
 } from '@/components/base'
+import { useRequestInterstitialAd } from '@/services/ads'
 import {
   audioController,
   type FrequencyBand,
@@ -37,11 +38,13 @@ import {
   useAudioController,
   useAudioToolLifecycle,
 } from '@/services/audio'
+import { type PaywallSource, usePremiumGate } from '@/services/revenueCat'
 import { useAudioPreferencesState } from '@/stores/features/audioPreferences'
 import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
 
 const CENTER_FADE_INTENSITY = 0.3
 const EDGE_FADE_INTENSITY = 1
+const TONE_WAVEFORM_PAYWALL_SOURCE = 'tone_waveform' satisfies PaywallSource
 const FrequencySlider = Platform.OS === 'ios' ? NativeSlider : Slider
 
 export default function ToneGeneratorScreen() {
@@ -50,6 +53,8 @@ export default function ToneGeneratorScreen() {
   const styles = useThemedStyles(createStyles)
   const { height, width } = useWindowDimensions()
   const snapshot = useAudioController()
+  const requestInterstitialAd = useRequestInterstitialAd()
+  const { premiumState, requirePremium } = usePremiumGate()
   const {
     hapticsEnabled,
     lastToneFrequencyHz,
@@ -58,6 +63,7 @@ export default function ToneGeneratorScreen() {
     setLastToneWaveform,
   } = useAudioPreferencesState()
   const [frequencyHz, setFrequencyHz] = useState(lastToneFrequencyHz)
+  const activeWaveform = premiumState === 'premium' ? lastToneWaveform : 'sine'
   const gestureWidth = useSharedValue(1)
   const gestureStart = useSharedValue(normalizeFrequency(lastToneFrequencyHz))
   const currentPosition = useSharedValue(normalizeFrequency(lastToneFrequencyHz))
@@ -98,6 +104,13 @@ export default function ToneGeneratorScreen() {
     const timer = setTimeout(() => setLastToneFrequencyHz(frequencyHz), 250)
     return () => clearTimeout(timer)
   }, [currentPosition, frequencyHz, setLastToneFrequencyHz])
+
+  useEffect(() => {
+    if (premiumState === 'free' && lastToneWaveform !== 'sine') {
+      setLastToneWaveform('sine')
+      if (isRunning) audioController.setToneWaveform('sine')
+    }
+  }, [isRunning, lastToneWaveform, premiumState, setLastToneWaveform])
 
   const applyFrequencyPosition = (position: number) => {
     const nextFrequency = frequencyFromNormalized(position)
@@ -150,14 +163,24 @@ export default function ToneGeneratorScreen() {
     }
   }
 
-  const handleMainPress = () => {
-    if (isActive) void audioController.stop('manual')
-    else void audioController.startTone(frequencyHz, lastToneWaveform)
+  const handleMainPress = async () => {
+    if (isActive) {
+      const wasRunning = isRunning
+      await audioController.stop('manual')
+      if (wasRunning) await requestInterstitialAd()
+    } else {
+      void audioController.startTone(frequencyHz, activeWaveform)
+    }
   }
 
   const handleWaveformChange = (waveform: typeof lastToneWaveform) => {
-    setLastToneWaveform(waveform)
-    if (isRunning) audioController.setToneWaveform(waveform)
+    const applyWaveform = () => {
+      setLastToneWaveform(waveform)
+      if (isRunning) audioController.setToneWaveform(waveform)
+    }
+
+    if (waveform === 'sine') applyWaveform()
+    else requirePremium(TONE_WAVEFORM_PAYWALL_SOURCE, applyWaveform)
   }
 
   const actionDock = (
@@ -178,7 +201,7 @@ export default function ToneGeneratorScreen() {
           active={isActive}
           haptic={hapticsEnabled}
           accessibilityLabel={isActive ? t('audioTools.tone.stop') : t('audioTools.tone.play')}
-          onPress={handleMainPress}
+          onPress={() => void handleMainPress()}
         />
         <View
           accessible={false}
@@ -252,12 +275,12 @@ export default function ToneGeneratorScreen() {
             style={[styles.waveformAdjuster, { width }]}>
             <FrequencyWaveform
               frequencyHz={frequencyHz}
-              waveform={lastToneWaveform}
+              waveform={activeWaveform}
               active={isRunning}
               color={theme.colors.primary.main}
               accessibilityLabel={t('audioTools.tone.waveformLabel', {
                 frequency: formattedFrequency,
-                waveform: t(`audioTools.tone.waveform.${lastToneWaveform}`),
+                waveform: t(`audioTools.tone.waveform.${activeWaveform}`),
               })}
               centerFadeIntensity={CENTER_FADE_INTENSITY}
               edgeFadeIntensity={EDGE_FADE_INTENSITY}
@@ -299,9 +322,10 @@ export default function ToneGeneratorScreen() {
       </View>
 
       <ToneWaveformPicker
-        value={lastToneWaveform}
+        value={activeWaveform}
         disabled={isStarting}
         haptic={hapticsEnabled}
+        premiumLocked={premiumState !== 'premium'}
         onValueChange={handleWaveformChange}
       />
 
