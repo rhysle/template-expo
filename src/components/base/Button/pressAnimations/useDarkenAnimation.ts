@@ -5,13 +5,24 @@ import {
   withTiming,
 } from 'react-native-reanimated'
 
+import { withAlpha } from '@/utils/color'
+
 import type { ButtonAnimationResult } from '../types'
 
-export const useDarkenAnimation = (): ButtonAnimationResult => {
+export const useDarkenAnimation = (
+  overlayColor: string,
+  overlayOpacity: number
+): ButtonAnimationResult => {
   const progress = useSharedValue(0)
+  const transparentOverlayColor = withAlpha(overlayColor, 0)
+  const pressedOverlayColor = withAlpha(overlayColor, overlayOpacity)
 
   const overlayStyle = useAnimatedStyle(() => ({
-    backgroundColor: interpolateColor(progress.value, [0, 1], ['rgba(0,0,0,0)', 'rgba(0,0,0,0.2)']),
+    backgroundColor: interpolateColor(
+      progress.value,
+      [0, 1],
+      [transparentOverlayColor, pressedOverlayColor]
+    ),
   }))
 
   return {
@@ -23,6 +34,5 @@ export const useDarkenAnimation = (): ButtonAnimationResult => {
     onPressOut: () => {
       progress.value = withTiming(0, { duration: 200 })
     },
-    disableOpacity: true,
   }
 }

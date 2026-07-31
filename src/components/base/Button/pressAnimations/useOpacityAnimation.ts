@@ -2,21 +2,21 @@ import { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-nati
 
 import type { ButtonAnimationResult } from '../types'
 
-export const useScaleAnimation = (): ButtonAnimationResult => {
-  const scale = useSharedValue(1)
+export const useOpacityAnimation = (): ButtonAnimationResult => {
+  const opacity = useSharedValue(1)
 
   const outerStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
+    opacity: opacity.value,
   }))
 
   return {
     outerStyle,
     overlayStyle: {},
     onPressIn: () => {
-      scale.value = withTiming(0.96, { duration: 60, easing: Easing.out(Easing.quad) })
+      opacity.value = withTiming(0.72, { duration: 80, easing: Easing.out(Easing.quad) })
     },
     onPressOut: () => {
-      scale.value = withTiming(1, { duration: 90, easing: Easing.out(Easing.quad) })
+      opacity.value = withTiming(1, { duration: 160, easing: Easing.out(Easing.quad) })
     },
   }
 }

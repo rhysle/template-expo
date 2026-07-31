@@ -71,7 +71,7 @@ export const SearchInput = ({
           <Pressable
             accessibilityLabel={clearAccessibilityLabel}
             accessibilityRole="button"
-            activeOpacity={0.65}
+            activeOpacity={0.7}
             hitSlop={12}
             onPress={handleClear}
             style={styles.clearButton}>

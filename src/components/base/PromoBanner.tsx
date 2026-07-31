@@ -143,12 +143,7 @@ export const PromoBanner = ({ icon, title, subtitle, onPress, style }: PromoBann
   }, [shimmerOffset])
 
   return (
-    <Pressable
-      activeOpacity={1}
-      onPress={onPress}
-      onPressIn={handlePressIn}
-      haptic
-      style={[styles.container, style]}>
+    <Pressable onPress={onPress} onPressIn={handlePressIn} haptic style={[styles.container, style]}>
       <View>
         <View style={styles.inner} onLayout={handleLayout}>
           <View style={styles.iconContainer}>{icon}</View>

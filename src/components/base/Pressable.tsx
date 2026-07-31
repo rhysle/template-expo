@@ -25,7 +25,7 @@ export interface PressableProps extends Omit<RNPressableProps, 'style'> {
 }
 
 export const Pressable = ({
-  activeOpacity = 0.7,
+  activeOpacity,
   variant = 'ghost',
   size,
   haptic = false,
@@ -55,7 +55,7 @@ export const Pressable = ({
           styles.base,
           size && styles.sizes[size],
           styles.variants[variant],
-          state.pressed && { opacity: activeOpacity },
+          state.pressed && activeOpacity !== undefined && { opacity: activeOpacity },
           disabled && styles.disabled,
           userStyle,
         ]

@@ -51,7 +51,7 @@ export const Button = ({
   disabled = false,
   style,
   children,
-  animationType = 'none',
+  animationType = 'opacity',
   loadingAnimation = 'bouncing-dots',
   onPressIn: userPressIn,
   onPressOut: userPressOut,
@@ -60,8 +60,19 @@ export const Button = ({
   const styles = useThemedStyles(createStyles)
   const theme = useTheme()
   const isDisabled = disabled || loading
-  const { outerStyle, overlayStyle, onPressIn, onPressOut, disableOpacity } =
-    useButtonAnimation(animationType)
+  const pressOverlay = {
+    primary: { color: '#000000', opacity: 0.2 },
+    secondary: { color: theme.colors.primary.main, opacity: 0.12 },
+    ghost: { color: theme.colors.primary.main, opacity: 0.12 },
+    danger: { color: '#000000', opacity: 0.2 },
+    inverted: { color: theme.colors.primary.main, opacity: 0.12 },
+    outlined: { color: theme.colors.primary.main, opacity: 0.12 },
+  }[variant]
+  const { outerStyle, overlayStyle, onPressIn, onPressOut } = useButtonAnimation(
+    animationType,
+    pressOverlay.color,
+    pressOverlay.opacity
+  )
   const Loader = loaders[loadingAnimation]
 
   const indicatorColor: Record<ButtonVariant, string> = {
@@ -108,7 +119,6 @@ export const Button = ({
         disabled={isDisabled}
         variant="ghost"
         size={size}
-        activeOpacity={disableOpacity ? 1 : 0.7}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
         style={[styles.base, variantStyle, sizeStyle]}

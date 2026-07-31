@@ -21,7 +21,6 @@ export const OnboardingControls = ({ isLastPage, onNext }: OnboardingControlsPro
         variant="primary"
         size="lg"
         haptic
-        animationType="darken"
         label={isLastPage ? t('common.getStarted') : t('common.next')}
         onPress={onNext}
         style={styles.button}
