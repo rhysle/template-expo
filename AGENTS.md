@@ -92,6 +92,12 @@ Use `react-native-reanimated` v4 for animations, never React Native's legacy `An
 
 `src/components/base/` is the reusable template layer. It includes fundamental text, button, card, list, input, sheet, feedback, header, navigation, onboarding, paywall, and loader components. Improve or add abstractions there only when they are broadly reusable.
 
+This repository supplies a configured mobile foundation, including integrations such as RevenueCat, Sentry, and Firebase, plus reusable and app-specific UI. Treat those facilities as starting points—not as a requirement to force every new product design through the existing components. When a design has been agreed, prioritize matching its layout, interaction model, hierarchy, and visual details. Adapt an existing component when that produces a faithful result; otherwise create or revise components as needed. Put generally useful mobile UI patterns in `src/components/base/`; put product-specific layouts and components under `src/components/` or the relevant route.
+
+### Interaction design handoff
+
+When implementing a design-led feature, create or update its interaction specification in `docs/design/` before building behavior that the visual design does not make explicit. For each interactive control, document its trigger, resulting surface or navigation, selection and dismissal behavior, validation, and relevant loading, empty, error, or active states. State whether the control uses a platform-native UI or a custom component; native controls still require their surrounding product behavior to be specified. Mark unresolved behavior as `Decision needed` and resolve it before implementation rather than silently inventing a product interaction. Verify both the designed initial screen and the documented interaction states before handoff. See `docs/design/README.md` for the format.
+
 Expo UI wrappers live under `src/components/base/NativeUI/` and use the `Native*` prefix so they remain distinct from custom React Native implementations. Keep shared props platform-neutral and apply the app appearance, tint, and RTL direction through the shared native host. These wrappers target iOS and Android only; do not add web fallbacks unless a product explicitly restores web support.
 
 Place product-specific layouts and content under `src/components/` or the relevant route. Keep the reusable onboarding and paywall cores intact; replace the matching app-specific content folders instead.
