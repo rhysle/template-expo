@@ -12,8 +12,8 @@ export const PaywallHero = () => {
 
 const createStyles = createThemedStyles((t) => ({
   image: {
-    width: 110,
-    height: 110,
+    width: 80,
+    height: 80,
     borderRadius: t.borderRadius['2xl'],
   },
 }))

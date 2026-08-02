@@ -214,11 +214,11 @@ const createStyles = createThemedStyles((t) => ({
   },
   packagesContainer: {
     paddingHorizontal: t.spacing['2xl'],
-    gap: t.spacing.md,
+    gap: t.spacing.sm,
   },
   footer: {
     paddingHorizontal: t.spacing['2xl'],
-    paddingTop: t.spacing['2xl'],
+    paddingTop: t.spacing.lg,
     paddingBottom: t.spacing.sm,
     gap: t.spacing.sm,
   },
