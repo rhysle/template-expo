@@ -6,13 +6,14 @@ import { useReducedMotion } from 'react-native-reanimated'
 import { Text } from '@/components/base'
 import { createThemedStyles, useThemedStyles } from '@/theme'
 
-const PREFERRED_ANIMATION_SIZE = 244
+const PREFERRED_ANIMATION_SIZE = 300
 const MAX_ANIMATION_WIDTH_RATIO = 0.8
 
 export type OnboardingLottieSource = AnimationObject | number
 
 export interface OnboardingAnimationConfig {
   source: OnboardingLottieSource
+  size?: number
   accessibilityLabel?: string
   loop?: boolean
   autoPlay?: boolean
@@ -35,7 +36,10 @@ export const OnboardingScreenContent = ({
   const { width: screenWidth } = useWindowDimensions()
 
   const shouldAutoPlay = !reducedMotion && (animation.autoPlay ?? true)
-  const animationSize = Math.min(PREFERRED_ANIMATION_SIZE, screenWidth * MAX_ANIMATION_WIDTH_RATIO)
+  const animationSize = Math.min(
+    animation.size ?? PREFERRED_ANIMATION_SIZE,
+    screenWidth * MAX_ANIMATION_WIDTH_RATIO
+  )
 
   return (
     <View style={styles.container}>
