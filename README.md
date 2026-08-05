@@ -44,15 +44,76 @@ Before implementing product features, fill in [`docs/PRODUCT.md`](docs/PRODUCT.m
 
 ### 3. Configure RevenueCat
 
-1. Create the app in RevenueCat and connect its App Store Connect and/or Google Play products.
-2. Create the entitlement that the app will use for premium access.
+1. Create the RevenueCat project and add its App Store and/or Google Play app records. Configure each app's store credentials so RevenueCat can validate purchases and read its catalog.
+2. Use the product-provisioning workflow below to create the store products, `premium` entitlement, default offering, and package associations.
 3. For development and testing, you can use RevenueCat's Test Store API key in `AppConfig.revenueCat.iosApiKey` and `androidApiKey` in `src/configs/AppConfig.ts`.
 4. Before submitting a release to the App Store or Google Play, replace the Test Store key with the correct platform-specific production API key for each field. Never submit an app configured with a Test Store key.
-5. Set `AppConfig.revenueCat.entitlementId` to the entitlement created in step 2, then replace `src/components/paywall/usePaywallFeatures.ts` and confirm the paywall and automatic-presentation behavior fit the product.
+5. Keep `AppConfig.revenueCat.entitlementId` aligned with `revenueCat.entitlementLookupKey` in `src/configs/monetization.ts`, then replace `src/components/paywall/usePaywallFeatures.ts` and confirm the paywall and automatic-presentation behavior fit the product.
 
 Paywall source IDs are intentionally defined beside the route or component that opens the paywall. When replacing a sample feature, replace or remove its local source ID in the same file; do not add a product-wide source registry under `src/configs/`. Route paywall navigation through `usePremiumGate` or `buildPaywallPath` so analytics attribution is retained.
 
 Subscription access is runtime-only and resolves to `loading`, `free`, `premium`, or `unknown`. Premium actions run only for `premium`; paywalls and ads are eligible only for confirmed `free` users. Keep `loading` and `unknown` fail-closed when adapting gates or monetization flows.
+
+### Provision store products
+
+Store products are declared in `src/configs/monetization.ts`. Select any combination of
+`weekly`, `monthly`, `yearly`, and `lifetime`; disabled products are not created or attached
+to RevenueCat. Monthly is preconfigured at USD 9.99 but disabled by default. The enabled
+template defaults are USD 3.99 weekly, USD 29.99 yearly, and USD 59.99 lifetime. Apple and
+Google generate the initial comparable regional prices from those US prices. Product IDs and
+internal reference names remain explicit because store identifiers cannot be changed or reused
+after activation.
+
+The app name, iOS bundle identifier, and Android package name are read from `app.json`.
+The Apple app's numeric resource ID is looked up by bundle identifier, so those values are
+not duplicated in `.env.fastlane.local`.
+
+Copy `.env.fastlane.example` to `.env.fastlane.local` and provide the App Store Connect,
+Google Play, and RevenueCat API identifiers and credentials. The App Store Connect key needs
+the App Manager role. The Google service account needs access to the app and permissions to
+manage products and subscriptions. The RevenueCat V2 key needs read/write project-configuration
+permissions for products, entitlements, offerings, and packages.
+It also needs app read access. The RevenueCat App Store and Google Play app records must already
+exist; the scripts find them by matching the bundle ID and package name from `app.json`, and stop
+with an error when no unique match exists.
+
+Store-product localizations are derived from every JSON resource under
+`src/i18n/locales/`. The configured source locale uses the exact product strings from
+`src/configs/monetization.ts`; other locales use their translated `paywall.packageTitle`,
+`paywall.period`, `paywall.title`, and feature titles. Remove locales the app will not ship
+before provisioning, and complete the release localization audit first so sample or stale
+translations are not uploaded.
+
+Apple App Review screenshots are optional per product. Set
+`appleReviewScreenshotPath` on `weekly`, `monthly`, `yearly`, and/or `lifetime`. The same local image
+may be referenced by multiple products, but App Store Connect receives a separate Review Information
+screenshot upload for each product. A content hash is included in the uploaded filename so
+changing the local image is detected reliably.
+
+Run the commands in this order:
+
+```bash
+npm run monetization:plan
+npm run monetization:apply
+npm run monetization:verify
+npm run monetization:activate -- --confirm
+```
+
+`plan` is read-only. `apply` creates missing products and initial prices, reconciles mutable
+internal metadata, and creates or updates every configured localization. Apple reviewable
+metadata uses the version-based App Store Connect API: an editable draft is updated in place,
+or a new draft metadata version is created when the previous version is no longer editable.
+Configured review screenshots are uploaded to each product's private Review Information field,
+separate from its public promotional image. Google base plans and purchase
+options remain in draft. The setup intentionally refuses to replace an existing US price;
+changing live prices and migrating existing subscribers are separate release operations.
+`verify` checks the selected catalog, localized metadata, screenshots, and RevenueCat
+associations. `activate` is Google-only and requires explicit confirmation because it makes
+draft products purchasable. Apple products still require submission to App Review; the first
+subscription group must be submitted with an app version.
+
+The setup is non-destructive. Removing a product from `enabledProducts` prevents future setup work
+for it but does not delete, deactivate, or detach a product that was provisioned previously.
 
 ### 4. Configure Sentry
 
@@ -293,7 +354,11 @@ The i18n configuration includes `number` and `currency` formatters for products 
 
 EAS profiles are defined in `eas.json`. Common production commands are `npm run eas-build`, `npm run eas-build:ios:submit`, `npm run eas-build:android:submit`, and `npm run eas-update`.
 
-Fastlane at the repository root manages App Store Connect and Google Play listing metadata and screenshots. Update its package identifiers, shared URLs, locale folders, and credentials for each new app before running the `fastlane:*` scripts. Keep secrets and reviewer contact information out of Git.
+Fastlane at the repository root manages App Store Connect and Google Play listing metadata and screenshots. It reads the bundle identifier and package name from `app.json`; update its shared URLs, locale folders, and credentials for each new app before running the `fastlane:*` scripts. Keep secrets and reviewer contact information out of Git.
+
+Store-product provisioning uses the official App Store Connect, Android Publisher, and RevenueCat
+APIs through the `monetization:*` commands above. Fastlane remains responsible for listing metadata,
+screenshots, and release tasks.
 
 ## Verification
 

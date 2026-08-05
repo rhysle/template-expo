@@ -33,6 +33,8 @@ def parse_locales(options)
 end
 
 PROJECT_ROOT = File.expand_path("..", __dir__).freeze
+EXPO_CONFIG = JSON.parse(File.read(File.join(PROJECT_ROOT, "app.json"))).fetch("expo").freeze
+ANDROID_PACKAGE_NAME = EXPO_CONFIG.fetch("android").fetch("package").freeze
 
 # Resolve a path that may be relative to the project root (where the user runs
 # `npm run`). Fastlane changes cwd at lane time, so any relative path provided
@@ -199,7 +201,7 @@ platform :android do
     # supply init refuses to download when the directory already exists — remove it first.
     FileUtils.rm_rf(metadata_path)
     Dir.chdir(PROJECT_ROOT) do
-      sh("fastlane supply init --metadata_path '#{metadata_path}' --json_key '#{json_key}' --package_name com.rhysle.currencyconverter")
+      sh("fastlane supply init --metadata_path '#{metadata_path}' --json_key '#{json_key}' --package_name '#{ANDROID_PACKAGE_NAME}'")
     end
   end
 

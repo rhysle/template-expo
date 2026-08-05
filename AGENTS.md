@@ -38,6 +38,11 @@ npm run align-deps
 npm run setup:i18n
 npm run setup:font
 npm run setup:ads
+
+npm run monetization:plan
+npm run monetization:apply
+npm run monetization:verify
+npm run monetization:activate -- --confirm
 ```
 
 Use `npm run check` before handing off code. Run a clean prebuild and test the affected native platform after changing native dependencies, `app.json`, a config plugin, or ads/font setup.
@@ -163,6 +168,8 @@ Use `OfflineError` and shared network utilities for appropriate offline behavior
 
 Set real API keys and entitlement ID before release. Product feature rows belong in `src/components/paywall/`. `usePremiumGate` and `useAutoPaywall` are available for access and timed-presentation flows; ensure their behavior fits the new product before retaining them.
 
+Store products are declared in `src/configs/monetization.ts`. Product forks select any combination of `weekly`, `monthly`, `yearly`, and `lifetime`; disabled products are not provisioned. App identifiers come from `app.json`, while store credentials remain in `.env.fastlane.local` and `fastlane/.private/`. RevenueCat projects and platform app records must already exist; the scripts discover one App Store app by bundle ID and one Play Store app by package name, and never create those records. Use `monetization:plan`, `monetization:apply`, and `monetization:verify` to create missing App Store Connect and Google Play products, initial store-equalized prices, version-based Apple review metadata, localized store listings derived from `src/i18n/locales/`, optional per-product Apple review screenshots, and RevenueCat catalog associations. Mutable metadata is reconciled from config; immutable product IDs and purchase types require a new product. Google products remain drafts until the explicitly confirmed `monetization:activate` command. The setup workflow must not change an existing price, migrate subscribers, delete products, prune localizations, or detach disabled products; those are separate release operations.
+
 Premium access is modeled as `loading | free | premium | unknown`. Treat only `premium` as authorized and only confirmed `free` users as eligible for paywalls or ads; `loading` and `unknown` are unresolved states and must fail closed without presenting monetization UI.
 
 Paywall source IDs are analytics metadata owned by the entry point that presents the paywall. Define product-specific IDs next to the route or component that passes them to `usePremiumGate`; do not collect them in `src/configs/` or reusable RevenueCat services. Navigate to the paywall through `usePremiumGate` or `buildPaywallPath` so the source is always preserved. Reusable base components must receive an `onPress` callback instead of assuming that they open the paywall.
@@ -191,7 +198,7 @@ The Settings screen demonstrates contact support, rating, sharing, legal links, 
 
 Fastlane configuration is at the repository root so it survives prebuilds. It manages App Store Connect and Google Play metadata/screenshots; it does not create an app binary in the metadata lanes.
 
-Keep API keys, Play service-account JSON, reviewer contact details, and local environment files out of Git. Update the Fastlane package name, shared URLs, locale mapping, and listing content for each new app before using its `fastlane:*` scripts.
+Keep API keys, Play service-account JSON, reviewer contact details, and local environment files out of Git. Fastlane reads the bundle identifier and package name from `app.json`; update shared URLs, locale mapping, and listing content for each new app before using its `fastlane:*` scripts.
 
 ## Code Conventions
 
