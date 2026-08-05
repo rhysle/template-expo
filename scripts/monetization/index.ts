@@ -34,7 +34,7 @@ const main = async (): Promise<void> => {
   const command = parseCommand()
   if (command === 'activate' && !process.argv.includes('--confirm')) {
     throw new Error(
-      'Activation makes Google Play products purchasable. Re-run with:\n' +
+      'Activation changes live Apple trials and makes Google Play products purchasable. Re-run with:\n' +
         'npm run monetization:activate -- --confirm'
     )
   }
@@ -46,10 +46,14 @@ const main = async (): Promise<void> => {
   console.log(`Products: ${config.enabledProducts.join(', ')}`)
 
   if (command === 'activate') {
-    if (!config.stores.google || !environment.google) {
-      reporter.info('Google Play is disabled; nothing to activate')
-    } else {
+    if (config.stores.apple && environment.apple) {
+      await new AppleStoreClient(config, environment.apple, reporter).activate()
+    }
+    if (config.stores.google && environment.google) {
       await new GooglePlayClient(config, environment.google, reporter).activate()
+    }
+    if (!config.stores.apple && !config.stores.google) {
+      reporter.info('Apple and Google stores are disabled; nothing to activate')
     }
     reporter.finish()
     return

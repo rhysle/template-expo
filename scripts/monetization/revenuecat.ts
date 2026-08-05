@@ -175,7 +175,7 @@ export class RevenueCatClient {
 
   private desiredProducts(apps: ResolvedRevenueCatApps): DesiredRevenueCatProduct[] {
     const desired: DesiredRevenueCatProduct[] = []
-    const subscriptionKeys = enabledSubscriptionKeys()
+    const subscriptionKeys = enabledSubscriptionKeys(this.config)
 
     for (const key of subscriptionKeys) {
       const product = this.config.products[key]
@@ -199,7 +199,7 @@ export class RevenueCatClient {
       }
     }
 
-    if (isEnabled('lifetime')) {
+    if (isEnabled('lifetime', this.config)) {
       const product = this.config.products.lifetime
       if (this.config.stores.apple && apps.appleAppId) {
         desired.push({

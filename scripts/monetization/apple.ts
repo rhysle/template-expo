@@ -7,7 +7,9 @@ import type {
   SubscriptionProductKey,
 } from './types'
 import { AppleAuth } from './auth'
+import { APPLE_FREE_TRIAL_DURATION } from './free-trial'
 import { appendQuery, requestJson } from './http'
+import type { JsonRequester } from './http'
 import { enabledSubscriptionKeys, isEnabled } from './config'
 import { loadStoreLocalizations } from './localizations'
 import { Reporter } from './reporter'
@@ -45,11 +47,26 @@ interface InAppPurchaseAvailabilityAttributes {
   availableInNewTerritories: boolean
 }
 
+interface SubscriptionIntroductoryOfferAttributes {
+  duration: string
+  endDate?: string | null
+  numberOfPeriods: number
+  offerMode: string
+  startDate?: string | null
+  targetSubscriptionPlanType?: string
+}
+
+interface AppleFreeTrialOffer {
+  key: SubscriptionProductKey
+  resource: JsonApiResource<SubscriptionIntroductoryOfferAttributes>
+}
+
 const SUBSCRIPTION_PERIOD: Record<SubscriptionProductKey, string> = {
   weekly: 'ONE_WEEK',
   monthly: 'ONE_MONTH',
   yearly: 'ONE_YEAR',
 }
+const SUBSCRIPTION_KEYS: SubscriptionProductKey[] = ['weekly', 'monthly', 'yearly']
 const SUBSCRIPTION_PLAN_TYPE = 'UPFRONT' as const
 
 const today = (): string => new Date().toISOString().slice(0, 10)
@@ -80,7 +97,8 @@ export class AppleStoreClient {
   constructor(
     private readonly config: MonetizationConfig,
     private readonly environment: NonNullable<StoreEnvironment['apple']>,
-    private readonly reporter: Reporter
+    private readonly reporter: Reporter,
+    private readonly requestOverride?: JsonRequester
   ) {
     this.auth = new AppleAuth(environment.issuerId, environment.keyId, environment.keyFilepath)
     this.metadata = new AppleMetadataReconciler(
@@ -96,6 +114,7 @@ export class AppleStoreClient {
     pathOrUrl: string,
     options: Parameters<typeof requestJson<T>>[1] = {}
   ): Promise<T | undefined> {
+    if (this.requestOverride) return this.requestOverride<T>(pathOrUrl, options)
     const url = pathOrUrl.startsWith('http') ? pathOrUrl : `${API_ROOT}${pathOrUrl}`
     return requestJson<T>(url, {
       ...options,
@@ -125,6 +144,30 @@ export class AppleStoreClient {
     this.appId = await this.resolveAppId()
     await this.syncSubscriptions()
     await this.syncLifetimePurchase()
+  }
+
+  async activate(): Promise<void> {
+    this.reporter.section('App Store Connect free-trial activation')
+    this.appId = await this.resolveAppId()
+    const groups = await this.listAll<JsonApiResource<{ referenceName: string }>>(
+      `/v1/apps/${this.requiredAppId()}/subscriptionGroups?limit=200`
+    )
+    const group = groups.find(
+      (item) => item.attributes.referenceName === this.config.apple.subscriptionGroupReferenceName
+    )
+    if (!group) {
+      if (this.config.freeTrial) {
+        this.reporter.error('Apple subscription group is missing; run monetization:apply first')
+      } else {
+        this.reporter.ok('Apple free trial is disabled')
+      }
+      return
+    }
+
+    const subscriptions = await this.listAll<JsonApiResource<SubscriptionAttributes>>(
+      `/v1/subscriptionGroups/${group.id}/subscriptions?limit=200`
+    )
+    await this.activateFreeTrial(this.configuredSubscriptions(subscriptions))
   }
 
   private async resolveAppId(): Promise<string> {
@@ -159,7 +202,7 @@ export class AppleStoreClient {
   }
 
   private async syncSubscriptions(): Promise<void> {
-    const keys = enabledSubscriptionKeys()
+    const keys = enabledSubscriptionKeys(this.config)
     if (keys.length === 0) {
       this.reporter.info('No Apple subscriptions enabled')
       return
@@ -206,6 +249,7 @@ export class AppleStoreClient {
     const subscriptions = await this.listAll<JsonApiResource<SubscriptionAttributes>>(
       `/v1/subscriptionGroups/${group.id}/subscriptions?limit=200`
     )
+    const resolvedSubscriptions = this.configuredSubscriptions(subscriptions)
 
     for (const key of keys) {
       const desired = this.config.products[key]
@@ -246,10 +290,156 @@ export class AppleStoreClient {
         this.reporter.change(`create Apple ${key} localization, availability, and initial prices`)
         continue
       }
+      resolvedSubscriptions.set(key, subscription)
       await this.syncSubscriptionAttributes(subscription, key)
       await this.metadata.syncSubscription(subscription.id, key)
       await this.ensureSubscriptionAvailability(subscription.id, key)
       await this.ensureSubscriptionPrice(subscription.id, key)
+    }
+
+    await this.reconcileFreeTrial(resolvedSubscriptions)
+  }
+
+  private configuredSubscriptions(
+    subscriptions: JsonApiResource<SubscriptionAttributes>[]
+  ): Map<SubscriptionProductKey, JsonApiResource<SubscriptionAttributes>> {
+    const resolved = new Map<SubscriptionProductKey, JsonApiResource<SubscriptionAttributes>>()
+    for (const key of SUBSCRIPTION_KEYS) {
+      const productId = this.config.products[key].appleProductId
+      const subscription = subscriptions.find((item) => item.attributes.productId === productId)
+      if (subscription) resolved.set(key, subscription)
+    }
+    return resolved
+  }
+
+  private async listAppleFreeTrials(
+    subscriptions: Map<SubscriptionProductKey, JsonApiResource<SubscriptionAttributes>>
+  ): Promise<AppleFreeTrialOffer[]> {
+    const offers: AppleFreeTrialOffer[] = []
+    for (const [key, subscription] of subscriptions) {
+      const subscriptionOffers = await this.listAll<
+        JsonApiResource<SubscriptionIntroductoryOfferAttributes>
+      >(`/v1/subscriptions/${subscription.id}/introductoryOffers?limit=200`)
+      offers.push(
+        ...subscriptionOffers
+          .filter((offer) => offer.attributes.offerMode === 'FREE_TRIAL')
+          .map((resource) => ({ key, resource }))
+      )
+    }
+    return offers
+  }
+
+  private appleFreeTrialMatches(offer: AppleFreeTrialOffer): boolean {
+    const desired = this.config.freeTrial
+    if (!desired || offer.key !== desired.target) return false
+    const attributes = offer.resource.attributes
+    return (
+      attributes.offerMode === 'FREE_TRIAL' &&
+      attributes.duration === APPLE_FREE_TRIAL_DURATION[desired.duration] &&
+      attributes.numberOfPeriods === 1 &&
+      attributes.targetSubscriptionPlanType === SUBSCRIPTION_PLAN_TYPE
+    )
+  }
+
+  private async reconcileFreeTrial(
+    subscriptions: Map<SubscriptionProductKey, JsonApiResource<SubscriptionAttributes>>
+  ): Promise<void> {
+    const desired = this.config.freeTrial
+    const offers = await this.listAppleFreeTrials(subscriptions)
+    const matching = offers.filter((offer) => this.appleFreeTrialMatches(offer))
+    const exact = desired ? matching.length === 1 && offers.length === 1 : offers.length === 0
+
+    if (exact) {
+      this.reporter.ok(
+        desired
+          ? `Apple ${desired.target} ${desired.duration} free trial`
+          : 'Apple free trial is disabled'
+      )
+      return
+    }
+
+    const description = desired
+      ? `transition Apple free trial to ${desired.target} ${desired.duration}`
+      : 'remove Apple free trial'
+    if (this.reporter.command === 'verify') {
+      this.reporter.error(`Apple free trial differs from config: ${description}`)
+    } else if (this.reporter.command === 'plan') {
+      this.reporter.change(description)
+    } else {
+      this.reporter.info(
+        `Apple free-trial transition pending: npm run monetization:activate -- --confirm`
+      )
+    }
+  }
+
+  private async activateFreeTrial(
+    subscriptions: Map<SubscriptionProductKey, JsonApiResource<SubscriptionAttributes>>
+  ): Promise<void> {
+    const desired = this.config.freeTrial
+    const offers = await this.listAppleFreeTrials(subscriptions)
+
+    if (!desired) {
+      for (const offer of offers) {
+        await this.request(`/v1/subscriptionIntroductoryOffers/${offer.resource.id}`, {
+          method: 'DELETE',
+        })
+      }
+      if (offers.length > 0) {
+        this.reporter.change(`removed ${offers.length} Apple free-trial offer(s)`)
+      } else {
+        this.reporter.ok('Apple free trial is disabled')
+      }
+      return
+    }
+
+    const subscription = subscriptions.get(desired.target)
+    if (!subscription) {
+      this.reporter.error(
+        `Apple ${desired.target} subscription is missing; run monetization:apply first`
+      )
+      return
+    }
+
+    let keep = offers.find((offer) => this.appleFreeTrialMatches(offer))
+    if (!keep) {
+      const response = await this.request<
+        JsonApiSingleResponse<JsonApiResource<SubscriptionIntroductoryOfferAttributes>>
+      >('/v1/subscriptionIntroductoryOffers', {
+        method: 'POST',
+        body: {
+          data: {
+            type: 'subscriptionIntroductoryOffers',
+            attributes: {
+              duration: APPLE_FREE_TRIAL_DURATION[desired.duration],
+              numberOfPeriods: 1,
+              offerMode: 'FREE_TRIAL',
+              startDate: today(),
+              targetSubscriptionPlanType: SUBSCRIPTION_PLAN_TYPE,
+            },
+            relationships: {
+              subscription: {
+                data: { type: 'subscriptions', id: subscription.id },
+              },
+            },
+          },
+        },
+      })
+      if (!response) throw new Error('Apple did not return the created free-trial offer')
+      keep = { key: desired.target, resource: response.data }
+      this.reporter.change(`created Apple ${desired.target} ${desired.duration} global free trial`)
+    }
+
+    const obsolete = offers.filter((offer) => offer.resource.id !== keep.resource.id)
+    for (const offer of obsolete) {
+      await this.request(`/v1/subscriptionIntroductoryOffers/${offer.resource.id}`, {
+        method: 'DELETE',
+      })
+    }
+    if (obsolete.length > 0) {
+      this.reporter.change(`removed ${obsolete.length} obsolete Apple free-trial offer(s)`)
+    }
+    if (obsolete.length === 0 && offers.length === 1) {
+      this.reporter.ok(`Apple ${desired.target} ${desired.duration} free trial already active`)
     }
   }
 
@@ -481,7 +671,7 @@ export class AppleStoreClient {
   }
 
   private async syncLifetimePurchase(): Promise<void> {
-    if (!isEnabled('lifetime')) {
+    if (!isEnabled('lifetime', this.config)) {
       this.reporter.info('No Apple lifetime purchase enabled')
       return
     }
@@ -527,9 +717,9 @@ export class AppleStoreClient {
   }
 
   private async ensureLifetimeAvailability(purchaseId: string): Promise<void> {
-    const response = await this.request<
-      { data: JsonApiResource<InAppPurchaseAvailabilityAttributes> | null }
-    >(`/v2/inAppPurchases/${purchaseId}/inAppPurchaseAvailability`, {
+    const response = await this.request<{
+      data: JsonApiResource<InAppPurchaseAvailabilityAttributes> | null
+    }>(`/v2/inAppPurchases/${purchaseId}/inAppPurchaseAvailability`, {
       allowNotFound: true,
     })
     const current = response?.data ?? undefined

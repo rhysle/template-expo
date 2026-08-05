@@ -2,6 +2,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 
 import { monetizationConfig } from '../../src/configs/monetization'
+import { FREE_TRIAL_DURATIONS } from './free-trial'
 
 import type { MonetizationConfig, ProductKey, SubscriptionProductKey } from './types'
 
@@ -23,6 +24,25 @@ export const validateConfig = (config: MonetizationConfig): void => {
     new Set(config.enabledProducts).size === config.enabledProducts.length,
     'enabledProducts must not contain duplicates'
   )
+
+  if (config.freeTrial) {
+    assert(
+      SUBSCRIPTION_KEYS.includes(config.freeTrial.target),
+      'freeTrial.target must be weekly, monthly, or yearly'
+    )
+    assert(
+      config.enabledProducts.includes(config.freeTrial.target),
+      `freeTrial.target ${config.freeTrial.target} must be enabled`
+    )
+    assert(
+      FREE_TRIAL_DURATIONS.includes(config.freeTrial.duration),
+      `freeTrial.duration must be one of: ${FREE_TRIAL_DURATIONS.join(', ')}`
+    )
+    assert(
+      GOOGLE_PLAN_ID_PATTERN.test(config.freeTrial.googleOfferId),
+      'freeTrial.googleOfferId must be a lowercase RFC-1034 identifier'
+    )
+  }
 
   for (const key of config.enabledProducts) {
     assert(PRODUCT_KEYS.includes(key), `unknown enabled product: ${key}`)
@@ -88,7 +108,10 @@ validateConfig(monetizationConfig)
 
 export const config: MonetizationConfig = monetizationConfig
 
-export const enabledSubscriptionKeys = (): SubscriptionProductKey[] =>
-  SUBSCRIPTION_KEYS.filter((key) => config.enabledProducts.includes(key))
+export const enabledSubscriptionKeys = (
+  value: MonetizationConfig = config
+): SubscriptionProductKey[] =>
+  SUBSCRIPTION_KEYS.filter((key) => value.enabledProducts.includes(key))
 
-export const isEnabled = (key: ProductKey): boolean => config.enabledProducts.includes(key)
+export const isEnabled = (key: ProductKey, value: MonetizationConfig = config): boolean =>
+  value.enabledProducts.includes(key)

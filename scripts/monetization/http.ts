@@ -19,6 +19,8 @@ export interface JsonRequestOptions {
   retries?: number
 }
 
+export type JsonRequester = <T>(url: string, options?: JsonRequestOptions) => Promise<T | undefined>
+
 export interface BytesRequestOptions {
   method: string
   headers?: Record<string, string>

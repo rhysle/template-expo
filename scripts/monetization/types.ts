@@ -1,6 +1,14 @@
 export type ProductKey = 'weekly' | 'monthly' | 'yearly' | 'lifetime'
 export type SubscriptionProductKey = Exclude<ProductKey, 'lifetime'>
 export type Command = 'plan' | 'apply' | 'verify' | 'activate'
+export type FreeTrialDuration =
+  '3-days' | '7-days' | '14-days' | '1-month' | '2-months' | '3-months' | '6-months' | '1-year'
+
+export interface FreeTrialConfig {
+  target: SubscriptionProductKey
+  duration: FreeTrialDuration
+  googleOfferId: string
+}
 
 export interface SubscriptionProductConfig {
   priceUsd: string
@@ -27,6 +35,7 @@ export interface LifetimeProductConfig {
 
 export interface MonetizationConfig {
   enabledProducts: readonly ProductKey[]
+  freeTrial: FreeTrialConfig | null
   stores: {
     apple: boolean
     google: boolean

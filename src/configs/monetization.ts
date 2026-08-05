@@ -9,6 +9,14 @@ import type { MonetizationConfig } from '../../scripts/monetization/types'
 export const monetizationConfig = {
   enabledProducts: ['weekly', 'yearly', 'lifetime'],
 
+  // Set to null to disable trials. Change target to move the one cross-store
+  // trial to another enabled subscription, or use e.g. '7-days' for one week.
+  freeTrial: {
+    target: 'weekly',
+    duration: '3-days',
+    googleOfferId: 'free-trial',
+  },
+
   stores: {
     apple: true,
     google: true,
@@ -22,7 +30,7 @@ export const monetizationConfig = {
       displayName: 'Premium Weekly',
       description: 'Weekly access to all premium features.',
       appleProductId: 'premium_weekly',
-      appleReviewScreenshotPath: './fastlane/monetization/review/paywall.png',
+      appleReviewScreenshotPath: './fastlane/monetization/review/paywall.PNG',
       googleBasePlanId: 'weekly',
       revenueCatPackageLookupKey: '$rc_weekly',
     },
@@ -33,7 +41,7 @@ export const monetizationConfig = {
       displayName: 'Premium Monthly',
       description: 'Monthly access to all premium features.',
       appleProductId: 'premium_monthly',
-      appleReviewScreenshotPath: './fastlane/monetization/review/paywall.png',
+      appleReviewScreenshotPath: './fastlane/monetization/review/paywall.PNG',
       googleBasePlanId: 'monthly',
       revenueCatPackageLookupKey: '$rc_monthly',
     },
@@ -43,7 +51,7 @@ export const monetizationConfig = {
       displayName: 'Premium Yearly',
       description: 'Yearly access to all premium features.',
       appleProductId: 'premium_yearly',
-      appleReviewScreenshotPath: './fastlane/monetization/review/paywall.png',
+      appleReviewScreenshotPath: './fastlane/monetization/review/paywall.PNG',
       googleBasePlanId: 'yearly',
       revenueCatPackageLookupKey: '$rc_annual',
     },
@@ -53,7 +61,7 @@ export const monetizationConfig = {
       displayName: 'Premium Lifetime',
       description: 'Lifetime access to all premium features.',
       appleProductId: 'premium_lifetime',
-      appleReviewScreenshotPath: './fastlane/monetization/review/paywall.png',
+      appleReviewScreenshotPath: './fastlane/monetization/review/paywall.PNG',
       googleProductId: 'premium_lifetime',
       googlePurchaseOptionId: 'buy',
       revenueCatPackageLookupKey: '$rc_lifetime',

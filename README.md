@@ -64,6 +64,14 @@ Google generate the initial comparable regional prices from those US prices. Pro
 internal reference names remain explicit because store identifiers cannot be changed or reused
 after activation.
 
+The optional top-level `freeTrial` selects exactly one enabled subscription for a cross-store
+trial. The template defaults to a 3-day weekly trial. Set `duration` to `7-days`, `14-days`,
+`1-month`, `2-months`, `3-months`, `6-months`, or `1-year` as needed; change `target` to an
+enabled `monthly` or `yearly` product to move it, or set `freeTrial` to `null` to disable it.
+Google eligibility is limited to customers who have never had any subscription in the app,
+which most closely matches Apple's subscription-group eligibility. The paywall reads the
+localized trial details returned by RevenueCat rather than duplicating this duration in UI copy.
+
 The app name, iOS bundle identifier, and Android package name are read from `app.json`.
 The Apple app's numeric resource ID is looked up by bundle identifier, so those values are
 not duplicated in `.env.fastlane.local`.
@@ -95,8 +103,8 @@ Run the commands in this order:
 ```bash
 npm run monetization:plan
 npm run monetization:apply
-npm run monetization:verify
 npm run monetization:activate -- --confirm
+npm run monetization:verify
 ```
 
 `plan` is read-only. `apply` creates missing products and initial prices, reconciles mutable
@@ -105,15 +113,23 @@ metadata uses the version-based App Store Connect API: an editable draft is upda
 or a new draft metadata version is created when the previous version is no longer editable.
 Configured review screenshots are uploaded to each product's private Review Information field,
 separate from its public promotional image. Google base plans and purchase
-options remain in draft. The setup intentionally refuses to replace an existing US price;
-changing live prices and migrating existing subscribers are separate release operations.
-`verify` checks the selected catalog, localized metadata, screenshots, and RevenueCat
-associations. `activate` is Google-only and requires explicit confirmation because it makes
-draft products purchasable. Apple products still require submission to App Review; the first
-subscription group must be submitted with an app version.
+options and free-trial offers remain in draft. The setup intentionally refuses to replace an
+existing US price or update a live Google offer. Changing live prices and migrating existing
+subscribers are separate release operations. `activate` requires explicit confirmation: it
+creates or replaces the configured Apple introductory free trial, activates the desired Google
+offer and base plans, and deactivates the previous managed Google trial when the target moves.
+`verify` then checks the selected catalog, localized metadata, screenshots, RevenueCat
+associations, and exact live trial state. Apple products still require submission to App Review;
+the first subscription group must be submitted with an app version. `activate` does not click
+**Add for Review**, create an App Review submission, or submit one; manage that separately in
+App Store Connect after provisioning and verification succeed.
 
 The setup is non-destructive. Removing a product from `enabledProducts` prevents future setup work
-for it but does not delete, deactivate, or detach a product that was provisioned previously.
+for it but does not delete, deactivate, or detach a product that was provisioned previously. The
+only exception is the explicitly confirmed free-trial transition: this workflow owns Apple
+`FREE_TRIAL` introductory offers on its configured subscriptions and the Google offer ID declared
+in `freeTrial`; it replaces/removes obsolete Apple trials and deactivates obsolete managed Google
+offers. Paid introductory, promotional, and unrecognized Google offers are never changed.
 
 ### 4. Configure Sentry
 
