@@ -1,0 +1,36 @@
+{
+  "appleLocale": "ru",
+  "googleLocale": "ru-RU",
+  "apple": {
+    "subscriptionGroupDisplayName": "Premium",
+    "products": {
+      "weekly": {
+        "displayName": "Premium · Еженедельно",
+        "description": "Полный доступ ко всем премиум-функциям."
+      },
+      "monthly": {
+        "displayName": "Premium · Ежемесячно",
+        "description": "Полный доступ ко всем премиум-функциям."
+      },
+      "yearly": {
+        "displayName": "Premium · Ежегодно",
+        "description": "Полный доступ ко всем премиум-функциям."
+      },
+      "lifetime": {
+        "displayName": "Premium · Навсегда",
+        "description": "Пожизненный доступ ко всем премиум-функциям."
+      }
+    }
+  },
+  "google": {
+    "subscription": {
+      "title": "Premium",
+      "description": "Полный доступ ко всем премиум-функциям.",
+      "benefits": ["Доступ ко всем премиум-функциям"]
+    },
+    "lifetime": {
+      "title": "Premium · Навсегда",
+      "description": "Пожизненный доступ ко всем премиум-функциям."
+    }
+  }
+}

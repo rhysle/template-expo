@@ -205,7 +205,7 @@ const googleSubscription = (
   config: MonetizationConfig,
   otherRegionsNewSubscriberAvailability: boolean | 'omitted' = true
 ) => {
-  const localizations = loadStoreLocalizations(config)
+  const localizations = loadStoreLocalizations()
   return {
     packageName: 'com.example.app',
     productId: config.google.subscriptionProductId,
@@ -235,9 +235,9 @@ const googleSubscription = (
     })),
     listings: localizations.map((localization) => ({
       languageCode: localization.googleLocale,
-      title: localization.subscriptionTitle,
-      benefits: localization.subscriptionBenefits,
-      description: localization.subscriptionDescription,
+      title: localization.google.subscription.title,
+      benefits: localization.google.subscription.benefits,
+      description: localization.google.subscription.description,
     })),
   }
 }
@@ -404,9 +404,9 @@ test('Apple creates the initial 3-day weekly trial in every storefront', async (
     targetSubscriptionPlanType: 'UPFRONT',
   })
   assert.deepEqual(
-    data.map((item) => item.relationships.territory.data).sort((left, right) =>
-      left.id.localeCompare(right.id)
-    ),
+    data
+      .map((item) => item.relationships.territory.data)
+      .sort((left, right) => left.id.localeCompare(right.id)),
     [
       { type: 'territories', id: 'CAN' },
       { type: 'territories', id: 'USA' },

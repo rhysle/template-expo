@@ -13,8 +13,6 @@ export interface FreeTrialConfig {
 export interface SubscriptionProductConfig {
   priceUsd: string
   referenceName: string
-  displayName: string
-  description: string
   appleProductId: string
   appleReviewScreenshotPath?: string
   googleBasePlanId: string
@@ -24,8 +22,6 @@ export interface SubscriptionProductConfig {
 export interface LifetimeProductConfig {
   priceUsd: string
   referenceName: string
-  displayName: string
-  description: string
   appleProductId: string
   appleReviewScreenshotPath?: string
   googleProductId: string
@@ -47,24 +43,14 @@ export interface MonetizationConfig {
     yearly: SubscriptionProductConfig
     lifetime: LifetimeProductConfig
   }
-  localization: {
-    sourceDirectory: string
-    sourceLocale: string
-  }
   apple: {
     subscriptionGroupReferenceName: string
-    subscriptionGroupDisplayName: string
     baseTerritory: string
-    locale: string
     familySharable: boolean
     reviewNote: string
   }
   google: {
     subscriptionProductId: string
-    subscriptionTitle: string
-    subscriptionDescription: string
-    subscriptionBenefits: readonly string[]
-    locale: string
   }
   revenueCat: {
     entitlementLookupKey: string
@@ -75,8 +61,13 @@ export interface MonetizationConfig {
   }
 }
 
-export interface ProductStoreLocalization {
+export interface AppleProductLocalization {
   displayName: string
+  description: string
+}
+
+export interface GoogleProductListing {
+  title: string
   description: string
 }
 
@@ -84,11 +75,14 @@ export interface StoreLocalization {
   sourceLocale: string
   appleLocale: string
   googleLocale: string
-  subscriptionGroupDisplayName: string
-  subscriptionTitle: string
-  subscriptionDescription: string
-  subscriptionBenefits: string[]
-  products: Record<ProductKey, ProductStoreLocalization>
+  apple: {
+    subscriptionGroupDisplayName: string
+    products: Record<ProductKey, AppleProductLocalization>
+  }
+  google: {
+    subscription: GoogleProductListing & { benefits: string[] }
+    lifetime: GoogleProductListing
+  }
 }
 
 export interface StoreEnvironment {

@@ -104,7 +104,7 @@ export class AppleStoreClient {
     this.auth = new AppleAuth(environment.issuerId, environment.keyId, environment.keyFilepath)
     this.metadata = new AppleMetadataReconciler(
       config,
-      loadStoreLocalizations(config),
+      loadStoreLocalizations(),
       reporter,
       async <T>(pathOrUrl: string, options = {}) => this.request<T>(pathOrUrl, options),
       async <T extends JsonApiResource>(pathOrUrl: string) => this.listAll<T>(pathOrUrl)

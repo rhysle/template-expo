@@ -49,8 +49,6 @@ export const validateConfig = (config: MonetizationConfig): void => {
     const product = config.products[key]
     assert(MONEY_PATTERN.test(product.priceUsd), `${key}.priceUsd must look like "3.99"`)
     assert(product.referenceName.trim().length > 0, `${key}.referenceName is required`)
-    assert(product.displayName.trim().length > 0, `${key}.displayName is required`)
-    assert(product.description.trim().length > 0, `${key}.description is required`)
     if (product.appleReviewScreenshotPath) {
       const screenshotPath = path.isAbsolute(product.appleReviewScreenshotPath)
         ? product.appleReviewScreenshotPath
@@ -66,15 +64,6 @@ export const validateConfig = (config: MonetizationConfig): void => {
       `${key}.appleProductId contains unsupported characters`
     )
   }
-
-  assert(
-    config.localization.sourceDirectory.trim().length > 0,
-    'localization.sourceDirectory is required'
-  )
-  assert(
-    config.localization.sourceLocale.trim().length > 0,
-    'localization.sourceLocale is required'
-  )
 
   for (const key of SUBSCRIPTION_KEYS) {
     const product = config.products[key]
@@ -100,8 +89,6 @@ export const validateConfig = (config: MonetizationConfig): void => {
     /^[A-Z]{3}$/.test(config.apple.baseTerritory),
     'apple.baseTerritory must be a three-letter App Store territory ID such as USA'
   )
-  assert(config.apple.locale.trim().length > 0, 'apple.locale is required')
-  assert(config.google.locale.trim().length > 0, 'google.locale is required')
 }
 
 validateConfig(monetizationConfig)

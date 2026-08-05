@@ -1,0 +1,36 @@
+{
+  "appleLocale": "hu",
+  "googleLocale": "hu-HU",
+  "apple": {
+    "subscriptionGroupDisplayName": "Premium",
+    "products": {
+      "weekly": {
+        "displayName": "Premium · Heti",
+        "description": "Teljes hozzáférés minden prémium funkcióhoz."
+      },
+      "monthly": {
+        "displayName": "Premium · Havi",
+        "description": "Teljes hozzáférés minden prémium funkcióhoz."
+      },
+      "yearly": {
+        "displayName": "Premium · Éves",
+        "description": "Teljes hozzáférés minden prémium funkcióhoz."
+      },
+      "lifetime": {
+        "displayName": "Premium · Élethosszig",
+        "description": "Élethosszig minden prémium funkció elérhető."
+      }
+    }
+  },
+  "google": {
+    "subscription": {
+      "title": "Premium",
+      "description": "Teljes hozzáférés minden prémium funkcióhoz.",
+      "benefits": ["Minden prémium funkció elérhető"]
+    },
+    "lifetime": {
+      "title": "Premium · Élethosszig",
+      "description": "Élethosszig minden prémium funkció elérhető."
+    }
+  }
+}

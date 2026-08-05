@@ -85,12 +85,12 @@ It also needs app read access. The RevenueCat App Store and Google Play app reco
 exist; the scripts find them by matching the bundle ID and package name from `app.json`, and stop
 with an error when no unique match exists.
 
-Store-product localizations are derived from every JSON resource under
-`src/i18n/locales/`. The configured source locale uses the exact product strings from
-`src/configs/monetization.ts`; other locales use their translated `paywall.packageTitle`,
-`paywall.period`, `paywall.title`, and feature titles. Remove locales the app will not ship
-before provisioning, and complete the release localization audit first so sample or stale
-translations are not uploaded.
+Store-product localizations are declared independently under
+`fastlane/monetization/localizations/`, with one JSON file per language and explicit Apple and
+Google sections. These files are the sole source for subscription-group, subscription, and
+lifetime-purchase listing text; monetization setup never derives store metadata from
+`src/i18n/locales/`. Review the generic premium wording for product accuracy before provisioning,
+and add or remove store locale files independently from the app's runtime locale set.
 
 Apple App Review screenshots are optional per product. Set
 `appleReviewScreenshotPath` on `weekly`, `monthly`, `yearly`, and/or `lifetime`. The same local image

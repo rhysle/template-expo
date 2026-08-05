@@ -180,7 +180,7 @@ export class GooglePlayClient {
     private readonly requestOverride?: JsonRequester
   ) {
     this.auth = requestOverride ? undefined : new GoogleAuth(environment.jsonKeyPath)
-    this.localizations = loadStoreLocalizations(config)
+    this.localizations = loadStoreLocalizations()
   }
 
   private async request<T>(
@@ -403,17 +403,17 @@ export class GooglePlayClient {
   private subscriptionListings(): GoogleSubscription['listings'] {
     return this.localizations.map((localization) => ({
       languageCode: localization.googleLocale,
-      title: localization.subscriptionTitle,
-      benefits: localization.subscriptionBenefits,
-      description: localization.subscriptionDescription,
+      title: localization.google.subscription.title,
+      benefits: localization.google.subscription.benefits,
+      description: localization.google.subscription.description,
     }))
   }
 
   private lifetimeListings(): GoogleOneTimeProduct['listings'] {
     return this.localizations.map((localization) => ({
       languageCode: localization.googleLocale,
-      title: localization.products.lifetime.displayName,
-      description: localization.products.lifetime.description,
+      title: localization.google.lifetime.title,
+      description: localization.google.lifetime.description,
     }))
   }
 

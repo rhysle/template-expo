@@ -130,7 +130,7 @@ export class AppleMetadataReconciler {
         `/v1/subscriptionGroupVersions/${versionId}/localizations?limit=200`,
       desiredLocalizations: this.localizations.map((localization) => ({
         locale: localization.appleLocale,
-        name: localization.subscriptionGroupDisplayName,
+        name: localization.apple.subscriptionGroupDisplayName,
       })),
     })
   }
@@ -153,8 +153,8 @@ export class AppleMetadataReconciler {
         `/v1/subscriptionVersions/${versionId}/localizations?limit=200`,
       desiredLocalizations: this.localizations.map((localization) => ({
         locale: localization.appleLocale,
-        name: localization.products[key].displayName,
-        description: localization.products[key].description,
+        name: localization.apple.products[key].displayName,
+        description: localization.apple.products[key].description,
       })),
     })
     await this.syncReviewScreenshot({
@@ -187,8 +187,8 @@ export class AppleMetadataReconciler {
         `/v1/inAppPurchaseVersions/${versionId}/localizations?limit=200`,
       desiredLocalizations: this.localizations.map((localization) => ({
         locale: localization.appleLocale,
-        name: localization.products.lifetime.displayName,
-        description: localization.products.lifetime.description,
+        name: localization.apple.products.lifetime.displayName,
+        description: localization.apple.products.lifetime.description,
       })),
     })
     await this.syncReviewScreenshot({

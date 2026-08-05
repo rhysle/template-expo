@@ -185,7 +185,7 @@ export class RevenueCatClient {
           appId: apps.appleAppId,
           storeIdentifier: product.appleProductId,
           type: 'subscription',
-          displayName: `${product.displayName} (App Store)`,
+          displayName: `${product.referenceName} (App Store)`,
         })
       }
       if (this.config.stores.google && apps.googleAppId) {
@@ -194,7 +194,7 @@ export class RevenueCatClient {
           appId: apps.googleAppId,
           storeIdentifier: `${this.config.google.subscriptionProductId}:${product.googleBasePlanId}`,
           type: 'subscription',
-          displayName: `${product.displayName} (Google Play)`,
+          displayName: `${product.referenceName} (Google Play)`,
         })
       }
     }
@@ -207,7 +207,7 @@ export class RevenueCatClient {
           appId: apps.appleAppId,
           storeIdentifier: product.appleProductId,
           type: 'non_consumable',
-          displayName: `${product.displayName} (App Store)`,
+          displayName: `${product.referenceName} (App Store)`,
         })
       }
       if (this.config.stores.google && apps.googleAppId) {
@@ -216,7 +216,7 @@ export class RevenueCatClient {
           appId: apps.googleAppId,
           storeIdentifier: product.googleProductId,
           type: 'non_consumable',
-          displayName: `${product.displayName} (Google Play)`,
+          displayName: `${product.referenceName} (Google Play)`,
         })
       }
     }
@@ -390,7 +390,7 @@ export class RevenueCatClient {
               method: 'POST',
               body: {
                 lookup_key: productConfig.revenueCatPackageLookupKey,
-                display_name: productConfig.displayName,
+                display_name: productConfig.referenceName,
                 position: index + 1,
               },
             }

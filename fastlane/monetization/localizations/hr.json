@@ -1,0 +1,36 @@
+{
+  "appleLocale": "hr",
+  "googleLocale": "hr",
+  "apple": {
+    "subscriptionGroupDisplayName": "Premium",
+    "products": {
+      "weekly": {
+        "displayName": "Premium · Tjedno",
+        "description": "Potpun pristup svim premium značajkama."
+      },
+      "monthly": {
+        "displayName": "Premium · Mjesečno",
+        "description": "Potpun pristup svim premium značajkama."
+      },
+      "yearly": {
+        "displayName": "Premium · Godišnje",
+        "description": "Potpun pristup svim premium značajkama."
+      },
+      "lifetime": {
+        "displayName": "Premium · Doživotno",
+        "description": "Doživotni pristup svim premium značajkama."
+      }
+    }
+  },
+  "google": {
+    "subscription": {
+      "title": "Premium",
+      "description": "Potpun pristup svim premium značajkama.",
+      "benefits": ["Pristup svim premium značajkama"]
+    },
+    "lifetime": {
+      "title": "Premium · Doživotno",
+      "description": "Doživotni pristup svim premium značajkama."
+    }
+  }
+}
