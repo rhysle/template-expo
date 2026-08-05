@@ -33,6 +33,7 @@ const appleOffer = (
     numberOfPeriods: number
     offerMode: string
     targetSubscriptionPlanType: string
+    territoryId: string
   }> = {}
 ) => ({
   id,
@@ -42,6 +43,11 @@ const appleOffer = (
     numberOfPeriods: overrides.numberOfPeriods ?? 1,
     offerMode: overrides.offerMode ?? 'FREE_TRIAL',
     targetSubscriptionPlanType: overrides.targetSubscriptionPlanType ?? 'UPFRONT',
+  },
+  relationships: {
+    territory: {
+      data: { type: 'territories', id: overrides.territoryId ?? 'USA' },
+    },
   },
 })
 
@@ -91,6 +97,11 @@ const appleRequester = (
     if (method === 'GET' && path === '/v1/subscriptionGroups/group-1/subscriptions?limit=200') {
       return { data: subscriptions } as T
     }
+    if (method === 'GET' && path.includes('/v1/territories?')) {
+      return {
+        data: ['USA', 'CAN'].map((id) => ({ id, type: 'territories', attributes: {} })),
+      } as T
+    }
     const introMatch = path.match(
       /^\/v1\/subscriptions\/sub-(weekly|monthly|yearly)\/introductoryOffers/
     )
@@ -102,11 +113,18 @@ const appleRequester = (
       const body = options.body as {
         data: {
           attributes: { duration: string }
-          relationships: { subscription: { data: { id: string } } }
+          relationships: {
+            subscription: { data: { id: string } }
+            territory: { data: { id: string } }
+          }
         }
       }
       return {
-        data: appleOffer('new-trial', body.data.attributes.duration),
+        data: appleOffer(
+          `new-trial-${body.data.relationships.territory.data.id}`,
+          body.data.attributes.duration,
+          { territoryId: body.data.relationships.territory.data.id }
+        ),
       } as T
     }
     if (method === 'DELETE' && path.startsWith('/v1/subscriptionIntroductoryOffers/')) {
@@ -360,17 +378,40 @@ test('validates that the trial target is enabled', () => {
   assert.throws(() => validateConfig(config), /freeTrial\.target monthly must be enabled/)
 })
 
-test('Apple creates the initial global 3-day weekly trial', async () => {
+test('Apple creates the initial 3-day weekly trial in every storefront', async () => {
   const writes = await runAppleActivation(makeConfig(), {})
-  assert.equal(writes.length, 1)
-  assert.equal(writes[0].method, 'POST')
-  assert.deepEqual((writes[0].body as { data: { attributes: object } }).data.attributes, {
+  assert.equal(writes.length, 2)
+  assert.deepEqual(
+    writes.map((call) => call.method),
+    ['POST', 'POST']
+  )
+  const data = writes.map(
+    (write) =>
+      (
+        write.body as {
+          data: {
+            attributes: object
+            relationships: { territory: { data: { type: string; id: string } } }
+          }
+        }
+      ).data
+  )
+  assert.deepEqual(data[0].attributes, {
     duration: 'THREE_DAYS',
     numberOfPeriods: 1,
     offerMode: 'FREE_TRIAL',
     startDate: new Date().toISOString().slice(0, 10),
     targetSubscriptionPlanType: 'UPFRONT',
   })
+  assert.deepEqual(
+    data.map((item) => item.relationships.territory.data).sort((left, right) =>
+      left.id.localeCompare(right.id)
+    ),
+    [
+      { type: 'territories', id: 'CAN' },
+      { type: 'territories', id: 'USA' },
+    ]
+  )
 })
 
 test('Apple creates the replacement before deleting an old duration', async () => {
@@ -379,12 +420,10 @@ test('Apple creates the replacement before deleting an old duration', async () =
     weekly: [appleOffer('old-trial', 'THREE_DAYS')],
   })
   assert.deepEqual(
-    writes.map((call) => [call.method, call.path]),
-    [
-      ['POST', '/v1/subscriptionIntroductoryOffers'],
-      ['DELETE', '/v1/subscriptionIntroductoryOffers/old-trial'],
-    ]
+    writes.map((call) => call.method),
+    ['POST', 'POST', 'DELETE']
   )
+  assert.equal(writes.at(-1)?.path, '/v1/subscriptionIntroductoryOffers/old-trial')
 })
 
 test('Apple moves the trial from weekly to yearly and cleans up duplicates', async () => {
@@ -393,10 +432,13 @@ test('Apple moves the trial from weekly to yearly and cleans up duplicates', asy
     weekly: [appleOffer('old-weekly', 'THREE_DAYS')],
     yearly: [appleOffer('duplicate-yearly', 'ONE_WEEK')],
   })
-  assert.equal(writes[0].method, 'POST')
+  assert.deepEqual(
+    writes.slice(0, 2).map((call) => call.method),
+    ['POST', 'POST']
+  )
   assert.deepEqual(
     writes
-      .slice(1)
+      .slice(2)
       .map((call) => call.path)
       .sort(),
     [
@@ -434,6 +476,17 @@ test('Apple plan is read-only and verify rejects duplicate free trials', async (
   assert.throws(() => verification.reporter.finish(), /monetization configuration issue/)
 })
 
+test('Apple verify accepts exact all-storefront trial coverage', async () => {
+  const config = makeConfig()
+  const verification = await runAppleTrialAudit('verify', config, {
+    weekly: [
+      appleOffer('trial-usa', 'THREE_DAYS', { territoryId: 'USA' }),
+      appleOffer('trial-can', 'THREE_DAYS', { territoryId: 'CAN' }),
+    ],
+  })
+  verification.reporter.finish()
+})
+
 test('Google apply creates an absent offer as a draft', async () => {
   const state = googleClient(makeConfig(), 'apply', {})
   await state.client.sync()
@@ -446,7 +499,7 @@ test('Google apply creates an absent offer as a draft', async () => {
   assert.equal(body.phases[0].duration, 'P3D')
 })
 
-test('Google apply omits a free phase when future-region availability is absent', async () => {
+test('Google apply omits other-region phase pricing when future availability is absent', async () => {
   const state = googleClient(makeConfig(), 'apply', {}, 'omitted')
   await state.client.sync()
   state.reporter.finish()
@@ -455,10 +508,10 @@ test('Google apply omits a free phase when future-region availability is absent'
   )
   assert.ok(create)
   const body = create.body as {
-    phases: Array<{ otherRegionsConfig: object }>
+    phases: Array<{ otherRegionsConfig?: object }>
     otherRegionsConfig: { otherRegionsNewSubscriberAvailability: boolean }
   }
-  assert.deepEqual(body.phases[0].otherRegionsConfig, {})
+  assert.equal(Object.hasOwn(body.phases[0], 'otherRegionsConfig'), false)
   assert.equal(body.otherRegionsConfig.otherRegionsNewSubscriberAvailability, false)
 })
 

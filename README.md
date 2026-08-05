@@ -116,8 +116,9 @@ separate from its public promotional image. Google base plans and purchase
 options and free-trial offers remain in draft. The setup intentionally refuses to replace an
 existing US price or update a live Google offer. Changing live prices and migrating existing
 subscribers are separate release operations. `activate` requires explicit confirmation: it
-creates or replaces the configured Apple introductory free trial, activates the desired Google
-offer and base plans, and deactivates the previous managed Google trial when the target moves.
+creates or replaces the configured Apple introductory free trial in every storefront, activates
+the desired Google offer and base plans, and deactivates the previous managed Google trial when
+the target moves.
 `verify` then checks the selected catalog, localized metadata, screenshots, RevenueCat
 associations, and exact live trial state. Apple products still require submission to App Review;
 the first subscription group must be submitted with an app version. `activate` does not click

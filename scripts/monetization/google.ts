@@ -42,7 +42,7 @@ interface GoogleSubscriptionOfferPhase {
     regionCode: string
     free?: Record<string, never>
   }>
-  otherRegionsConfig: {
+  otherRegionsConfig?: {
     free?: Record<string, never>
   }
 }
@@ -270,7 +270,7 @@ export class GooglePlayClient {
           recurrenceCount: 1,
           duration: GOOGLE_FREE_TRIAL_DURATION[trial.duration],
           regionalConfigs: regions.map((regionCode) => ({ regionCode, free: {} })),
-          otherRegionsConfig: otherRegionsAvailable ? { free: {} } : {},
+          ...(otherRegionsAvailable ? { otherRegionsConfig: { free: {} } } : {}),
         },
       ],
       targeting: {
@@ -317,8 +317,8 @@ export class GooglePlayClient {
       phase.duration === desiredPhase.duration &&
       JSON.stringify(normalizePhaseRegions(phase.regionalConfigs)) ===
         JSON.stringify(normalizePhaseRegions(desiredPhase.regionalConfigs)) &&
-      (phase.otherRegionsConfig.free !== undefined) ===
-        (desiredPhase.otherRegionsConfig.free !== undefined) &&
+      (phase.otherRegionsConfig?.free !== undefined) ===
+        (desiredPhase.otherRegionsConfig?.free !== undefined) &&
       offer.targeting.acquisitionRule?.scope.anySubscriptionInApp !== undefined &&
       offer.targeting.upgradeRule === undefined &&
       JSON.stringify(normalizeRegions(offer.regionalConfigs)) ===
@@ -331,7 +331,7 @@ export class GooglePlayClient {
   private isGoogleFreeOffer(offer: GoogleSubscriptionOffer): boolean {
     return offer.phases.some(
       (phase) =>
-        phase.otherRegionsConfig.free !== undefined ||
+        phase.otherRegionsConfig?.free !== undefined ||
         phase.regionalConfigs.some((region) => region.free !== undefined)
     )
   }

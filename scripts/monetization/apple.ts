@@ -59,6 +59,7 @@ interface SubscriptionIntroductoryOfferAttributes {
 interface AppleFreeTrialOffer {
   key: SubscriptionProductKey
   resource: JsonApiResource<SubscriptionIntroductoryOfferAttributes>
+  territoryId?: string
 }
 
 const SUBSCRIPTION_PERIOD: Record<SubscriptionProductKey, string> = {
@@ -319,11 +320,15 @@ export class AppleStoreClient {
     for (const [key, subscription] of subscriptions) {
       const subscriptionOffers = await this.listAll<
         JsonApiResource<SubscriptionIntroductoryOfferAttributes>
-      >(`/v1/subscriptions/${subscription.id}/introductoryOffers?limit=200`)
+      >(`/v1/subscriptions/${subscription.id}/introductoryOffers?limit=200&include=territory`)
       offers.push(
         ...subscriptionOffers
           .filter((offer) => offer.attributes.offerMode === 'FREE_TRIAL')
-          .map((resource) => ({ key, resource }))
+          .map((resource) => {
+            const territoryData = resource.relationships?.territory?.data
+            const territory = Array.isArray(territoryData) ? territoryData[0] : territoryData
+            return { key, resource, territoryId: territory?.id }
+          })
       )
     }
     return offers
@@ -347,19 +352,27 @@ export class AppleStoreClient {
     const desired = this.config.freeTrial
     const offers = await this.listAppleFreeTrials(subscriptions)
     const matching = offers.filter((offer) => this.appleFreeTrialMatches(offer))
-    const exact = desired ? matching.length === 1 && offers.length === 1 : offers.length === 0
+    const territoryIds = desired
+      ? (await this.allTerritoryIdentifiers()).map((territory) => territory.id)
+      : []
+    const matchingTerritoryIds = new Set(matching.map((offer) => offer.territoryId))
+    const exact = desired
+      ? matching.length === territoryIds.length &&
+        offers.length === territoryIds.length &&
+        territoryIds.every((territoryId) => matchingTerritoryIds.has(territoryId))
+      : offers.length === 0
 
     if (exact) {
       this.reporter.ok(
         desired
-          ? `Apple ${desired.target} ${desired.duration} free trial`
+          ? `Apple ${desired.target} ${desired.duration} free trial in ${territoryIds.length} storefront(s)`
           : 'Apple free trial is disabled'
       )
       return
     }
 
     const description = desired
-      ? `transition Apple free trial to ${desired.target} ${desired.duration}`
+      ? `transition Apple free trial to ${desired.target} ${desired.duration} in ${territoryIds.length} storefront(s)`
       : 'remove Apple free trial'
     if (this.reporter.command === 'verify') {
       this.reporter.error(`Apple free trial differs from config: ${description}`)
@@ -400,8 +413,21 @@ export class AppleStoreClient {
       return
     }
 
-    let keep = offers.find((offer) => this.appleFreeTrialMatches(offer))
-    if (!keep) {
+    const territories = await this.allTerritoryIdentifiers()
+    const keptIds = new Set<string>()
+    const missingTerritories = territories.filter((territory) => {
+      const existing = offers.find(
+        (offer) =>
+          !keptIds.has(offer.resource.id) &&
+          offer.territoryId === territory.id &&
+          this.appleFreeTrialMatches(offer)
+      )
+      if (!existing) return true
+      keptIds.add(existing.resource.id)
+      return false
+    })
+
+    await runWithConcurrency(missingTerritories, 5, async (territory) => {
       const response = await this.request<
         JsonApiSingleResponse<JsonApiResource<SubscriptionIntroductoryOfferAttributes>>
       >('/v1/subscriptionIntroductoryOffers', {
@@ -420,26 +446,35 @@ export class AppleStoreClient {
               subscription: {
                 data: { type: 'subscriptions', id: subscription.id },
               },
+              territory: {
+                data: territory,
+              },
             },
           },
         },
       })
       if (!response) throw new Error('Apple did not return the created free-trial offer')
-      keep = { key: desired.target, resource: response.data }
-      this.reporter.change(`created Apple ${desired.target} ${desired.duration} global free trial`)
+      keptIds.add(response.data.id)
+    })
+    if (missingTerritories.length > 0) {
+      this.reporter.change(
+        `created Apple ${desired.target} ${desired.duration} free trial in ${missingTerritories.length} storefront(s)`
+      )
     }
 
-    const obsolete = offers.filter((offer) => offer.resource.id !== keep.resource.id)
-    for (const offer of obsolete) {
+    const obsolete = offers.filter((offer) => !keptIds.has(offer.resource.id))
+    await runWithConcurrency(obsolete, 5, async (offer) => {
       await this.request(`/v1/subscriptionIntroductoryOffers/${offer.resource.id}`, {
         method: 'DELETE',
       })
-    }
+    })
     if (obsolete.length > 0) {
       this.reporter.change(`removed ${obsolete.length} obsolete Apple free-trial offer(s)`)
     }
-    if (obsolete.length === 0 && offers.length === 1) {
-      this.reporter.ok(`Apple ${desired.target} ${desired.duration} free trial already active`)
+    if (missingTerritories.length === 0 && obsolete.length === 0) {
+      this.reporter.ok(
+        `Apple ${desired.target} ${desired.duration} free trial already active in ${territories.length} storefront(s)`
+      )
     }
   }
 
