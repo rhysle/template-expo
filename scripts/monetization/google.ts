@@ -24,7 +24,6 @@ import type {
 } from './types'
 
 const API_ROOT = 'https://androidpublisher.googleapis.com/androidpublisher/v3/applications'
-const DEFAULT_GOOGLE_FREE_TRIAL_OFFER_ID = 'free-trial'
 
 interface GoogleBasePlan {
   basePlanId: string
@@ -39,7 +38,7 @@ interface GoogleBasePlan {
     eurPrice: GoogleMoney
     newSubscriberAvailability?: boolean
   }
-  autoRenewingBasePlanType: {
+  autoRenewingBasePlanType?: {
     billingPeriodDuration: string
   }
 }
@@ -91,6 +90,9 @@ interface GoogleOfferWithPlan {
   plan: GoogleBasePlan
   offer: GoogleSubscriptionOffer
 }
+
+type GoogleFreeTrialDifference =
+  'duration' | 'eligibility' | 'regional availability' | 'future-region availability'
 
 interface GoogleSubscription {
   packageName: string
@@ -241,14 +243,15 @@ export class GooglePlayClient {
   }
 
   private priceDifferences(
-    currentConfigs: Array<{ regionCode: string; price: GoogleMoney }>,
+    currentConfigs: Array<{ regionCode: string; price: GoogleMoney; available: boolean }>,
     desiredConfigs: Array<{ regionCode: string; price: GoogleMoney }>
   ): {
     changed: string[]
     increased: string[]
     decreased: string[]
   } {
-    const current = new Map(currentConfigs.map((item) => [item.regionCode, item.price]))
+    const current = new Map(currentConfigs.map((item) => [item.regionCode, item]))
+    const desiredRegions = new Set(desiredConfigs.map((item) => item.regionCode))
     const changed: string[] = []
     const increased: string[] = []
     const decreased: string[] = []
@@ -258,14 +261,28 @@ export class GooglePlayClient {
         changed.push(desired.regionCode)
         continue
       }
-      if (moneyEquals(existing, desired.price)) continue
+      if (moneyEquals(existing.price, desired.price) && existing.available) continue
       changed.push(desired.regionCode)
-      if (existing.currencyCode !== desired.price.currencyCode) continue
-      const direction = moneyToNanos(desired.price) - moneyToNanos(existing)
+      if (moneyEquals(existing.price, desired.price)) continue
+      if (existing.price.currencyCode !== desired.price.currencyCode) continue
+      const direction = moneyToNanos(desired.price) - moneyToNanos(existing.price)
       if (direction > 0n) increased.push(desired.regionCode)
       if (direction < 0n) decreased.push(desired.regionCode)
     }
+    for (const existing of currentConfigs) {
+      if (!desiredRegions.has(existing.regionCode)) changed.push(existing.regionCode)
+    }
     return { changed, increased, decreased }
+  }
+
+  private validateBasePlanPeriod(plan: GoogleBasePlan, key: SubscriptionProductKey): boolean {
+    const expected = BILLING_PERIOD[key]
+    const actual = plan.autoRenewingBasePlanType?.billingPeriodDuration
+    if (actual === expected) return true
+    this.reporter.error(
+      `Google ${key} base plan ${plan.basePlanId} has billing period ${actual ?? 'non-renewing/unknown'}; expected ${expected}. Configure a new googleBasePlanId because billing periods are immutable.`
+    )
+    return false
   }
 
   private async reconcileSubscriptionPrices(): Promise<void> {
@@ -285,12 +302,20 @@ export class GooglePlayClient {
         this.reporter.error(`Missing: Google ${key} base plan; run monetization:apply first`)
         continue
       }
+      if (!this.validateBasePlanPeriod(plan, key)) continue
       const matrix = await this.prepareRegionalPriceMatrix(desired.priceUsd)
       this.reportPppCoverage(`Google ${key}`, matrix)
-      const differences = this.priceDifferences(plan.regionalConfigs, matrix.regionalConfigs)
+      const differences = this.priceDifferences(
+        plan.regionalConfigs.map((item) => ({
+          ...item,
+          available: item.newSubscriberAvailability === true,
+        })),
+        matrix.regionalConfigs
+      )
       const otherRegionsDiffer =
         !moneyEquals(plan.otherRegionsConfig.usdPrice, matrix.otherRegions.usdPrice) ||
-        !moneyEquals(plan.otherRegionsConfig.eurPrice, matrix.otherRegions.eurPrice)
+        !moneyEquals(plan.otherRegionsConfig.eurPrice, matrix.otherRegions.eurPrice) ||
+        plan.otherRegionsConfig.newSubscriberAvailability !== true
       if (differences.changed.length === 0 && !otherRegionsDiffer) {
         this.reporter.ok(`Google ${key} prices match ${matrix.regionalConfigs.length} region(s)`)
         continue
@@ -339,7 +364,10 @@ export class GooglePlayClient {
         continue
       }
 
-      const replacement = this.buildBasePlan(key, matrix)
+      const replacement = {
+        ...withoutState(plan),
+        ...this.buildBasePlan(key, matrix),
+      }
       const migrationCutoff = new Date().toISOString()
       const basePlans = subscription.basePlans.map((item) =>
         item.basePlanId === plan.basePlanId ? replacement : withoutState(item)
@@ -394,12 +422,16 @@ export class GooglePlayClient {
     const matrix = await this.prepareRegionalPriceMatrix(desired.priceUsd)
     this.reportPppCoverage('Google lifetime', matrix)
     const differences = this.priceDifferences(
-      option.regionalPricingAndAvailabilityConfigs,
+      option.regionalPricingAndAvailabilityConfigs.map((item) => ({
+        ...item,
+        available: item.availability === 'AVAILABLE',
+      })),
       matrix.regionalConfigs
     )
     const otherRegionsDiffer =
       !moneyEquals(option.newRegionsConfig.usdPrice, matrix.otherRegions.usdPrice) ||
-      !moneyEquals(option.newRegionsConfig.eurPrice, matrix.otherRegions.eurPrice)
+      !moneyEquals(option.newRegionsConfig.eurPrice, matrix.otherRegions.eurPrice) ||
+      option.newRegionsConfig.availability !== 'AVAILABLE'
     if (differences.changed.length === 0 && !otherRegionsDiffer) {
       this.reporter.ok(`Google lifetime prices match ${matrix.regionalConfigs.length} region(s)`)
       return
@@ -576,7 +608,7 @@ export class GooglePlayClient {
       packageName: subscription.packageName,
       productId: subscription.productId,
       basePlanId: plan.basePlanId,
-      offerId: trial.googleOfferId,
+      offerId: this.config.google.freeTrialOfferId,
       phases: [
         {
           recurrenceCount: 1,
@@ -599,11 +631,11 @@ export class GooglePlayClient {
     }
   }
 
-  private freeTrialOfferMatches(
+  private freeTrialOfferDifferences(
     offer: GoogleSubscriptionOffer,
     subscription: GoogleSubscription,
     plan: GoogleBasePlan
-  ): boolean {
+  ): GoogleFreeTrialDifference[] {
     const desired = this.buildFreeTrialOffer(subscription, plan)
     const normalizeRegions = (
       regions: Array<{ regionCode: string; newSubscriberAvailability: boolean }>
@@ -623,21 +655,38 @@ export class GooglePlayClient {
 
     const phase = offer.phases[0]
     const desiredPhase = desired.phases[0]
-    return (
-      offer.phases.length === 1 &&
-      phase?.recurrenceCount === desiredPhase.recurrenceCount &&
-      phase.duration === desiredPhase.duration &&
-      JSON.stringify(normalizePhaseRegions(phase.regionalConfigs)) ===
-        JSON.stringify(normalizePhaseRegions(desiredPhase.regionalConfigs)) &&
-      (phase.otherRegionsConfig?.free !== undefined) ===
-        (desiredPhase.otherRegionsConfig?.free !== undefined) &&
-      offer.targeting.acquisitionRule?.scope.anySubscriptionInApp !== undefined &&
-      offer.targeting.upgradeRule === undefined &&
-      JSON.stringify(normalizeRegions(offer.regionalConfigs)) ===
-        JSON.stringify(normalizeRegions(desired.regionalConfigs)) &&
-      offer.otherRegionsConfig.otherRegionsNewSubscriberAvailability ===
+    const differences: GoogleFreeTrialDifference[] = []
+    if (
+      offer.phases.length !== 1 ||
+      phase?.recurrenceCount !== desiredPhase.recurrenceCount ||
+      phase.duration !== desiredPhase.duration
+    ) {
+      differences.push('duration')
+    }
+    if (
+      offer.targeting.acquisitionRule?.scope.anySubscriptionInApp === undefined ||
+      offer.targeting.upgradeRule !== undefined
+    ) {
+      differences.push('eligibility')
+    }
+    if (
+      !phase ||
+      JSON.stringify(normalizePhaseRegions(phase.regionalConfigs)) !==
+        JSON.stringify(normalizePhaseRegions(desiredPhase.regionalConfigs)) ||
+      JSON.stringify(normalizeRegions(offer.regionalConfigs)) !==
+        JSON.stringify(normalizeRegions(desired.regionalConfigs))
+    ) {
+      differences.push('regional availability')
+    }
+    if (
+      (phase?.otherRegionsConfig?.free !== undefined) !==
+        (desiredPhase.otherRegionsConfig?.free !== undefined) ||
+      offer.otherRegionsConfig.otherRegionsNewSubscriberAvailability !==
         desired.otherRegionsConfig.otherRegionsNewSubscriberAvailability
-    )
+    ) {
+      differences.push('future-region availability')
+    }
+    return differences
   }
 
   private isGoogleFreeOffer(offer: GoogleSubscriptionOffer): boolean {
@@ -666,7 +715,7 @@ export class GooglePlayClient {
   }
 
   private unknownActiveFreeOffers(offers: GoogleOfferWithPlan[]): GoogleOfferWithPlan[] {
-    const managedId = this.config.freeTrial?.googleOfferId ?? DEFAULT_GOOGLE_FREE_TRIAL_OFFER_ID
+    const managedId = this.config.google.freeTrialOfferId
     return offers.filter(
       ({ offer }) =>
         offer.state === 'ACTIVE' && this.isGoogleFreeOffer(offer) && offer.offerId !== managedId
@@ -684,12 +733,12 @@ export class GooglePlayClient {
     const converted = await this.convertPrice(this.config.products[trial.target].priceUsd)
     const baseUrl = `${API_ROOT}/${encodeURIComponent(this.environment.packageName)}/subscriptions/${encodeURIComponent(subscription.productId)}/basePlans/${encodeURIComponent(plan.basePlanId)}/offers`
     const url = existing
-      ? appendQuery(`${baseUrl}/${encodeURIComponent(trial.googleOfferId)}`, {
+      ? appendQuery(`${baseUrl}/${encodeURIComponent(this.config.google.freeTrialOfferId)}`, {
           updateMask: 'phases,targeting,regionalConfigs,otherRegionsConfig,offerTags',
           'regionsVersion.version': converted.regionVersion.version,
         })
       : appendQuery(baseUrl, {
-          offerId: trial.googleOfferId,
+          offerId: this.config.google.freeTrialOfferId,
           'regionsVersion.version': converted.regionVersion.version,
         })
     const result = await this.request<GoogleSubscriptionOffer>(url, {
@@ -801,14 +850,21 @@ export class GooglePlayClient {
         (item) => item.basePlanId === desired.googleBasePlanId
       )
       if (existing) {
+        if (!this.validateBasePlanPeriod(existing, key)) continue
         this.reporter.ok(`Google ${key} base plan`)
         const matrix = await this.prepareRegionalPriceMatrix(desired.priceUsd)
         this.reportPppCoverage(`Google ${key}`, matrix)
         this.verifyGooglePrice(
           `Google ${key}`,
-          existing.regionalConfigs,
+          existing.regionalConfigs.map((item) => ({
+            ...item,
+            available: item.newSubscriberAvailability === true,
+          })),
           matrix.regionalConfigs,
-          existing.otherRegionsConfig,
+          {
+            ...existing.otherRegionsConfig,
+            available: existing.otherRegionsConfig.newSubscriberAvailability === true,
+          },
           matrix.otherRegions
         )
         continue
@@ -858,7 +914,7 @@ export class GooglePlayClient {
       return
     }
 
-    const managedId = trial?.googleOfferId ?? DEFAULT_GOOGLE_FREE_TRIAL_OFFER_ID
+    const managedId = this.config.google.freeTrialOfferId
     const managed = offers.filter(({ offer }) => offer.offerId === managedId)
     if (!trial) {
       const active = managed.filter(
@@ -903,16 +959,24 @@ export class GooglePlayClient {
         this.reporter.change(`prepare Google ${trial.target} ${trial.duration} free-trial offer`)
       }
     } else {
-      const matches = this.freeTrialOfferMatches(desired.offer, subscription, plan)
+      const differences = this.freeTrialOfferDifferences(desired.offer, subscription, plan)
+      const matches = differences.length === 0
+      const differenceDescription = differences
+        .map((difference) =>
+          difference === 'duration' ? `duration to ${trial.duration}` : difference
+        )
+        .join(', ')
       if (!matches && desired.offer.state !== 'ACTIVE' && this.reporter.command === 'apply') {
         await this.writeGoogleFreeTrialOffer(subscription, plan, desired.offer)
         this.reporter.change(
           `updated Google ${trial.target} ${trial.duration} inactive free-trial offer`
         )
       } else if (!matches && this.reporter.command === 'verify') {
-        this.reporter.error(`Google ${trial.target} free-trial offer differs from config`)
+        this.reporter.error(
+          `Google ${trial.target} free-trial offer differs from config: ${differenceDescription}`
+        )
       } else if (!matches && this.reporter.command === 'plan') {
-        this.reporter.change(`transition Google ${trial.target} free trial to ${trial.duration}`)
+        this.reporter.change(`update Google ${trial.target} free-trial ${differenceDescription}`)
       } else if (!matches) {
         this.reporter.info(
           'Google live free-trial update pending: npm run monetization:activate -- --confirm'
@@ -969,7 +1033,7 @@ export class GooglePlayClient {
     if (!trial) {
       const active = offers.filter(
         ({ offer }) =>
-          offer.offerId === DEFAULT_GOOGLE_FREE_TRIAL_OFFER_ID &&
+          offer.offerId === this.config.google.freeTrialOfferId &&
           offer.state === 'ACTIVE' &&
           this.isGoogleFreeOffer(offer)
       )
@@ -987,7 +1051,8 @@ export class GooglePlayClient {
     const planId = this.config.products[trial.target].googleBasePlanId
     const plan = subscription.basePlans.find((item) => item.basePlanId === planId)
     const desired = offers.find(
-      ({ plan: item, offer }) => item.basePlanId === planId && offer.offerId === trial.googleOfferId
+      ({ plan: item, offer }) =>
+        item.basePlanId === planId && offer.offerId === this.config.google.freeTrialOfferId
     )
     if (!plan || !desired) {
       this.reporter.error(
@@ -997,7 +1062,7 @@ export class GooglePlayClient {
     }
 
     let desiredOffer = desired.offer
-    if (!this.freeTrialOfferMatches(desiredOffer, subscription, plan)) {
+    if (this.freeTrialOfferDifferences(desiredOffer, subscription, plan).length > 0) {
       if (desiredOffer.state === 'ACTIVE') {
         await this.setGoogleOfferActive(subscription, desiredOffer, false)
         this.reporter.change(`deactivated Google ${trial.target} free trial for update`)
@@ -1017,7 +1082,7 @@ export class GooglePlayClient {
     const obsolete = offers.filter(
       ({ plan: item, offer }) =>
         item.basePlanId !== planId &&
-        offer.offerId === trial.googleOfferId &&
+        offer.offerId === this.config.google.freeTrialOfferId &&
         offer.state === 'ACTIVE'
     )
     for (const { offer } of obsolete) {
@@ -1070,27 +1135,30 @@ export class GooglePlayClient {
 
   private verifyGooglePrice(
     label: string,
-    regionalConfigs: Array<{ regionCode: string; price: GoogleMoney }>,
+    regionalConfigs: Array<{ regionCode: string; price: GoogleMoney; available: boolean }>,
     desiredConfigs: Array<{ regionCode: string; price: GoogleMoney }>,
-    otherRegions?: { usdPrice: GoogleMoney; eurPrice: GoogleMoney },
+    otherRegions?: { usdPrice: GoogleMoney; eurPrice: GoogleMoney; available: boolean },
     desiredOtherRegions?: { usdPrice: GoogleMoney; eurPrice: GoogleMoney }
   ): void {
-    const current = new Map(regionalConfigs.map((item) => [item.regionCode, item.price]))
+    const current = new Map(regionalConfigs.map((item) => [item.regionCode, item]))
+    const desiredRegions = new Set(desiredConfigs.map((item) => item.regionCode))
     const mismatches = desiredConfigs.filter((item) => {
       const existing = current.get(item.regionCode)
-      return !existing || !moneyEquals(existing, item.price)
+      return !existing || !existing.available || !moneyEquals(existing.price, item.price)
     })
+    const unexpectedRegions = regionalConfigs.filter((item) => !desiredRegions.has(item.regionCode))
     const otherRegionsMatch =
       !desiredOtherRegions ||
       (otherRegions !== undefined &&
+        otherRegions.available &&
         moneyEquals(otherRegions.usdPrice, desiredOtherRegions.usdPrice) &&
         moneyEquals(otherRegions.eurPrice, desiredOtherRegions.eurPrice))
-    if (mismatches.length > 0 || !otherRegionsMatch) {
+    if (mismatches.length > 0 || unexpectedRegions.length > 0 || !otherRegionsMatch) {
       const example = mismatches[0]
       const existing = example ? current.get(example.regionCode) : undefined
       this.reporter.error(
-        `${label} has ${mismatches.length + (otherRegionsMatch ? 0 : 1)} regional price difference(s)` +
-          `${example ? `; ${example.regionCode} is ${existing ? formatMoney(existing) : 'missing'}, expected ${formatMoney(example.price)}` : '; future-region prices differ'}. ` +
+        `${label} has ${mismatches.length + unexpectedRegions.length + (otherRegionsMatch ? 0 : 1)} regional price/availability difference(s)` +
+          `${example ? `; ${example.regionCode} is ${existing ? `${formatMoney(existing.price)} (${existing.available ? 'available' : 'unavailable'})` : 'missing'}, expected ${formatMoney(example.price)} (available)` : unexpectedRegions[0] ? `; unexpected region ${unexpectedRegions[0].regionCode}` : '; future-region prices or availability differ'}. ` +
           'Initial setup will not change established prices; use monetization:prices:apply.'
       )
     } else {
@@ -1176,9 +1244,15 @@ export class GooglePlayClient {
     this.reportPppCoverage('Google lifetime', matrix)
     this.verifyGooglePrice(
       'Google lifetime',
-      option.regionalPricingAndAvailabilityConfigs,
+      option.regionalPricingAndAvailabilityConfigs.map((item) => ({
+        ...item,
+        available: item.availability === 'AVAILABLE',
+      })),
       matrix.regionalConfigs,
-      option.newRegionsConfig,
+      {
+        ...option.newRegionsConfig,
+        available: option.newRegionsConfig.availability === 'AVAILABLE',
+      },
       matrix.otherRegions
     )
   }
@@ -1236,6 +1310,8 @@ export class GooglePlayClient {
       const plan = subscription.basePlans.find((item) => item.basePlanId === id)
       if (!plan) {
         this.reporter.error(`Google ${key} base plan is missing; run monetization:apply first`)
+      } else if (!this.validateBasePlanPeriod(plan, key)) {
+        continue
       } else if (plan.state === 'ACTIVE') {
         this.reporter.ok(`Google ${key} base plan already active`)
       } else if (plan.state !== 'DRAFT' && plan.state !== 'INACTIVE') {

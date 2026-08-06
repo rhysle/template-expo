@@ -76,10 +76,6 @@ export const validateConfig = (config: MonetizationConfig): void => {
       FREE_TRIAL_DURATIONS.includes(config.freeTrial.duration),
       `freeTrial.duration must be one of: ${FREE_TRIAL_DURATIONS.join(', ')}`
     )
-    assert(
-      GOOGLE_PLAN_ID_PATTERN.test(config.freeTrial.googleOfferId),
-      'freeTrial.googleOfferId must be a lowercase RFC-1034 identifier'
-    )
   }
 
   for (const key of config.enabledProducts) {
@@ -122,6 +118,10 @@ export const validateConfig = (config: MonetizationConfig): void => {
   assert(
     GOOGLE_PRODUCT_ID_PATTERN.test(config.google.subscriptionProductId),
     'google.subscriptionProductId must be a valid Google product ID'
+  )
+  assert(
+    GOOGLE_PLAN_ID_PATTERN.test(config.google.freeTrialOfferId),
+    'google.freeTrialOfferId must be a lowercase RFC-1034 identifier'
   )
   assert(
     /^[A-Z]{3}$/.test(config.apple.baseTerritory),

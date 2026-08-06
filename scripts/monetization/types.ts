@@ -8,7 +8,6 @@ export type FreeTrialDuration =
 export interface FreeTrialConfig {
   target: SubscriptionProductKey
   duration: FreeTrialDuration
-  googleOfferId: string
 }
 
 export interface SubscriptionProductConfig {
@@ -60,6 +59,7 @@ export interface MonetizationConfig {
   }
   google: {
     subscriptionProductId: string
+    freeTrialOfferId: string
   }
   revenueCat: {
     entitlementLookupKey: string

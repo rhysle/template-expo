@@ -112,6 +112,15 @@ const runWithConcurrency = async <T>(
   await Promise.all(workers)
 }
 
+const sameIdentifierSet = (
+  left: readonly { id: string }[],
+  right: readonly { id: string }[]
+): boolean => {
+  if (left.length !== right.length) return false
+  const rightIds = new Set(right.map((item) => item.id))
+  return left.every((item) => rightIds.has(item.id))
+}
+
 export class AppleStoreClient {
   private readonly auth: AppleAuth
   private readonly metadata: AppleMetadataReconciler
@@ -587,39 +596,73 @@ export class AppleStoreClient {
     const current = availabilities.find(
       (availability) => availability.attributes.planType === SUBSCRIPTION_PLAN_TYPE
     )
+    const desiredTerritories = await this.allTerritoryIdentifiers()
 
-    await this.reporter.ensure(
-      `Apple ${key} availability in all storefronts`,
-      current,
-      async () => {
-        const response = await this.request<
-          JsonApiSingleResponse<JsonApiResource<SubscriptionPlanAvailabilityAttributes>>
-        >('/v1/subscriptionPlanAvailabilities', {
-          method: 'POST',
-          body: {
-            data: {
-              type: 'subscriptionPlanAvailabilities',
-              attributes: {
-                planType: SUBSCRIPTION_PLAN_TYPE,
-                availableInNewTerritories: true,
-              },
-              relationships: {
-                subscription: {
-                  data: { type: 'subscriptions', id: subscriptionId },
+    if (!current) {
+      await this.reporter.ensure(
+        `Apple ${key} availability in all storefronts`,
+        current,
+        async () => {
+          const response = await this.request<
+            JsonApiSingleResponse<JsonApiResource<SubscriptionPlanAvailabilityAttributes>>
+          >('/v1/subscriptionPlanAvailabilities', {
+            method: 'POST',
+            body: {
+              data: {
+                type: 'subscriptionPlanAvailabilities',
+                attributes: {
+                  planType: SUBSCRIPTION_PLAN_TYPE,
+                  availableInNewTerritories: true,
                 },
-                availableTerritories: {
-                  data: await this.allTerritoryIdentifiers(),
+                relationships: {
+                  subscription: {
+                    data: { type: 'subscriptions', id: subscriptionId },
+                  },
+                  availableTerritories: { data: desiredTerritories },
                 },
               },
             },
-          },
-        })
-        if (!response) {
-          throw new Error(`Apple did not return the created ${key} subscription availability`)
+          })
+          if (!response) {
+            throw new Error(`Apple did not return the created ${key} subscription availability`)
+          }
+          return response.data
         }
-        return response.data
-      }
+      )
+      return
+    }
+
+    const currentTerritories = await this.listAll<JsonApiResource>(
+      `/v1/subscriptionPlanAvailabilities/${current.id}/availableTerritories?limit=200`
     )
+    const matches =
+      current.attributes.availableInNewTerritories === true &&
+      sameIdentifierSet(currentTerritories, desiredTerritories)
+    if (matches) {
+      this.reporter.ok(`Apple ${key} availability in all storefronts`)
+      return
+    }
+
+    if (this.reporter.command === 'verify') {
+      this.reporter.error(`Apple ${key} storefront availability differs from config`)
+    } else if (this.reporter.command === 'plan') {
+      this.reporter.change(`update Apple ${key} availability in all storefronts`)
+    } else {
+      await this.request(`/v1/subscriptionPlanAvailabilities/${current.id}`, {
+        method: 'PATCH',
+        body: {
+          data: {
+            type: 'subscriptionPlanAvailabilities',
+            id: current.id,
+            attributes: { availableInNewTerritories: true },
+            relationships: {
+              availableTerritories: { data: desiredTerritories },
+            },
+          },
+        },
+      })
+      this.reporter.change(`updated Apple ${key} availability in all storefronts`)
+    }
   }
 
   private async syncSubscriptionAttributes(
@@ -949,34 +992,57 @@ export class AppleStoreClient {
       allowNotFound: true,
     })
     const current = response?.data ?? undefined
+    const desiredTerritories = await this.allTerritoryIdentifiers()
 
-    await this.reporter.ensure(
-      'Apple lifetime availability in all storefronts',
-      current,
-      async () => {
-        const created = await this.request<
-          JsonApiSingleResponse<JsonApiResource<InAppPurchaseAvailabilityAttributes>>
-        >('/v1/inAppPurchaseAvailabilities', {
-          method: 'POST',
-          body: {
-            data: {
-              type: 'inAppPurchaseAvailabilities',
-              attributes: { availableInNewTerritories: true },
-              relationships: {
-                availableTerritories: {
-                  data: await this.allTerritoryIdentifiers(),
-                },
-                inAppPurchase: {
-                  data: { type: 'inAppPurchases', id: purchaseId },
-                },
+    const writeAvailability = async (): Promise<
+      JsonApiResource<InAppPurchaseAvailabilityAttributes>
+    > => {
+      const created = await this.request<
+        JsonApiSingleResponse<JsonApiResource<InAppPurchaseAvailabilityAttributes>>
+      >('/v1/inAppPurchaseAvailabilities', {
+        method: 'POST',
+        body: {
+          data: {
+            type: 'inAppPurchaseAvailabilities',
+            attributes: { availableInNewTerritories: true },
+            relationships: {
+              availableTerritories: { data: desiredTerritories },
+              inAppPurchase: {
+                data: { type: 'inAppPurchases', id: purchaseId },
               },
             },
           },
-        })
-        if (!created) throw new Error('Apple did not return the lifetime purchase availability')
-        return created.data
-      }
+        },
+      })
+      if (!created) throw new Error('Apple did not return the lifetime purchase availability')
+      return created.data
+    }
+
+    if (!current) {
+      await this.reporter.ensure(
+        'Apple lifetime availability in all storefronts',
+        current,
+        writeAvailability
+      )
+      return
+    }
+
+    const currentTerritories = await this.listAll<JsonApiResource>(
+      `/v1/inAppPurchaseAvailabilities/${current.id}/availableTerritories?limit=200`
     )
+    const matches =
+      current.attributes.availableInNewTerritories === true &&
+      sameIdentifierSet(currentTerritories, desiredTerritories)
+    if (matches) {
+      this.reporter.ok('Apple lifetime availability in all storefronts')
+    } else if (this.reporter.command === 'verify') {
+      this.reporter.error('Apple lifetime storefront availability differs from config')
+    } else if (this.reporter.command === 'plan') {
+      this.reporter.change('update Apple lifetime availability in all storefronts')
+    } else {
+      await writeAvailability()
+      this.reporter.change('updated Apple lifetime availability in all storefronts')
+    }
   }
 
   private async syncLifetimeAttributes(

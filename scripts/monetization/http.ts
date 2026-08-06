@@ -11,6 +11,17 @@ export class ApiError extends Error {
 const delay = (milliseconds: number): Promise<void> =>
   new Promise((resolve) => setTimeout(resolve, milliseconds))
 
+const retryDelayMilliseconds = (retryAfter: string | null, attempt: number): number => {
+  if (retryAfter !== null) {
+    const seconds = Number(retryAfter)
+    if (Number.isFinite(seconds) && seconds >= 0) return seconds * 1000
+
+    const date = Date.parse(retryAfter)
+    if (Number.isFinite(date)) return Math.max(0, date - Date.now())
+  }
+  return Math.min(1000 * 2 ** attempt, 8000)
+}
+
 export interface JsonRequestOptions {
   method?: 'GET' | 'POST' | 'PATCH' | 'DELETE'
   headers?: Record<string, string>
@@ -48,10 +59,7 @@ export const requestJson = async <T>(
     if (response.status === 404 && allowNotFound) return undefined
 
     if ((response.status === 429 || response.status >= 500) && attempt < retries) {
-      const retryAfter = Number(response.headers.get('retry-after'))
-      const waitMilliseconds = Number.isFinite(retryAfter)
-        ? retryAfter * 1000
-        : Math.min(1000 * 2 ** attempt, 8000)
+      const waitMilliseconds = retryDelayMilliseconds(response.headers.get('retry-after'), attempt)
       await response.arrayBuffer()
       await delay(waitMilliseconds)
       continue
@@ -71,10 +79,7 @@ export const requestBytes = async (url: string, options: BytesRequestOptions): P
     const response = await fetch(url, { method, headers, body })
 
     if ((response.status === 429 || response.status >= 500) && attempt < retries) {
-      const retryAfter = Number(response.headers.get('retry-after'))
-      const waitMilliseconds = Number.isFinite(retryAfter)
-        ? retryAfter * 1000
-        : Math.min(1000 * 2 ** attempt, 8000)
+      const waitMilliseconds = retryDelayMilliseconds(response.headers.get('retry-after'), attempt)
       await response.arrayBuffer()
       await delay(waitMilliseconds)
       continue

@@ -94,6 +94,8 @@ The optional top-level `freeTrial` selects exactly one enabled subscription for 
 trial. The template defaults to a 3-day weekly trial. Set `duration` to `7-days`, `14-days`,
 `1-month`, `2-months`, `3-months`, `6-months`, or `1-year` as needed; change `target` to an
 enabled `monthly` or `yearly` product to move it, or set `freeTrial` to `null` to disable it.
+Set the stable managed offer ID in `google.freeTrialOfferId`; it stays configured while the trial
+is disabled so `monetization:activate` can identify and deactivate the previously managed offer.
 Google eligibility is limited to customers who have never had any subscription in the app,
 which most closely matches Apple's subscription-group eligibility. The paywall reads the
 localized trial details returned by RevenueCat rather than duplicating this duration in UI copy.

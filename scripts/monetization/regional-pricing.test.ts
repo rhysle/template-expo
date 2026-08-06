@@ -59,7 +59,7 @@ const config = (priceUsd = '3.99'): MonetizationConfig => ({
     familySharable: false,
     reviewNote: 'Premium',
   },
-  google: { subscriptionProductId: 'premium' },
+  google: { subscriptionProductId: 'premium', freeTrialOfferId: 'free-trial' },
   revenueCat: {
     entitlementLookupKey: 'premium',
     entitlementDisplayName: 'Premium',
@@ -172,6 +172,91 @@ test('a later price decrease patches the complete matrix and migrates legacy coh
     ).regionalPriceMigrations[0].oldestAllowedPriceVersionTime,
     '1970-01-01T00:00:00Z'
   )
+})
+
+test('Google price verification rejects matching prices that are unavailable to subscribers', async () => {
+  const current = {
+    packageName: 'com.example.app',
+    productId: 'premium',
+    listings: [],
+    basePlans: [
+      {
+        basePlanId: 'weekly',
+        state: 'ACTIVE',
+        regionalConfigs: [
+          { regionCode: 'US', newSubscriberAvailability: false, price: money('3.99') },
+          { regionCode: 'CH', newSubscriberAvailability: true, price: money('2.00') },
+        ],
+        otherRegionsConfig: {
+          usdPrice: money('3.99'),
+          eurPrice: { ...money('3.99'), currencyCode: 'EUR' },
+          newSubscriberAvailability: true,
+        },
+        autoRenewingBasePlanType: { billingPeriodDuration: 'P1W' },
+      },
+    ],
+  }
+  const request: JsonRequester = async <T>(path, options = {}) => {
+    if (path.includes('pricing:convertRegionPrices')) {
+      return conversion((options.body as { price: GoogleMoney }).price) as T
+    }
+    if (path.includes('/subscriptions/premium')) return current as T
+    return undefined
+  }
+  const reporter = new Reporter('prices-verify', { color: false })
+  const client = new GooglePlayClient(
+    config(),
+    { packageName: 'com.example.app', jsonKeyPath: '/unused' },
+    reporter,
+    request
+  )
+  await client.syncPrices()
+  assert.throws(() => reporter.finish(), /monetization configuration issue/)
+})
+
+test('Apple verification rejects an incomplete existing storefront availability', async () => {
+  const request: JsonRequester = async <T>(path) => {
+    if (path === '/v1/subscriptions/sub-1/planAvailabilities?limit=200') {
+      return {
+        data: [
+          {
+            id: 'availability-1',
+            type: 'subscriptionPlanAvailabilities',
+            attributes: { planType: 'UPFRONT', availableInNewTerritories: false },
+          },
+        ],
+      } as T
+    }
+    if (path.includes('/v1/territories')) {
+      return {
+        data: ['USA', 'CAN'].map((id) => ({ type: 'territories', id, attributes: {} })),
+      } as T
+    }
+    if (path.includes('/subscriptionPlanAvailabilities/availability-1/availableTerritories')) {
+      return {
+        data: [{ type: 'territories', id: 'USA', attributes: {} }],
+      } as T
+    }
+    throw new Error(`Unexpected Apple request: ${path}`)
+  }
+  const reporter = new Reporter('verify', { color: false })
+  const client = new AppleStoreClient(
+    { ...config(), stores: { apple: true, google: false, revenueCat: false } },
+    {
+      bundleIdentifier: 'com.example.app',
+      issuerId: 'unused',
+      keyId: 'unused',
+      keyFilepath: '/unused',
+    },
+    reporter,
+    request
+  )
+  await (
+    client as unknown as {
+      ensureSubscriptionAvailability(subscriptionId: string, key: 'weekly'): Promise<void>
+    }
+  ).ensureSubscriptionAvailability('sub-1', 'weekly')
+  assert.throws(() => reporter.finish(), /monetization configuration issue/)
 })
 
 test('Apple later pricing preserves increases but passes decreases to existing subscribers', async () => {

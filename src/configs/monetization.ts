@@ -14,7 +14,6 @@ export const monetizationConfig = {
   freeTrial: {
     target: 'weekly',
     duration: '3-days',
-    googleOfferId: 'free-trial',
   },
 
   stores: {
@@ -76,6 +75,9 @@ export const monetizationConfig = {
 
   google: {
     subscriptionProductId: 'premium',
+    // Kept outside nullable freeTrial so a previously activated offer can still
+    // be identified and deactivated when freeTrial is set to null.
+    freeTrialOfferId: 'free-trial',
   },
 
   revenueCat: {

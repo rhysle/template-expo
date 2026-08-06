@@ -8,6 +8,7 @@ import { APPLE_FREE_TRIAL_DURATION, GOOGLE_FREE_TRIAL_DURATION } from './free-tr
 import { GooglePlayClient } from './google'
 import type { JsonRequester, JsonRequestOptions } from './http'
 import { loadStoreLocalizations } from './localizations'
+import { adjustedPriceUsd, RegionalPricingResolver } from './ppp'
 import { Reporter } from './reporter'
 import type { FreeTrialDuration, MonetizationConfig, SubscriptionProductKey } from './types'
 
@@ -23,8 +24,14 @@ const makeConfig = (
 ): MonetizationConfig => ({
   ...structuredClone(monetizationConfig),
   enabledProducts: ['weekly', 'monthly', 'yearly'],
-  freeTrial: { target, duration, googleOfferId: 'free-trial' },
+  freeTrial: { target, duration },
 })
+
+const BILLING_PERIOD: Record<SubscriptionProductKey, string> = {
+  weekly: 'P1W',
+  monthly: 'P1M',
+  yearly: 'P1Y',
+}
 
 const appleOffer = (
   id: string,
@@ -206,6 +213,8 @@ const googleSubscription = (
   otherRegionsNewSubscriberAvailability: boolean | 'omitted' = true
 ) => {
   const localizations = loadStoreLocalizations()
+  const regionalPricing = new RegionalPricingResolver(config)
+  const canadaMultiplier = regionalPricing.forGoogle('CA').multiplier
   return {
     packageName: 'com.example.app',
     productId: config.google.subscriptionProductId,
@@ -221,7 +230,7 @@ const googleSubscription = (
         {
           regionCode: 'CA',
           newSubscriberAvailability: true,
-          price: money(config.products[key].priceUsd),
+          price: money(adjustedPriceUsd(config.products[key].priceUsd, canadaMultiplier)),
         },
       ],
       otherRegionsConfig: {
@@ -231,7 +240,7 @@ const googleSubscription = (
           ? {}
           : { newSubscriberAvailability: otherRegionsNewSubscriberAvailability }),
       },
-      autoRenewingBasePlanType: { billingPeriodDuration: 'P1M' },
+      autoRenewingBasePlanType: { billingPeriodDuration: BILLING_PERIOD[key] },
     })),
     listings: localizations.map((localization) => ({
       languageCode: localization.googleLocale,
@@ -261,14 +270,14 @@ const googleOffer = (
     packageName: 'com.example.app',
     productId: config.google.subscriptionProductId,
     basePlanId: config.products[key].googleBasePlanId,
-    offerId: overrides.offerId ?? trial.googleOfferId,
+    offerId: overrides.offerId ?? config.google.freeTrialOfferId,
     state,
     phases: [
       {
         recurrenceCount: 1,
         duration: overrides.duration ?? GOOGLE_FREE_TRIAL_DURATION[trial.duration],
         regionalConfigs: regions.map((regionCode) => ({ regionCode, free: {} })),
-        otherRegionsConfig: { free: {} },
+        ...(overrides.futureRegionsAvailable === false ? {} : { otherRegionsConfig: { free: {} } }),
       },
     ],
     targeting: {
@@ -288,6 +297,18 @@ const googleOffer = (
     },
     offerTags: [],
   }
+}
+
+const captureLogs = async (task: () => Promise<void>): Promise<string[]> => {
+  const lines: string[] = []
+  const original = console.log
+  console.log = (value = '') => lines.push(String(value))
+  try {
+    await task()
+  } finally {
+    console.log = original
+  }
+  return lines
 }
 
 const googleRequester = (
@@ -316,8 +337,12 @@ const googleRequester = (
       return { subscriptionOffers: key ? (offers[key] ?? []) : [] } as T
     }
     if (method === 'POST' && path === '/pricing:convertRegionPrices') {
+      const price = (options.body as { price: ReturnType<typeof money> }).price
       return {
-        convertedRegionPrices: {},
+        convertedRegionPrices: {
+          US: { regionCode: 'US', price },
+          CA: { regionCode: 'CA', price },
+        },
         convertedOtherRegionsPrice: { usdPrice: money('1.00'), eurPrice: money('1.00') },
         regionVersion: { version: '2026-01' },
       } as T
@@ -347,7 +372,7 @@ const googleClient = (
 ) => {
   const subscription = googleSubscription(config, otherRegionsNewSubscriberAvailability)
   const mock = googleRequester(subscription, offers)
-  const reporter = new Reporter(command)
+  const reporter = new Reporter(command, { color: false })
   const client = new GooglePlayClient(
     config,
     { packageName: 'com.example.app', jsonKeyPath: '/unused' },
@@ -502,7 +527,6 @@ test('Google apply creates an absent offer as a draft', async () => {
 test('Google apply omits other-region phase pricing when future availability is absent', async () => {
   const state = googleClient(makeConfig(), 'apply', {}, 'omitted')
   await state.client.sync()
-  state.reporter.finish()
   const create = state.calls.find(
     (call) => call.method === 'POST' && call.path.includes('/basePlans/weekly/offers?')
   )
@@ -523,6 +547,30 @@ test('Google plan is read-only when the free-trial offer is missing', async () =
     state.calls.some(
       (call) => call.method !== 'GET' && !call.path.includes('/pricing:convertRegionPrices')
     ),
+    false
+  )
+})
+
+test('Google plan explains a future-region-only free-trial transition', async () => {
+  const config = makeConfig()
+  const state = googleClient(config, 'plan', {
+    weekly: [
+      googleOffer(config, 'weekly', 'ACTIVE', {
+        futureRegionsAvailable: false,
+      }),
+    ],
+  })
+  const lines = await captureLogs(async () => {
+    await state.client.sync()
+    state.reporter.finish()
+  })
+
+  assert.equal(
+    lines.includes('  + Would update Google weekly free-trial future-region availability'),
+    true
+  )
+  assert.equal(
+    lines.some((line) => line.includes('transition Google weekly')),
     false
   )
 })
@@ -592,6 +640,49 @@ test('Google disables the default managed trial through confirmed activation', a
     state.calls.some((call) => call.path.endsWith(':deactivate')),
     true
   )
+})
+
+test('Google disables a custom managed trial through confirmed activation', async () => {
+  const enabled = makeConfig()
+  enabled.freeTrial = { target: 'weekly', duration: '3-days' }
+  enabled.google.freeTrialOfferId = 'intro-2026'
+  const active = googleOffer(enabled, 'weekly', 'ACTIVE')
+  const disabled = makeConfig()
+  disabled.freeTrial = null
+  disabled.google.freeTrialOfferId = 'intro-2026'
+  const state = googleClient(disabled, 'activate', { weekly: [active] })
+  await state.client.activate()
+  state.reporter.finish()
+  assert.equal(
+    state.calls.some(
+      (call) => call.path.includes('/offers/intro-2026:') && call.path.endsWith(':deactivate')
+    ),
+    true
+  )
+})
+
+test('Google verify rejects a configured base plan with the wrong billing period', async () => {
+  const config = makeConfig()
+  const state = googleClient(config, 'verify', {
+    weekly: [googleOffer(config, 'weekly', 'ACTIVE')],
+  })
+  const subscription = state.client as unknown as {
+    getSubscription(): Promise<ReturnType<typeof googleSubscription>>
+  }
+  const originalGetSubscription = subscription.getSubscription.bind(state.client)
+  subscription.getSubscription = async () => {
+    const value = await originalGetSubscription()
+    return {
+      ...value,
+      basePlans: value.basePlans.map((plan) =>
+        plan.basePlanId === config.products.weekly.googleBasePlanId
+          ? { ...plan, autoRenewingBasePlanType: { billingPeriodDuration: 'P1M' } }
+          : plan
+      ),
+    }
+  }
+  await state.client.sync()
+  assert.throws(() => state.reporter.finish(), /monetization configuration issue/)
 })
 
 for (const [label, overrides] of [
