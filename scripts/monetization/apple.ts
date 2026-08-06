@@ -297,6 +297,20 @@ export class AppleStoreClient {
     const keys = enabledSubscriptionKeys(this.config)
     if (keys.length === 0) {
       this.reporter.info('No Apple subscriptions enabled')
+      const groups = await this.listAll<JsonApiResource<{ referenceName: string }>>(
+        `/v1/apps/${this.requiredAppId()}/subscriptionGroups?limit=200`
+      )
+      const group = groups.find(
+        (item) => item.attributes.referenceName === this.config.apple.subscriptionGroupReferenceName
+      )
+      if (!group) {
+        this.reporter.ok('Apple free trial is disabled')
+        return
+      }
+      const subscriptions = await this.listAll<JsonApiResource<SubscriptionAttributes>>(
+        `/v1/subscriptionGroups/${group.id}/subscriptions?limit=200`
+      )
+      await this.reconcileFreeTrial(this.configuredSubscriptions(subscriptions))
       return
     }
 

@@ -512,6 +512,36 @@ test('Apple verify accepts exact all-storefront trial coverage', async () => {
   verification.reporter.finish()
 })
 
+test('Apple verify audits an active trial when only lifetime is enabled', async () => {
+  const config = makeConfig()
+  config.enabledProducts = ['lifetime']
+  config.freeTrial = null
+  const mock = appleRequester(config, {
+    weekly: [appleOffer('old-trial', 'THREE_DAYS')],
+  })
+  const reporter = new Reporter('verify', { color: false })
+  const client = new AppleStoreClient(
+    config,
+    {
+      bundleIdentifier: 'com.example.app',
+      issuerId: 'issuer',
+      keyId: 'key',
+      keyFilepath: '/unused',
+    },
+    reporter,
+    mock.request
+  )
+  const subscriptions = client as unknown as {
+    appId: string
+    syncSubscriptions(): Promise<void>
+  }
+  subscriptions.appId = 'app-1'
+
+  await subscriptions.syncSubscriptions()
+
+  assert.throws(() => reporter.finish(), /monetization configuration issue/)
+})
+
 test('Google apply creates an absent offer as a draft', async () => {
   const state = googleClient(makeConfig(), 'apply', {})
   await state.client.sync()
@@ -659,6 +689,22 @@ test('Google disables a custom managed trial through confirmed activation', asyn
     ),
     true
   )
+})
+
+test('Google verify audits an active trial when only lifetime is enabled', async () => {
+  const enabled = makeConfig()
+  const active = googleOffer(enabled, 'weekly', 'ACTIVE')
+  const config = makeConfig()
+  config.enabledProducts = ['lifetime']
+  config.freeTrial = null
+  const state = googleClient(config, 'verify', { weekly: [active] })
+  const subscriptions = state.client as unknown as {
+    syncSubscription(): Promise<void>
+  }
+
+  await subscriptions.syncSubscription()
+
+  assert.throws(() => state.reporter.finish(), /monetization configuration issue/)
 })
 
 test('Google verify rejects a configured base plan with the wrong billing period', async () => {

@@ -1,5 +1,6 @@
 import { enabledSubscriptionKeys, isEnabled } from './config'
 import { requestJson } from './http'
+import type { JsonRequester } from './http'
 import { Reporter } from './reporter'
 import type { MonetizationConfig, ProductKey, StoreEnvironment } from './types'
 
@@ -60,7 +61,7 @@ interface DesiredRevenueCatProduct {
   logicalKey: ProductKey
   appId: string
   storeIdentifier: string
-  type: 'subscription' | 'non_consumable'
+  type: 'subscription' | 'one_time' | 'non_consumable'
   displayName: string
 }
 
@@ -68,13 +69,17 @@ export class RevenueCatClient {
   constructor(
     private readonly config: MonetizationConfig,
     private readonly environment: NonNullable<StoreEnvironment['revenueCat']>,
-    private readonly reporter: Reporter
+    private readonly reporter: Reporter,
+    private readonly requestOverride?: JsonRequester
   ) {}
 
   private async request<T>(
     pathOrUrl: string,
     options: Parameters<typeof requestJson<T>>[1] = {}
   ): Promise<T | undefined> {
+    if (this.requestOverride) {
+      return this.requestOverride<T>(pathOrUrl, options)
+    }
     const url = pathOrUrl.startsWith('http') ? pathOrUrl : `${API_ROOT}${pathOrUrl}`
     return requestJson<T>(url, {
       ...options,
@@ -215,7 +220,7 @@ export class RevenueCatClient {
           logicalKey: 'lifetime',
           appId: apps.googleAppId,
           storeIdentifier: product.googleProductId,
-          type: 'non_consumable',
+          type: 'one_time',
           displayName: `${product.referenceName} (Google Play)`,
         })
       }
@@ -238,23 +243,52 @@ export class RevenueCatClient {
       let product = existing.find(
         (item) => item.app_id === desired.appId && item.store_identifier === desired.storeIdentifier
       )
-      product = await this.reporter.ensure(
-        `RevenueCat ${desired.displayName} product`,
-        product,
-        async () => {
-          const created = await this.request<RevenueCatProduct>(`/projects/${projectId}/products`, {
-            method: 'POST',
-            body: {
-              app_id: desired.appId,
-              store_identifier: desired.storeIdentifier,
-              type: desired.type,
-              display_name: desired.displayName,
-            },
-          })
-          if (!created) throw new Error(`RevenueCat did not return ${desired.displayName}`)
-          return created
+      if (!product) {
+        product = await this.reporter.ensure(
+          `RevenueCat ${desired.displayName} product`,
+          product,
+          async () => {
+            const created = await this.request<RevenueCatProduct>(
+              `/projects/${projectId}/products`,
+              {
+                method: 'POST',
+                body: {
+                  app_id: desired.appId,
+                  store_identifier: desired.storeIdentifier,
+                  type: desired.type,
+                  display_name: desired.displayName,
+                },
+              }
+            )
+            if (!created) throw new Error(`RevenueCat did not return ${desired.displayName}`)
+            return created
+          }
+        )
+      } else if (product.type !== desired.type) {
+        this.reporter.error(
+          `RevenueCat ${desired.displayName} product has immutable type ${product.type}; expected ${desired.type}. Use a new store product identifier.`
+        )
+        continue
+      } else if (product.display_name !== desired.displayName) {
+        if (this.reporter.command === 'apply') {
+          const updated = await this.request<RevenueCatProduct>(
+            `/projects/${projectId}/products/${product.id}`,
+            {
+              method: 'POST',
+              body: { display_name: desired.displayName },
+            }
+          )
+          if (!updated) throw new Error(`RevenueCat did not return ${desired.displayName}`)
+          product = updated
+          this.reporter.change(`updated RevenueCat ${desired.displayName} product display name`)
+        } else if (this.reporter.command === 'verify') {
+          this.reporter.error(`RevenueCat ${desired.displayName} product display name differs`)
+        } else {
+          this.reporter.change(`update RevenueCat ${desired.displayName} product display name`)
         }
-      )
+      } else {
+        this.reporter.ok(`RevenueCat ${desired.displayName} product`)
+      }
       if (product) resolved.set(key, product)
     }
 
@@ -268,24 +302,45 @@ export class RevenueCatClient {
       `/projects/${projectId}/entitlements?limit=100`
     )
     let entitlement = entitlements.find((item) => item.lookup_key === desired.entitlementLookupKey)
-    entitlement = await this.reporter.ensure(
-      'RevenueCat premium entitlement',
-      entitlement,
-      async () => {
-        const created = await this.request<RevenueCatEntitlement>(
-          `/projects/${projectId}/entitlements`,
+    if (!entitlement) {
+      entitlement = await this.reporter.ensure(
+        'RevenueCat premium entitlement',
+        entitlement,
+        async () => {
+          const created = await this.request<RevenueCatEntitlement>(
+            `/projects/${projectId}/entitlements`,
+            {
+              method: 'POST',
+              body: {
+                lookup_key: desired.entitlementLookupKey,
+                display_name: desired.entitlementDisplayName,
+              },
+            }
+          )
+          if (!created) throw new Error('RevenueCat did not return the premium entitlement')
+          return created
+        }
+      )
+    } else if (entitlement.display_name !== desired.entitlementDisplayName) {
+      if (this.reporter.command === 'apply') {
+        const updated = await this.request<RevenueCatEntitlement>(
+          `/projects/${projectId}/entitlements/${entitlement.id}`,
           {
             method: 'POST',
-            body: {
-              lookup_key: desired.entitlementLookupKey,
-              display_name: desired.entitlementDisplayName,
-            },
+            body: { display_name: desired.entitlementDisplayName },
           }
         )
-        if (!created) throw new Error('RevenueCat did not return the premium entitlement')
-        return created
+        if (!updated) throw new Error('RevenueCat did not return the premium entitlement')
+        entitlement = updated
+        this.reporter.change('updated RevenueCat premium entitlement display name')
+      } else if (this.reporter.command === 'verify') {
+        this.reporter.error('RevenueCat premium entitlement display name differs')
+      } else {
+        this.reporter.change('update RevenueCat premium entitlement display name')
       }
-    )
+    } else {
+      this.reporter.ok('RevenueCat premium entitlement')
+    }
 
     if (!entitlement) {
       this.reporter.change('attach enabled products to RevenueCat premium entitlement')
@@ -335,17 +390,19 @@ export class RevenueCatClient {
       `/projects/${projectId}/offerings?limit=100`
     )
     let offering = offerings.find((item) => item.lookup_key === desired.offeringLookupKey)
-    offering = await this.reporter.ensure('RevenueCat default offering', offering, async () => {
-      const created = await this.request<RevenueCatOffering>(`/projects/${projectId}/offerings`, {
-        method: 'POST',
-        body: {
-          lookup_key: desired.offeringLookupKey,
-          display_name: desired.offeringDisplayName,
-        },
+    if (!offering) {
+      offering = await this.reporter.ensure('RevenueCat default offering', offering, async () => {
+        const created = await this.request<RevenueCatOffering>(`/projects/${projectId}/offerings`, {
+          method: 'POST',
+          body: {
+            lookup_key: desired.offeringLookupKey,
+            display_name: desired.offeringDisplayName,
+          },
+        })
+        if (!created) throw new Error('RevenueCat did not return the default offering')
+        return created
       })
-      if (!created) throw new Error('RevenueCat did not return the default offering')
-      return created
-    })
+    }
 
     if (!offering) {
       for (const key of this.config.enabledProducts) {
@@ -354,22 +411,28 @@ export class RevenueCatClient {
       return
     }
 
-    if (desired.makeOfferingCurrent && !offering.is_current) {
+    const offeringDisplayNameDiffers = offering.display_name !== desired.offeringDisplayName
+    const offeringCurrentDiffers = desired.makeOfferingCurrent && !offering.is_current
+    if (offeringDisplayNameDiffers || offeringCurrentDiffers) {
       if (this.reporter.command === 'apply') {
+        const body = {
+          ...(offeringDisplayNameDiffers ? { display_name: desired.offeringDisplayName } : {}),
+          ...(offeringCurrentDiffers ? { is_current: true } : {}),
+        }
         const updated = await this.request<RevenueCatOffering>(
           `/projects/${projectId}/offerings/${offering.id}`,
-          { method: 'POST', body: { is_current: true } }
+          { method: 'POST', body }
         )
         if (!updated) throw new Error('RevenueCat did not return the updated default offering')
         offering = updated
-        this.reporter.change('set RevenueCat default offering as current')
+        this.reporter.change('updated RevenueCat default offering metadata')
       } else if (this.reporter.command === 'verify') {
-        this.reporter.error('RevenueCat default offering is not current')
+        this.reporter.error('RevenueCat default offering metadata differs')
       } else {
-        this.reporter.change('set RevenueCat default offering as current')
+        this.reporter.change('update RevenueCat default offering metadata')
       }
-    } else if (desired.makeOfferingCurrent) {
-      this.reporter.ok('RevenueCat default offering is current')
+    } else {
+      this.reporter.ok('RevenueCat default offering')
     }
 
     const packages = await this.listAll<RevenueCatPackage>(
@@ -377,32 +440,63 @@ export class RevenueCatClient {
     )
     for (const [index, key] of this.config.enabledProducts.entries()) {
       const productConfig = this.config.products[key]
+      const readPosition = index
+      const writePosition = index + 1
       let packageItem = packages.find(
         (item) => item.lookup_key === productConfig.revenueCatPackageLookupKey
       )
-      packageItem = await this.reporter.ensure(
-        `RevenueCat ${key} package`,
-        packageItem,
-        async () => {
-          const created = await this.request<RevenueCatPackage>(
-            `/projects/${projectId}/offerings/${offering.id}/packages`,
-            {
-              method: 'POST',
-              body: {
-                lookup_key: productConfig.revenueCatPackageLookupKey,
-                display_name: productConfig.referenceName,
-                position: index + 1,
-              },
-            }
-          )
-          if (!created) throw new Error(`RevenueCat did not return the ${key} package`)
-          return created
-        }
-      )
+      if (!packageItem) {
+        packageItem = await this.reporter.ensure(
+          `RevenueCat ${key} package`,
+          packageItem,
+          async () => {
+            const created = await this.request<RevenueCatPackage>(
+              `/projects/${projectId}/offerings/${offering.id}/packages`,
+              {
+                method: 'POST',
+                body: {
+                  lookup_key: productConfig.revenueCatPackageLookupKey,
+                  display_name: productConfig.referenceName,
+                  position: writePosition,
+                },
+              }
+            )
+            if (!created) throw new Error(`RevenueCat did not return the ${key} package`)
+            return created
+          }
+        )
+      }
 
       if (!packageItem) {
         this.reporter.change(`attach Apple and Google ${key} products to RevenueCat package`)
         continue
+      }
+
+      const packageMetadataDiffers =
+        packageItem.display_name !== productConfig.referenceName ||
+        packageItem.position !== readPosition
+      if (packageMetadataDiffers) {
+        if (this.reporter.command === 'apply') {
+          const updated = await this.request<RevenueCatPackage>(
+            `/projects/${projectId}/packages/${packageItem.id}`,
+            {
+              method: 'POST',
+              body: {
+                display_name: productConfig.referenceName,
+                position: writePosition,
+              },
+            }
+          )
+          if (!updated) throw new Error(`RevenueCat did not return the updated ${key} package`)
+          packageItem = updated
+          this.reporter.change(`updated RevenueCat ${key} package metadata`)
+        } else if (this.reporter.command === 'verify') {
+          this.reporter.error(`RevenueCat ${key} package metadata differs`)
+        } else {
+          this.reporter.change(`update RevenueCat ${key} package metadata`)
+        }
+      } else {
+        this.reporter.ok(`RevenueCat ${key} package`)
       }
       await this.syncPackageProducts(packageItem, key, products, apps)
     }

@@ -789,6 +789,12 @@ export class GooglePlayClient {
     const keys = enabledSubscriptionKeys(this.config)
     if (keys.length === 0) {
       this.reporter.info('No Google subscriptions enabled')
+      const subscription = await this.getSubscription()
+      if (!subscription) {
+        this.reporter.ok('Google free trial is disabled')
+        return
+      }
+      await this.reconcileFreeTrial(subscription)
       return
     }
 
