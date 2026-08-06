@@ -28,6 +28,8 @@ npm run lint
 npm run check:type
 npm run check:i18n
 npm run check
+npm run check:monetization
+npm run test:monetization
 npm run format
 
 npm run prebuild
@@ -49,7 +51,7 @@ npm run monetization:prices:verify
 npm run monetization:ppp:refresh -- --year 2025
 ```
 
-Use `npm run check` before handing off code. Run a clean prebuild and test the affected native platform after changing native dependencies, `app.json`, a config plugin, or ads/font setup.
+Use `npm run check` before handing off code. It intentionally runs only linting and the app TypeScript check. Run `npm run check:monetization` and `npm run test:monetization` separately after changing `scripts/monetization/` or `src/configs/monetization.ts`. Run a clean prebuild and test the affected native platform after changing native dependencies, `app.json`, a config plugin, or ads/font setup.
 
 ## Before Building Product Features
 
@@ -225,5 +227,6 @@ Keep API keys, Play service-account JSON, reviewer contact details, and local en
 1. Run the narrowest relevant checks, and `npm run check` for normal code changes.
 2. Test the changed route or integration on its target platform when feasible.
 3. Run `npm run check:i18n` after changing English product copy.
-4. Regenerate and test native projects after native configuration changes.
-5. Update this file and `README.md` when a reusable architectural convention changes.
+4. Run `npm run check:monetization` and `npm run test:monetization` after changing monetization scripts or configuration.
+5. Regenerate and test native projects after native configuration changes.
+6. Update this file and `README.md` when a reusable architectural convention changes.
