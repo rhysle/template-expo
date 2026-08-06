@@ -1,6 +1,7 @@
 export type ProductKey = 'weekly' | 'monthly' | 'yearly' | 'lifetime'
 export type SubscriptionProductKey = Exclude<ProductKey, 'lifetime'>
-export type Command = 'plan' | 'apply' | 'verify' | 'activate'
+export type Command =
+  'plan' | 'apply' | 'verify' | 'activate' | 'prices-plan' | 'prices-apply' | 'prices-verify'
 export type FreeTrialDuration =
   '3-days' | '7-days' | '14-days' | '1-month' | '2-months' | '3-months' | '6-months' | '1-year'
 
@@ -37,6 +38,14 @@ export interface MonetizationConfig {
     google: boolean
     revenueCat: boolean
   }
+  regionalPricing:
+    | { strategy: 'store-equalized' }
+    | {
+        strategy: 'ppp-bands'
+        dataset: string
+        bands: readonly number[]
+        countryOverrides: Readonly<Record<string, number>>
+      }
   products: {
     weekly: SubscriptionProductConfig
     monthly: SubscriptionProductConfig
@@ -59,6 +68,46 @@ export interface MonetizationConfig {
     offeringDisplayName: string
     makeOfferingCurrent: boolean
   }
+}
+
+export interface PppCountryData {
+  iso2: string
+  iso3: string
+  name: string
+  sourceYear: number
+  pppConversionFactor: number
+  officialExchangeRate: number
+  usPppConversionFactor: number
+  usOfficialExchangeRate: number
+  normalizedRatio: number
+}
+
+export interface PppSnapshot {
+  id: string
+  source: 'World Bank World Development Indicators'
+  license: 'CC BY-4.0'
+  sourceUrl: 'https://api.worldbank.org/v2/country/all/indicator'
+  licenseUrl: 'https://datacatalog.worldbank.org/public-licenses#cc-by'
+  targetYear: number
+  fallbackStartYear: number
+  retrievedAt: string
+  worldBankLastUpdated: string
+  indicators: {
+    pppConversionFactor: 'PA.NUS.PPP'
+    officialExchangeRate: 'PA.NUS.FCRF'
+  }
+  countries: PppCountryData[]
+}
+
+export interface RegionalPricingAssignment {
+  iso2?: string
+  iso3?: string
+  countryName?: string
+  sourceYear?: number
+  rawRatio?: number
+  multiplier: number
+  overridden: boolean
+  fallback: boolean
 }
 
 export interface AppleProductLocalization {

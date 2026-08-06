@@ -4,11 +4,20 @@ import { GOOGLE_FREE_TRIAL_DURATION } from './free-trial'
 import { appendQuery, requestJson } from './http'
 import type { JsonRequester } from './http'
 import { loadStoreLocalizations } from './localizations'
+import {
+  adjustedPriceUsd,
+  formatMoney,
+  moneyEquals,
+  moneyToNanos,
+  RegionalPricingResolver,
+  validateMoneyPrecision,
+} from './ppp'
 import { Reporter } from './reporter'
 import type {
   GoogleConvertedPrices,
   GoogleMoney,
   MonetizationConfig,
+  RegionalPricingAssignment,
   StoreLocalization,
   StoreEnvironment,
   SubscriptionProductKey,
@@ -121,6 +130,15 @@ interface GoogleOneTimeProduct {
   purchaseOptions: GooglePurchaseOption[]
 }
 
+interface GoogleRegionalPriceMatrix {
+  regionalConfigs: Array<{ regionCode: string; price: GoogleMoney }>
+  otherRegions: GoogleConvertedPrices['convertedOtherRegionsPrice']
+  regionVersion: { version: string }
+  fallbackRegions: string[]
+  olderSourceYearRegions: string[]
+  assignments: Map<string, RegionalPricingAssignment>
+}
+
 const BILLING_PERIOD: Record<SubscriptionProductKey, string> = {
   weekly: 'P1W',
   monthly: 'P1M',
@@ -172,6 +190,7 @@ export class GooglePlayClient {
   private readonly auth: GoogleAuth | undefined
   private readonly localizations: StoreLocalization[]
   private readonly convertedPriceCache = new Map<string, GoogleConvertedPrices>()
+  private readonly regionalPricing: RegionalPricingResolver
 
   constructor(
     private readonly config: MonetizationConfig,
@@ -181,6 +200,7 @@ export class GooglePlayClient {
   ) {
     this.auth = requestOverride ? undefined : new GoogleAuth(environment.jsonKeyPath)
     this.localizations = loadStoreLocalizations()
+    this.regionalPricing = new RegionalPricingResolver(config)
   }
 
   private async request<T>(
@@ -214,6 +234,230 @@ export class GooglePlayClient {
     await this.activateLifetimePurchase()
   }
 
+  async syncPrices(): Promise<void> {
+    this.reporter.section('Google Play regional prices')
+    await this.reconcileSubscriptionPrices()
+    await this.reconcileLifetimePrices()
+  }
+
+  private priceDifferences(
+    currentConfigs: Array<{ regionCode: string; price: GoogleMoney }>,
+    desiredConfigs: Array<{ regionCode: string; price: GoogleMoney }>
+  ): {
+    changed: string[]
+    increased: string[]
+    decreased: string[]
+  } {
+    const current = new Map(currentConfigs.map((item) => [item.regionCode, item.price]))
+    const changed: string[] = []
+    const increased: string[] = []
+    const decreased: string[] = []
+    for (const desired of desiredConfigs) {
+      const existing = current.get(desired.regionCode)
+      if (!existing) {
+        changed.push(desired.regionCode)
+        continue
+      }
+      if (moneyEquals(existing, desired.price)) continue
+      changed.push(desired.regionCode)
+      if (existing.currencyCode !== desired.price.currencyCode) continue
+      const direction = moneyToNanos(desired.price) - moneyToNanos(existing)
+      if (direction > 0n) increased.push(desired.regionCode)
+      if (direction < 0n) decreased.push(desired.regionCode)
+    }
+    return { changed, increased, decreased }
+  }
+
+  private async reconcileSubscriptionPrices(): Promise<void> {
+    const keys = enabledSubscriptionKeys(this.config)
+    if (keys.length === 0) return
+    let subscription = await this.getSubscription()
+    if (!subscription) {
+      this.reporter.error('Missing: Google subscription; run monetization:apply first')
+      return
+    }
+    for (const key of keys) {
+      const desired = this.config.products[key]
+      const plan = subscription.basePlans.find(
+        (item) => item.basePlanId === desired.googleBasePlanId
+      )
+      if (!plan) {
+        this.reporter.error(`Missing: Google ${key} base plan; run monetization:apply first`)
+        continue
+      }
+      const matrix = await this.prepareRegionalPriceMatrix(desired.priceUsd)
+      this.reportPppCoverage(`Google ${key}`, matrix)
+      const differences = this.priceDifferences(plan.regionalConfigs, matrix.regionalConfigs)
+      const otherRegionsDiffer =
+        !moneyEquals(plan.otherRegionsConfig.usdPrice, matrix.otherRegions.usdPrice) ||
+        !moneyEquals(plan.otherRegionsConfig.eurPrice, matrix.otherRegions.eurPrice)
+      if (differences.changed.length === 0 && !otherRegionsDiffer) {
+        this.reporter.ok(`Google ${key} prices match ${matrix.regionalConfigs.length} region(s)`)
+        continue
+      }
+      const sampleRegion = differences.changed[0]
+      const oldPrice = sampleRegion
+        ? plan.regionalConfigs.find((item) => item.regionCode === sampleRegion)?.price
+        : undefined
+      const newPrice = sampleRegion
+        ? matrix.regionalConfigs.find((item) => item.regionCode === sampleRegion)?.price
+        : undefined
+      const assignment = sampleRegion ? matrix.assignments.get(sampleRegion) : undefined
+      const pricingDetails = assignment
+        ? `band ${assignment.multiplier}, anchor $${adjustedPriceUsd(desired.priceUsd, assignment.multiplier)}, ` +
+          `${assignment.rawRatio === undefined ? 'ratio unavailable' : `ratio ${assignment.rawRatio.toFixed(3)}`}, ` +
+          `${assignment.sourceYear === undefined ? 'no source year' : `source ${assignment.sourceYear}`}, ` +
+          `${assignment.fallback ? '1.0 fallback' : assignment.overridden ? 'override' : 'automatic'}`
+        : ''
+      const summary =
+        `update Google ${key} in ${differences.changed.length + (otherRegionsDiffer ? 1 : 0)} region group(s) ` +
+        `(${differences.increased.length} increase, ${differences.decreased.length} decrease; ` +
+        `${sampleRegion ? `${sampleRegion}: ${oldPrice ? formatMoney(oldPrice) : 'missing'} → ${newPrice ? formatMoney(newPrice) : 'missing'}; ${pricingDetails}` : 'future-region prices changed'}). ` +
+        'Increases retain legacy cohorts; decreases migrate legacy cohorts.'
+      if (this.reporter.command === 'prices-verify') {
+        this.reporter.error(summary)
+        continue
+      }
+      if (this.reporter.command === 'prices-plan') {
+        this.reporter.change(summary)
+        const currentByRegion = new Map(
+          plan.regionalConfigs.map((item) => [item.regionCode, item.price])
+        )
+        for (const regionCode of differences.changed) {
+          const existing = currentByRegion.get(regionCode)
+          const target = matrix.regionalConfigs.find((item) => item.regionCode === regionCode)
+          const itemAssignment = matrix.assignments.get(regionCode)
+          if (!target || !itemAssignment) continue
+          this.reporter.info(
+            `${regionCode}: ${existing ? formatMoney(existing) : 'missing'} → ${formatMoney(target.price)}; ` +
+              `source ${itemAssignment.sourceYear ?? 'none'}, ratio ${itemAssignment.rawRatio?.toFixed(3) ?? 'unavailable'}, ` +
+              `band ${itemAssignment.multiplier}, anchor $${adjustedPriceUsd(desired.priceUsd, itemAssignment.multiplier)}, ` +
+              `${itemAssignment.fallback ? '1.0 fallback' : itemAssignment.overridden ? 'override' : 'automatic'}, ` +
+              `${differences.decreased.includes(regionCode) ? 'legacy cohorts migrate' : 'legacy cohorts retained'}`
+          )
+        }
+        continue
+      }
+
+      const replacement = this.buildBasePlan(key, matrix)
+      const migrationCutoff = new Date().toISOString()
+      const basePlans = subscription.basePlans.map((item) =>
+        item.basePlanId === plan.basePlanId ? replacement : withoutState(item)
+      )
+      const url = appendQuery(
+        `${API_ROOT}/${encodeURIComponent(this.environment.packageName)}/subscriptions/${encodeURIComponent(subscription.productId)}`,
+        {
+          updateMask: 'basePlans',
+          'regionsVersion.version': matrix.regionVersion.version,
+        }
+      )
+      const updated = await this.request<GoogleSubscription>(url, {
+        method: 'PATCH',
+        body: {
+          packageName: subscription.packageName,
+          productId: subscription.productId,
+          basePlans,
+        },
+      })
+      if (!updated) throw new Error(`Google did not return updated ${key} regional prices`)
+      subscription = updated
+      if (differences.decreased.length > 0) {
+        await this.request(
+          `/subscriptions/${encodeURIComponent(subscription.productId)}/basePlans/${encodeURIComponent(plan.basePlanId)}:migratePrices`,
+          {
+            method: 'POST',
+            body: {
+              regionalPriceMigrations: differences.decreased.map((regionCode) => ({
+                regionCode,
+                oldestAllowedPriceVersionTime: migrationCutoff,
+              })),
+              regionsVersion: matrix.regionVersion,
+            },
+          }
+        )
+      }
+      this.reporter.change(summary)
+    }
+  }
+
+  private async reconcileLifetimePrices(): Promise<void> {
+    if (!isEnabled('lifetime', this.config)) return
+    const desired = this.config.products.lifetime
+    const purchase = await this.getLifetimePurchase()
+    const option = purchase?.purchaseOptions.find(
+      (item) => item.purchaseOptionId === desired.googlePurchaseOptionId
+    )
+    if (!purchase || !option) {
+      this.reporter.error('Missing: Google lifetime purchase option; run monetization:apply first')
+      return
+    }
+    const matrix = await this.prepareRegionalPriceMatrix(desired.priceUsd)
+    this.reportPppCoverage('Google lifetime', matrix)
+    const differences = this.priceDifferences(
+      option.regionalPricingAndAvailabilityConfigs,
+      matrix.regionalConfigs
+    )
+    const otherRegionsDiffer =
+      !moneyEquals(option.newRegionsConfig.usdPrice, matrix.otherRegions.usdPrice) ||
+      !moneyEquals(option.newRegionsConfig.eurPrice, matrix.otherRegions.eurPrice)
+    if (differences.changed.length === 0 && !otherRegionsDiffer) {
+      this.reporter.ok(`Google lifetime prices match ${matrix.regionalConfigs.length} region(s)`)
+      return
+    }
+    const summary = `update Google lifetime in ${differences.changed.length + (otherRegionsDiffer ? 1 : 0)} region group(s) (future purchases only)`
+    if (this.reporter.command === 'prices-verify') {
+      this.reporter.error(summary)
+      return
+    }
+    if (this.reporter.command === 'prices-plan') {
+      this.reporter.change(summary)
+      const currentByRegion = new Map(
+        option.regionalPricingAndAvailabilityConfigs.map((item) => [item.regionCode, item.price])
+      )
+      for (const regionCode of differences.changed) {
+        const existing = currentByRegion.get(regionCode)
+        const target = matrix.regionalConfigs.find((item) => item.regionCode === regionCode)
+        const assignment = matrix.assignments.get(regionCode)
+        if (!target || !assignment) continue
+        this.reporter.info(
+          `${regionCode}: ${existing ? formatMoney(existing) : 'missing'} → ${formatMoney(target.price)}; ` +
+            `source ${assignment.sourceYear ?? 'none'}, ratio ${assignment.rawRatio?.toFixed(3) ?? 'unavailable'}, band ${assignment.multiplier}, ` +
+            `anchor $${adjustedPriceUsd(desired.priceUsd, assignment.multiplier)}, ${assignment.fallback ? '1.0 fallback' : assignment.overridden ? 'override' : 'automatic'}, future purchases only`
+        )
+      }
+      return
+    }
+    const replacement: GooglePurchaseOption = {
+      ...option,
+      regionalPricingAndAvailabilityConfigs: matrix.regionalConfigs.map((item) => ({
+        ...item,
+        availability: 'AVAILABLE',
+      })),
+      newRegionsConfig: {
+        ...matrix.otherRegions,
+        availability: 'AVAILABLE',
+      },
+    }
+    const url = appendQuery(
+      `${API_ROOT}/${encodeURIComponent(this.environment.packageName)}/onetimeproducts/${encodeURIComponent(purchase.productId)}`,
+      {
+        updateMask: 'purchaseOptions',
+        'regionsVersion.version': matrix.regionVersion.version,
+      }
+    )
+    await this.request<GoogleOneTimeProduct>(url, {
+      method: 'PATCH',
+      body: {
+        packageName: purchase.packageName,
+        productId: purchase.productId,
+        purchaseOptions: purchase.purchaseOptions.map((item) =>
+          item.purchaseOptionId === option.purchaseOptionId ? replacement : item
+        ),
+      },
+    })
+    this.reporter.change(summary)
+  }
+
   private async convertPrice(priceUsd: string): Promise<GoogleConvertedPrices> {
     const cached = this.convertedPriceCache.get(priceUsd)
     if (cached) return cached
@@ -226,20 +470,88 @@ export class GooglePlayClient {
     return result
   }
 
+  private async prepareRegionalPriceMatrix(priceUsd: string): Promise<GoogleRegionalPriceMatrix> {
+    const baseline = await this.convertPrice(priceUsd)
+    const baselineRegions = Object.values(baseline.convertedRegionPrices)
+    const assignments = new Map(
+      baselineRegions.map((item) => [
+        item.regionCode,
+        this.regionalPricing.forGoogle(item.regionCode),
+      ])
+    )
+    const multipliers = this.regionalPricing.usedMultipliers(assignments.values())
+    const convertedByMultiplier = new Map<number, GoogleConvertedPrices>()
+    await Promise.all(
+      multipliers.map(async (multiplier) => {
+        const converted = await this.convertPrice(adjustedPriceUsd(priceUsd, multiplier))
+        if (converted.regionVersion.version !== baseline.regionVersion.version) {
+          throw new Error('Google region versions changed while preparing PPP prices; retry')
+        }
+        convertedByMultiplier.set(multiplier, converted)
+      })
+    )
+
+    const regionalConfigs = baselineRegions.map((baselineRegion) => {
+      const assignment = assignments.get(baselineRegion.regionCode)
+      if (!assignment)
+        throw new Error(`Missing Google pricing assignment ${baselineRegion.regionCode}`)
+      const converted = convertedByMultiplier.get(assignment.multiplier)?.convertedRegionPrices[
+        baselineRegion.regionCode
+      ]
+      if (!converted) {
+        throw new Error(
+          `Google did not return ${baselineRegion.regionCode} price for PPP band ${assignment.multiplier}`
+        )
+      }
+      validateMoneyPrecision(converted.price)
+      return { regionCode: baselineRegion.regionCode, price: converted.price }
+    })
+
+    const targetYear = this.regionalPricing.snapshot?.targetYear
+    return {
+      regionalConfigs,
+      otherRegions: baseline.convertedOtherRegionsPrice,
+      regionVersion: baseline.regionVersion,
+      fallbackRegions: [...assignments]
+        .filter(([, assignment]) => assignment.fallback)
+        .map(([region]) => region),
+      olderSourceYearRegions: [...assignments]
+        .filter(([, assignment]) =>
+          Boolean(targetYear && assignment.sourceYear && assignment.sourceYear < targetYear)
+        )
+        .map(([region]) => region),
+      assignments,
+    }
+  }
+
+  private reportPppCoverage(label: string, matrix: GoogleRegionalPriceMatrix): void {
+    if (this.config.regionalPricing.strategy === 'store-equalized') return
+    if (matrix.olderSourceYearRegions.length > 0) {
+      this.reporter.info(
+        `${label} PPP uses fallback source years in ${matrix.olderSourceYearRegions.length} region(s)`
+      )
+    }
+    if (matrix.fallbackRegions.length > 0) {
+      this.reporter.info(
+        `${label} PPP uses 1.0 fallback in ${matrix.fallbackRegions.length} region(s): ${matrix.fallbackRegions.join(', ')}`
+      )
+    }
+  }
+
   private buildBasePlan(
     key: SubscriptionProductKey,
-    converted: GoogleConvertedPrices
+    matrix: GoogleRegionalPriceMatrix
   ): GoogleBasePlan {
     return {
       basePlanId: this.config.products[key].googleBasePlanId,
-      regionalConfigs: Object.values(converted.convertedRegionPrices).map((item) => ({
+      regionalConfigs: matrix.regionalConfigs.map((item) => ({
         regionCode: item.regionCode,
         newSubscriberAvailability: true,
         price: item.price,
       })),
       otherRegionsConfig: {
-        usdPrice: converted.convertedOtherRegionsPrice.usdPrice,
-        eurPrice: converted.convertedOtherRegionsPrice.eurPrice,
+        usdPrice: matrix.otherRegions.usdPrice,
+        eurPrice: matrix.otherRegions.eurPrice,
         newSubscriberAvailability: true,
       },
       autoRenewingBasePlanType: {
@@ -434,24 +746,28 @@ export class GooglePlayClient {
     let subscription = await this.getSubscription()
     if (!subscription) {
       if (this.reporter.command === 'apply') {
-        const converted = await Promise.all(
+        const matrices = await Promise.all(
           keys.map(
             async (key) =>
-              [key, await this.convertPrice(this.config.products[key].priceUsd)] as const
+              [
+                key,
+                await this.prepareRegionalPriceMatrix(this.config.products[key].priceUsd),
+              ] as const
           )
         )
-        const regionsVersion = converted[0][1].regionVersion.version
-        for (const [, prices] of converted) {
+        const regionsVersion = matrices[0][1].regionVersion.version
+        for (const [key, prices] of matrices) {
           if (prices.regionVersion.version !== regionsVersion) {
             throw new Error(
               'Google region versions changed while preparing subscription prices; retry'
             )
           }
+          this.reportPppCoverage(`Google ${key}`, prices)
         }
         const body: GoogleSubscription = {
           packageName: this.environment.packageName,
           productId: this.config.google.subscriptionProductId,
-          basePlans: converted.map(([key, prices]) => this.buildBasePlan(key, prices)),
+          basePlans: matrices.map(([key, prices]) => this.buildBasePlan(key, prices)),
           listings: this.subscriptionListings(),
         }
         const url = appendQuery(
@@ -486,19 +802,28 @@ export class GooglePlayClient {
       )
       if (existing) {
         this.reporter.ok(`Google ${key} base plan`)
-        this.verifyGooglePrice(`Google ${key}`, existing.regionalConfigs, desired.priceUsd)
+        const matrix = await this.prepareRegionalPriceMatrix(desired.priceUsd)
+        this.reportPppCoverage(`Google ${key}`, matrix)
+        this.verifyGooglePrice(
+          `Google ${key}`,
+          existing.regionalConfigs,
+          matrix.regionalConfigs,
+          existing.otherRegionsConfig,
+          matrix.otherRegions
+        )
         continue
       }
 
       if (this.reporter.command === 'apply') {
-        const converted = await this.convertPrice(desired.priceUsd)
-        const newPlan = this.buildBasePlan(key, converted)
+        const matrix = await this.prepareRegionalPriceMatrix(desired.priceUsd)
+        this.reportPppCoverage(`Google ${key}`, matrix)
+        const newPlan = this.buildBasePlan(key, matrix)
         const basePlans = [...subscription.basePlans.map(withoutState), newPlan]
         const url = appendQuery(
           `${API_ROOT}/${encodeURIComponent(this.environment.packageName)}/subscriptions/${encodeURIComponent(subscription.productId)}`,
           {
             updateMask: 'basePlans',
-            'regionsVersion.version': converted.regionVersion.version,
+            'regionsVersion.version': matrix.regionVersion.version,
           }
         )
         const updated = await this.request<GoogleSubscription>(url, {
@@ -746,17 +1071,30 @@ export class GooglePlayClient {
   private verifyGooglePrice(
     label: string,
     regionalConfigs: Array<{ regionCode: string; price: GoogleMoney }>,
-    desiredUsd: string
+    desiredConfigs: Array<{ regionCode: string; price: GoogleMoney }>,
+    otherRegions?: { usdPrice: GoogleMoney; eurPrice: GoogleMoney },
+    desiredOtherRegions?: { usdPrice: GoogleMoney; eurPrice: GoogleMoney }
   ): void {
-    const usPrice = regionalConfigs.find((item) => item.regionCode === 'US')?.price
-    if (!usPrice) {
-      this.reporter.error(`${label} has no US regional price`)
-    } else if (moneyToDecimal(usPrice) !== desiredUsd) {
+    const current = new Map(regionalConfigs.map((item) => [item.regionCode, item.price]))
+    const mismatches = desiredConfigs.filter((item) => {
+      const existing = current.get(item.regionCode)
+      return !existing || !moneyEquals(existing, item.price)
+    })
+    const otherRegionsMatch =
+      !desiredOtherRegions ||
+      (otherRegions !== undefined &&
+        moneyEquals(otherRegions.usdPrice, desiredOtherRegions.usdPrice) &&
+        moneyEquals(otherRegions.eurPrice, desiredOtherRegions.eurPrice))
+    if (mismatches.length > 0 || !otherRegionsMatch) {
+      const example = mismatches[0]
+      const existing = example ? current.get(example.regionCode) : undefined
       this.reporter.error(
-        `${label} already has US price $${moneyToDecimal(usPrice)}; initial setup will not change it to $${desiredUsd}`
+        `${label} has ${mismatches.length + (otherRegionsMatch ? 0 : 1)} regional price difference(s)` +
+          `${example ? `; ${example.regionCode} is ${existing ? formatMoney(existing) : 'missing'}, expected ${formatMoney(example.price)}` : '; future-region prices differ'}. ` +
+          'Initial setup will not change established prices; use monetization:prices:apply.'
       )
     } else {
-      this.reporter.ok(`${label} US price is $${desiredUsd}`)
+      this.reporter.ok(`${label} prices match ${desiredConfigs.length} region(s)`)
     }
   }
 
@@ -777,7 +1115,8 @@ export class GooglePlayClient {
     let purchase = await this.getLifetimePurchase()
     if (!purchase) {
       if (this.reporter.command === 'apply') {
-        const converted = await this.convertPrice(desired.priceUsd)
+        const matrix = await this.prepareRegionalPriceMatrix(desired.priceUsd)
+        this.reportPppCoverage('Google lifetime', matrix)
         const body: GoogleOneTimeProduct = {
           packageName: this.environment.packageName,
           productId: desired.googleProductId,
@@ -785,16 +1124,14 @@ export class GooglePlayClient {
           purchaseOptions: [
             {
               purchaseOptionId: desired.googlePurchaseOptionId,
-              regionalPricingAndAvailabilityConfigs: Object.values(
-                converted.convertedRegionPrices
-              ).map((item) => ({
+              regionalPricingAndAvailabilityConfigs: matrix.regionalConfigs.map((item) => ({
                 regionCode: item.regionCode,
                 price: item.price,
                 availability: 'AVAILABLE',
               })),
               newRegionsConfig: {
-                usdPrice: converted.convertedOtherRegionsPrice.usdPrice,
-                eurPrice: converted.convertedOtherRegionsPrice.eurPrice,
+                usdPrice: matrix.otherRegions.usdPrice,
+                eurPrice: matrix.otherRegions.eurPrice,
                 availability: 'AVAILABLE',
               },
               buyOption: { legacyCompatible: true, multiQuantityEnabled: false },
@@ -806,7 +1143,7 @@ export class GooglePlayClient {
           {
             allowMissing: true,
             updateMask: 'listings,purchaseOptions',
-            'regionsVersion.version': converted.regionVersion.version,
+            'regionsVersion.version': matrix.regionVersion.version,
           }
         )
         purchase = await this.request<GoogleOneTimeProduct>(url, { method: 'PATCH', body })
@@ -835,10 +1172,14 @@ export class GooglePlayClient {
       return
     }
     this.reporter.ok('Google lifetime purchase option')
+    const matrix = await this.prepareRegionalPriceMatrix(desired.priceUsd)
+    this.reportPppCoverage('Google lifetime', matrix)
     this.verifyGooglePrice(
       'Google lifetime',
       option.regionalPricingAndAvailabilityConfigs,
-      desired.priceUsd
+      matrix.regionalConfigs,
+      option.newRegionsConfig,
+      matrix.otherRegions
     )
   }
 

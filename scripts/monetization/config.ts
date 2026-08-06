@@ -12,6 +12,8 @@ const MONEY_PATTERN = /^\d+\.\d{2}$/
 const APPLE_PRODUCT_ID_PATTERN = /^[A-Za-z0-9._-]+$/
 const GOOGLE_PRODUCT_ID_PATTERN = /^[a-z0-9][a-z0-9._]{0,39}$/
 const GOOGLE_PLAN_ID_PATTERN = /^[a-z0-9][a-z0-9-]{0,62}$/
+const ISO_ALPHA_2_PATTERN = /^[A-Z]{2}$/
+const PPP_BANDS = [0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2]
 const ROOT = path.resolve(__dirname, '../..')
 
 const assert = (condition: boolean, message: string): void => {
@@ -24,6 +26,42 @@ export const validateConfig = (config: MonetizationConfig): void => {
     new Set(config.enabledProducts).size === config.enabledProducts.length,
     'enabledProducts must not contain duplicates'
   )
+
+  if (config.regionalPricing.strategy === 'ppp-bands') {
+    assert(config.apple.baseTerritory === 'USA', 'PPP pricing requires apple.baseTerritory USA')
+    assert(config.regionalPricing.dataset.trim().length > 0, 'regionalPricing.dataset is required')
+    assert(config.regionalPricing.bands.length > 0, 'regionalPricing.bands must not be empty')
+    const bands = [...config.regionalPricing.bands]
+    assert(
+      new Set(bands).size === bands.length,
+      'regionalPricing.bands must not contain duplicates'
+    )
+    assert(
+      bands.every((band) => Number.isFinite(band) && band > 0 && Number.isInteger(band * 10)),
+      'regionalPricing.bands must be positive one-decimal numbers'
+    )
+    assert(
+      bands.every((band, index) => index === 0 || band > bands[index - 1]),
+      'regionalPricing.bands must be sorted ascending'
+    )
+    assert(bands.includes(1), 'regionalPricing.bands must include 1.0')
+    assert(
+      JSON.stringify(bands) === JSON.stringify(PPP_BANDS),
+      `regionalPricing.bands must contain the complete ${PPP_BANDS.join(', ')} range`
+    )
+    for (const [country, band] of Object.entries(config.regionalPricing.countryOverrides)) {
+      assert(
+        ISO_ALPHA_2_PATTERN.test(country),
+        `regionalPricing override ${country} must be ISO alpha-2`
+      )
+      assert(bands.includes(band), `regionalPricing override ${country} must use a configured band`)
+    }
+    assert(
+      config.regionalPricing.countryOverrides.US === undefined ||
+        config.regionalPricing.countryOverrides.US === 1,
+      'regionalPricing override US must be 1.0'
+    )
+  }
 
   if (config.freeTrial) {
     assert(

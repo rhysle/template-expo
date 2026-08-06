@@ -23,6 +23,13 @@ export const monetizationConfig = {
     revenueCat: true,
   },
 
+  regionalPricing: {
+    strategy: 'ppp-bands',
+    dataset: 'world-bank-2025',
+    bands: [0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2],
+    countryOverrides: {},
+  },
+
   products: {
     weekly: {
       priceUsd: '3.99',

@@ -12,6 +12,7 @@ import { appendQuery, requestJson } from './http'
 import type { JsonRequester } from './http'
 import { enabledSubscriptionKeys, isEnabled } from './config'
 import { loadStoreLocalizations } from './localizations'
+import { adjustedPriceUsd, RegionalPricingResolver, selectClosestUsdPrice } from './ppp'
 import { Reporter } from './reporter'
 
 const API_ROOT = 'https://api.appstoreconnect.apple.com'
@@ -62,6 +63,16 @@ interface AppleFreeTrialOffer {
   territoryId?: string
 }
 
+interface AppleRegionalPriceTarget {
+  territoryId: string
+  point: JsonApiResource<PricePointAttributes>
+  multiplier: number
+  sourceYear?: number
+  rawRatio?: number
+  fallback: boolean
+  currency?: string
+}
+
 const SUBSCRIPTION_PERIOD: Record<SubscriptionProductKey, string> = {
   weekly: 'ONE_WEEK',
   monthly: 'ONE_MONTH',
@@ -71,8 +82,20 @@ const SUBSCRIPTION_KEYS: SubscriptionProductKey[] = ['weekly', 'monthly', 'yearl
 const SUBSCRIPTION_PLAN_TYPE = 'UPFRONT' as const
 
 const today = (): string => new Date().toISOString().slice(0, 10)
-const pricesEqual = (left: string, right: string): boolean => Number(left) === Number(right)
-
+const decimalMagnitude = (value: string): { magnitude: bigint; scale: number } => {
+  const match = /^(\d+)(?:\.(\d+))?$/.exec(value)
+  if (!match) throw new Error(`Invalid store price: ${value}`)
+  const fraction = match[2] ?? ''
+  return { magnitude: BigInt(`${match[1]}${fraction}`), scale: fraction.length }
+}
+const compareDecimal = (left: string, right: string): number => {
+  const a = decimalMagnitude(left)
+  const b = decimalMagnitude(right)
+  const scale = Math.max(a.scale, b.scale)
+  const leftValue = a.magnitude * 10n ** BigInt(scale - a.scale)
+  const rightValue = b.magnitude * 10n ** BigInt(scale - b.scale)
+  return leftValue < rightValue ? -1 : leftValue > rightValue ? 1 : 0
+}
 const runWithConcurrency = async <T>(
   items: readonly T[],
   concurrency: number,
@@ -94,6 +117,8 @@ export class AppleStoreClient {
   private readonly metadata: AppleMetadataReconciler
   private appId: string | undefined
   private territoryIdentifiers: Array<{ type: 'territories'; id: string }> | undefined
+  private readonly territoryCurrencies = new Map<string, string>()
+  private readonly regionalPricing: RegionalPricingResolver
 
   constructor(
     private readonly config: MonetizationConfig,
@@ -102,6 +127,7 @@ export class AppleStoreClient {
     private readonly requestOverride?: JsonRequester
   ) {
     this.auth = new AppleAuth(environment.issuerId, environment.keyId, environment.keyFilepath)
+    this.regionalPricing = new RegionalPricingResolver(config)
     this.metadata = new AppleMetadataReconciler(
       config,
       loadStoreLocalizations(),
@@ -140,6 +166,22 @@ export class AppleStoreClient {
     return items
   }
 
+  private async listAllWithIncluded<T extends JsonApiResource>(
+    pathOrUrl: string
+  ): Promise<{ data: T[]; included: JsonApiResource[] }> {
+    const data: T[] = []
+    const included: JsonApiResource[] = []
+    let next: string | undefined = pathOrUrl
+    while (next) {
+      const response: JsonApiListResponse<T> | undefined = await this.request(next)
+      if (!response) break
+      data.push(...response.data)
+      included.push(...(response.included ?? []))
+      next = response.links?.next
+    }
+    return { data, included }
+  }
+
   async sync(): Promise<void> {
     this.reporter.section('App Store Connect')
     this.appId = await this.resolveAppId()
@@ -169,6 +211,46 @@ export class AppleStoreClient {
       `/v1/subscriptionGroups/${group.id}/subscriptions?limit=200`
     )
     await this.activateFreeTrial(this.configuredSubscriptions(subscriptions))
+  }
+
+  async syncPrices(): Promise<void> {
+    this.reporter.section('App Store Connect regional prices')
+    this.appId = await this.resolveAppId()
+    const groups = await this.listAll<JsonApiResource<{ referenceName: string }>>(
+      `/v1/apps/${this.requiredAppId()}/subscriptionGroups?limit=200`
+    )
+    const group = groups.find(
+      (item) => item.attributes.referenceName === this.config.apple.subscriptionGroupReferenceName
+    )
+    const subscriptions = group
+      ? await this.listAll<JsonApiResource<SubscriptionAttributes>>(
+          `/v1/subscriptionGroups/${group.id}/subscriptions?limit=200`
+        )
+      : []
+    for (const key of enabledSubscriptionKeys(this.config)) {
+      const subscription = subscriptions.find(
+        (item) => item.attributes.productId === this.config.products[key].appleProductId
+      )
+      if (!subscription) {
+        this.reporter.error(`Missing: Apple ${key} subscription; run monetization:apply first`)
+        continue
+      }
+      await this.reconcileSubscriptionPrice(subscription.id, key, true)
+    }
+
+    if (isEnabled('lifetime', this.config)) {
+      const purchases = await this.listAll<JsonApiResource<InAppPurchaseAttributes>>(
+        `/v1/apps/${this.requiredAppId()}/inAppPurchasesV2?limit=200`
+      )
+      const purchase = purchases.find(
+        (item) => item.attributes.productId === this.config.products.lifetime.appleProductId
+      )
+      if (!purchase) {
+        this.reporter.error('Missing: Apple lifetime purchase; run monetization:apply first')
+      } else {
+        await this.reconcileLifetimePrice(purchase.id, true)
+      }
+    }
   }
 
   private async resolveAppId(): Promise<string> {
@@ -483,6 +565,10 @@ export class AppleStoreClient {
       const territories = await this.listAll<JsonApiResource>(
         appendQuery(`${API_ROOT}/v1/territories`, { limit: 200 })
       )
+      for (const territory of territories) {
+        const currency = (territory.attributes as { currency?: unknown }).currency
+        if (typeof currency === 'string') this.territoryCurrencies.set(territory.id, currency)
+      }
       this.territoryIdentifiers = territories.map((territory) => ({
         type: 'territories',
         id: territory.id,
@@ -573,95 +659,131 @@ export class AppleStoreClient {
     }
   }
 
-  private async getSubscriptionPrice(
-    subscriptionId: string
-  ): Promise<JsonApiResource<PricePointAttributes> | undefined> {
-    const url = appendQuery(`${API_ROOT}/v1/subscriptions/${subscriptionId}/prices`, {
-      'filter[territory]': this.config.apple.baseTerritory,
-      include: 'subscriptionPricePoint',
-      limit: 200,
-    })
-    const response =
-      await this.request<JsonApiListResponse<JsonApiResource<{ startDate?: string | null }>>>(url)
-    if (!response || response.data.length === 0) return undefined
-
-    const current = response.data
-      .filter((item) => item.attributes.startDate == null || item.attributes.startDate <= today())
-      .sort((left, right) =>
-        String(left.attributes.startDate ?? '').localeCompare(
-          String(right.attributes.startDate ?? '')
-        )
-      )
-      .at(-1)
-    const pricePointId = current?.relationships?.subscriptionPricePoint?.data
-    const identifier = Array.isArray(pricePointId) ? pricePointId[0] : pricePointId
-    return response.included?.find(
-      (item): item is JsonApiResource<PricePointAttributes> =>
-        item.type === 'subscriptionPricePoints' && item.id === identifier?.id
-    )
-  }
-
   private async ensureSubscriptionPrice(
     subscriptionId: string,
     key: SubscriptionProductKey
   ): Promise<void> {
-    const desired = this.config.products[key]
-    const current = await this.getSubscriptionPrice(subscriptionId)
-    if (current) {
-      if (!pricesEqual(current.attributes.customerPrice, desired.priceUsd)) {
-        this.reporter.error(
-          `Apple ${key} already has US price $${current.attributes.customerPrice}; initial setup will not change it to $${desired.priceUsd}`
-        )
-        return
-      }
-      this.reporter.ok(`Apple ${key} US price is $${desired.priceUsd}`)
-    }
+    await this.reconcileSubscriptionPrice(subscriptionId, key, false)
+  }
 
-    if (!current && this.reporter.command !== 'apply') {
-      if (this.reporter.command === 'verify') {
-        this.reporter.error(`Missing: Apple ${key} initial storefront prices`)
-      } else {
-        this.reporter.change(`configure Apple ${key} initial storefront prices`)
-      }
-      return
-    }
-
-    const basePricePoint = await this.findSubscriptionPricePoint(subscriptionId, desired.priceUsd)
-    const equalizations = await this.listAll<JsonApiResource<PricePointAttributes>>(
-      appendQuery(`${API_ROOT}/v1/subscriptionPricePoints/${basePricePoint.id}/equalizations`, {
+  private async reconcileSubscriptionPrice(
+    subscriptionId: string,
+    key: SubscriptionProductKey,
+    laterChange: boolean
+  ): Promise<void> {
+    const targets = await this.appleRegionalTargets(
+      'subscription',
+      subscriptionId,
+      this.config.products[key].priceUsd
+    )
+    const currentResponse = await this.listAllWithIncluded<
+      JsonApiResource<{ startDate?: string | null }>
+    >(
+      appendQuery(`${API_ROOT}/v1/subscriptions/${subscriptionId}/prices`, {
+        include: 'subscriptionPricePoint,territory',
         limit: 200,
       })
     )
-    const targetPoints = [basePricePoint, ...equalizations]
-    const existingPrices = await this.listAll<JsonApiResource<{ startDate?: string | null }>>(
-      appendQuery(`${API_ROOT}/v1/subscriptions/${subscriptionId}/prices`, { limit: 200 })
+    const existingPrices = currentResponse.data
+    const futurePrices = existingPrices.filter(
+      (price) => price.attributes.startDate && price.attributes.startDate > today()
     )
-    const existingPointIds = new Set(
-      existingPrices.flatMap((item) => {
-        const data = item.relationships?.subscriptionPricePoint?.data
-        const identifiers = Array.isArray(data) ? data : data ? [data] : []
-        return identifiers.map((identifier) => identifier.id)
-      })
+    if (futurePrices.length > 0) {
+      this.reporter.error(
+        `Apple ${key} has ${futurePrices.length} scheduled future price(s); remove or complete them in App Store Connect before reconciliation`
+      )
+      return
+    }
+    const includedPoints = new Map(
+      currentResponse.included
+        .filter((item) => item.type === 'subscriptionPricePoints')
+        .map((item) => [item.id, item as JsonApiResource<PricePointAttributes>])
     )
-    const missingPoints = targetPoints.filter((point) => !existingPointIds.has(point.id))
+    const currentByTerritory = new Map<string, JsonApiResource<PricePointAttributes>>()
+    for (const price of [...existingPrices].sort((left, right) =>
+      String(left.attributes.startDate ?? '').localeCompare(
+        String(right.attributes.startDate ?? '')
+      )
+    )) {
+      if (price.attributes.startDate && price.attributes.startDate > today()) continue
+      const relationship = price.relationships?.subscriptionPricePoint?.data
+      const identifier = Array.isArray(relationship) ? relationship[0] : relationship
+      const point = identifier ? includedPoints.get(identifier.id) : undefined
+      const territoryRelationship =
+        price.relationships?.territory?.data ?? point?.relationships?.territory?.data
+      const territory = Array.isArray(territoryRelationship)
+        ? territoryRelationship[0]
+        : territoryRelationship
+      if (territory && point) currentByTerritory.set(territory.id, point)
+    }
+    if (existingPrices.length > 0 && currentByTerritory.size === 0) {
+      throw new Error(
+        `Apple ${key} returned existing prices without territory details; refusing an unsafe reconciliation`
+      )
+    }
+    const existingPointIds = new Set([...currentByTerritory.values()].map((point) => point.id))
+    const targetPointIds = new Set(targets.map((target) => target.point.id))
+    const missingTargets = targets.filter((target) => !existingPointIds.has(target.point.id))
+    const conflictingPointIds = [...existingPointIds].filter((id) => !targetPointIds.has(id))
 
-    if (missingPoints.length === 0 || existingPrices.length >= targetPoints.length) {
-      this.reporter.ok(`Apple ${key} prices cover all storefronts`)
+    if (missingTargets.length === 0 && conflictingPointIds.length === 0) {
+      this.reporter.ok(`Apple ${key} prices match ${targets.length} storefronts`)
       return
     }
 
-    if (this.reporter.command === 'verify') {
-      this.reporter.error(`Missing: Apple ${key} prices in ${missingPoints.length} storefront(s)`)
-      return
-    }
-    if (this.reporter.command === 'plan') {
-      this.reporter.change(
-        `configure Apple ${key} prices in ${missingPoints.length} missing storefront(s)`
+    if (!laterChange && conflictingPointIds.length > 0) {
+      this.reporter.error(
+        `Apple ${key} has established regional prices that differ from config; use monetization:prices:apply`
       )
       return
     }
 
-    await runWithConcurrency(missingPoints, 5, async (pricePoint) => {
+    if (this.reporter.command === 'verify' || this.reporter.command === 'prices-verify') {
+      this.reporter.error(`Apple ${key} differs in ${missingTargets.length} storefront(s)`)
+      return
+    }
+    if (this.reporter.command === 'plan' || this.reporter.command === 'prices-plan') {
+      const sample = missingTargets[0]
+      const currentPoint = sample ? currentByTerritory.get(sample.territoryId) : undefined
+      const details = sample
+        ? `; ${sample.territoryId}: ${currentPoint?.attributes.customerPrice ?? 'missing'} → ${sample.point.attributes.customerPrice}, ` +
+          `ratio ${sample.rawRatio === undefined ? 'unavailable' : sample.rawRatio.toFixed(3)}, band ${sample.multiplier}, ` +
+          `anchor $${adjustedPriceUsd(this.config.products[key].priceUsd, sample.multiplier)}, ` +
+          `${sample.sourceYear === undefined ? 'no source year' : `source ${sample.sourceYear}`}, ${sample.fallback ? '1.0 fallback' : 'automatic/override'}`
+        : ''
+      this.reporter.change(
+        `${laterChange ? 'update' : 'configure'} Apple ${key} prices in ${missingTargets.length} storefront(s)${details}`
+      )
+      if (this.reporter.command === 'prices-plan') {
+        for (const target of missingTargets) {
+          const existing = currentByTerritory.get(target.territoryId)
+          const format = (value: string): string =>
+            target.currency
+              ? new Intl.NumberFormat('en-US', {
+                  style: 'currency',
+                  currency: target.currency,
+                  currencyDisplay: 'narrowSymbol',
+                }).format(Number(value))
+              : value
+          this.reporter.info(
+            `${target.territoryId}: ${existing ? format(existing.attributes.customerPrice) : 'missing'} → ${format(target.point.attributes.customerPrice)}; ` +
+              `source ${target.sourceYear ?? 'none'}, ratio ${target.rawRatio?.toFixed(3) ?? 'unavailable'}, band ${target.multiplier}, ` +
+              `anchor $${adjustedPriceUsd(this.config.products[key].priceUsd, target.multiplier)}, ${target.fallback ? '1.0 fallback' : 'automatic/override'}`
+          )
+        }
+      }
+      return
+    }
+
+    await runWithConcurrency(missingTargets, 5, async (target) => {
+      const currentPoint = currentByTerritory.get(target.territoryId)
+      const preserveCurrentPrice =
+        laterChange &&
+        currentPoint !== undefined &&
+        compareDecimal(
+          target.point.attributes.customerPrice,
+          currentPoint.attributes.customerPrice
+        ) > 0
       await this.request('/v1/subscriptionPrices', {
         method: 'POST',
         body: {
@@ -670,11 +792,12 @@ export class AppleStoreClient {
             attributes: {
               startDate: null,
               planType: SUBSCRIPTION_PLAN_TYPE,
+              ...(laterChange ? { preserveCurrentPrice } : {}),
             },
             relationships: {
               subscription: { data: { type: 'subscriptions', id: subscriptionId } },
               subscriptionPricePoint: {
-                data: { type: 'subscriptionPricePoints', id: pricePoint.id },
+                data: { type: 'subscriptionPricePoints', id: target.point.id },
               },
             },
           },
@@ -682,27 +805,95 @@ export class AppleStoreClient {
       })
     })
     this.reporter.change(
-      `configured Apple ${key} initial prices in ${missingPoints.length} storefront(s)`
+      `${laterChange ? 'updated' : 'configured'} Apple ${key} prices in ${missingTargets.length} storefront(s)`
     )
   }
 
-  private async findSubscriptionPricePoint(
-    subscriptionId: string,
+  private async appleRegionalTargets(
+    kind: 'subscription' | 'lifetime',
+    productId: string,
     priceUsd: string
-  ): Promise<JsonApiResource<PricePointAttributes>> {
+  ): Promise<AppleRegionalPriceTarget[]> {
+    const pointPath =
+      kind === 'subscription'
+        ? `/v1/subscriptions/${productId}/pricePoints`
+        : `/v2/inAppPurchases/${productId}/pricePoints`
     const points = await this.listAll<JsonApiResource<PricePointAttributes>>(
-      appendQuery(`${API_ROOT}/v1/subscriptions/${subscriptionId}/pricePoints`, {
+      appendQuery(`${API_ROOT}${pointPath}`, {
         'filter[territory]': this.config.apple.baseTerritory,
         limit: 200,
       })
     )
-    const point = points.find((item) => pricesEqual(item.attributes.customerPrice, priceUsd))
-    if (!point) {
-      throw new Error(
-        `Apple has no ${this.config.apple.baseTerritory} subscription price point for $${priceUsd}`
+    const territories = await this.allTerritoryIdentifiers()
+    const assignments = new Map(
+      territories.map((territory) => [territory.id, this.regionalPricing.forApple(territory.id)])
+    )
+    const selectedByMultiplier = new Map(
+      this.regionalPricing
+        .usedMultipliers(assignments.values())
+        .map((multiplier) => [
+          multiplier,
+          selectClosestUsdPrice(adjustedPriceUsd(priceUsd, multiplier), points),
+        ])
+    )
+    const equalizedByMultiplier = new Map<
+      number,
+      Map<string, JsonApiResource<PricePointAttributes>>
+    >()
+
+    await Promise.all(
+      [...selectedByMultiplier].map(async ([multiplier, point]) => {
+        const equalizationType =
+          kind === 'subscription' ? 'subscriptionPricePoints' : 'inAppPurchasePricePoints'
+        const equalizations = await this.listAll<JsonApiResource<PricePointAttributes>>(
+          appendQuery(`${API_ROOT}/v1/${equalizationType}/${point.id}/equalizations`, {
+            include: 'territory',
+            limit: 200,
+          })
+        )
+        const byTerritory = new Map<string, JsonApiResource<PricePointAttributes>>()
+        byTerritory.set(this.config.apple.baseTerritory, point)
+        for (const equalization of equalizations) {
+          const relationship = equalization.relationships?.territory?.data
+          const territory = Array.isArray(relationship) ? relationship[0] : relationship
+          if (territory) byTerritory.set(territory.id, equalization)
+        }
+        equalizedByMultiplier.set(multiplier, byTerritory)
+      })
+    )
+
+    const targets = territories.map((territory) => {
+      const assignment = assignments.get(territory.id)
+      if (!assignment) throw new Error(`Missing Apple PPP assignment for ${territory.id}`)
+      const point = equalizedByMultiplier.get(assignment.multiplier)?.get(territory.id)
+      if (!point) {
+        throw new Error(
+          `Apple did not return an equalized ${territory.id} price point for PPP band ${assignment.multiplier}`
+        )
+      }
+      return {
+        territoryId: territory.id,
+        point,
+        multiplier: assignment.multiplier,
+        sourceYear: assignment.sourceYear,
+        rawRatio: assignment.rawRatio,
+        fallback: assignment.fallback,
+        currency: this.territoryCurrencies.get(territory.id),
+      }
+    })
+    const older = targets.filter(
+      (target) =>
+        target.sourceYear !== undefined &&
+        this.regionalPricing.snapshot !== undefined &&
+        target.sourceYear < this.regionalPricing.snapshot.targetYear
+    )
+    const fallback = targets.filter((target) => target.fallback)
+    if (this.config.regionalPricing.strategy === 'ppp-bands') {
+      this.reporter.info(
+        `Apple ${kind} PPP: ${targets.length} storefronts, ${selectedByMultiplier.size} band(s), ${older.length} older-year, ${fallback.length} no-data fallback`
       )
     }
-    return point
+    return targets
   }
 
   private async syncLifetimePurchase(): Promise<void> {
@@ -822,72 +1013,111 @@ export class AppleStoreClient {
     }
   }
 
-  private async getLifetimePrice(
-    purchaseId: string
-  ): Promise<JsonApiResource<PricePointAttributes> | undefined> {
+  private async ensureLifetimePrice(purchaseId: string): Promise<void> {
+    await this.reconcileLifetimePrice(purchaseId, false)
+  }
+
+  private async reconcileLifetimePrice(purchaseId: string, laterChange: boolean): Promise<void> {
+    const targets = await this.appleRegionalTargets(
+      'lifetime',
+      purchaseId,
+      this.config.products.lifetime.priceUsd
+    )
     const schedule = await this.request<JsonApiSingleResponse<JsonApiResource>>(
       `/v2/inAppPurchases/${purchaseId}/iapPriceSchedule`,
       { allowNotFound: true }
     )
-    if (!schedule) return undefined
-
-    const response = await this.request<
-      JsonApiListResponse<JsonApiResource<{ startDate?: string | null }>>
-    >(
-      appendQuery(`${API_ROOT}/v1/inAppPurchasePriceSchedules/${schedule.data.id}/manualPrices`, {
-        'filter[territory]': this.config.apple.baseTerritory,
-        include: 'inAppPurchasePricePoint',
-        limit: 200,
-      })
-    )
-    if (!response || response.data.length === 0) return undefined
-    const current =
-      response.data.find((item) => item.attributes.startDate == null) ?? response.data.at(-1)
-    const relationship = current?.relationships?.inAppPurchasePricePoint?.data
-    const identifier = Array.isArray(relationship) ? relationship[0] : relationship
-    return response.included?.find(
-      (item): item is JsonApiResource<PricePointAttributes> =>
-        item.type === 'inAppPurchasePricePoints' && item.id === identifier?.id
-    )
-  }
-
-  private async ensureLifetimePrice(purchaseId: string): Promise<void> {
-    const desired = this.config.products.lifetime
-    const current = await this.getLifetimePrice(purchaseId)
-    if (current) {
-      if (pricesEqual(current.attributes.customerPrice, desired.priceUsd)) {
-        this.reporter.ok(`Apple lifetime US price is $${desired.priceUsd}`)
-      } else {
-        this.reporter.error(
-          `Apple lifetime already has US price $${current.attributes.customerPrice}; initial setup will not change it to $${desired.priceUsd}`
+    const currentResponse = schedule
+      ? await this.listAllWithIncluded<JsonApiResource<{ startDate?: string | null }>>(
+          appendQuery(
+            `${API_ROOT}/v1/inAppPurchasePriceSchedules/${schedule.data.id}/manualPrices`,
+            { include: 'inAppPurchasePricePoint,territory', limit: 200 }
+          )
         )
-      }
+      : { data: [], included: [] }
+    const currentPrices = currentResponse.data
+    const futurePrices = currentPrices.filter(
+      (price) => price.attributes.startDate && price.attributes.startDate > today()
+    )
+    if (futurePrices.length > 0) {
+      this.reporter.error(
+        `Apple lifetime has ${futurePrices.length} scheduled future price(s); resolve them in App Store Connect before reconciliation`
+      )
       return
     }
-
-    if (this.reporter.command !== 'apply') {
-      if (this.reporter.command === 'verify') {
-        this.reporter.error('Missing: Apple lifetime initial price')
-      } else {
-        this.reporter.change('configure Apple lifetime initial price')
-      }
-      return
-    }
-
-    const points = await this.listAll<JsonApiResource<PricePointAttributes>>(
-      appendQuery(`${API_ROOT}/v2/inAppPurchases/${purchaseId}/pricePoints`, {
-        'filter[territory]': this.config.apple.baseTerritory,
-        limit: 200,
+    const currentPointIds = new Set(
+      currentPrices.flatMap((item) => {
+        const data = item.relationships?.inAppPurchasePricePoint?.data
+        const identifiers = Array.isArray(data) ? data : data ? [data] : []
+        return identifiers.map((identifier) => identifier.id)
       })
     )
-    const pricePoint = points.find((item) =>
-      pricesEqual(item.attributes.customerPrice, desired.priceUsd)
-    )
-    if (!pricePoint) {
-      throw new Error(
-        `Apple has no ${this.config.apple.baseTerritory} lifetime price point for $${desired.priceUsd}`
-      )
+    const targetPointIds = new Set(targets.map((target) => target.point.id))
+    const matches =
+      currentPointIds.size === targetPointIds.size &&
+      [...targetPointIds].every((id) => currentPointIds.has(id))
+    if (matches) {
+      this.reporter.ok(`Apple lifetime prices match ${targets.length} storefronts`)
+      return
     }
+    if (schedule && !laterChange) {
+      this.reporter.error(
+        'Apple lifetime has an established regional price schedule; use monetization:prices:apply'
+      )
+      return
+    }
+    if (this.reporter.command === 'verify' || this.reporter.command === 'prices-verify') {
+      this.reporter.error(
+        `Apple lifetime regional prices differ in ${targets.length} storefront(s)`
+      )
+      return
+    }
+    if (this.reporter.command === 'plan' || this.reporter.command === 'prices-plan') {
+      this.reporter.change(
+        `${laterChange ? 'replace' : 'configure'} Apple lifetime regional price schedule (${targets.length} storefronts; future purchases only)`
+      )
+      if (this.reporter.command === 'prices-plan') {
+        const includedPoints = new Map(
+          currentResponse.included
+            .filter((item) => item.type === 'inAppPurchasePricePoints')
+            .map((item) => [item.id, item as JsonApiResource<PricePointAttributes>])
+        )
+        const currentByTerritory = new Map<string, JsonApiResource<PricePointAttributes>>()
+        for (const price of currentPrices) {
+          const relationship = price.relationships?.inAppPurchasePricePoint?.data
+          const identifier = Array.isArray(relationship) ? relationship[0] : relationship
+          const point = identifier ? includedPoints.get(identifier.id) : undefined
+          const territoryRelationship =
+            price.relationships?.territory?.data ?? point?.relationships?.territory?.data
+          const territory = Array.isArray(territoryRelationship)
+            ? territoryRelationship[0]
+            : territoryRelationship
+          if (territory && point) currentByTerritory.set(territory.id, point)
+        }
+        for (const target of targets) {
+          const existing = currentByTerritory.get(target.territoryId)
+          if (existing?.id === target.point.id) continue
+          this.reporter.info(
+            `${target.territoryId}: ${existing?.attributes.customerPrice ?? 'missing'} → ${target.point.attributes.customerPrice}; ` +
+              `source ${target.sourceYear ?? 'none'}, ratio ${target.rawRatio?.toFixed(3) ?? 'unavailable'}, band ${target.multiplier}, ` +
+              `anchor $${adjustedPriceUsd(this.config.products.lifetime.priceUsd, target.multiplier)}, ${target.fallback ? '1.0 fallback' : 'automatic/override'}, future purchases only`
+          )
+        }
+      }
+      return
+    }
+
+    const included = targets.map((target, index) => ({
+      type: 'inAppPurchasePrices',
+      id: `\${price${index + 1}}`,
+      attributes: { startDate: null },
+      relationships: {
+        inAppPurchaseV2: { data: { type: 'inAppPurchases', id: purchaseId } },
+        inAppPurchasePricePoint: {
+          data: { type: 'inAppPurchasePricePoints', id: target.point.id },
+        },
+      },
+    }))
 
     await this.request('/v1/inAppPurchasePriceSchedules', {
       method: 'POST',
@@ -900,25 +1130,15 @@ export class AppleStoreClient {
               data: { type: 'territories', id: this.config.apple.baseTerritory },
             },
             manualPrices: {
-              data: [{ type: 'inAppPurchasePrices', id: '${price1}' }],
+              data: included.map(({ type, id }) => ({ type, id })),
             },
           },
         },
-        included: [
-          {
-            type: 'inAppPurchasePrices',
-            id: '${price1}',
-            attributes: { startDate: null },
-            relationships: {
-              inAppPurchaseV2: { data: { type: 'inAppPurchases', id: purchaseId } },
-              inAppPurchasePricePoint: {
-                data: { type: 'inAppPurchasePricePoints', id: pricePoint.id },
-              },
-            },
-          },
-        ],
+        included,
       },
     })
-    this.reporter.change('configured Apple lifetime base price with automatic equalization')
+    this.reporter.change(
+      `${laterChange ? 'replaced' : 'configured'} Apple lifetime regional price schedule (${targets.length} storefronts; future purchases only)`
+    )
   }
 }

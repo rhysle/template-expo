@@ -77,7 +77,10 @@ const readExpoAppConfig = (): {
   }
 }
 
-export const readStoreEnvironment = (config: MonetizationConfig): StoreEnvironment => {
+export const readStoreEnvironment = (
+  config: MonetizationConfig,
+  options: { revenueCat?: boolean } = {}
+): StoreEnvironment => {
   loadFastlaneEnvironment()
   const app = readExpoAppConfig()
   const environment: StoreEnvironment = { appName: app.appName }
@@ -110,7 +113,7 @@ export const readStoreEnvironment = (config: MonetizationConfig): StoreEnvironme
     }
   }
 
-  if (config.stores.revenueCat) {
+  if (config.stores.revenueCat && options.revenueCat !== false) {
     environment.revenueCat = {
       projectId: required('REVENUECAT_PROJECT_ID'),
       ...(config.stores.apple ? { bundleIdentifier: app.bundleIdentifier } : {}),

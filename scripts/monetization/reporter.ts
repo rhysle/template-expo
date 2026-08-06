@@ -67,7 +67,9 @@ export class Reporter {
     this.changes += 1
     this.write(
       'change',
-      this.command === 'apply' || this.command === 'activate' ? message : `Would ${message}`
+      this.command === 'apply' || this.command === 'activate' || this.command === 'prices-apply'
+        ? message
+        : `Would ${message}`
     )
   }
 
@@ -105,7 +107,7 @@ export class Reporter {
     if (this.errors > 0) {
       throw new Error(`${this.errors} monetization configuration issue(s) found`)
     }
-    if (this.command === 'plan') {
+    if (this.command === 'plan' || this.command === 'prices-plan') {
       const summary =
         this.changes === 0 ? 'No changes required.' : `${this.changes} change(s) planned.`
       console.log(
@@ -113,16 +115,12 @@ export class Reporter {
           ? this.styled(summary, ANSI.bold, ANSI.green)
           : this.styled(summary, ANSI.bold, ANSI.brightYellow)
       )
-    } else if (this.command === 'verify') {
+    } else if (this.command === 'verify' || this.command === 'prices-verify') {
       console.log(this.styled('Monetization configuration verified.', ANSI.bold, ANSI.green))
     } else {
       const summary = `${this.changes} change(s) applied.`
       console.log(
-        this.styled(
-          summary,
-          ANSI.bold,
-          this.changes === 0 ? ANSI.green : ANSI.brightYellow
-        )
+        this.styled(summary, ANSI.bold, this.changes === 0 ? ANSI.green : ANSI.brightYellow)
       )
     }
   }

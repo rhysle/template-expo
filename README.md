@@ -60,9 +60,35 @@ Store products are declared in `src/configs/monetization.ts`. Select any combina
 `weekly`, `monthly`, `yearly`, and `lifetime`; disabled products are not created or attached
 to RevenueCat. Monthly is preconfigured at USD 9.99 but disabled by default. The enabled
 template defaults are USD 3.99 weekly, USD 29.99 yearly, and USD 59.99 lifetime. Apple and
-Google generate the initial comparable regional prices from those US prices. Product IDs and
+Google generate the initial PPP regional prices from those US anchors. Product IDs and
 internal reference names remain explicit because store identifiers cannot be changed or reused
 after activation.
+
+Regional pricing defaults to `ppp-bands` with automatic multipliers from `0.4` through `1.2`,
+including premium bands. The checked-in `world-bank-2025` snapshot combines World Bank
+`PA.NUS.PPP` and `PA.NUS.FCRF` observations. For each country it selects the newest year from
+2025 back through 2023 where both indicators are positive, then calculates:
+
+```text
+(country PPP conversion factor / country exchange rate)
+/
+(US PPP conversion factor / US exchange rate from the same year)
+```
+
+The nearest configured band wins, with the lower band winning an exact tie. The United States is
+always `1.0`; ISO alpha-2 `countryOverrides` can select another configured band. Countries without
+a complete indicator pair use `1.0` with a warning. Set `strategy: 'store-equalized'` to opt out.
+Economic data is never downloaded by normal monetization commands. Refresh it deliberately and
+review the resulting checked-in snapshot with:
+
+```bash
+npm run monetization:ppp:refresh -- --year 2025
+```
+
+Adjusted USD anchors use integer cents with half-up rounding. Apple chooses its closest valid USD
+price point (lower on a tie) and uses Apple's storefront equalizations. Google uses the `Money`
+values returned by `pricing:convertRegionPrices`. Neither path post-processes local prices, so
+zero-decimal currencies such as VND, JPY, and KRW retain store-native price patterns.
 
 The optional top-level `freeTrial` selects exactly one enabled subscription for a cross-store
 trial. The template defaults to a 3-day weekly trial. Set `duration` to `7-days`, `14-days`,
@@ -107,15 +133,17 @@ npm run monetization:activate -- --confirm
 npm run monetization:verify
 ```
 
-`plan` is read-only. `apply` creates missing products and initial prices, reconciles mutable
+`plan` does not write store state. For a new app, `apply` creates missing products directly with
+their complete initial PPP matrix, reconciles mutable
 internal metadata, and creates or updates every configured localization. Apple reviewable
 metadata uses the version-based App Store Connect API: an editable draft is updated in place,
 or a new draft metadata version is created when the previous version is no longer editable.
 Configured review screenshots are uploaded to each product's private Review Information field,
 separate from its public promotional image. Google base plans and purchase
 options and free-trial offers remain in draft. The setup intentionally refuses to replace an
-existing US price or update a live Google offer. Changing live prices and migrating existing
-subscribers are separate release operations. `activate` requires explicit confirmation: it
+existing regional matrix or update a live Google offer. An interrupted Apple run may leave draft
+products without all prices; rerunning `apply` safely completes a matching partial matrix.
+`activate` requires explicit confirmation: it
 creates or replaces the configured Apple introductory free trial in every storefront, activates
 the desired Google offer and base plans, and deactivates the previous managed Google trial when
 the target moves.
@@ -124,6 +152,21 @@ associations, and exact live trial state. Apple products still require submissio
 the first subscription group must be submitted with an app version. `activate` does not click
 **Add for Review**, create an App Review submission, or submit one; manage that separately in
 App Store Connect after provisioning and verification succeed.
+
+After prices have been established, changing a `priceUsd`, PPP snapshot, band, or override uses a
+separate confirmed workflow that never creates products, changes metadata, or touches RevenueCat:
+
+```bash
+npm run monetization:prices:plan
+npm run monetization:prices:apply -- --confirm
+npm run monetization:prices:verify
+```
+
+The plan regenerates and compares the complete regional matrix. Subscription increases preserve
+existing subscriber prices on Apple and leave Google subscribers in legacy cohorts. Decreases
+reach existing Apple subscribers and migrate affected Google legacy cohorts to the lower current
+price. Lifetime changes affect future purchases only. Apple and Google writes are not
+transactional; rerun the command to reconcile any remaining differences after a partial failure.
 
 The setup is non-destructive. Removing a product from `enabledProducts` prevents future setup work
 for it but does not delete, deactivate, or detach a product that was provisioned previously. The

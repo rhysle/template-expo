@@ -2,13 +2,22 @@
 
 import { AppleStoreClient } from './apple'
 import { config } from './config'
+import { requireCommandConfirmation } from './confirmation'
 import { readStoreEnvironment } from './env'
 import { GooglePlayClient } from './google'
 import { Reporter } from './reporter'
 import { RevenueCatClient } from './revenuecat'
 import type { Command } from './types'
 
-const COMMANDS: Command[] = ['plan', 'apply', 'verify', 'activate']
+const COMMANDS: Command[] = [
+  'plan',
+  'apply',
+  'verify',
+  'activate',
+  'prices-plan',
+  'prices-apply',
+  'prices-verify',
+]
 
 const usage = (): string =>
   `
@@ -17,6 +26,9 @@ Usage:
   npm run monetization:apply
   npm run monetization:verify
   npm run monetization:activate -- --confirm
+  npm run monetization:prices:plan
+  npm run monetization:prices:apply -- --confirm
+  npm run monetization:prices:verify
 
 Edit src/configs/monetization.ts to select weekly, monthly, yearly, and/or lifetime products.
 App identifiers are read from app.json; remote credentials are loaded from .env.fastlane.local.
@@ -32,14 +44,10 @@ const parseCommand = (): Command => {
 
 const main = async (): Promise<void> => {
   const command = parseCommand()
-  if (command === 'activate' && !process.argv.includes('--confirm')) {
-    throw new Error(
-      'Activation changes live Apple trials and makes Google Play products purchasable. Re-run with:\n' +
-        'npm run monetization:activate -- --confirm'
-    )
-  }
+  requireCommandConfirmation(command, process.argv)
 
-  const environment = readStoreEnvironment(config)
+  const priceCommand = command.startsWith('prices-')
+  const environment = readStoreEnvironment(config, { revenueCat: !priceCommand })
   const reporter = new Reporter(command)
   console.log(`\nMonetization ${command}`)
   console.log(`App: ${environment.appName}`)
@@ -54,6 +62,20 @@ const main = async (): Promise<void> => {
     }
     if (!config.stores.apple && !config.stores.google) {
       reporter.info('Apple and Google stores are disabled; nothing to activate')
+    }
+    reporter.finish()
+    return
+  }
+
+  if (priceCommand) {
+    if (config.stores.apple && environment.apple) {
+      await new AppleStoreClient(config, environment.apple, reporter).syncPrices()
+    }
+    if (config.stores.google && environment.google) {
+      await new GooglePlayClient(config, environment.google, reporter).syncPrices()
+    }
+    if (!config.stores.apple && !config.stores.google) {
+      reporter.info('Apple and Google stores are disabled; nothing to price')
     }
     reporter.finish()
     return

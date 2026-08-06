@@ -520,7 +520,9 @@ test('Google plan is read-only when the free-trial offer is missing', async () =
   await state.client.sync()
   state.reporter.finish()
   assert.equal(
-    state.calls.some((call) => call.method !== 'GET'),
+    state.calls.some(
+      (call) => call.method !== 'GET' && !call.path.includes('/pricing:convertRegionPrices')
+    ),
     false
   )
 })
