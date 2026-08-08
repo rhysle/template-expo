@@ -1,0 +1,36 @@
+{
+  "appleLocale": "el",
+  "googleLocale": "el-GR",
+  "apple": {
+    "subscriptionGroupDisplayName": "Premium",
+    "products": {
+      "weekly": {
+        "displayName": "Premium · Εβδομαδιαίο",
+        "description": "Πλήρης πρόσβαση σε όλες τις premium λειτουργίες."
+      },
+      "monthly": {
+        "displayName": "Premium · Μηνιαίο",
+        "description": "Πλήρης πρόσβαση σε όλες τις premium λειτουργίες."
+      },
+      "yearly": {
+        "displayName": "Premium · Ετήσιο",
+        "description": "Πλήρης πρόσβαση σε όλες τις premium λειτουργίες."
+      },
+      "lifetime": {
+        "displayName": "Premium · Εφ' όρου ζωής",
+        "description": "Ισόβια πρόσβαση σε όλες τις premium λειτουργίες."
+      }
+    }
+  },
+  "google": {
+    "subscription": {
+      "title": "Premium",
+      "description": "Πλήρης πρόσβαση σε όλες τις premium λειτουργίες.",
+      "benefits": ["Πρόσβαση σε όλες τις premium λειτουργίες"]
+    },
+    "lifetime": {
+      "title": "Premium · Εφ' όρου ζωής",
+      "description": "Ισόβια πρόσβαση σε όλες τις premium λειτουργίες."
+    }
+  }
+}

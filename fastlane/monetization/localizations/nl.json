@@ -1,0 +1,36 @@
+{
+  "appleLocale": "nl-NL",
+  "googleLocale": "nl-NL",
+  "apple": {
+    "subscriptionGroupDisplayName": "Premium",
+    "products": {
+      "weekly": {
+        "displayName": "Premium · Wekelijks",
+        "description": "Volledige toegang tot alle premiumfuncties."
+      },
+      "monthly": {
+        "displayName": "Premium · Maandelijks",
+        "description": "Volledige toegang tot alle premiumfuncties."
+      },
+      "yearly": {
+        "displayName": "Premium · Jaarlijks",
+        "description": "Volledige toegang tot alle premiumfuncties."
+      },
+      "lifetime": {
+        "displayName": "Premium · Levenslang",
+        "description": "Levenslange toegang tot alle premiumfuncties."
+      }
+    }
+  },
+  "google": {
+    "subscription": {
+      "title": "Premium",
+      "description": "Volledige toegang tot alle premiumfuncties.",
+      "benefits": ["Toegang tot alle premiumfuncties"]
+    },
+    "lifetime": {
+      "title": "Premium · Levenslang",
+      "description": "Levenslange toegang tot alle premiumfuncties."
+    }
+  }
+}

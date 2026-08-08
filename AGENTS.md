@@ -28,6 +28,8 @@ npm run lint
 npm run check:type
 npm run check:i18n
 npm run check
+npm run check:monetization
+npm run test:monetization
 npm run format
 
 npm run prebuild
@@ -38,9 +40,18 @@ npm run align-deps
 npm run setup:i18n
 npm run setup:font
 npm run setup:ads
+
+npm run monetization:plan
+npm run monetization:apply
+npm run monetization:verify
+npm run monetization:activate -- --confirm
+npm run monetization:prices:plan
+npm run monetization:prices:apply -- --confirm
+npm run monetization:prices:verify
+npm run monetization:ppp:refresh -- --year 2025
 ```
 
-Use `npm run check` before handing off code. Run a clean prebuild and test the affected native platform after changing native dependencies, `app.json`, a config plugin, or ads/font setup.
+Use `npm run check` before handing off code. It intentionally runs only linting and the app TypeScript check. Run `npm run check:monetization` and `npm run test:monetization` separately after changing `scripts/monetization/` or `src/configs/monetization.ts`. Run a clean prebuild and test the affected native platform after changing native dependencies, `app.json`, a config plugin, or ads/font setup.
 
 ## Before Building Product Features
 
@@ -163,6 +174,8 @@ Use `OfflineError` and shared network utilities for appropriate offline behavior
 
 Set real API keys and entitlement ID before release. Product feature rows belong in `src/components/paywall/`. `usePremiumGate` and `useAutoPaywall` are available for access and timed-presentation flows; ensure their behavior fits the new product before retaining them.
 
+Store products are declared in `src/configs/monetization.ts`. Product forks select any combination of `weekly`, `monthly`, `yearly`, and `lifetime`; disabled products are not provisioned. Store-facing Apple and Google text is declared independently in one JSON file per language under `fastlane/monetization/localizations/`; these files are the sole metadata source and must not be derived from `src/i18n/locales/`. Every store locale file declares all four product variants, even when some are disabled, and product forks must replace generic premium wording when it does not accurately describe the entitlement. The optional top-level `freeTrial` owns one cross-store introductory trial on an enabled subscription; it defaults to 3 days on weekly, supports the shared Apple/Google duration set, can target monthly or yearly, and can be disabled with `null`. The managed Google offer ID remains in `google.freeTrialOfferId` even while the trial is disabled so the confirmed transition can safely identify the offer it owns. Google trial eligibility is scoped to customers who never had any subscription in the app. App identifiers come from `app.json`, while store credentials remain in `.env.fastlane.local` and `fastlane/.private/`. RevenueCat projects and platform app records must already exist; the scripts discover one App Store app by bundle ID and one Play Store app by package name, and never create those records. Use `monetization:plan`, `monetization:apply`, `monetization:activate -- --confirm`, then `monetization:verify` to create missing App Store Connect and Google Play products, initial PPP prices, version-based Apple review metadata, explicit localized store listings, optional per-product Apple review screenshots, RevenueCat catalog associations, and the configured trial. A new app receives product creation and its final PPP matrix in the same `monetization:apply` run; a matching partial Apple run is completed idempotently. PPP uses the checked-in World Bank 2025 snapshot, pairs `PA.NUS.PPP` and `PA.NUS.FCRF` in the newest complete year through 2023, normalizes each country against US inputs from that same year, selects the nearest configured `0.4`–`1.2` band with lower tie-breaking, forces the US to `1.0`, and warns while falling back to `1.0` for missing data. Only `monetization:ppp:refresh -- --year 2025` downloads data. Apple price points/equalizations and Google converted `Money` values are authoritative and must not receive custom local rounding. Mutable metadata and inactive Google trial offers are reconciled from config; immutable product IDs and purchase types require a new product. Google products and prepared offers remain drafts until the explicitly confirmed activation command. The setup workflow rejects established price conflicts. Use the confirmed `monetization:prices:*` workflow for later complete-matrix changes: increases preserve Apple subscribers and Google legacy cohorts, decreases reach Apple subscribers and migrate Google legacy cohorts, and lifetime changes affect future purchases only. It never creates products, changes metadata, or modifies RevenueCat associations. The confirmed trial transition separately replaces obsolete Apple `FREE_TRIAL` introductory offers on configured subscriptions and deactivates obsolete Google offers with the managed trial ID, while leaving paid, promotional, and unrecognized offers untouched.
+
 Premium access is modeled as `loading | free | premium | unknown`. Treat only `premium` as authorized and only confirmed `free` users as eligible for paywalls or ads; `loading` and `unknown` are unresolved states and must fail closed without presenting monetization UI.
 
 Paywall source IDs are analytics metadata owned by the entry point that presents the paywall. Define product-specific IDs next to the route or component that passes them to `usePremiumGate`; do not collect them in `src/configs/` or reusable RevenueCat services. Navigate to the paywall through `usePremiumGate` or `buildPaywallPath` so the source is always preserved. Reusable base components must receive an `onPress` callback instead of assuming that they open the paywall.
@@ -191,7 +204,7 @@ The Settings screen demonstrates contact support, rating, sharing, legal links, 
 
 Fastlane configuration is at the repository root so it survives prebuilds. It manages App Store Connect and Google Play metadata/screenshots; it does not create an app binary in the metadata lanes.
 
-Keep API keys, Play service-account JSON, reviewer contact details, and local environment files out of Git. Update the Fastlane package name, shared URLs, locale mapping, and listing content for each new app before using its `fastlane:*` scripts.
+Keep API keys, Play service-account JSON, reviewer contact details, and local environment files out of Git. Fastlane reads the bundle identifier and package name from `app.json`; update shared URLs, locale mapping, and listing content for each new app before using its `fastlane:*` scripts.
 
 ## Code Conventions
 
@@ -214,5 +227,6 @@ Keep API keys, Play service-account JSON, reviewer contact details, and local en
 1. Run the narrowest relevant checks, and `npm run check` for normal code changes.
 2. Test the changed route or integration on its target platform when feasible.
 3. Run `npm run check:i18n` after changing English product copy.
-4. Regenerate and test native projects after native configuration changes.
-5. Update this file and `README.md` when a reusable architectural convention changes.
+4. Run `npm run check:monetization` and `npm run test:monetization` after changing monetization scripts or configuration.
+5. Regenerate and test native projects after native configuration changes.
+6. Update this file and `README.md` when a reusable architectural convention changes.

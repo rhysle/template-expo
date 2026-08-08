@@ -1,0 +1,36 @@
+{
+  "appleLocale": "uk",
+  "googleLocale": "uk",
+  "apple": {
+    "subscriptionGroupDisplayName": "Premium",
+    "products": {
+      "weekly": {
+        "displayName": "Premium · Щотижня",
+        "description": "Повний доступ до всіх преміум-функцій."
+      },
+      "monthly": {
+        "displayName": "Premium · Щомісяця",
+        "description": "Повний доступ до всіх преміум-функцій."
+      },
+      "yearly": {
+        "displayName": "Premium · Щороку",
+        "description": "Повний доступ до всіх преміум-функцій."
+      },
+      "lifetime": {
+        "displayName": "Premium · Назавжди",
+        "description": "Довічний доступ до всіх преміум-функцій."
+      }
+    }
+  },
+  "google": {
+    "subscription": {
+      "title": "Premium",
+      "description": "Повний доступ до всіх преміум-функцій.",
+      "benefits": ["Доступ до всіх преміум-функцій"]
+    },
+    "lifetime": {
+      "title": "Premium · Назавжди",
+      "description": "Довічний доступ до всіх преміум-функцій."
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "appleLocale": "zh-Hans",
+  "googleLocale": "zh-CN",
+  "apple": {
+    "subscriptionGroupDisplayName": "Premium",
+    "products": {
+      "weekly": { "displayName": "Premium · 每周", "description": "完整访问所有高级功能。" },
+      "monthly": { "displayName": "Premium · 每月", "description": "完整访问所有高级功能。" },
+      "yearly": { "displayName": "Premium · 每年", "description": "完整访问所有高级功能。" },
+      "lifetime": { "displayName": "Premium · 终身", "description": "终身访问所有高级功能。" }
+    }
+  },
+  "google": {
+    "subscription": {
+      "title": "Premium",
+      "description": "完整访问所有高级功能。",
+      "benefits": ["访问所有高级功能"]
+    },
+    "lifetime": { "title": "Premium · 终身", "description": "终身访问所有高级功能。" }
+  }
+}

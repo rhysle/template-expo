@@ -1,0 +1,36 @@
+{
+  "appleLocale": "cs",
+  "googleLocale": "cs-CZ",
+  "apple": {
+    "subscriptionGroupDisplayName": "Premium",
+    "products": {
+      "weekly": {
+        "displayName": "Premium · Týdně",
+        "description": "Plný přístup ke všem prémiovým funkcím."
+      },
+      "monthly": {
+        "displayName": "Premium · Měsíčně",
+        "description": "Plný přístup ke všem prémiovým funkcím."
+      },
+      "yearly": {
+        "displayName": "Premium · Ročně",
+        "description": "Plný přístup ke všem prémiovým funkcím."
+      },
+      "lifetime": {
+        "displayName": "Premium · Doživotně",
+        "description": "Doživotní přístup ke všem prémiovým funkcím."
+      }
+    }
+  },
+  "google": {
+    "subscription": {
+      "title": "Premium",
+      "description": "Plný přístup ke všem prémiovým funkcím.",
+      "benefits": ["Plný přístup ke všem prémiovým funkcím"]
+    },
+    "lifetime": {
+      "title": "Premium · Doživotně",
+      "description": "Doživotní přístup ke všem prémiovým funkcím."
+    }
+  }
+}
