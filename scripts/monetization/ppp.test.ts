@@ -96,7 +96,7 @@ test('forces the US to 1.0, applies overrides, and falls back when data is absen
       strategy: 'ppp-bands',
       dataset: 'world-bank-2025',
       bands,
-      countryOverrides: { CH: 0.9 },
+      countryOverrides: { CH: 0.9, GI: 0.9 },
     },
   } as MonetizationConfig
   const resolver = new RegionalPricingResolver(config)
@@ -106,6 +106,16 @@ test('forces the US to 1.0, applies overrides, and falls back when data is absen
   assert.equal(resolver.forGoogle('US').multiplier, 1)
   assert.equal(resolver.forGoogle('CH').multiplier, 0.9)
   assert.equal(resolver.forGoogle('CH').overridden, true)
+  assert.deepEqual(resolver.forGoogle('GI'), {
+    iso2: 'GI',
+    iso3: 'GIB',
+    countryName: 'Gibraltar',
+    multiplier: 0.9,
+    overridden: true,
+    fallback: false,
+  })
+  assert.equal(resolver.forApple('GIB').multiplier, 0.9)
+  assert.equal(resolver.forApple('GIB').overridden, true)
   assert.deepEqual(resolver.forGoogle('ZZ'), {
     multiplier: 1,
     overridden: false,

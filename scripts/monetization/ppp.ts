@@ -10,6 +10,27 @@ import type {
 
 const DATA_ROOT = path.resolve(__dirname, 'data')
 
+// World Bank omits PPP or exchange-rate observations for these storefront countries.
+// Keep their ISO alpha-3 IDs here so alpha-2 `countryOverrides` still resolve for
+// App Store Connect, whose territory IDs are alpha-3.
+const NO_DATA_COUNTRIES: Readonly<
+  Record<string, { iso3: string; countryName: string }>
+> = {
+  ER: { iso3: 'ERI', countryName: 'Eritrea' },
+  GI: { iso3: 'GIB', countryName: 'Gibraltar' },
+  GN: { iso3: 'GIN', countryName: 'Guinea' },
+  LI: { iso3: 'LIE', countryName: 'Liechtenstein' },
+  MC: { iso3: 'MCO', countryName: 'Monaco' },
+  MM: { iso3: 'MMR', countryName: 'Myanmar' },
+  SO: { iso3: 'SOM', countryName: 'Somalia' },
+  TM: { iso3: 'TKM', countryName: 'Turkmenistan' },
+  TW: { iso3: 'TWN', countryName: 'Taiwan' },
+  VA: { iso3: 'VAT', countryName: 'Vatican City' },
+  VE: { iso3: 'VEN', countryName: 'Venezuela' },
+  VG: { iso3: 'VGB', countryName: 'British Virgin Islands' },
+  YE: { iso3: 'YEM', countryName: 'Yemen' },
+}
+
 export const decimalToCents = (value: string): bigint => {
   const match = /^(\d+)\.(\d{2})$/.exec(value)
   if (!match) throw new Error(`Invalid USD price: ${value}`)
@@ -102,6 +123,25 @@ export class RegionalPricingResolver {
         fallback: false,
       }
       this.byIso2.set(country.iso2, assignment)
+      this.byIso3.set(country.iso3, assignment)
+    }
+    for (const [iso2, multiplier] of Object.entries(config.regionalPricing.countryOverrides)) {
+      if (this.byIso2.has(iso2)) continue
+      const country = NO_DATA_COUNTRIES[iso2]
+      if (!country) {
+        throw new Error(
+          `PPP override ${iso2} has no World Bank data or known App Store territory mapping`
+        )
+      }
+      const assignment: RegionalPricingAssignment = {
+        iso2,
+        iso3: country.iso3,
+        countryName: country.countryName,
+        multiplier,
+        overridden: true,
+        fallback: false,
+      }
+      this.byIso2.set(iso2, assignment)
       this.byIso3.set(country.iso3, assignment)
     }
   }

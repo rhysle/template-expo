@@ -69,6 +69,7 @@ interface AppleRegionalPriceTarget {
   multiplier: number
   sourceYear?: number
   rawRatio?: number
+  overridden: boolean
   fallback: boolean
   currency?: string
 }
@@ -806,7 +807,7 @@ export class AppleStoreClient {
         ? `; ${sample.territoryId}: ${currentPoint?.attributes.customerPrice ?? 'missing'} → ${sample.point.attributes.customerPrice}, ` +
           `ratio ${sample.rawRatio === undefined ? 'unavailable' : sample.rawRatio.toFixed(3)}, band ${sample.multiplier}, ` +
           `anchor $${adjustedPriceUsd(this.config.products[key].priceUsd, sample.multiplier)}, ` +
-          `${sample.sourceYear === undefined ? 'no source year' : `source ${sample.sourceYear}`}, ${sample.fallback ? '1.0 fallback' : 'automatic/override'}`
+          `${sample.sourceYear === undefined ? 'no source year' : `source ${sample.sourceYear}`}, ${sample.fallback ? '1.0 fallback' : sample.overridden ? 'override' : 'automatic'}`
         : ''
       this.reporter.change(
         `${laterChange ? 'update' : 'configure'} Apple ${key} prices in ${missingTargets.length} storefront(s)${details}`
@@ -825,7 +826,7 @@ export class AppleStoreClient {
           this.reporter.info(
             `${target.territoryId}: ${existing ? format(existing.attributes.customerPrice) : 'missing'} → ${format(target.point.attributes.customerPrice)}; ` +
               `source ${target.sourceYear ?? 'none'}, ratio ${target.rawRatio?.toFixed(3) ?? 'unavailable'}, band ${target.multiplier}, ` +
-              `anchor $${adjustedPriceUsd(this.config.products[key].priceUsd, target.multiplier)}, ${target.fallback ? '1.0 fallback' : 'automatic/override'}`
+              `anchor $${adjustedPriceUsd(this.config.products[key].priceUsd, target.multiplier)}, ${target.fallback ? '1.0 fallback' : target.overridden ? 'override' : 'automatic'}`
           )
         }
       }
@@ -934,6 +935,7 @@ export class AppleStoreClient {
         multiplier: assignment.multiplier,
         sourceYear: assignment.sourceYear,
         rawRatio: assignment.rawRatio,
+        overridden: assignment.overridden,
         fallback: assignment.fallback,
         currency: this.territoryCurrencies.get(territory.id),
       }
@@ -1180,7 +1182,7 @@ export class AppleStoreClient {
           this.reporter.info(
             `${target.territoryId}: ${existing?.attributes.customerPrice ?? 'missing'} → ${target.point.attributes.customerPrice}; ` +
               `source ${target.sourceYear ?? 'none'}, ratio ${target.rawRatio?.toFixed(3) ?? 'unavailable'}, band ${target.multiplier}, ` +
-              `anchor $${adjustedPriceUsd(this.config.products.lifetime.priceUsd, target.multiplier)}, ${target.fallback ? '1.0 fallback' : 'automatic/override'}, future purchases only`
+              `anchor $${adjustedPriceUsd(this.config.products.lifetime.priceUsd, target.multiplier)}, ${target.fallback ? '1.0 fallback' : target.overridden ? 'override' : 'automatic'}, future purchases only`
           )
         }
       }

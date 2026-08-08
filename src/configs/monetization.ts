@@ -26,7 +26,21 @@ export const monetizationConfig = {
     strategy: 'ppp-bands',
     dataset: 'world-bank-2025',
     bands: [0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2],
-    countryOverrides: {},
+    countryOverrides: {
+      GI: 0.9, // Gibraltar
+      LI: 1.0, // Liechtenstein
+      MC: 1.0, // Monaco
+      MM: 0.4, // Myanmar
+      TW: 0.5, // Taiwan
+      VA: 0.7, // Vatican City
+      VG: 1.0, // British Virgin Islands
+      ER: 0.4, // Eritrea
+      GN: 0.4, // Guinea
+      SO: 0.4, // Somalia
+      TM: 0.5, // Turkmenistan
+      VE: 0.4, // Venezuela
+      YE: 0.4, // Yemen
+    },
   },
 
   products: {
