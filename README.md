@@ -64,8 +64,8 @@ Google generate the initial PPP regional prices from those US anchors. Product I
 internal reference names remain explicit because store identifiers cannot be changed or reused
 after activation.
 
-Regional pricing defaults to `ppp-bands` with automatic multipliers from `0.4` through `1.2`,
-including premium bands. The checked-in `world-bank-2025` snapshot combines World Bank
+Regional pricing uses `ppp-bands` with the required complete fixed multiplier range from `0.4`
+through `1.2`, including premium bands; do not add, remove, or reorder those bands. The checked-in `world-bank-2025` snapshot combines World Bank
 `PA.NUS.PPP` and `PA.NUS.FCRF` observations. For each country it selects the newest year from
 2025 back through 2023 where both indicators are positive, then calculates:
 
@@ -76,8 +76,10 @@ including premium bands. The checked-in `world-bank-2025` snapshot combines Worl
 ```
 
 The nearest configured band wins, with the lower band winning an exact tie. The United States is
-always `1.0`; ISO alpha-2 `countryOverrides` can select another configured band. Countries without
-a complete indicator pair use `1.0` with a warning. Set `strategy: 'store-equalized'` to opt out.
+always `1.0`; ISO alpha-2 `countryOverrides` must select one of the fixed bands. Overrides for
+the known App Store territories without World Bank data are supported; an unknown no-data country
+is rejected rather than silently falling back. Countries without a complete indicator pair use
+`1.0` with a warning. Set `strategy: 'store-equalized'` to opt out.
 Economic data is never downloaded by normal monetization commands. Refresh it deliberately and
 review the resulting checked-in snapshot with:
 
@@ -136,8 +138,10 @@ npm run monetization:verify
 ```
 
 `plan` does not write store state. For a new app, `apply` creates missing products directly with
-their complete initial PPP matrix, reconciles mutable
-internal metadata, and creates or updates every configured localization. Apple reviewable
+their complete initial PPP matrix, reconciles mutable store metadata and RevenueCat product,
+entitlement, offering, and package metadata, and creates or updates every configured localization.
+RevenueCat product types, like store product IDs and purchase types, are immutable; resolve a type
+conflict with a new store product identifier instead of attempting to mutate it. Apple reviewable
 metadata uses the version-based App Store Connect API: an editable draft is updated in place,
 or a new draft metadata version is created when the previous version is no longer editable.
 Configured review screenshots are uploaded to each product's private Review Information field,
