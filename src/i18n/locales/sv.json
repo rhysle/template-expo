@@ -91,7 +91,7 @@
       }
     },
     "feedback": {
-      "subscribeSuccess": "Välkommen! Din prenumeration är aktiv.",
+      "subscribeSuccess": "Välkommen! Din premiumåtkomst är aktiv.",
       "subscribeError": "Något gick fel. Försök igen.",
       "restoreSuccess": "Prenumeration återställd!",
       "restoreNotFound": "Ingen aktiv prenumeration hittades.",

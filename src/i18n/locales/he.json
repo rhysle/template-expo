@@ -91,7 +91,7 @@
       }
     },
     "feedback": {
-      "subscribeSuccess": "ברוך הבא! המנוי שלך פעיל.",
+      "subscribeSuccess": "ברוכים הבאים! הגישה שלך ל-Premium פעילה.",
       "subscribeError": "משהו השתבש. אנא נסה שוב.",
       "restoreSuccess": "המנוי שוחזר בהצלחה!",
       "restoreNotFound": "לא נמצא מנוי פעיל.",

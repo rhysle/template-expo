@@ -91,7 +91,7 @@
       }
     },
     "feedback": {
-      "subscribeSuccess": "Welkom! Uw abonnement is actief.",
+      "subscribeSuccess": "Welkom! Uw Premium-toegang is actief.",
       "subscribeError": "Er ging iets fout. Probeer het opnieuw.",
       "restoreSuccess": "Abonnement succesvol hersteld!",
       "restoreNotFound": "Geen actief abonnement gevonden.",

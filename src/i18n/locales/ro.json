@@ -91,7 +91,7 @@
       }
     },
     "feedback": {
-      "subscribeSuccess": "Bun venit! Abonamentul tău este activ.",
+      "subscribeSuccess": "Bun venit! Accesul tău Premium este activ.",
       "subscribeError": "Ceva a mers greșit. Te rugăm să încerci din nou.",
       "restoreSuccess": "Abonament restaurat cu succes!",
       "restoreNotFound": "Nu s-a găsit niciun abonament activ.",

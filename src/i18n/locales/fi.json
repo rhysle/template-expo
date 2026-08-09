@@ -91,7 +91,7 @@
       }
     },
     "feedback": {
-      "subscribeSuccess": "Tervetuloa! Tilauksesi on aktiivinen.",
+      "subscribeSuccess": "Tervetuloa! Premium-käyttöoikeutesi on aktiivinen.",
       "subscribeError": "Jotain meni pieleen. Yritä uudelleen.",
       "restoreSuccess": "Tilaus palautettu onnistuneesti!",
       "restoreNotFound": "Aktiivista tilausta ei löydetty.",

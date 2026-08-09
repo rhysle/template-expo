@@ -91,7 +91,7 @@
       }
     },
     "feedback": {
-      "subscribeSuccess": "欢迎！您的订阅已激活。",
+      "subscribeSuccess": "欢迎！您的高级版使用权限已激活。",
       "subscribeError": "出现错误，请重试。",
       "restoreSuccess": "订阅恢复成功！",
       "restoreNotFound": "未找到有效订阅。",

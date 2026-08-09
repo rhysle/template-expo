@@ -91,7 +91,7 @@
       }
     },
     "feedback": {
-      "subscribeSuccess": "Hoş geldiniz! Aboneliğiniz aktif.",
+      "subscribeSuccess": "Hoş geldiniz! Premium erişiminiz etkin.",
       "subscribeError": "Bir şeyler ters gitti. Lütfen tekrar deneyin.",
       "restoreSuccess": "Abonelik başarıyla geri yüklendi!",
       "restoreNotFound": "Aktif abonelik bulunamadı.",

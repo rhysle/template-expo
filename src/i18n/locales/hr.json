@@ -91,7 +91,7 @@
       }
     },
     "feedback": {
-      "subscribeSuccess": "Dobrodošli! Vaša pretplata je aktivna.",
+      "subscribeSuccess": "Dobro došli! Vaš Premium pristup je aktivan.",
       "subscribeError": "Nešto je pošlo po krivu. Molimo pokušajte ponovo.",
       "restoreSuccess": "Pretplata uspješno obnovljena!",
       "restoreNotFound": "Nije pronađena aktivna pretplata.",

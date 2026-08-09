@@ -91,7 +91,7 @@
       }
     },
     "feedback": {
-      "subscribeSuccess": "Willkommen! Ihr Abonnement ist aktiv.",
+      "subscribeSuccess": "Willkommen! Ihr Premium-Zugang ist aktiv.",
       "subscribeError": "Etwas ist schiefgelaufen. Bitte erneut versuchen.",
       "restoreSuccess": "Abonnement erfolgreich wiederhergestellt!",
       "restoreNotFound": "Kein aktives Abonnement gefunden.",

@@ -91,7 +91,7 @@
       }
     },
     "feedback": {
-      "subscribeSuccess": "مرحبًا! اشتراكك فعّال.",
+      "subscribeSuccess": "مرحبًا! تم تفعيل وصولك المميز.",
       "subscribeError": "حدث خطأ ما. يرجى المحاولة مجددًا.",
       "restoreSuccess": "تم استعادة الاشتراك بنجاح!",
       "restoreNotFound": "لم يتم العثور على اشتراك فعّال.",

@@ -91,7 +91,7 @@
       }
     },
     "feedback": {
-      "subscribeSuccess": "Üdvözöljük! Az előfizetése aktív.",
+      "subscribeSuccess": "Üdvözöljük! A prémium hozzáférése aktív.",
       "subscribeError": "Valami hiba történt. Kérjük, próbálja újra.",
       "restoreSuccess": "Az előfizetés sikeresen visszaállítva!",
       "restoreNotFound": "Nem található aktív előfizetés.",

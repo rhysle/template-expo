@@ -91,7 +91,7 @@
       }
     },
     "feedback": {
-      "subscribeSuccess": "Bienvenue ! Votre abonnement est actif.",
+      "subscribeSuccess": "Bienvenue ! Votre accès Premium est actif.",
       "subscribeError": "Une erreur s'est produite. Veuillez réessayer.",
       "restoreSuccess": "Abonnement restauré avec succès !",
       "restoreNotFound": "Aucun abonnement actif trouvé.",

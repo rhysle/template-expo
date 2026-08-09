@@ -91,7 +91,7 @@
       }
     },
     "feedback": {
-      "subscribeSuccess": "Vítejte! Vaše předplatné je aktivní.",
+      "subscribeSuccess": "Vítejte! Váš prémiový přístup je aktivní.",
       "subscribeError": "Něco se pokazilo. Zkuste to prosím znovu.",
       "restoreSuccess": "Předplatné úspěšně obnoveno!",
       "restoreNotFound": "Nebylo nalezeno žádné aktivní předplatné.",

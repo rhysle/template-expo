@@ -91,7 +91,7 @@
       }
     },
     "feedback": {
-      "subscribeSuccess": "Velkommen! Abonnementet ditt er aktivt.",
+      "subscribeSuccess": "Velkommen! Premium-tilgangen din er aktiv.",
       "subscribeError": "Noe gikk galt. Vennligst prøv igjen.",
       "restoreSuccess": "Abonnement gjenopprettet!",
       "restoreNotFound": "Ingen aktivt abonnement funnet.",

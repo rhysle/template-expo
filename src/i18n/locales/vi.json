@@ -91,7 +91,7 @@
       }
     },
     "feedback": {
-      "subscribeSuccess": "Chào mừng! Gói đăng ký của bạn đã được kích hoạt.",
+      "subscribeSuccess": "Chào mừng! Quyền truy cập Premium của bạn đã được kích hoạt.",
       "subscribeError": "Đã xảy ra lỗi. Vui lòng thử lại.",
       "restoreSuccess": "Khôi phục gói đăng ký thành công!",
       "restoreNotFound": "Không tìm thấy gói đăng ký nào.",

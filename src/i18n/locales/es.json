@@ -91,7 +91,7 @@
       }
     },
     "feedback": {
-      "subscribeSuccess": "¡Bienvenido! Tu suscripción está activa.",
+      "subscribeSuccess": "¡Te damos la bienvenida! Tu acceso Premium está activo.",
       "subscribeError": "Algo salió mal. Por favor, inténtalo de nuevo.",
       "restoreSuccess": "¡Suscripción restaurada con éxito!",
       "restoreNotFound": "No se encontró ninguna suscripción activa.",

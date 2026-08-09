@@ -91,7 +91,7 @@
       }
     },
     "feedback": {
-      "subscribeSuccess": "ようこそ！サブスクリプションが有効です。",
+      "subscribeSuccess": "ようこそ！プレミアムアクセスが有効になりました。",
       "subscribeError": "エラーが発生しました。もう一度お試しください。",
       "restoreSuccess": "サブスクリプションを復元しました！",
       "restoreNotFound": "有効なサブスクリプションが見つかりませんでした。",

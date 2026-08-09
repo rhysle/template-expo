@@ -91,7 +91,7 @@
       }
     },
     "feedback": {
-      "subscribeSuccess": "환영합니다! 구독이 활성화되었습니다.",
+      "subscribeSuccess": "환영합니다! 프리미엄 이용 권한이 활성화되었습니다.",
       "subscribeError": "문제가 발생했습니다. 다시 시도해 주세요.",
       "restoreSuccess": "구독이 복원되었습니다!",
       "restoreNotFound": "활성 구독을 찾을 수 없습니다.",

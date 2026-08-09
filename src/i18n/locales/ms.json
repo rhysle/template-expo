@@ -91,7 +91,7 @@
       }
     },
     "feedback": {
-      "subscribeSuccess": "Selamat datang! Langganan anda aktif.",
+      "subscribeSuccess": "Selamat datang! Akses Premium anda aktif.",
       "subscribeError": "Ada yang tidak kena. Sila cuba lagi.",
       "restoreSuccess": "Langganan berjaya dipulihkan!",
       "restoreNotFound": "Tiada langganan aktif ditemui.",

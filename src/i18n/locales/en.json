@@ -95,7 +95,7 @@
       }
     },
     "feedback": {
-      "subscribeSuccess": "Welcome! Your subscription is active.",
+      "subscribeSuccess": "Welcome! Your premium access is active.",
       "subscribeError": "Something went wrong. Please try again.",
       "restoreSuccess": "Premium access restored successfully!",
       "restoreNotFound": "No active Premium purchase found.",
