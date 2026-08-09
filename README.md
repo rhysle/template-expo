@@ -184,10 +184,40 @@ offers. Paid introductory, promotional, and unrecognized Google offers are never
 
 ### 4. Configure Sentry
 
-1. Create a Sentry project for the app.
-2. Set `AppConfig.sentry.dsn` in `src/configs/AppConfig.ts`.
-3. Update the Sentry Expo plugin's `organization` and `project` values in `app.json`.
-4. Store the Sentry authentication token for EAS source-map uploads as an EAS secret; never commit it.
+1. Keep the fixed-scope Sentry Organization Token as `SENTRY_AUTH_TOKEN` in the gitignored
+   `.env.local` file and in the existing account- or project-level EAS environment configuration.
+   Its `org:ci` scope is used only for build/update source-map uploads.
+2. In Sentry Organization Settings, open **Developer Settings > Custom Integrations**, create an
+   **Internal Integration**, and grant **Organization: Read**, **Team: Admin**, and **Project: Read
+   & Write**. Team Admin allows project creation while the organization disables member project
+   creation; it is narrower than granting Organization Write. Keep this reusable provisioning token
+   in a secure machine-level environment as `SENTRY_SETUP_AUTH_TOKEN` and use the same token when
+   bootstrapping future app forks. Do not add it to EAS. This template intentionally includes
+   `.env.local` in EAS build archives for local-build inputs, so only place the setup token there
+   temporarily and remove it before any EAS build.
+3. After `npm run setup:expo` has linked the app to EAS, run:
+
+   ```bash
+   npm run setup:sentry
+   ```
+
+   The command derives the Sentry project name and slug from `expo.name` and `expo.slug`, selects an
+   existing Sentry team, and idempotently creates or reuses the React Native project. It then
+   retrieves or creates an active client key, writes its public DSN to `AppConfig.sentry.dsn`, and
+   updates the Sentry Expo plugin's `organization`, `project`, and `url` properties in `app.json`.
+   The organization is read from the existing Sentry Expo plugin configuration in `app.json`; set
+   `SENTRY_ORG` in `.env.local` only to override it. A sole team is selected automatically; set
+   `SENTRY_TEAM` when the organization has multiple teams. Set `SENTRY_URL` only for self-hosted
+   Sentry. A normal Sentry Organization Token cannot be used for this command because Sentry fixes
+   it to the `org:ci` scope.
+
+4. Run a clean prebuild before the next local native build. A release build is still required to
+   verify event delivery and native/JavaScript symbolication end to end.
+
+EAS Build uploads source maps automatically when `SENTRY_AUTH_TOKEN` is available. The
+`eas-update`, `eas-update:ios`, and `eas-update:android` commands upload the generated `dist`
+source maps after a successful update. If the upload fails, the update has already been published,
+but the overall command reports failure so the symbolication problem is visible.
 
 ### 5. Configure AdMob (if the app shows ads)
 
@@ -259,6 +289,7 @@ npm run check:i18n        # English source-locale audit
 npm run check:i18n:release # All-locale release audit
 npm run check             # Lint + type check
 npm run test:setup-expo   # Type-check and test Expo setup tooling
+npm run test:setup-sentry # Type-check and test Sentry setup tooling
 npm run test:monetization # Type-check and test monetization tooling
 npm run format            # Format and apply safe lint fixes
 
@@ -267,6 +298,7 @@ npm run doctor            # Expo environment diagnostics
 npm run align-deps        # Align installed packages with the Expo SDK
 
 npm run setup:expo        # Rename the app and create/link its EAS project
+npm run setup:sentry      # Create/reuse the Sentry project and sync local config
 npm run setup:ads         # Synchronize AdMob native configuration
 npm run setup:font        # Synchronize the selected embedded font
 npm run setup:i18n        # Synchronize supported locales in Expo config
@@ -421,7 +453,7 @@ The i18n configuration includes `number` and `currency` formatters for products 
 
 ## Build and Release
 
-EAS profiles are defined in `eas.json`. Common production commands are `npm run eas-build`, `npm run eas-build:ios:submit`, `npm run eas-build:android:submit`, and `npm run eas-update`.
+EAS profiles are defined in `eas.json`. Common production commands are `npm run eas-build`, `npm run eas-build:ios:submit`, `npm run eas-build:android:submit`, and `npm run eas-update`. The EAS Update commands publish only when the update succeeds, then upload the generated `dist` source maps to Sentry.
 
 Fastlane at the repository root manages App Store Connect and Google Play listing metadata and screenshots. It reads the bundle identifier and package name from `app.json`; update its shared URLs, locale folders, and credentials for each new app before running the `fastlane:*` scripts. Keep secrets and reviewer contact information out of Git.
 
@@ -431,4 +463,4 @@ screenshots, and release tasks.
 
 ## Verification
 
-At a minimum, run `npm run check` after code changes and `npm run check:i18n` after changing English product copy. The standard check intentionally covers only linting and the app TypeScript check. Run `npm run test:setup-expo` after changing the Expo setup tooling, and run `npm run test:monetization` after changing `scripts/monetization/` or `src/configs/monetization.ts`; each domain command includes its TypeScript check. For native dependency or configuration changes, also run `npm run prebuild:clean` and test the affected platform.
+At a minimum, run `npm run check` after code changes and `npm run check:i18n` after changing English product copy. The standard check intentionally covers only linting and the app TypeScript check. Run `npm run test:setup-expo` after changing the Expo setup tooling, `npm run test:setup-sentry` after changing the Sentry setup tooling, and `npm run test:monetization` after changing `scripts/monetization/` or `src/configs/monetization.ts`; each domain command includes its TypeScript check. For native dependency or configuration changes, also run `npm run prebuild:clean` and test the affected platform.

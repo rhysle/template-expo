@@ -43,6 +43,18 @@ export default defineConfig([
     },
   },
   {
+    files: [
+      'scripts/setup-sentry.ts',
+      'scripts/setup-sentry-core.ts',
+      'scripts/setup-sentry.test.ts',
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: './scripts/setup-sentry.tsconfig.json',
+      },
+    },
+  },
+  {
     settings: {
       'import/resolver': {
         typescript: {
