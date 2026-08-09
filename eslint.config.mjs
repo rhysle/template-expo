@@ -35,6 +35,14 @@ export default defineConfig([
     },
   },
   {
+    files: ['scripts/setup-expo.ts', 'scripts/setup-expo-core.ts', 'scripts/setup-expo.test.ts'],
+    languageOptions: {
+      parserOptions: {
+        project: './scripts/setup-expo.tsconfig.json',
+      },
+    },
+  },
+  {
     settings: {
       'import/resolver': {
         typescript: {

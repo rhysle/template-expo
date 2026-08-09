@@ -29,11 +29,12 @@ Before implementing product features, fill in [`docs/PRODUCT.md`](docs/PRODUCT.m
    npm run setup:expo
    ```
 
-   The script prompts for an npm-style app name, updates the package and Expo app names, creates or links an EAS project, and writes the new EAS project ID and update URL to `app.json`. Do not reuse the template's EAS project ID or update URL.
+   The script separately prompts for the app display name, Expo slug, URL scheme, iOS bundle identifier, and Android package name. It then lets you create or link an EAS project, verifies the resulting project and resolved Expo configuration, and writes the project ID and update URL to `app.json`. Rerunning it against an already linked app requires confirmation, and failed setup restores the local configuration files.
 
-3. Choose final, globally unique iOS and Android identifiers. Update `expo.scheme`, `expo.ios.bundleIdentifier`, and `expo.android.package` in `app.json`.
-4. Replace icons, adaptive-icon layers, splash art, and favicon under `assets/images/`, then update their references and colors in `app.json`.
-5. Replace the four onboarding Lottie assets in `assets/animations/onboarding/page-1.json` through `page-4.json`. Keep those fixed filenames and the matching generic page keys so no code changes are needed.
+   Choose final, globally unique native identifiers before continuing. They identify the app in Apple and Google services and should not change after publishing. This command intentionally does not configure Firebase, Sentry, AdMob, RevenueCat, or store metadata; complete those dedicated setup steps separately.
+
+3. Replace icons, adaptive-icon layers, splash art, and favicon under `assets/images/`, then update their references and colors in `app.json`.
+4. Replace the four onboarding Lottie assets in `assets/animations/onboarding/page-1.json` through `page-4.json`. Keep those fixed filenames and the matching generic page keys so no code changes are needed.
 
 ### 2. Configure Firebase Analytics
 
@@ -257,8 +258,8 @@ npm run check:type        # TypeScript, no emit
 npm run check:i18n        # English source-locale audit
 npm run check:i18n:release # All-locale release audit
 npm run check             # Lint + type check
-npm run check:monetization # Monetization script type check
-npm run test:monetization # Monetization script tests
+npm run test:setup-expo   # Type-check and test Expo setup tooling
+npm run test:monetization # Type-check and test monetization tooling
 npm run format            # Format and apply safe lint fixes
 
 npm run prebuild:clean    # Regenerate native projects from Expo config
@@ -430,4 +431,4 @@ screenshots, and release tasks.
 
 ## Verification
 
-At a minimum, run `npm run check` after code changes and `npm run check:i18n` after changing English product copy. The standard check intentionally covers only linting and the app TypeScript check; run `npm run check:monetization` and `npm run test:monetization` separately when changing `scripts/monetization/` or `src/configs/monetization.ts`. For native dependency or configuration changes, also run `npm run prebuild:clean` and test the affected platform.
+At a minimum, run `npm run check` after code changes and `npm run check:i18n` after changing English product copy. The standard check intentionally covers only linting and the app TypeScript check. Run `npm run test:setup-expo` after changing the Expo setup tooling, and run `npm run test:monetization` after changing `scripts/monetization/` or `src/configs/monetization.ts`; each domain command includes its TypeScript check. For native dependency or configuration changes, also run `npm run prebuild:clean` and test the affected platform.

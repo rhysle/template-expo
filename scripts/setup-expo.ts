@@ -1,149 +1,240 @@
 #!/usr/bin/env npx tsx
 /**
- * Personalizes a clone of this template and links it to a new EAS project.
+ * Personalizes a clone of this template and creates or links its EAS project.
  *
  * Usage:
  *   npm run setup:expo
  */
 
-import { execFileSync } from 'child_process'
-import { createInterface } from 'readline/promises'
-import fs from 'fs'
-import path from 'path'
+import { execFileSync } from 'node:child_process'
+import fs from 'node:fs'
+import path from 'node:path'
+import { createInterface } from 'node:readline/promises'
+
+import type { AppIdentity, JsonObject } from './setup-expo-core'
+import {
+  applyAppIdentity,
+  deriveSlug,
+  getExpoConfig,
+  getProjectId,
+  parseEasUsername,
+  setProjectId,
+  validateAndroidPackage,
+  validateDisplayName,
+  validateIosBundleIdentifier,
+  validateProjectId,
+  validateScheme,
+  validateSlug,
+} from './setup-expo-core'
 
 const ROOT = path.resolve(__dirname, '..')
-const PROJECT_ID_PATTERN =
-  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
-
-type JsonObject = Record<string, unknown>
+const CONFIG_FILES = ['package.json', 'package-lock.json', 'app.json'] as const
+type EasSetup = { mode: 'owner-slug'; owner: string } | { mode: 'project-id'; projectId: string }
 
 function readJson(fileName: string): JsonObject {
   return JSON.parse(fs.readFileSync(path.join(ROOT, fileName), 'utf8')) as JsonObject
 }
 
 function writeJson(fileName: string, value: JsonObject): void {
-  fs.writeFileSync(path.join(ROOT, fileName), `${JSON.stringify(value, null, 2)}\n`)
+  const target = path.join(ROOT, fileName)
+  const temporary = `${target}.setup-expo.tmp`
+  fs.writeFileSync(temporary, `${JSON.stringify(value, null, 2)}\n`)
+  fs.renameSync(temporary, target)
 }
 
-function getExpoConfig(appJson: JsonObject): JsonObject {
-  const expo = appJson.expo
-  if (!expo || typeof expo !== 'object' || Array.isArray(expo)) {
-    throw new Error('app.json must contain an "expo" object.')
-  }
-
-  return expo as JsonObject
+function snapshotConfigFiles(): Map<string, string> {
+  return new Map(
+    CONFIG_FILES.map((fileName) => [fileName, fs.readFileSync(path.join(ROOT, fileName), 'utf8')])
+  )
 }
 
-function setProjectId(appJson: JsonObject, projectId: string): void {
-  const expo = getExpoConfig(appJson)
-  const extra = (expo.extra ??= {})
-  if (typeof extra !== 'object' || Array.isArray(extra)) {
-    throw new Error('app.json "expo.extra" must be an object.')
+function restoreConfigFiles(snapshot: Map<string, string>): void {
+  for (const [fileName, contents] of snapshot) {
+    const target = path.join(ROOT, fileName)
+    const temporary = `${target}.setup-expo.tmp`
+    fs.writeFileSync(temporary, contents)
+    fs.renameSync(temporary, target)
   }
-
-  const eas = ((extra as JsonObject).eas ??= {})
-  if (typeof eas !== 'object' || Array.isArray(eas)) {
-    throw new Error('app.json "expo.extra.eas" must be an object.')
-  }
-
-  ;(eas as JsonObject).projectId = projectId
-  expo.updates = { ...(expo.updates as JsonObject), url: `https://u.expo.dev/${projectId}` }
 }
 
-function removeExistingEasProjectLink(expo: JsonObject): void {
-  const extra = expo.extra
-  if (extra && typeof extra === 'object' && !Array.isArray(extra)) {
-    const eas = (extra as JsonObject).eas
-    if (eas && typeof eas === 'object' && !Array.isArray(eas)) {
-      delete (eas as JsonObject).projectId
-      if (Object.keys(eas).length === 0) delete (extra as JsonObject).eas
+function runEas(args: string[], captureOutput = false): string {
+  return execFileSync('npx', ['eas-cli@latest', ...args], {
+    cwd: ROOT,
+    encoding: 'utf8',
+    stdio: captureOutput ? ['inherit', 'pipe', 'inherit'] : 'inherit',
+  })
+}
+
+function runExpoConfigCheck(): void {
+  execFileSync('npx', ['expo', 'config', '--type', 'public'], {
+    cwd: ROOT,
+    stdio: 'inherit',
+  })
+}
+
+type Readline = ReturnType<typeof createInterface>
+
+async function ask(readline: Readline, prompt: string, defaultValue?: string): Promise<string> {
+  const suffix = defaultValue ? ` [${defaultValue}]` : ''
+  const answer = (await readline.question(`${prompt}${suffix}: `)).trim()
+  const value = answer || defaultValue
+  if (!value) throw new Error(`${prompt} is required.`)
+  return value
+}
+
+async function askValidated(
+  readline: Readline,
+  prompt: string,
+  validate: (value: string) => void,
+  defaultValue?: string
+): Promise<string> {
+  while (true) {
+    const value = await ask(readline, prompt, defaultValue)
+    try {
+      validate(value)
+      return value
+    } catch (error) {
+      console.error(`❌ ${error instanceof Error ? error.message : String(error)}`)
     }
   }
-
-  const updates = expo.updates
-  if (updates && typeof updates === 'object' && !Array.isArray(updates)) {
-    delete (updates as JsonObject).url
-    if (Object.keys(updates).length === 0) delete expo.updates
-  }
-
-  delete expo.owner
 }
 
-function getProjectId(appJson: JsonObject): string | undefined {
-  const expo = getExpoConfig(appJson)
-  const extra = expo.extra
-  if (!extra || typeof extra !== 'object' || Array.isArray(extra)) return undefined
+async function confirm(readline: Readline, prompt: string): Promise<boolean> {
+  const answer = (await readline.question(`${prompt} (y/N): `)).trim().toLowerCase()
+  return answer === 'y' || answer === 'yes'
+}
 
-  const eas = (extra as JsonObject).eas
-  if (!eas || typeof eas !== 'object' || Array.isArray(eas)) return undefined
+async function askIdentity(readline: Readline): Promise<AppIdentity> {
+  const displayName = await askValidated(readline, 'App display name', validateDisplayName)
+  const suggestedSlug = deriveSlug(displayName)
+  const slug = await askValidated(readline, 'Expo project slug', validateSlug, suggestedSlug)
+  const iosBundleIdentifier = await askValidated(
+    readline,
+    'iOS bundle identifier (for example, com.example.habittracker)',
+    validateIosBundleIdentifier
+  )
+  const androidPackage = await askValidated(
+    readline,
+    'Android package name',
+    validateAndroidPackage,
+    iosBundleIdentifier.toLowerCase()
+  )
+  const scheme = await askValidated(readline, 'URL scheme', validateScheme, slug)
 
-  const projectId = (eas as JsonObject).projectId
-  return typeof projectId === 'string' ? projectId : undefined
+  return { displayName, slug, iosBundleIdentifier, androidPackage, scheme }
+}
+
+async function askEasSetup(readline: Readline): Promise<EasSetup> {
+  const activeAccount = parseEasUsername(runEas(['whoami'], true))
+  console.log(`\nSigned in to Expo as: ${activeAccount}`)
+
+  const mode = await askValidated(
+    readline,
+    'EAS project setup (new or existing)',
+    (value) => {
+      if (value !== 'new' && value !== 'existing') {
+        throw new Error('Enter "new" or "existing".')
+      }
+    },
+    'new'
+  )
+
+  if (mode === 'new') {
+    const owner = await ask(readline, 'Expo account owner', activeAccount)
+    return { mode: 'owner-slug', owner }
+  }
+
+  const projectId = await askValidated(
+    readline,
+    'Existing Expo project ID (UUID)',
+    validateProjectId
+  )
+  return { mode: 'project-id', projectId }
+}
+
+function printSummary(identity: AppIdentity, easSetup: EasSetup): void {
+  console.log('\nConfiguration summary:')
+  console.log(`  Display name:       ${identity.displayName}`)
+  console.log(`  Project slug:       ${identity.slug}`)
+  console.log(`  iOS bundle ID:      ${identity.iosBundleIdentifier}`)
+  console.log(`  Android package:    ${identity.androidPackage}`)
+  console.log(`  URL scheme:         ${identity.scheme}`)
+  console.log(
+    easSetup.mode === 'owner-slug'
+      ? `  EAS project:        create or link @${easSetup.owner}/${identity.slug}`
+      : `  EAS project ID:     ${easSetup.projectId}`
+  )
 }
 
 async function main(): Promise<void> {
   const readline = createInterface({ input: process.stdin, output: process.stdout })
 
   try {
-    const appName = (await readline.question('App name (for example, habit-tracker): ')).trim()
-    if (!/^[a-z0-9]+(?:[._-][a-z0-9]+)*$/.test(appName)) {
-      throw new Error('Use a lowercase npm-style name, such as "habit-tracker".')
-    }
-
-    const packageJson = readJson('package.json')
-    const packageLock = readJson('package-lock.json')
-    const appJson = readJson('app.json')
-    const expo = getExpoConfig(appJson)
-
-    packageJson.name = appName
-    packageLock.name = appName
-    const rootPackage = packageLock.packages
-    if (!rootPackage || typeof rootPackage !== 'object' || Array.isArray(rootPackage)) {
-      throw new Error('package-lock.json must contain a "packages" object.')
-    }
-    const rootPackageMetadata = (rootPackage as JsonObject)['']
-    if (
-      !rootPackageMetadata ||
-      typeof rootPackageMetadata !== 'object' ||
-      Array.isArray(rootPackageMetadata)
-    ) {
-      throw new Error('package-lock.json must contain root package metadata.')
-    }
-    ;(rootPackageMetadata as JsonObject).name = appName
-
-    expo.name = appName
-    expo.slug = appName
-    removeExistingEasProjectLink(expo)
-
-    writeJson('package.json', packageJson)
-    writeJson('package-lock.json', packageLock)
-    writeJson('app.json', appJson)
-    console.log('\nUpdated package metadata and Expo app names.')
-
-    let projectId: string | undefined
-    try {
-      console.log('\nCreating a new remote EAS project...')
-      execFileSync('npx', ['eas-cli@latest', 'init', '--force', '--non-interactive'], {
-        cwd: ROOT,
-        stdio: 'inherit',
-      })
-      projectId = getProjectId(readJson('app.json'))
-      if (!projectId) throw new Error('EAS CLI did not write a project ID to app.json.')
-    } catch (error) {
-      console.log('\nUnable to create an EAS project automatically.')
-      const reason = error instanceof Error ? error.message : String(error)
-      console.log(`Reason: ${reason}`)
-      projectId = (await readline.question('Existing Expo project ID (UUID): ')).trim()
-      if (!PROJECT_ID_PATTERN.test(projectId)) {
-        throw new Error('Expo project ID must be a valid UUID.')
+    const originalAppJson = readJson('app.json')
+    const existingProjectId = getProjectId(originalAppJson)
+    if (existingProjectId) {
+      console.log(`⚠️  This app is already linked to EAS project ${existingProjectId}.`)
+      if (!(await confirm(readline, 'Replace the current app identity and EAS link?'))) {
+        console.log('\nSetup cancelled. No files were changed.')
+        return
       }
     }
 
-    const configuredAppJson = readJson('app.json')
-    setProjectId(configuredAppJson, projectId)
-    writeJson('app.json', configuredAppJson)
+    const identity = await askIdentity(readline)
+    const easSetup = await askEasSetup(readline)
+    printSummary(identity, easSetup)
+    if (!(await confirm(readline, 'Apply this configuration?'))) {
+      console.log('\nSetup cancelled. No files were changed.')
+      return
+    }
 
-    console.log(`\nExpo project configured: ${projectId}`)
+    const snapshot = snapshotConfigFiles()
+    const packageJson = readJson('package.json')
+    const packageLock = readJson('package-lock.json')
+    const appJson = readJson('app.json')
+
+    try {
+      applyAppIdentity(packageJson, packageLock, appJson, identity)
+      writeJson('package.json', packageJson)
+      writeJson('package-lock.json', packageLock)
+      writeJson('app.json', appJson)
+
+      console.log('\nConfiguring the EAS project...')
+      const initArgs =
+        easSetup.mode === 'owner-slug'
+          ? ['init', '--account', easSetup.owner, '--force', '--non-interactive']
+          : ['init', '--id', easSetup.projectId, '--force', '--non-interactive']
+      runEas(initArgs)
+
+      const configuredAppJson = readJson('app.json')
+      const projectId = getProjectId(configuredAppJson)
+      if (!projectId) throw new Error('EAS CLI did not write a project ID to app.json.')
+      if (easSetup.mode === 'project-id' && projectId !== easSetup.projectId) {
+        throw new Error(`EAS CLI linked project ${projectId}, expected ${easSetup.projectId}.`)
+      }
+
+      setProjectId(configuredAppJson, projectId)
+      if (easSetup.mode === 'owner-slug') {
+        getExpoConfig(configuredAppJson).owner = easSetup.owner
+      }
+      writeJson('app.json', configuredAppJson)
+
+      console.log('\nVerifying the EAS link...')
+      runEas(['project:info'])
+      console.log('\nValidating the resolved Expo configuration...')
+      runExpoConfigCheck()
+
+      console.log(`\n✅ Expo app and EAS project configured: ${projectId}`)
+      console.log('\nNative identity changed. Before running a native build:')
+      console.log('  npm run prebuild:clean')
+      console.log('  npm run ios   # and/or npm run android')
+    } catch (error) {
+      restoreConfigFiles(snapshot)
+      const reason = error instanceof Error ? error.message : String(error)
+      throw new Error(
+        `Setup failed and local configuration files were restored.\nReason: ${reason}`
+      )
+    }
   } finally {
     readline.close()
   }
