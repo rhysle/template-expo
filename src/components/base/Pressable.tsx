@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import {
   type GestureResponderEvent,
   Pressable as RNPressable,
@@ -15,12 +16,15 @@ import { haptics, type HapticType } from '@/utils/haptics'
 type PressableVariant = 'default' | 'surface' | 'ghost'
 type PressableSize = 'sm' | 'md' | 'lg'
 
+const RAPID_PRESS_GUARD_MS = 500
+
 export interface PressableProps extends Omit<RNPressableProps, 'style'> {
   activeOpacity?: number
   variant?: PressableVariant
   size?: PressableSize
   haptic?: boolean
   hapticType?: HapticType
+  allowRapidPress?: boolean
   style?: StyleProp<ViewStyle> | ((state: PressableStateCallbackType) => StyleProp<ViewStyle>)
 }
 
@@ -30,20 +34,34 @@ export const Pressable = ({
   size,
   haptic = false,
   hapticType = 'light',
+  allowRapidPress = false,
   style,
   disabled,
   onPress,
   ...restProps
 }: PressableProps) => {
   const styles = useThemedStyles(createStyles)
+  const lastPressAt = useRef<number | null>(null)
 
-  const handlePress =
-    onPress && haptic
-      ? (e: GestureResponderEvent) => {
-          void haptics[hapticType]()
-          onPress(e)
+  const handlePress = onPress
+    ? (e: GestureResponderEvent) => {
+        if (!allowRapidPress) {
+          const now = Date.now()
+
+          if (lastPressAt.current !== null && now - lastPressAt.current < RAPID_PRESS_GUARD_MS) {
+            return
+          }
+
+          lastPressAt.current = now
         }
-      : onPress
+
+        if (haptic) {
+          void haptics[hapticType]()
+        }
+
+        onPress(e)
+      }
+    : undefined
 
   return (
     <RNPressable
