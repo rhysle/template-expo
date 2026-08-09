@@ -1,0 +1,36 @@
+{
+  "appleLocale": "hi",
+  "googleLocale": "hi-IN",
+  "apple": {
+    "subscriptionGroupDisplayName": "Premium",
+    "products": {
+      "weekly": {
+        "displayName": "Premium · साप्ताहिक",
+        "description": "सभी प्रीमियम सुविधाओं का पूरा एक्सेस।"
+      },
+      "monthly": {
+        "displayName": "Premium · मासिक",
+        "description": "सभी प्रीमियम सुविधाओं का पूरा एक्सेस।"
+      },
+      "yearly": {
+        "displayName": "Premium · वार्षिक",
+        "description": "सभी प्रीमियम सुविधाओं का पूरा एक्सेस।"
+      },
+      "lifetime": {
+        "displayName": "Premium · आजीवन",
+        "description": "सभी प्रीमियम सुविधाओं का आजीवन एक्सेस।"
+      }
+    }
+  },
+  "google": {
+    "subscription": {
+      "title": "Premium",
+      "description": "सभी प्रीमियम सुविधाओं का पूरा एक्सेस।",
+      "benefits": ["सभी प्रीमियम सुविधाओं का एक्सेस"]
+    },
+    "lifetime": {
+      "title": "Premium · आजीवन",
+      "description": "सभी प्रीमियम सुविधाओं का आजीवन एक्सेस।"
+    }
+  }
+}

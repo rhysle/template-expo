@@ -44,15 +44,142 @@ Before implementing product features, fill in [`docs/PRODUCT.md`](docs/PRODUCT.m
 
 ### 3. Configure RevenueCat
 
-1. Create the app in RevenueCat and connect its App Store Connect and/or Google Play products.
-2. Create the entitlement that the app will use for premium access.
+1. Create the RevenueCat project and add its App Store and/or Google Play app records. Configure each app's store credentials so RevenueCat can validate purchases and read its catalog.
+2. Use the product-provisioning workflow below to create the store products, `premium` entitlement, default offering, and package associations.
 3. For development and testing, you can use RevenueCat's Test Store API key in `AppConfig.revenueCat.iosApiKey` and `androidApiKey` in `src/configs/AppConfig.ts`.
 4. Before submitting a release to the App Store or Google Play, replace the Test Store key with the correct platform-specific production API key for each field. Never submit an app configured with a Test Store key.
-5. Set `AppConfig.revenueCat.entitlementId` to the entitlement created in step 2, then replace `src/components/paywall/usePaywallFeatures.ts` and confirm the paywall and automatic-presentation behavior fit the product.
+5. Keep `AppConfig.revenueCat.entitlementId` aligned with `revenueCat.entitlementLookupKey` in `src/configs/monetization.ts`, then replace `src/components/paywall/usePaywallFeatures.ts` and confirm the paywall and automatic-presentation behavior fit the product.
 
 Paywall source IDs are intentionally defined beside the route or component that opens the paywall. When replacing a sample feature, replace or remove its local source ID in the same file; do not add a product-wide source registry under `src/configs/`. Route paywall navigation through `usePremiumGate` or `buildPaywallPath` so analytics attribution is retained.
 
 Subscription access is runtime-only and resolves to `loading`, `free`, `premium`, or `unknown`. Premium actions run only for `premium`; paywalls and ads are eligible only for confirmed `free` users. Keep `loading` and `unknown` fail-closed when adapting gates or monetization flows.
+
+### Provision store products
+
+Store products are declared in `src/configs/monetization.ts`. Select any combination of
+`weekly`, `monthly`, `yearly`, and `lifetime`; disabled products are not created or attached
+to RevenueCat. Monthly is preconfigured at USD 9.99 but disabled by default. The enabled
+template defaults are USD 3.99 weekly, USD 29.99 yearly, and USD 59.99 lifetime. Apple and
+Google generate the initial PPP regional prices from those US anchors. Product IDs and
+internal reference names remain explicit because store identifiers cannot be changed or reused
+after activation.
+
+Regional pricing uses `ppp-bands` with the required complete fixed multiplier range from `0.4`
+through `1.2`, including premium bands; do not add, remove, or reorder those bands. The checked-in `world-bank-2025` snapshot combines World Bank
+`PA.NUS.PPP` and `PA.NUS.FCRF` observations. For each country it selects the newest year from
+2025 back through 2023 where both indicators are positive, then calculates:
+
+```text
+(country PPP conversion factor / country exchange rate)
+/
+(US PPP conversion factor / US exchange rate from the same year)
+```
+
+The nearest configured band wins, with the lower band winning an exact tie. The United States is
+always `1.0`; ISO alpha-2 `countryOverrides` must select one of the fixed bands. Overrides for
+the known App Store territories without World Bank data are supported; an unknown no-data country
+is rejected rather than silently falling back. Countries without a complete indicator pair use
+`1.0` with a warning. Set `strategy: 'store-equalized'` to opt out.
+Economic data is never downloaded by normal monetization commands. Refresh it deliberately and
+review the resulting checked-in snapshot with:
+
+```bash
+npm run monetization:ppp:refresh -- --year 2025
+```
+
+Adjusted USD anchors use integer cents with half-up rounding. Apple chooses its closest valid USD
+price point (lower on a tie) and uses Apple's storefront equalizations. Google uses the `Money`
+values returned by `pricing:convertRegionPrices`. Neither path post-processes local prices, so
+zero-decimal currencies such as VND, JPY, and KRW retain store-native price patterns.
+
+The optional top-level `freeTrial` selects exactly one enabled subscription for a cross-store
+trial. The template defaults to a 3-day weekly trial. Set `duration` to `7-days`, `14-days`,
+`1-month`, `2-months`, `3-months`, `6-months`, or `1-year` as needed; change `target` to an
+enabled `monthly` or `yearly` product to move it, or set `freeTrial` to `null` to disable it.
+Set the stable managed offer ID in `google.freeTrialOfferId`; it stays configured while the trial
+is disabled so `monetization:activate` can identify and deactivate the previously managed offer.
+Google eligibility is limited to customers who have never had any subscription in the app,
+which most closely matches Apple's subscription-group eligibility. The paywall reads the
+localized trial details returned by RevenueCat rather than duplicating this duration in UI copy.
+
+The app name, iOS bundle identifier, and Android package name are read from `app.json`.
+The Apple app's numeric resource ID is looked up by bundle identifier, so those values are
+not duplicated in `.env.fastlane.local`.
+
+Copy `.env.fastlane.example` to `.env.fastlane.local` and provide the App Store Connect,
+Google Play, and RevenueCat API identifiers and credentials. The App Store Connect key needs
+the App Manager role. The Google service account needs access to the app and permissions to
+manage products and subscriptions. The RevenueCat V2 key needs read/write project-configuration
+permissions for products, entitlements, offerings, and packages.
+It also needs app read access. The RevenueCat App Store and Google Play app records must already
+exist; the scripts find them by matching the bundle ID and package name from `app.json`, and stop
+with an error when no unique match exists.
+
+Store-product localizations are declared independently under
+`fastlane/monetization/localizations/`, with one JSON file per language and explicit Apple and
+Google sections. These files are the sole source for subscription-group, subscription, and
+lifetime-purchase listing text; monetization setup never derives store metadata from
+`src/i18n/locales/`. Review the generic premium wording for product accuracy before provisioning,
+and add or remove store locale files independently from the app's runtime locale set.
+
+Apple App Review screenshots are optional per product. Set
+`appleReviewScreenshotPath` on `weekly`, `monthly`, `yearly`, and/or `lifetime`. The same local image
+may be referenced by multiple products, but App Store Connect receives a separate Review Information
+screenshot upload for each product. A content hash is included in the uploaded filename so
+changing the local image is detected reliably.
+
+Run the commands in this order:
+
+```bash
+npm run monetization:plan
+npm run monetization:apply
+npm run monetization:activate -- --confirm
+npm run monetization:verify
+```
+
+`plan` does not write store state. For a new app, `apply` creates missing products directly with
+their complete initial PPP matrix, reconciles mutable store metadata and RevenueCat product,
+entitlement, offering, and package metadata, and creates or updates every configured localization.
+RevenueCat product types, like store product IDs and purchase types, are immutable; resolve a type
+conflict with a new store product identifier instead of attempting to mutate it. Apple reviewable
+metadata uses the version-based App Store Connect API: an editable draft is updated in place,
+or a new draft metadata version is created when the previous version is no longer editable.
+Configured review screenshots are uploaded to each product's private Review Information field,
+separate from its public promotional image. Google base plans and purchase
+options and free-trial offers remain in draft. The setup intentionally refuses to replace an
+existing regional matrix or update a live Google offer. An interrupted Apple run may leave draft
+products without all prices; rerunning `apply` safely completes a matching partial matrix.
+`activate` requires explicit confirmation: it
+creates or replaces the configured Apple introductory free trial in every storefront, activates
+the desired Google offer and base plans, and deactivates the previous managed Google trial when
+the target moves.
+`verify` then checks the selected catalog, localized metadata, screenshots, RevenueCat
+associations, and exact live trial state. Apple products still require submission to App Review;
+the first subscription group must be submitted with an app version. `activate` does not click
+**Add for Review**, create an App Review submission, or submit one; manage that separately in
+App Store Connect after provisioning and verification succeed.
+
+After prices have been established, changing a `priceUsd`, PPP snapshot, band, or override uses a
+separate confirmed workflow that never creates products, changes metadata, or touches RevenueCat:
+
+```bash
+npm run monetization:prices:plan
+npm run monetization:prices:apply -- --confirm
+npm run monetization:prices:verify
+```
+
+The plan regenerates and compares the complete regional matrix. Subscription increases preserve
+existing subscriber prices on Apple and leave Google subscribers in legacy cohorts. Decreases
+reach existing Apple subscribers and migrate affected Google legacy cohorts to the lower current
+price. Lifetime changes affect future purchases only. Apple and Google writes are not
+transactional; rerun the command to reconcile any remaining differences after a partial failure.
+
+The setup is non-destructive. Removing a product from `enabledProducts` prevents future setup work
+for it but does not delete, deactivate, or detach a product that was provisioned previously. The
+only exception is the explicitly confirmed free-trial transition: this workflow owns Apple
+`FREE_TRIAL` introductory offers on its configured subscriptions and the Google offer ID declared
+in `freeTrial`; it replaces/removes obsolete Apple trials and deactivates obsolete managed Google
+offers. Paid introductory, promotional, and unrecognized Google offers are never changed.
 
 ### 4. Configure Sentry
 
@@ -130,6 +257,8 @@ npm run check:type        # TypeScript, no emit
 npm run check:i18n        # English source-locale audit
 npm run check:i18n:release # All-locale release audit
 npm run check             # Lint + type check
+npm run check:monetization # Monetization script type check
+npm run test:monetization # Monetization script tests
 npm run format            # Format and apply safe lint fixes
 
 npm run prebuild:clean    # Regenerate native projects from Expo config
@@ -293,8 +422,12 @@ The i18n configuration includes `number` and `currency` formatters for products 
 
 EAS profiles are defined in `eas.json`. Common production commands are `npm run eas-build`, `npm run eas-build:ios:submit`, `npm run eas-build:android:submit`, and `npm run eas-update`.
 
-Fastlane at the repository root manages App Store Connect and Google Play listing metadata and screenshots. Update its package identifiers, shared URLs, locale folders, and credentials for each new app before running the `fastlane:*` scripts. Keep secrets and reviewer contact information out of Git.
+Fastlane at the repository root manages App Store Connect and Google Play listing metadata and screenshots. It reads the bundle identifier and package name from `app.json`; update its shared URLs, locale folders, and credentials for each new app before running the `fastlane:*` scripts. Keep secrets and reviewer contact information out of Git.
+
+Store-product provisioning uses the official App Store Connect, Android Publisher, and RevenueCat
+APIs through the `monetization:*` commands above. Fastlane remains responsible for listing metadata,
+screenshots, and release tasks.
 
 ## Verification
 
-At a minimum, run `npm run check` after code changes and `npm run check:i18n` after changing English product copy. For native dependency or configuration changes, also run `npm run prebuild:clean` and test the affected platform.
+At a minimum, run `npm run check` after code changes and `npm run check:i18n` after changing English product copy. The standard check intentionally covers only linting and the app TypeScript check; run `npm run check:monetization` and `npm run test:monetization` separately when changing `scripts/monetization/` or `src/configs/monetization.ts`. For native dependency or configuration changes, also run `npm run prebuild:clean` and test the affected platform.

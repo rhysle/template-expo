@@ -1,0 +1,36 @@
+{
+  "appleLocale": "id",
+  "googleLocale": "id",
+  "apple": {
+    "subscriptionGroupDisplayName": "Premium",
+    "products": {
+      "weekly": {
+        "displayName": "Premium · Mingguan",
+        "description": "Akses penuh ke semua fitur premium."
+      },
+      "monthly": {
+        "displayName": "Premium · Bulanan",
+        "description": "Akses penuh ke semua fitur premium."
+      },
+      "yearly": {
+        "displayName": "Premium · Tahunan",
+        "description": "Akses penuh ke semua fitur premium."
+      },
+      "lifetime": {
+        "displayName": "Premium · Seumur hidup",
+        "description": "Akses seumur hidup ke semua fitur premium."
+      }
+    }
+  },
+  "google": {
+    "subscription": {
+      "title": "Premium",
+      "description": "Akses penuh ke semua fitur premium.",
+      "benefits": ["Akses ke semua fitur premium"]
+    },
+    "lifetime": {
+      "title": "Premium · Seumur hidup",
+      "description": "Akses seumur hidup ke semua fitur premium."
+    }
+  }
+}

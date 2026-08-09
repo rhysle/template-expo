@@ -1,8 +1,12 @@
-app_identifier("com.rhysle.currencyconverter")
+require "json"
+
+expo_config = JSON.parse(File.read(File.expand_path("../app.json", __dir__))).fetch("expo")
+
+app_identifier(expo_config.fetch("ios").fetch("bundleIdentifier"))
 
 apple_id(ENV["APPLE_ID"]) if ENV["APPLE_ID"]
 team_id(ENV["APPLE_TEAM_ID"]) if ENV["APPLE_TEAM_ID"]
 itc_team_id(ENV["ITC_TEAM_ID"]) if ENV["ITC_TEAM_ID"]
 
 json_key_file(ENV["GOOGLE_PLAY_JSON_KEY_PATH"]) if ENV["GOOGLE_PLAY_JSON_KEY_PATH"]
-package_name("com.rhysle.currencyconverter")
+package_name(expo_config.fetch("android").fetch("package"))
