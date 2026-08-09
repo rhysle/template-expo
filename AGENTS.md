@@ -10,9 +10,10 @@ Current stack: Expo SDK 57, React Native 0.86, React 19 with React Compiler, Exp
 
 Use Context7 whenever work depends on the current API, configuration, setup, migration, or usage of a library, framework, SDK, CLI, or cloud service.
 
-1. Run `npx ctx7@latest library <official-name> "<full question>"`.
-2. Select the appropriate `/org/project` result.
-3. Run `npx ctx7@latest docs <library-id> "<full question>"`.
+1. Run `npx ctx7@latest whoami` so an expired OAuth session is refreshed before querying.
+2. Run `npx ctx7@latest library <official-name> "<full question>"`.
+3. Select the appropriate `/org/project` result.
+4. Run `npx ctx7@latest docs <library-id> "<full question>"`.
 
 Use the project's full question, resolve the library before fetching docs, and do not silently substitute outdated knowledge if Context7 is unavailable. If a Context7 network request fails in the sandbox, rerun it with the required external permission.
 
