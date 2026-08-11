@@ -113,8 +113,13 @@ Store products are declared in `src/configs/monetization.ts`. Select any combina
 to RevenueCat. Monthly is preconfigured at USD 9.99 but disabled by default. The enabled
 template defaults are USD 3.99 weekly, USD 29.99 yearly, and USD 79.99 lifetime. Apple and
 Google generate the initial PPP regional prices from those US anchors. Product IDs and
-internal reference names remain explicit because store identifiers cannot be changed or reused
-after activation.
+internal reference names remain explicit because store identifiers cannot be changed after
+activation. Apple product IDs are automatically formed as
+`<expo.ios.bundleIdentifier>.<configured appleProductId suffix>`, so a new product fork only needs
+to replace the bundle identifier in `app.json`; the suffixes in `src/configs/monetization.ts` stay
+stable. The resolved Apple identifier must use only letters, numbers, periods, hyphens, and
+underscores and must not exceed 100 characters. Google product IDs remain unprefixed because the
+Play Developer API scopes them to the parent Android package and limits them to 40 characters.
 
 Regional pricing uses `ppp-bands` with the required complete fixed multiplier range from `0.4`
 through `1.2`, including premium bands; do not add, remove, or reorder those bands. The checked-in `world-bank-2025` snapshot combines World Bank

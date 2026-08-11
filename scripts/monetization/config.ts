@@ -2,6 +2,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 
 import { monetizationConfig } from '../../src/configs/monetization'
+import { readAppIdentifiers } from './env'
 import { FREE_TRIAL_DURATIONS } from './free-trial'
 
 import type { MonetizationConfig, ProductKey, SubscriptionProductKey } from './types'
@@ -9,7 +10,7 @@ import type { MonetizationConfig, ProductKey, SubscriptionProductKey } from './t
 const PRODUCT_KEYS: ProductKey[] = ['weekly', 'monthly', 'yearly', 'lifetime']
 const SUBSCRIPTION_KEYS: SubscriptionProductKey[] = ['weekly', 'monthly', 'yearly']
 const MONEY_PATTERN = /^\d+\.\d{2}$/
-const APPLE_PRODUCT_ID_PATTERN = /^[A-Za-z0-9._-]+$/
+const APPLE_PRODUCT_ID_PATTERN = /^[A-Za-z0-9._-]{1,100}$/
 const GOOGLE_PRODUCT_ID_PATTERN = /^[a-z0-9][a-z0-9._]{0,39}$/
 const GOOGLE_PLAN_ID_PATTERN = /^[a-z0-9][a-z0-9-]{0,62}$/
 const ISO_ALPHA_2_PATTERN = /^[A-Z]{2}$/
@@ -95,7 +96,7 @@ export const validateConfig = (config: MonetizationConfig): void => {
     }
     assert(
       APPLE_PRODUCT_ID_PATTERN.test(product.appleProductId),
-      `${key}.appleProductId contains unsupported characters`
+      `${key}.appleProductId must contain only letters, numbers, periods, hyphens, or underscores and be at most 100 characters`
     )
   }
 
@@ -129,9 +130,40 @@ export const validateConfig = (config: MonetizationConfig): void => {
   )
 }
 
-validateConfig(monetizationConfig)
+export const resolveMonetizationConfig = (
+  value: MonetizationConfig,
+  bundleIdentifier: string
+): MonetizationConfig => {
+  const appleProductId = (suffix: string): string => `${bundleIdentifier}.${suffix}`
+  const resolved: MonetizationConfig = {
+    ...value,
+    products: {
+      weekly: {
+        ...value.products.weekly,
+        appleProductId: appleProductId(value.products.weekly.appleProductId),
+      },
+      monthly: {
+        ...value.products.monthly,
+        appleProductId: appleProductId(value.products.monthly.appleProductId),
+      },
+      yearly: {
+        ...value.products.yearly,
+        appleProductId: appleProductId(value.products.yearly.appleProductId),
+      },
+      lifetime: {
+        ...value.products.lifetime,
+        appleProductId: appleProductId(value.products.lifetime.appleProductId),
+      },
+    },
+  }
+  validateConfig(resolved)
+  return resolved
+}
 
-export const config: MonetizationConfig = monetizationConfig
+export const config = resolveMonetizationConfig(
+  monetizationConfig,
+  readAppIdentifiers().bundleIdentifier
+)
 
 export const enabledSubscriptionKeys = (
   value: MonetizationConfig = config

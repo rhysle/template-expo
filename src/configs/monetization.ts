@@ -4,7 +4,9 @@ import type { MonetizationConfig } from '../../scripts/monetization/types'
  * Store-product catalog for a product fork.
  *
  * Keep this file free of credentials. Select only the products the app sells;
- * disabled products are not created or attached to RevenueCat.
+ * disabled products are not created or attached to RevenueCat. Each
+ * appleProductId is a stable suffix; the provisioning script prefixes it with
+ * the iOS bundle identifier from app.json.
  */
 export const monetizationConfig = {
   enabledProducts: ['weekly', 'yearly', 'lifetime'],

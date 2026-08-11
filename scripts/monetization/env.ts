@@ -61,11 +61,13 @@ const appConfigValue = (value: unknown, location: string): string => {
   return value.trim()
 }
 
-const readExpoAppConfig = (): {
+export interface AppIdentifiers {
   appName: string
   bundleIdentifier: string
   packageName: string
-} => {
+}
+
+export const readAppIdentifiers = (): AppIdentifiers => {
   const parsed = JSON.parse(fs.readFileSync(APP_CONFIG_PATH, 'utf8')) as ExpoAppConfig
   return {
     appName: appConfigValue(parsed.expo?.name, 'expo.name'),
@@ -82,7 +84,7 @@ export const readStoreEnvironment = (
   options: { revenueCat?: boolean } = {}
 ): StoreEnvironment => {
   loadFastlaneEnvironment()
-  const app = readExpoAppConfig()
+  const app = readAppIdentifiers()
   const environment: StoreEnvironment = { appName: app.appName }
 
   if (config.stores.apple) {
