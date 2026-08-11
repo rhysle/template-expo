@@ -45,7 +45,7 @@ const config = (priceUsd = '3.99'): MonetizationConfig => ({
       revenueCatPackageLookupKey: '$rc_annual',
     },
     lifetime: {
-      priceUsd: '59.99',
+      priceUsd: '79.99',
       referenceName: 'Lifetime',
       appleProductId: 'lifetime',
       googleProductId: 'lifetime',

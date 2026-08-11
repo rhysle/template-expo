@@ -70,7 +70,7 @@ export const monetizationConfig = {
       revenueCatPackageLookupKey: '$rc_annual',
     },
     lifetime: {
-      priceUsd: '59.99',
+      priceUsd: '79.99',
       referenceName: 'Premium Lifetime',
       appleProductId: 'premium_lifetime',
       appleReviewScreenshotPath: './fastlane/monetization/review/paywall.png',

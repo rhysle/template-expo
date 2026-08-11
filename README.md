@@ -111,7 +111,7 @@ Subscription access is runtime-only and resolves to `loading`, `free`, `premium`
 Store products are declared in `src/configs/monetization.ts`. Select any combination of
 `weekly`, `monthly`, `yearly`, and `lifetime`; disabled products are not created or attached
 to RevenueCat. Monthly is preconfigured at USD 9.99 but disabled by default. The enabled
-template defaults are USD 3.99 weekly, USD 29.99 yearly, and USD 59.99 lifetime. Apple and
+template defaults are USD 3.99 weekly, USD 29.99 yearly, and USD 79.99 lifetime. Apple and
 Google generate the initial PPP regional prices from those US anchors. Product IDs and
 internal reference names remain explicit because store identifiers cannot be changed or reused
 after activation.
