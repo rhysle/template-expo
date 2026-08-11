@@ -30,6 +30,7 @@ npm run check:type
 npm run check:i18n
 npm run check
 npm run test:setup-expo
+npm run test:setup-firebase
 npm run test:setup-sentry
 npm run test:monetization
 npm run format
@@ -42,6 +43,7 @@ npm run align-deps
 npm run setup:i18n
 npm run setup:font
 npm run setup:ads
+npm run setup:firebase
 npm run setup:sentry
 
 npm run monetization:plan
@@ -194,7 +196,7 @@ When enabling ads, configure real IDs and AdMob Privacy & messaging forms, run t
 ### Firebase, Sentry, identity, and OTA
 
 - Keep generic analytics events in `analyticsGeneralEvents.ts`; define only product events in `analyticsAppEvents.ts`.
-- Firebase native config files must be replaced for every released app, followed by a clean prebuild.
+- After `setup:expo`, authenticate a personal Google account with `gcloud auth application-default login`, set an ADC quota project with `gcloud auth application-default set-quota-project`, ensure `GOOGLE_APPLICATION_CREDENTIALS` is unset, configure `FIREBASE_ANALYTICS_ACCOUNT_ID`, then run `npm run setup:firebase`. The idempotent workflow creates or reuses a standalone Google Cloud/Firebase project under No organization and its exact native app registrations, creates one Analytics property when missing, keeps Gemini in Firebase disabled, replaces the validated root native config files, and reconciles production-only Sensitive EAS file variables. It retries time-based Google API quota responses with bounded exponential backoff. Use `FIREBASE_PROJECT_ID` only to override the deterministic slug/EAS-UUID project ID. The personal account needs Analytics Editor access and the quota project must enable Cloud Resource Manager, Firebase Management, and Service Usage APIs. Firebase native config files remain gitignored local/non-production fallbacks and must be followed by a clean prebuild. Firebase's Production environment marker currently affects only console presentation and has no supported public API or CLI; the setup command prints the direct console link for this manual tag.
 - `initSentry()` runs before components render. The fixed-scope `org:ci` Organization Token remains `SENTRY_AUTH_TOKEN` locally and in EAS for source-map uploads. After `setup:expo`, provide a separate reusable Internal Integration token as `SENTRY_SETUP_AUTH_TOKEN` with Organization Read, Team Admin, and Project Read & Write, then run `npm run setup:sentry` to create or reuse the project and synchronize its DSN and Expo plugin properties. Reuse this provisioning token across future app forks; Team Admin is required while the organization disables member project creation and is preferred over the broader Organization Write alternative. Keep it in a secure machine-level environment, never add it to EAS, and never leave it in `.env.local` during a build because this template includes that file in EAS build archives. The setup script reads the organization from the existing Expo plugin, automatically selects a sole existing team, and uses `SENTRY_ORG` or `SENTRY_TEAM` only as explicit overrides. It never creates or administers teams and never writes either token. EAS Build uploads source maps automatically, while the `eas-update`, `eas-update:ios`, and `eas-update:android` commands upload the generated `dist` source maps after publishing. Do not record development events.
 - User identity is an anonymous, per-variant UUID stored in MMKV and shared with supported services. It represents the current installation and resets after uninstall/reinstall on both platforms. Android Auto Backup is disabled at the template level so restored local data cannot revive a previous installation identity; each product fork must choose and configure its own backup policy before release.
 - OTA checks are initialized with `useOtaUpdateInit()` and controlled by `AppConfig.otaUpdate.enabled`.
@@ -230,6 +232,6 @@ Keep API keys, Play service-account JSON, reviewer contact details, and local en
 1. Run the narrowest relevant checks, and `npm run check` for normal code changes.
 2. Test the changed route or integration on its target platform when feasible.
 3. Run `npm run check:i18n` after changing English product copy.
-4. Run the focused tooling command after changing setup or monetization scripts: `npm run test:setup-expo`, `npm run test:setup-sentry`, or `npm run test:monetization`.
+4. Run the focused tooling command after changing setup or monetization scripts: `npm run test:setup-expo`, `npm run test:setup-firebase`, `npm run test:setup-sentry`, or `npm run test:monetization`.
 5. Regenerate and test native projects after native configuration changes.
 6. Update this file and `README.md` when a reusable architectural convention changes.

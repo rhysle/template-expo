@@ -1,17 +1,15 @@
 # When present, this file REPLACES .gitignore for EAS build archives.
-# It exists so that `eas build --local` (and any other EAS build flow that
-# bundles the project tree) can ship three gitignored files that the build
-# needs but that we do not want in version control:
+# It exists so that EAS build flows can ship three gitignored local fallback
+# files that the build needs but that we do not want in version control:
 #
 #   - .env.local                   (used by Metro/Expo to load SENTRY_AUTH_TOKEN
 #                                   so Sentry source maps upload during builds)
 #   - google-services.json         (Firebase Android config required by prebuild)
 #   - GoogleService-Info.plist     (Firebase iOS config required by prebuild)
 #
-# Background: EAS local builds tarball the project respecting .gitignore;
-# secret-visibility EAS env vars are NOT injected into local builds. Combined,
-# those two facts mean the only way local builds see these files is to let them
-# ride along in the archive — which is exactly what this file enables.
+# Background: the Firebase EAS file variables are intentionally scoped to the
+# production environment with Sensitive visibility. Keeping the root files in
+# the archive preserves local, development, and preview build fallback behavior.
 #
 # IMPORTANT: keep this file in sync with .gitignore. If you add a new exclusion
 # to .gitignore, mirror it here too — otherwise the file will leak into EAS
@@ -70,10 +68,14 @@ firebase-debug.log
 
 # Claude
 .claude/
+
+#Codex
+.codex/
 # NOTE: .env.local intentionally NOT excluded here — see header comment.
 
 # Misc
 .superpowers/
+tmp/
 
 # Git worktrees
 .worktrees/

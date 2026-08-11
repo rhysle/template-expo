@@ -38,10 +38,61 @@ Before implementing product features, fill in [`docs/PRODUCT.md`](docs/PRODUCT.m
 
 ### 2. Configure Firebase Analytics
 
-1. Create a Firebase project and register both an iOS app and an Android app using the exact bundle ID/package name from `app.json`.
-2. Download `GoogleService-Info.plist` for iOS and `google-services.json` for Android. Place them at the repository root using exactly those names; `app.json` already references them.
-3. The files are intentionally Git-ignored. Provide them securely to local developers and your build environment rather than committing them.
-4. Replace the sample events in `src/services/firebase/analytics/analyticsAppEvents.ts`. Keep generic lifecycle events in `analyticsGeneralEvents.ts`.
+Firebase provisioning is automated after `npm run setup:expo`. It uses your personal Google account
+through Application Default Credentials (ADC) and creates standalone projects under **No
+organization**, so it does not require Google Workspace, Cloud Identity, a domain, or a provisioning
+service account.
+
+Complete these one-time administration steps:
+
+1. Install the Google Cloud CLI and create user ADC. Use an existing personal Google Cloud project
+   as the quota project; your account needs `serviceusage.services.use` on it. Enable the Cloud
+   Resource Manager, Firebase Management, and Service Usage APIs in that quota project.
+
+   ```bash
+   gcloud auth application-default login
+   gcloud auth application-default set-quota-project YOUR_EXISTING_PROJECT_ID
+   unset GOOGLE_APPLICATION_CREDENTIALS
+   ```
+
+2. Add the same personal Google account as **Editor** to the reusable Google Analytics account that
+   will contain one new property per app fork.
+3. Configure the Analytics account ID as a stable machine environment variable. The optional
+   Firebase override applies only when the deterministic slug + EAS UUID project ID is unsuitable:
+
+   ```bash
+   export FIREBASE_ANALYTICS_ACCOUNT_ID=123456789
+   # Optional:
+   export FIREBASE_PROJECT_ID=my-globally-unique-project-id
+   ```
+
+Then provision the current fork:
+
+```bash
+npm run setup:firebase
+```
+
+The command verifies personal ADC and rejects `GOOGLE_APPLICATION_CREDENTIALS` so it cannot silently
+use a service account. It reads the native identifiers and EAS UUID from `app.json`, asks for
+confirmation, and idempotently creates or reuses the standalone Google Cloud/Firebase project, iOS
+app, Android app, and Analytics link. It explicitly verifies that Gemini in Firebase is disabled,
+validates and atomically replaces the root `GoogleService-Info.plist` and `google-services.json`, and
+uploads both to the linked EAS project as production-only **Sensitive** file variables. Existing
+Analytics properties are never relinked, and cloud resources are not automatically deleted after a
+partial failure; rerun the same command to reconcile them. Time-based Google API quota responses are
+retried automatically with bounded exponential backoff.
+
+Firebase recommends marking the live project as a **Production** environment. This marker currently
+changes only the Firebase console presentation: it adds a visible production warning and does not
+change project behavior or features. Firebase does not expose the marker through its public
+Management REST API or CLI, so the setup command prints a direct Project settings link for the one
+remaining manual step: under **Your project > Environment**, select **Production**.
+
+The root Firebase files remain Git-ignored and are intentionally included by `.easignore` as the
+local/development/preview fallback. Production EAS builds resolve the `GOOGLE_SERVICE_INFO_PLIST` and
+`GOOGLE_SERVICES_JSON` file variables instead. Run a clean prebuild after provisioning, then replace
+the sample events in `src/services/firebase/analytics/analyticsAppEvents.ts`; keep generic lifecycle
+events in `analyticsGeneralEvents.ts`.
 
 ### 3. Configure RevenueCat
 
@@ -298,6 +349,7 @@ npm run doctor            # Expo environment diagnostics
 npm run align-deps        # Align installed packages with the Expo SDK
 
 npm run setup:expo        # Rename the app and create/link its EAS project
+npm run setup:firebase    # Provision Firebase, Analytics, native configs, and EAS files
 npm run setup:sentry      # Create/reuse the Sentry project and sync local config
 npm run setup:ads         # Synchronize AdMob native configuration
 npm run setup:font        # Synchronize the selected embedded font
