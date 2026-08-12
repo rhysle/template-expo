@@ -1,12 +1,12 @@
 import { useFonts } from 'expo-font'
 
-import { fontFamilyMap } from '@/configs/fonts'
+import { runtimeFontFamilyMap } from '@/configs/fonts'
 
 function getDevFontMap(): Record<string, string> {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const devFonts = require('@expo-google-fonts/dev')
   const fontMap: Record<string, string> = {}
-  for (const fontName of Object.values(fontFamilyMap)) {
+  for (const fontName of Object.values(runtimeFontFamilyMap)) {
     const url = devFonts[fontName]
     if (url) {
       fontMap[fontName] = url

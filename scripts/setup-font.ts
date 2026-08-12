@@ -13,8 +13,8 @@
  *   1. Imports FONT_NAME from src/configs/fonts.ts
  *   2. Derives package name (@expo-google-fonts/open-sans) from FONT_NAME
  *   3. Installs the package via `npx expo install`
- *   4. Checks which .ttf weight variants exist and reports any missing ones
- *   5. Updates app.json expo-font plugin with found .ttf paths for production embedding
+ *   4. Requires every configured .ttf weight variant
+ *   5. Updates app.json with iOS font files and one weighted Android font family
  */
 
 import { execSync } from 'child_process'
@@ -27,11 +27,11 @@ const ROOT = path.resolve(__dirname, '..')
 
 // Weight config: semantic key → Google Font weight suffix
 const WEIGHTS = [
-  { key: 'light', suffix: '300Light' },
-  { key: 'regular', suffix: '400Regular' },
-  { key: 'medium', suffix: '500Medium' },
-  { key: 'semibold', suffix: '600SemiBold' },
-  { key: 'bold', suffix: '700Bold' },
+  { key: 'light', suffix: '300Light', weight: 300 },
+  { key: 'regular', suffix: '400Regular', weight: 400 },
+  { key: 'medium', suffix: '500Medium', weight: 500 },
+  { key: 'semibold', suffix: '600SemiBold', weight: 600 },
+  { key: 'bold', suffix: '700Bold', weight: 700 },
 ] as const
 
 function toKebabCase(name: string): string {
@@ -65,10 +65,10 @@ function main() {
   //   - Flat:   <package>/<FontName>.ttf
   //   - Nested: <package>/<WeightSuffix>/<FontName>.ttf  (newer packages)
   const packageDir = path.join(ROOT, 'node_modules', packageName)
-  const fontFiles: { key: string; name: string; relativePath: string }[] = []
+  const fontFiles: { key: string; name: string; relativePath: string; weight: number }[] = []
   const missingVariants: { key: string; suffix: string }[] = []
 
-  for (const { key, suffix } of WEIGHTS) {
+  for (const { key, suffix, weight } of WEIGHTS) {
     const fontName = `${prefix}_${suffix}`
     const ttfFile = `${fontName}.ttf`
 
@@ -87,28 +87,26 @@ function main() {
       continue
     }
 
-    fontFiles.push({ key, name: fontName, relativePath })
+    fontFiles.push({ key, name: fontName, relativePath, weight })
   }
 
   // 3. Report missing variants
   if (missingVariants.length > 0) {
-    console.log(`\n⚠️  Missing ${missingVariants.length} weight variant(s):`)
+    console.error(`\n❌ Missing ${missingVariants.length} required weight variant(s):`)
     missingVariants.forEach(({ key, suffix }) => {
-      console.log(`     • ${key} (${prefix}_${suffix}.ttf)`)
+      console.error(`     • ${key} (${prefix}_${suffix}.ttf)`)
     })
-    console.log(`\n   Available files in ${packageDir}:`)
+    console.error(`\n   Available files in ${packageDir}:`)
     const entries = fs
       .readdirSync(packageDir)
       .filter(
         (f) =>
           !f.startsWith('.') && !f.endsWith('.js') && !f.endsWith('.json') && !f.endsWith('.d.ts')
       )
-    entries.forEach((f) => console.log(`     ${f}`))
-    console.log('')
-  }
-
-  if (fontFiles.length === 0) {
-    console.error('❌ No font variants found. Check the font name and package contents.')
+    entries.forEach((f) => console.error(`     ${f}`))
+    console.error(
+      '\n   Choose a family that supplies every required weight or update the template weight set.\n'
+    )
     process.exit(1)
   }
 
@@ -125,7 +123,23 @@ function main() {
   )
 
   const fontPaths = fontFiles.map((f) => f.relativePath)
-  const fontPluginEntry = ['expo-font', { fonts: fontPaths }]
+  const fontPluginEntry = [
+    'expo-font',
+    {
+      ios: { fonts: fontPaths },
+      android: {
+        fonts: [
+          {
+            fontFamily: prefix,
+            fontDefinitions: fontFiles.map(({ relativePath, weight }) => ({
+              path: relativePath,
+              weight,
+            })),
+          },
+        ],
+      },
+    },
+  ]
 
   if (fontPluginIndex !== -1) {
     plugins[fontPluginIndex] = fontPluginEntry

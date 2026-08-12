@@ -76,6 +76,7 @@
     "format": "prettier ./src --write --log-level error && eslint ./src --fix --quiet"
   },
   "dependencies": {
+    "@expo-google-fonts/inter": "^0.4.2",
     "@expo/ui": "~57.0.9",
     "@react-native-firebase/analytics": "^24.0.0",
     "@react-native-firebase/app": "^24.0.0",
