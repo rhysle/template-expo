@@ -86,7 +86,7 @@ export const monetizationConfig = {
     subscriptionGroupReferenceName: 'Premium',
     baseTerritory: 'USA',
     familySharable: false,
-    reviewNote: 'Unlocks all premium features in the app.',
+    reviewNote: '',
   },
 
   google: {
