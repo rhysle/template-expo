@@ -211,7 +211,7 @@ The Settings screen demonstrates contact support, rating, sharing, legal links, 
 
 Fastlane configuration is at the repository root so it survives prebuilds. It manages App Store Connect and Google Play metadata/screenshots; it does not create an app binary in the metadata lanes.
 
-Keep API keys, Play service-account JSON, reviewer contact details, and local environment files out of Git. Fastlane reads the bundle identifier and package name from `app.json`; update shared URLs, locale mapping, and listing content for each new app before using its `fastlane:*` scripts.
+Keep API keys, Play service-account JSON, reviewer contact details, and local environment files out of Git. Fastlane reads the bundle identifier and package name from `app.json`; update shared URLs, locale mapping, and listing content for each new app before using its `fastlane:*` scripts. Every iOS locale's `fastlane/ios/metadata/<locale>/description.txt` must include direct Terms of Use and Privacy Policy links from `AppConfig.links.termsOfService` and `AppConfig.links.privacyPolicy`, respectively; localize the two link labels to match that metadata locale. This description requirement is iOS-only; do not add the links to Android descriptions solely for this purpose.
 
 ## Code Conventions
 
