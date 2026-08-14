@@ -12,7 +12,7 @@ import {
   AdsConsent,
   AdsConsentDebugGeography,
   AdsConsentPrivacyOptionsRequirementStatus,
-  isAdsEnabled,
+  isAnyAdFormatEnabled,
 } from './adsService'
 
 const isOfflineConsentFailure = async (error: unknown): Promise<boolean> => {
@@ -34,7 +34,7 @@ export const useConsentInit = () => {
 
   useEffect(() => {
     // Premium and unresolved users see no ads, so skip consent until access is confirmed free.
-    if (!isAdsEnabled() || premiumState !== 'free') {
+    if (!isAnyAdFormatEnabled() || premiumState !== 'free') {
       setCanRequestAds(false)
       setConsentGathered(true)
       return

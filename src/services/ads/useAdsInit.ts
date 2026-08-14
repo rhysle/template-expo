@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 
 import { useAdsState } from '@/stores/features/ads'
 
-import { initMobileAds, isAdsEnabled } from './adsService'
+import { initMobileAds, isAnyAdFormatEnabled } from './adsService'
 
 /**
  * Initializes the Google Mobile Ads SDK once ATT + UMP consent have resolved.
@@ -22,7 +22,7 @@ export const useAdsInit = () => {
     useAdsState()
 
   useEffect(() => {
-    if (!isAdsEnabled() || !consentGathered || !canRequestAds || adsInitialized) return
+    if (!isAnyAdFormatEnabled() || !consentGathered || !canRequestAds || adsInitialized) return
 
     let cancelled = false
 

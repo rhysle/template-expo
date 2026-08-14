@@ -89,7 +89,7 @@ Management REST API or CLI, so the setup command prints a direct Project setting
 remaining manual step: under **Your project > Environment**, select **Production**.
 
 The root Firebase files remain Git-ignored and are intentionally included by `.easignore` as the
-local/development/preview fallback. Production EAS builds resolve the `GOOGLE_SERVICE_INFO_PLIST` and
+local/development fallback. Production EAS builds resolve the `GOOGLE_SERVICE_INFO_PLIST` and
 `GOOGLE_SERVICES_JSON` file variables instead. Run a clean prebuild after provisioning, then replace
 the sample events in `src/services/firebase/analytics/analyticsAppEvents.ts`; keep generic lifecycle
 events in `analyticsGeneralEvents.ts`.
@@ -281,7 +281,7 @@ but the overall command reports failure so the symbolication problem is visible.
 2. For each AdMob app, open **Ad units**, choose **Add ad unit**, and create the formats used by this template: one **Banner** unit and one **Interstitial** unit.
 3. Copy each platform's Banner and Interstitial ad-unit IDs into the matching `bannerAdUnitId` and `interstitialAdUnitId` fields in `AppConfig.ads`.
 4. Set `AppConfig.ads.enabled` to `true`, choose the `banner.enabled` and `interstitial.enabled` flags, review the interstitial completion thresholds and cooldown, then run `npm run setup:ads` to synchronize the native configuration. Keep the ads initialization hooks in the root and tabs layouts when ads are enabled; remove them when ads are disabled.
-5. Development and preview builds automatically use Google's banner and interstitial test ad-unit IDs. Register any physical device used to test a production variant as an AdMob test device; never click live ads during development.
+5. Development builds automatically use Google's banner and interstitial test ad-unit IDs. Register any physical device used to test a production variant as an AdMob test device; never click live ads during development.
 6. The template requests UMP consent before initializing Mobile Ads or constructing ad objects. Preserve that gate and configure any required Privacy & messaging forms in AdMob before release.
 7. Run a clean prebuild after changing the ads configuration.
 
@@ -291,7 +291,7 @@ The tab layout owns one `InterstitialAdProvider`. Product completion points requ
 
 - **Fonts:** Change `FONT_NAME` in `src/configs/fonts.ts`, run `npm run setup:font`, then run a clean prebuild so the selected font is embedded in release builds.
 - **Localization:** During product development, update only `src/i18n/locales/en.json`; missing non-English values fall back to English. Do not copy English text into other locale files. Before store submission, translate the complete current English resource for every locale the product will ship, or remove unsupported locales, then run `npm run check:i18n:release`. Run `npm run setup:i18n` after adding or removing a locale, and `npm run check:i18n` after changing English copy.
-- **OTA updates:** Keep `AppConfig.otaUpdate.enabled` only when the new EAS project and update channels are ready. OTA builds and updates must share the same EAS project and runtime-version policy.
+- **OTA updates:** Keep `AppConfig.otaUpdate.enabled` only when the new EAS project and update channels are ready. OTA builds and updates must share the same EAS project and runtime-version policy. This template supports only `development` and `production`: build profiles provide the configuration-time `APP_VARIANT`, while production updates require a project-scoped plaintext `APP_VARIANT=production` variable in the EAS production environment. Runtime code derives the variant directly from `__DEV__` and must not read `process.env.APP_VARIANT` for behavior.
 
 ### 7. Configure app-facing settings
 

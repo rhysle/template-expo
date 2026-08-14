@@ -6,6 +6,9 @@ export {
   BannerAdSize,
   InterstitialAd,
   isAdsEnabled,
+  isAnyAdFormatEnabled,
+  isBannerAdsEnabled,
+  isInterstitialAdsEnabled,
   TestIds,
 } from './adsService'
 export type { BannerAdDimensions, BannerAdProps } from './BannerAd'

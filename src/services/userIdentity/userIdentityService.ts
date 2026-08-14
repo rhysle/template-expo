@@ -3,9 +3,9 @@ import * as Crypto from 'expo-crypto'
 import { recordError } from '@/services/sentry'
 import { getStoredUserId, removeStoredUserId, setStoredUserId } from '@/storage'
 
-// Per-variant key prevents IDs leaking between dev/preview/production
+// Per-variant key prevents IDs leaking between development and production
 // analytics and RevenueCat customers under a shared bundle ID.
-const APP_VARIANT = process.env.APP_VARIANT ?? 'development'
+const appVariant = __DEV__ ? 'development' : 'production'
 
 /**
  * Returns the current installation's anonymous user ID from MMKV, or generates
@@ -13,7 +13,7 @@ const APP_VARIANT = process.env.APP_VARIANT ?? 'development'
  */
 export const getOrCreateUserId = async (): Promise<string> => {
   try {
-    const existingId = getStoredUserId(APP_VARIANT)
+    const existingId = getStoredUserId(appVariant)
     if (existingId) return existingId
   } catch (error) {
     recordError(error, 'userIdentity.getOrCreateUserId.read')
@@ -22,7 +22,7 @@ export const getOrCreateUserId = async (): Promise<string> => {
   const newId = Crypto.randomUUID()
 
   try {
-    setStoredUserId(APP_VARIANT, newId)
+    setStoredUserId(appVariant, newId)
   } catch (error) {
     recordError(error, 'userIdentity.getOrCreateUserId.write')
   }
@@ -35,5 +35,5 @@ export const getOrCreateUserId = async (): Promise<string> => {
  * Intended for dev/debug use only - the next cold launch will generate a new ID.
  */
 export const clearUserId = async (): Promise<void> => {
-  removeStoredUserId(APP_VARIANT)
+  removeStoredUserId(appVariant)
 }

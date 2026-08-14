@@ -63,7 +63,7 @@ export const initSentry = (): void => {
   Sentry.init({
     dsn: AppConfig.sentry.dsn,
     enabled: !__DEV__,
-    environment: process.env.APP_VARIANT ?? (__DEV__ ? 'development' : 'production'),
+    environment: __DEV__ ? 'development' : 'production',
     tracesSampleRate: 0, // performance monitoring off; enable when ready
     beforeSend: (event, hint) => {
       const err = hint?.originalException

@@ -27,12 +27,17 @@ export {
 // ── Feature flag ──────────────────────────────────────────────────────────────
 
 export const isAdsEnabled = (): boolean => AppConfig.ads.enabled
-const isPreviewBuild = process.env.APP_VARIANT === 'preview'
+export const isBannerAdsEnabled = (): boolean =>
+  AppConfig.ads.enabled && AppConfig.ads.banner.enabled
+export const isInterstitialAdsEnabled = (): boolean =>
+  AppConfig.ads.enabled && AppConfig.ads.interstitial.enabled
+export const isAnyAdFormatEnabled = (): boolean =>
+  isBannerAdsEnabled() || isInterstitialAdsEnabled()
 
 // ── Ad unit IDs ───────────────────────────────────────────────────────────────
 
 export const getAdUnitId = (type: 'banner' | 'interstitial'): string => {
-  if (!AppConfig.ads.enabled || __DEV__ || isPreviewBuild) {
+  if (!AppConfig.ads.enabled || __DEV__) {
     const testMap = {
       banner: TestIds.BANNER,
       interstitial: TestIds.INTERSTITIAL,
@@ -56,7 +61,7 @@ export const getAdUnitId = (type: 'banner' | 'interstitial'): string => {
 // ── SDK initialisation ────────────────────────────────────────────────────────
 
 export const initMobileAds = async (): Promise<void> => {
-  if (!AppConfig.ads.enabled) return
+  if (!isAnyAdFormatEnabled()) return
 
   try {
     await MobileAds().setRequestConfiguration({

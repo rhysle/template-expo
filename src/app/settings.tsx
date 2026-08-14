@@ -19,7 +19,7 @@ import { ScrollView, View } from 'react-native'
 
 import { ActionListItem, Card, Pressable, PromoBanner, Text } from '@/components/base'
 import { AppConfig } from '@/configs'
-import { AdsConsent, isAdsEnabled } from '@/services/ads'
+import { AdsConsent, isAnyAdFormatEnabled } from '@/services/ads'
 import { AnalyticsGeneralEvents, trackEvent } from '@/services/firebase/analytics'
 import { getCurrentOtaUpdateId } from '@/services/otaUpdate'
 import { type PaywallSource, usePremiumGate } from '@/services/revenueCat'
@@ -46,7 +46,8 @@ export default function SettingsScreen() {
   const { userId } = useUserIdentityState()
   const { privacyOptionsRequired } = useAdsState()
   const { showSnackbar } = useSnackbarState()
-  const showPrivacyConsentItem = isAdsEnabled() && premiumState === 'free' && privacyOptionsRequired
+  const showPrivacyConsentItem =
+    isAnyAdFormatEnabled() && premiumState === 'free' && privacyOptionsRequired
   const currentOtaUpdateId = getCurrentOtaUpdateId()
   const appName = Constants.expoConfig?.name ?? 'App'
 

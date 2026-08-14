@@ -3,7 +3,7 @@ import type { StyleProp, ViewStyle } from 'react-native'
 import { Platform, StyleSheet, View } from 'react-native'
 import { BannerAd as RNBannerAd, useForeground } from 'react-native-google-mobile-ads'
 
-import { BannerAdSize, getAdUnitId } from './adsService'
+import { BannerAdSize, getAdUnitId, isBannerAdsEnabled } from './adsService'
 import { useCanShowAds } from './useCanShowAds'
 
 export interface BannerAdDimensions {
@@ -33,14 +33,15 @@ export const BannerAd = ({
 }: BannerAdProps) => {
   const bannerRef = useRef<RNBannerAd>(null)
   const canShowAds = useCanShowAds()
+  const canShowBanner = canShowAds && isBannerAdsEnabled()
 
   useForeground(() => {
-    if (Platform.OS === 'ios' && canShowAds) {
+    if (Platform.OS === 'ios' && canShowBanner) {
       bannerRef.current?.load()
     }
   })
 
-  if (!canShowAds) {
+  if (!canShowBanner) {
     return null
   }
 

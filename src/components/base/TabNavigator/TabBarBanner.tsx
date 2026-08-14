@@ -1,8 +1,7 @@
 import { useEffect } from 'react'
 import { StyleSheet, View } from 'react-native'
 
-import { AppConfig } from '@/configs'
-import { BannerAd, useCanShowAds } from '@/services/ads'
+import { BannerAd, isBannerAdsEnabled, useCanShowAds } from '@/services/ads'
 import { createThemedStyles, useThemedStyles } from '@/theme'
 
 import { useSetTabBarAccessoryHeight, useTabBarBaseHeight } from '../FloatingTabBar/tabBarHeight'
@@ -15,7 +14,7 @@ export const TabBarBanner = () => {
   const setAccessoryHeight = useSetTabBarAccessoryHeight()
   const styles = useThemedStyles(createStyles)
 
-  const isEligible = canShowAds && AppConfig.ads.banner.enabled
+  const isEligible = canShowAds && isBannerAdsEnabled()
 
   const accessoryHeight = isEligible ? ADS_BANNER_HEIGHT + StyleSheet.hairlineWidth * 2 : 0
 

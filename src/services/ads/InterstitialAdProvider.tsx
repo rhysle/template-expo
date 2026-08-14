@@ -15,7 +15,7 @@ import { useAdsState } from '@/stores/features/ads'
 import { usePaywallState } from '@/stores/features/paywall'
 import { useSubscriptionState } from '@/stores/features/subscription'
 
-import { AdEventType, getAdUnitId, InterstitialAd } from './adsService'
+import { AdEventType, getAdUnitId, InterstitialAd, isInterstitialAdsEnabled } from './adsService'
 import { getInterstitialEligibility } from './interstitialPolicy'
 import { useCanShowAds } from './useCanShowAds'
 
@@ -51,7 +51,8 @@ export const InterstitialAdProvider = ({
   const canPresentRef = useRef(canPresent)
   const isLoadedRef = useRef(false)
   const config = AppConfig.ads.interstitial
-  const isActive = canShowAds && config.enabled
+  const interstitialAdsEnabled = isInterstitialAdsEnabled()
+  const isActive = canShowAds && interstitialAdsEnabled
   const autoPaywallIntervalMs = AppConfig.autoPaywall.intervalDays * 24 * 60 * 60 * 1_000
 
   useLayoutEffect(() => {
@@ -107,7 +108,7 @@ export const InterstitialAdProvider = ({
   }, [resetInterstitialForegroundCap])
 
   const requestInterstitialAd: RequestInterstitialAd = async () => {
-    if (!config.enabled || premiumState !== 'free') return
+    if (!interstitialAdsEnabled || premiumState !== 'free') return
 
     recordInterstitialQualifyingCompletion()
 
