@@ -6,6 +6,10 @@ This is a reusable Expo application template, not a product-specific app. Preser
 
 Current stack: Expo SDK 57, React Native 0.86, React 19 with React Compiler, Expo Router, TypeScript strict mode, Zustand + Immer + MMKV, TanStack Query, i18next, Reanimated, and native Firebase Analytics / RevenueCat / Sentry integrations.
 
+## Platform Scope
+
+This template targets iOS and Android only. Build, implement, review, and test product features for both mobile platforms; web compatibility, web-specific implementations, web fallbacks, and web testing are out of scope. Do not block mobile work on web-only failures or use `--platform all` for EAS Update because that also exports web. Use the mobile-only `eas-update`, `eas-update:ios`, and `eas-update:android` scripts instead.
+
 ## Documentation Lookup
 
 Use Context7 whenever work depends on the current API, configuration, setup, migration, or usage of a library, framework, SDK, CLI, or cloud service.
@@ -23,7 +27,6 @@ Use the project's full question, resolve the library before fetching docs, and d
 npm start
 npm run ios
 npm run android
-npm run web
 
 npm run lint
 npm run check:type
@@ -114,7 +117,7 @@ This repository supplies a configured mobile foundation, including integrations 
 
 When implementing a design-led feature, create or update its interaction specification in `docs/design/` before building behavior that the visual design does not make explicit. For each interactive control, document its trigger, resulting surface or navigation, selection and dismissal behavior, validation, and relevant loading, empty, error, or active states. State whether the control uses a platform-native UI or a custom component; native controls still require their surrounding product behavior to be specified. Mark unresolved behavior as `Decision needed` and resolve it before implementation rather than silently inventing a product interaction. Verify both the designed initial screen and the documented interaction states before handoff. See `docs/design/README.md` for the format.
 
-Expo UI wrappers live under `src/components/base/NativeUI/` and use the `Native*` prefix so they remain distinct from custom React Native implementations. Keep shared props platform-neutral and apply the app appearance, tint, and RTL direction through the shared native host. These wrappers target iOS and Android only; do not add web fallbacks unless a product explicitly restores web support.
+Expo UI wrappers live under `src/components/base/NativeUI/` and use the `Native*` prefix so they remain distinct from custom React Native implementations. Keep shared props platform-neutral and apply the app appearance, tint, and RTL direction through the shared native host. These wrappers target iOS and Android only; do not add web fallbacks.
 
 Place product-specific layouts and content under `src/components/` or the relevant route. Keep the reusable onboarding and paywall cores intact; replace the matching app-specific content folders instead.
 
@@ -232,7 +235,7 @@ Keep API keys, Play service-account JSON, reviewer contact details, and local en
 ## Handoff Checklist
 
 1. Run the narrowest relevant checks, and `npm run check` for normal code changes.
-2. Test the changed route or integration on its target platform when feasible.
+2. Test affected behavior on iOS and Android when feasible; web verification is not required.
 3. Run `npm run check:i18n` after changing English product copy.
 4. Run the focused tooling command after changing setup or monetization scripts: `npm run test:setup-expo`, `npm run test:setup-firebase`, `npm run test:setup-sentry`, or `npm run test:monetization`.
 5. Regenerate and test native projects after native configuration changes.

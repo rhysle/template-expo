@@ -30,7 +30,7 @@
     "eas-submit:android": "eas submit --platform android",
     "eas-update:android": "eas update --channel production --environment production --platform android && npx sentry-expo-upload-sourcemaps dist",
     "eas-update:ios": "eas update --channel production --environment production --platform ios && npx sentry-expo-upload-sourcemaps dist",
-    "eas-update": "eas update --channel production --environment production --platform all && npx sentry-expo-upload-sourcemaps dist",
+    "eas-update": "npm run eas-update:ios && npm run eas-update:android",
     "lint": "expo lint",
     "check": "npm run lint && npm run check:type",
     "check:type": "tsc --noEmit",
