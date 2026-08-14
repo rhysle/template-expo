@@ -41,9 +41,6 @@ const createStyles = createThemedStyles((t) => ({
     right: 0,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: t.colors.background.surface,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderColor: t.colors.border.subtle,
+    backgroundColor: 'transparent',
   },
 }))
