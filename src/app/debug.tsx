@@ -12,6 +12,7 @@ import { Button, Card, Pressable, SegmentedControl, Text } from '@/components/ba
 import type { SegmentedOption } from '@/components/base/SegmentedControl'
 import { BaseComponentGallery } from '@/components/debug/BaseComponentGallery'
 import { DesignTokenSection } from '@/components/debug/DesignTokenSection'
+import { LanguageSwitcher } from '@/components/debug/LanguageSwitcher'
 import { ScreenHeader } from '@/components/ScreenHeader'
 import { usePremiumGate } from '@/services/revenueCat'
 import { clearUserId as clearUserIdService } from '@/services/userIdentity'
@@ -99,6 +100,10 @@ export default function DebugScreen() {
       keyboardShouldPersistTaps="handled">
       <View style={styles.container}>
         <ScreenHeader title="Debug State" subtitle="Inspect live, persisted, and migration state" />
+
+        <CollapsibleSection title="Language Preview">
+          <LanguageSwitcher />
+        </CollapsibleSection>
 
         <DesignTokenSection />
 

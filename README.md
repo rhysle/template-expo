@@ -500,6 +500,48 @@ Use the shared network and offline-error utilities where appropriate. Persist on
 
 Locale resources live in `src/i18n/locales/`, are loaded dynamically, and are type-checked against English. User-visible product text belongs in translations, except for the development-only debug route.
 
+### Supported Languages
+
+The app ships with 33 UI locales. In production, the active language follows the app or device
+locale reported by the operating system; there is no in-app language picker. Unmatched locales and
+missing translations fall back to English.
+
+| #   | Code      | Language              | Script            | Direction |
+| --- | --------- | --------------------- | ----------------- | --------- |
+| 1   | `ar`      | Arabic                | Arabic            | RTL       |
+| 2   | `bn`      | Bangla                | Bengali           | LTR       |
+| 3   | `cs`      | Czech                 | Latin             | LTR       |
+| 4   | `da`      | Danish                | Latin             | LTR       |
+| 5   | `de`      | German                | Latin             | LTR       |
+| 6   | `el`      | Greek                 | Greek             | LTR       |
+| 7   | `en`      | English               | Latin             | LTR       |
+| 8   | `es`      | Spanish               | Latin             | LTR       |
+| 9   | `fi`      | Finnish               | Latin             | LTR       |
+| 10  | `fr`      | French                | Latin             | LTR       |
+| 11  | `he`      | Hebrew                | Hebrew            | RTL       |
+| 12  | `hi`      | Hindi                 | Devanagari        | LTR       |
+| 13  | `hr`      | Croatian              | Latin             | LTR       |
+| 14  | `hu`      | Hungarian             | Latin             | LTR       |
+| 15  | `id`      | Indonesian            | Latin             | LTR       |
+| 16  | `it`      | Italian               | Latin             | LTR       |
+| 17  | `ja`      | Japanese              | Japanese          | LTR       |
+| 18  | `ko`      | Korean                | Hangul            | LTR       |
+| 19  | `ms`      | Malay                 | Latin             | LTR       |
+| 20  | `nl`      | Dutch                 | Latin             | LTR       |
+| 21  | `nb`      | Norwegian Bokmål      | Latin             | LTR       |
+| 22  | `pl`      | Polish                | Latin             | LTR       |
+| 23  | `pt-BR`   | Portuguese (Brazil)   | Latin             | LTR       |
+| 24  | `pt`      | Portuguese (Portugal) | Latin             | LTR       |
+| 25  | `ro`      | Romanian              | Latin             | LTR       |
+| 26  | `ru`      | Russian               | Cyrillic          | LTR       |
+| 27  | `sv`      | Swedish               | Latin             | LTR       |
+| 28  | `th`      | Thai                  | Thai              | LTR       |
+| 29  | `tr`      | Turkish               | Latin             | LTR       |
+| 30  | `uk`      | Ukrainian             | Cyrillic          | LTR       |
+| 31  | `vi`      | Vietnamese            | Latin             | LTR       |
+| 32  | `zh-Hans` | Chinese (Simplified)  | Han (Simplified)  | LTR       |
+| 33  | `zh-Hant` | Chinese (Traditional) | Han (Traditional) | LTR       |
+
 ```tsx
 const { t } = useTranslation()
 return <Text>{t('settings.title')}</Text>

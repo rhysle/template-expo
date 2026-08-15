@@ -2,18 +2,22 @@ import { getLocales } from 'expo-localization'
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 
+import { getDebugLanguageOverride } from '@/storage'
+
 import { resources } from './resources'
 
-const getDeviceLanguage = (): string => {
+export const getDeviceLanguage = (): string => {
   const locales = getLocales()
   return locales[0]?.languageTag ?? 'en'
 }
+
+const getInitialLanguage = (): string => getDebugLanguageOverride() ?? getDeviceLanguage()
 
 export const initI18n = () => {
   // eslint-disable-next-line import/no-named-as-default-member
   void i18n.use(initReactI18next).init({
     resources,
-    lng: getDeviceLanguage(),
+    lng: getInitialLanguage(),
     fallbackLng: {
       no: ['nb', 'en'],
       default: ['en'],

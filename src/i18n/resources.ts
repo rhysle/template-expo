@@ -13,3 +13,5 @@ export const resources = {
   en: { translation: en },
   ...dynamicResources,
 } satisfies Record<string, { translation: Record<string, unknown> }>
+
+export const supportedLanguageCodes = Object.keys(resources)

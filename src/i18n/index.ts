@@ -1,3 +1,4 @@
 import './types'
-export { initI18n } from './config'
+export { getDeviceLanguage, initI18n } from './config'
 export { I18nProvider } from './I18nProvider'
+export { supportedLanguageCodes } from './resources'
