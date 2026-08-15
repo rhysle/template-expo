@@ -326,6 +326,7 @@ npm run android    # test Android changes
 npm run check
 npm run check:i18n # after changing English product copy
 npm run check:i18n:release # after completing release translations
+npm run check:i18n:release:fix # remove obsolete locale keys, then audit
 npm run release:verify-config
 ```
 
@@ -343,6 +344,8 @@ npm run lint              # ESLint
 npm run check:type        # TypeScript, no emit
 npm run check:i18n        # English source-locale audit
 npm run check:i18n:release # All-locale release audit
+npm run check:i18n:release:fix # Remove obsolete locale keys, then audit
+npm run test:i18n         # Test i18n audit tooling
 npm run check             # Lint + type check
 npm run test:setup-expo   # Type-check and test Expo setup tooling
 npm run test:setup-sentry # Type-check and test Sentry setup tooling
@@ -504,7 +507,7 @@ return <Text>{t('settings.title')}</Text>
 
 During product development, treat `src/i18n/locales/en.json` as the only source locale. Add and revise copy there, then run `npm run check:i18n`. The command checks English key usage and empty values while intentionally ignoring every non-English locale. Do not copy English values into other locale files to make their keys match; missing translations use the English fallback.
 
-Before publishing a product fork, translate the complete current English resource into every locale the product will ship. Preserve interpolation placeholders, review translation quality, remove locale files for languages the product will not support, and run `npm run check:i18n:release` to verify key coverage, non-empty values, and placeholders across every configured locale. To add or remove a locale, update its JSON resource and run `npm run setup:i18n` to synchronize `app.json`.
+Before publishing a product fork, translate the complete current English resource into every locale the product will ship. Preserve interpolation placeholders, review translation quality, remove locale files for languages the product will not support, and run `npm run check:i18n:release` to verify key coverage, non-empty values, and placeholders across every configured locale. Run `npm run check:i18n:release:fix` when obsolete English keys should also be removed from every release locale before the audit; missing translations, empty values, and placeholder mismatches remain manual release blockers. To add or remove a locale, update its JSON resource and run `npm run setup:i18n` to synchronize `app.json`.
 
 The i18n configuration includes `number` and `currency` formatters for products that need them, but neither is a requirement of the template.
 

@@ -13,6 +13,7 @@
  *   npx tsx scripts/check-i18n.ts
  *   npx tsx scripts/check-i18n.ts --remove-unused   # auto-remove unused keys from en.json
  *   npx tsx scripts/check-i18n.ts --release         # validate every locale before release
+ *   npx tsx scripts/check-i18n.ts --release --remove-unused # remove obsolete release-locale keys
  */
 
 import { execSync } from 'child_process'
@@ -234,7 +235,11 @@ function sameStrings(left: string[], right: string[]): boolean {
   return left.length === right.length && left.every((value, index) => value === right[index])
 }
 
-function checkReleaseLocales(baseKeys: string[], baseValues: Map<string, string>): boolean {
+function checkReleaseLocales(
+  baseKeys: string[],
+  baseValues: Map<string, string>,
+  removeUnused: boolean
+): boolean {
   console.log('\n🔍 Checking every release locale...\n')
 
   const baseKeySet = new Set(baseKeys)
@@ -247,14 +252,37 @@ function checkReleaseLocales(baseKeys: string[], baseValues: Map<string, string>
   }
 
   for (const { locale, filePath } of localeFiles) {
-    const localeJson = loadJson(filePath)
-    const localeKeys = flatKeys(localeJson)
+    let localeJson = loadJson(filePath)
+    let localeKeys = flatKeys(localeJson)
+    let extraKeys = localeKeys.filter((key) => !baseKeySet.has(key))
+    let emptyObjectKeys = flatEmptyObjects(localeJson)
+
+    if (removeUnused && (extraKeys.length > 0 || emptyObjectKeys.length > 0)) {
+      const removedExtraKeys = extraKeys
+      const removedEmptyObjectKeys = emptyObjectKeys
+      localeJson = pruneUnusedKeys(localeJson, new Set(extraKeys))
+      fs.writeFileSync(filePath, JSON.stringify(localeJson, null, 2) + '\n', 'utf-8')
+
+      if (removedExtraKeys.length > 0) {
+        console.log(
+          `  🗑️  ${locale}.json — removed ${removedExtraKeys.length} extra key(s): ${removedExtraKeys.join(', ')}`
+        )
+      }
+      if (removedEmptyObjectKeys.length > 0) {
+        console.log(
+          `  🗑️  ${locale}.json — removed ${removedEmptyObjectKeys.length} empty object(s): ${removedEmptyObjectKeys.join(', ')}`
+        )
+      }
+
+      localeKeys = flatKeys(localeJson)
+      extraKeys = localeKeys.filter((key) => !baseKeySet.has(key))
+      emptyObjectKeys = flatEmptyObjects(localeJson)
+    }
+
     const localeKeySet = new Set(localeKeys)
     const localeValues = flatValues(localeJson)
     const localeLineMap = buildKeyLineMap(filePath)
     const missingKeys = baseKeys.filter((key) => !localeKeySet.has(key))
-    const extraKeys = localeKeys.filter((key) => !baseKeySet.has(key))
-    const emptyObjectKeys = flatEmptyObjects(localeJson)
     const emptyValueKeys = flatEmptyValues(localeJson)
     const placeholderMismatchKeys = baseKeys.filter((key) => {
       const baseValue = baseValues.get(key)
@@ -329,9 +357,9 @@ function main() {
     process.exit(1)
   }
 
-  const baseJson = loadJson(baseFilePath)
-  const baseKeys = flatKeys(baseJson)
-  const baseLineMap = buildKeyLineMap(baseFilePath)
+  let baseJson = loadJson(baseFilePath)
+  let baseKeys = flatKeys(baseJson)
+  let baseLineMap = buildKeyLineMap(baseFilePath)
 
   let hasErrors = false
 
@@ -352,6 +380,9 @@ function main() {
     const unusedSet = new Set(unusedKeys)
     const pruned = pruneUnusedKeys(baseJson, unusedSet)
     fs.writeFileSync(baseFilePath, JSON.stringify(pruned, null, 2) + '\n', 'utf-8')
+    baseJson = pruned
+    baseKeys = flatKeys(baseJson)
+    baseLineMap = buildKeyLineMap(baseFilePath)
 
     if (unusedKeys.length > 0) {
       console.log(`  🗑️  Removed ${unusedKeys.length} unused key(s) from ${BASE_LOCALE}.json:\n`)
@@ -399,7 +430,7 @@ function main() {
     }
   }
 
-  if (release && checkReleaseLocales(baseKeys, flatValues(baseJson))) {
+  if (release && checkReleaseLocales(baseKeys, flatValues(baseJson), removeUnused)) {
     hasErrors = true
   }
 
