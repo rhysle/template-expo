@@ -10,9 +10,11 @@
   "gamblingSimulated": "NONE",
   "sexualContentOrNudity": "NONE",
   "sexualContentGraphicAndNudity": "NONE",
+  "socialMedia": false,
+  "socialMediaAgeRestricted": false,
   "gunsOrOtherWeapons": "NONE",
   "contests": "NONE",
-  "advertising": false,
+  "advertising": true,
   "gambling": false,
   "unrestrictedWebAccess": false,
   "userGeneratedContent": false,
@@ -20,5 +22,9 @@
   "parentalControls": false,
   "lootBox": false,
   "ageAssurance": false,
-  "messagingAndChat": false
+  "messagingAndChat": false,
+  "ageRatingOverrideV2": "NONE",
+  "koreaAgeRatingOverride": "NONE",
+  "kidsAgeBand": null,
+  "developerAgeRatingInfoUrl": null
 }

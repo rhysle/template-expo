@@ -173,6 +173,7 @@ platform :ios do
       force: true,
       run_precheck_before_submit: false,
       submit_for_review: false,
+      automatic_release: false,
       precheck_include_in_app_purchases: false,
       app_rating_config_path: File.join(PROJECT_ROOT, "fastlane/ios/metadata/app_rating_config.json"),
       **SHARED_IOS_URLS,
