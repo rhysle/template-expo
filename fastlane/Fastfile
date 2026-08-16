@@ -206,10 +206,21 @@ platform :android do
     end
   end
 
-  desc "Upload Android metadata + screenshots. Pass `locales:\"en-US,vi\"` to limit."
+  desc "Upload Android metadata + screenshots against the latest internal release. Pass `locales:\"en-US,vi\"` to limit."
   lane :metadata do |options|
     metadata_root = File.join(PROJECT_ROOT, "fastlane/android/metadata")
     locales = parse_locales(options)
+    track = options[:track] || "internal"
+
+    version_code = options[:version_code] || google_play_track_version_codes(track: track).max
+    unless version_code.to_s.match?(/\A\d+\z/)
+      UI.user_error!(
+        "No version codes found on the '#{track}' track. " \
+        "Upload a release there first or pass version_code:<code> to target a specific release.",
+      )
+    end
+
+    version_code = version_code.to_i
 
     metadata_path =
       if locales
@@ -223,12 +234,15 @@ platform :android do
         metadata_root
       end
 
+    UI.message("Uploading Android metadata for versionCode #{version_code} on the #{track} track.")
+
     supply(
-      track: "production",
+      track: track,
       metadata_path: metadata_path,
+      version_code: version_code,
       skip_upload_apk: true,
       skip_upload_aab: true,
-      skip_upload_changelogs: true, # no APK/AAB uploaded → no version_code → changelogs can't be uploaded
+      skip_upload_changelogs: true, # changelogs are handled by the separate `changelog` lane
       skip_upload_images: false,
       skip_upload_screenshots: false,
       validate_only: options[:validate_only] == true || options[:validate_only] == "true",
