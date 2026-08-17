@@ -218,6 +218,8 @@ Fastlane configuration is at the repository root so it survives prebuilds. It ma
 
 Keep API keys, Play service-account JSON, reviewer contact details, and local environment files out of Git. Fastlane reads the bundle identifier and package name from `app.json`; update shared URLs, locale mapping, and listing content for each new app before using its `fastlane:*` scripts. Every iOS locale's `fastlane/ios/metadata/<locale>/description.txt` must include direct Terms of Use and Privacy Policy links from `AppConfig.links.termsOfService` and `AppConfig.links.privacyPolicy`, respectively; localize the two link labels to match that metadata locale. This description requirement is iOS-only; do not add the links to Android descriptions solely for this purpose.
 
+Every iOS Fastlane metadata upload reads `fastlane/ios/app_store_config.json`, synchronizes its Content Rights declaration, and replaces the App Review attachment from `IOS_APP_REVIEW_ATTACHMENT_PATH`. Keep the tracked config aligned with the product, configure the attachment path in the gitignored `.env.fastlane.local` from `.env.fastlane.example`, and keep the product recording under the gitignored `fastlane/ios/review/` directory; the lane must fail before remote changes when the config is invalid or the attachment is missing. App pricing and App Privacy responses are intentionally managed manually in App Store Connect. Keep `submit_for_review` disabled so build selection and the final App Review submission remain manual.
+
 ## Code Conventions
 
 - Prefer aliases (`@/...`) and named exports.

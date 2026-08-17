@@ -47,6 +47,8 @@ yarn-error.*
 .DS_Store
 *.pem
 
+# NOTE: .env.local intentionally NOT excluded here — see header comment.
+
 # typescript
 *.tsbuildinfo
 
@@ -71,7 +73,6 @@ firebase-debug.log
 
 #Codex
 .codex/
-# NOTE: .env.local intentionally NOT excluded here — see header comment.
 
 # Misc
 .superpowers/
@@ -87,4 +88,6 @@ fastlane/report.xml
 fastlane/README.md
 fastlane/ios/metadata/review_information/*
 !fastlane/ios/metadata/review_information/notes.txt
+fastlane/ios/review/*
+!fastlane/ios/review/.gitkeep
 .env.fastlane.local

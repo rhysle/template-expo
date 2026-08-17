@@ -32,6 +32,7 @@ yarn-error.*
 
 # local env files
 .env*.local
+.env.local
 
 # typescript
 *.tsbuildinfo
@@ -54,7 +55,6 @@ firebase-debug.log
 
 # Claude
 .claude/
-.env.local
 
 #Codex
 .codex/
@@ -73,4 +73,6 @@ fastlane/report.xml
 fastlane/README.md
 fastlane/ios/metadata/review_information/*
 !fastlane/ios/metadata/review_information/notes.txt
+fastlane/ios/review/*
+!fastlane/ios/review/.gitkeep
 .env.fastlane.local
