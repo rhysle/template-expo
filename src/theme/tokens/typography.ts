@@ -13,6 +13,8 @@ export const typography = {
     '4xl': 28,
     '5xl': 32,
     '6xl': 48,
+    '7xl': 64,
+    '8xl': 80,
   },
   weights: {
     light: '300',

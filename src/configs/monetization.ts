@@ -47,7 +47,7 @@ export const monetizationConfig = {
 
   products: {
     weekly: {
-      priceUsd: '3.99',
+      priceUsd: '1.99',
       referenceName: 'Premium Weekly',
       appleProductId: 'premium_weekly',
       appleReviewScreenshotPath: './fastlane/monetization/review/paywall.png',
@@ -56,7 +56,7 @@ export const monetizationConfig = {
     },
     // Available for future forks; add 'monthly' to enabledProducts to provision it.
     monthly: {
-      priceUsd: '9.99',
+      priceUsd: '4.99',
       referenceName: 'Premium Monthly',
       appleProductId: 'premium_monthly',
       appleReviewScreenshotPath: './fastlane/monetization/review/paywall.png',
@@ -64,7 +64,7 @@ export const monetizationConfig = {
       revenueCatPackageLookupKey: '$rc_monthly',
     },
     yearly: {
-      priceUsd: '29.99',
+      priceUsd: '19.99',
       referenceName: 'Premium Yearly',
       appleProductId: 'premium_yearly',
       appleReviewScreenshotPath: './fastlane/monetization/review/paywall.png',
@@ -72,7 +72,7 @@ export const monetizationConfig = {
       revenueCatPackageLookupKey: '$rc_annual',
     },
     lifetime: {
-      priceUsd: '79.99',
+      priceUsd: '49.99',
       referenceName: 'Premium Lifetime',
       appleProductId: 'premium_lifetime',
       appleReviewScreenshotPath: './fastlane/monetization/review/paywall.png',

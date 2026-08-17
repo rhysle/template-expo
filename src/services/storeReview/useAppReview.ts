@@ -14,7 +14,8 @@ export const useAppReview = () => {
     recordReviewRequested,
   } = useAppReviewState()
 
-  const requestReview = async () => {
+  /** Returns true only when a native review request was dispatched. */
+  const requestReview = async (): Promise<boolean> => {
     const nextCount = appReviewActionCount + 1
     incrementActionCount()
 
@@ -25,17 +26,19 @@ export const useAppReview = () => {
         : Infinity
     const meetsDays = daysSinceLast >= AppConfig.appReview.minDaysBetweenRequests
 
-    if (!meetsCount || !meetsDays) return
-
-    const available = await isReviewAvailable()
-    if (!available) return
+    if (!meetsCount || !meetsDays) return false
 
     try {
+      const available = await isReviewAvailable()
+      if (!available) return false
+
       await requestStoreReview()
       recordReviewRequested()
       trackEvent(AnalyticsGeneralEvents.APP_REVIEW_REQUESTED)
+      return true
     } catch (error) {
       recordError(error)
+      return false
     }
   }
 
