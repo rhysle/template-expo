@@ -3,9 +3,10 @@ import type { PurchasesPackage } from 'react-native-purchases'
 
 import { AnalyticsGeneralEvents, trackEvent } from '@/services/firebase/analytics'
 import {
+  canMakePayments,
   fetchOfferings,
+  getOfferingsFailureKind,
   getRevenueCatErrorDetails,
-  isBillingUnavailableError,
   type PaywallSource,
   purchasePackage,
   restorePurchases,
@@ -19,6 +20,9 @@ interface UsePaywallOptions extends PaywallCallbacks {
   source: PaywallSource
 }
 
+export type PaywallOfferingsStatus =
+  'available' | 'configuration_error' | 'loading' | 'purchase_not_allowed' | 'temporary_error'
+
 export const usePaywall = ({
   onComplete,
   onSubscribeSuccess,
@@ -30,30 +34,79 @@ export const usePaywall = ({
 }: UsePaywallOptions) => {
   const [packages, setPackages] = useState<PurchasesPackage[]>([])
   const [selectedPackage, setSelectedPackage] = useState<PurchasesPackage | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [offeringsStatus, setOfferingsStatus] = useState<PaywallOfferingsStatus>('loading')
+  const [offeringsRequestId, setOfferingsRequestId] = useState(0)
   const [purchasing, setPurchasing] = useState(false)
 
   useEffect(() => {
+    let cancelled = false
+
     const loadOfferings = async () => {
+      setOfferingsStatus('loading')
+      setPackages([])
+      setSelectedPackage(null)
+
       try {
+        const paymentsSupported = await canMakePayments()
+        if (cancelled) return
+
+        if (!paymentsSupported) {
+          setOfferingsStatus('purchase_not_allowed')
+          return
+        }
+
         const availablePackages = await fetchOfferings()
+        if (cancelled) return
+
+        if (availablePackages.length === 0) {
+          const error = new Error('RevenueCat current offering has no available packages')
+          if (!__DEV__) {
+            recordError(error, 'usePaywall.loadOfferings', {
+              error_code: 'empty_offering',
+              failure_kind: 'configuration',
+              source,
+            })
+          }
+          setOfferingsStatus('configuration_error')
+          return
+        }
+
         setPackages(availablePackages)
-        if (availablePackages.length > 0) {
-          setSelectedPackage(availablePackages[0])
+        setSelectedPackage(availablePackages[0])
+        setOfferingsStatus('available')
+      } catch (error: unknown) {
+        if (cancelled) return
+
+        const failureKind = getOfferingsFailureKind(error)
+        if (failureKind === 'purchase_not_allowed') {
+          setOfferingsStatus('purchase_not_allowed')
+          return
         }
-      } catch (error) {
-        // Offerings may not be available during development.
-        // In production, log so SDK/network failures are visible.
-        if (!__DEV__ && !isBillingUnavailableError(error)) {
-          recordError(error, 'usePaywall.loadOfferings')
+
+        setOfferingsStatus(failureKind === 'temporary' ? 'temporary_error' : 'configuration_error')
+
+        // Connectivity and store availability errors are expected operational failures.
+        // Configuration and unknown errors remain actionable in Sentry.
+        if (!__DEV__ && failureKind !== 'temporary') {
+          recordError(error, 'usePaywall.loadOfferings', {
+            failure_kind: failureKind,
+            source,
+            ...getRevenueCatErrorDetails(error),
+          })
         }
-      } finally {
-        setLoading(false)
       }
     }
 
     void loadOfferings()
-  }, [])
+
+    return () => {
+      cancelled = true
+    }
+  }, [offeringsRequestId, source])
+
+  const retryOfferings = () => {
+    setOfferingsRequestId((requestId) => requestId + 1)
+  }
 
   const handleSubscribe = async () => {
     if (!selectedPackage) return
@@ -140,7 +193,8 @@ export const usePaywall = ({
     packages,
     selectedPackage,
     setSelectedPackage,
-    loading,
+    offeringsStatus,
+    retryOfferings,
     purchasing,
     handleSubscribe,
     handleRestore,

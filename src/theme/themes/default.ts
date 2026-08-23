@@ -19,7 +19,7 @@ export const defaultTheme: Theme = {
       primary: '#102A43',
       secondary: '#35546A',
       muted: '#5F7A8C',
-      accent: '#0077C8',
+      accent: '#21A0FF',
       inverse: '#FFFFFF',
       inverseSecondary: '#F3FAFF',
       inverseMuted: 'rgba(255, 255, 255, 0.72)',

@@ -2,11 +2,12 @@ import { Image } from 'expo-image'
 import { useIsFocused } from 'expo-router'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { type StyleProp, View, type ViewStyle } from 'react-native'
+import { PixelRatio, type StyleProp, View, type ViewStyle } from 'react-native'
 import Animated, {
   cancelAnimation,
   Easing,
   ReduceMotion,
+  type SharedValue,
   useAnimatedStyle,
   useReducedMotion,
   useSharedValue,
@@ -19,7 +20,10 @@ import { createThemedStyles, useThemedStyles } from '@/theme'
 
 const IMAGE_FRAME_SIZE = 336
 const IMAGE_FRAME_COMPACT_SIZE = 244
-const IMAGE_PULSE_SCALE = 0.025
+const ACTIVE_BOB_TRANSLATE_Y = 2
+const ADRIFT_TRANSLATE_X = 2
+const ADRIFT_TRANSLATE_Y = 4
+const ADRIFT_HALF_CYCLE_DURATION = 1_700
 const VISUAL_TRANSITION_DURATION = 220
 
 interface TransitionSources {
@@ -29,25 +33,33 @@ interface TransitionSources {
 
 export interface MascotHeroProps {
   active?: boolean
+  adrift?: boolean
   compact?: boolean
   fillAvailableSpace?: boolean
   source: number
   style?: StyleProp<ViewStyle>
+  tiltDegrees?: SharedValue<number>
 }
 
 export const MascotHero = ({
   active = false,
+  adrift = false,
   compact = false,
   fillAvailableSpace = false,
   source,
   style,
+  tiltDegrees,
 }: MascotHeroProps) => {
   const { t } = useTranslation()
   const styles = useThemedStyles(createStyles)
   const isFocused = useIsFocused()
   const reducedMotion = useReducedMotion()
-  const pulse = useSharedValue(0)
+  const drift = useSharedValue(0)
+  const activeBob = useSharedValue(0)
   const transition = useSharedValue(1)
+  const staticTiltDegrees = useSharedValue(0)
+  const sceneTiltDegrees = tiltDegrees ?? staticTiltDegrees
+  const pixelRatio = PixelRatio.get()
   const currentSourceRef = useRef(source)
   const [transitionSources, setTransitionSources] = useState<TransitionSources>({
     current: source,
@@ -81,9 +93,36 @@ export const MascotHero = ({
   }, [reducedMotion, source, transition])
 
   useEffect(() => {
-    cancelAnimation(pulse)
+    cancelAnimation(drift)
+    if (adrift && isFocused && !reducedMotion) {
+      drift.value = withSequence(
+        ReduceMotion.System,
+        withTiming(-1, {
+          duration: ADRIFT_HALF_CYCLE_DURATION,
+          easing: Easing.inOut(Easing.sin),
+        }),
+        withRepeat(
+          withTiming(1, {
+            duration: ADRIFT_HALF_CYCLE_DURATION * 2,
+            easing: Easing.inOut(Easing.sin),
+          }),
+          -1,
+          true,
+          undefined,
+          ReduceMotion.System
+        )
+      )
+    } else {
+      drift.value = withTiming(0, { duration: 240, reduceMotion: ReduceMotion.System })
+    }
+
+    return () => cancelAnimation(drift)
+  }, [adrift, drift, isFocused, reducedMotion])
+
+  useEffect(() => {
+    cancelAnimation(activeBob)
     if (active && isFocused && !reducedMotion) {
-      pulse.value = withRepeat(
+      activeBob.value = withRepeat(
         withSequence(
           withTiming(1, { duration: 750, easing: Easing.out(Easing.quad) }),
           withTiming(0, { duration: 750, easing: Easing.in(Easing.quad) })
@@ -91,22 +130,28 @@ export const MascotHero = ({
         -1
       )
     } else {
-      pulse.value = withTiming(0, { duration: 180, reduceMotion: ReduceMotion.System })
+      activeBob.value = withTiming(0, { duration: 180, reduceMotion: ReduceMotion.System })
     }
 
-    return () => cancelAnimation(pulse)
-  }, [active, isFocused, pulse, reducedMotion])
+    return () => cancelAnimation(activeBob)
+  }, [active, activeBob, isFocused, reducedMotion])
 
-  const frameStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: 1 + pulse.value * IMAGE_PULSE_SCALE }],
-  }))
+  const frameStyle = useAnimatedStyle(() => {
+    const translateX = Math.round(drift.value * ADRIFT_TRANSLATE_X * pixelRatio) / pixelRatio
+    const translateY =
+      Math.round(
+        (drift.value * ADRIFT_TRANSLATE_Y - activeBob.value * ACTIVE_BOB_TRANSLATE_Y) * pixelRatio
+      ) / pixelRatio
+
+    return {
+      transform: [{ translateX }, { translateY }, { rotateZ: `${sceneTiltDegrees.value}deg` }],
+    }
+  })
   const currentStyle = useAnimatedStyle(() => ({
     opacity: transition.value,
-    transform: [{ scale: 0.96 + transition.value * 0.04 }],
   }))
   const outgoingStyle = useAnimatedStyle(() => ({
     opacity: 1 - transition.value,
-    transform: [{ scale: 1 + transition.value * 0.02 }],
   }))
 
   return (

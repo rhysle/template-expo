@@ -18,6 +18,7 @@ import Animated, {
 
 import { Pressable } from '@/components/base'
 import type { ToneWaveform } from '@/services/audio'
+import { useIsRTL } from '@/services/rtl'
 import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
 
 const WAVEFORM_OPTIONS = [
@@ -113,16 +114,18 @@ export const ToneWaveformPicker = ({
   const { t } = useTranslation()
   const styles = useThemedStyles(createStyles)
   const reducedMotion = useReducedMotion()
+  const isRTL = useIsRTL()
   const selectedIndex = Math.max(
     WAVEFORM_OPTIONS.findIndex((option) => option.value === value),
     0
   )
-  const indicatorX = useSharedValue(selectedIndex * OPTION_SIZE)
+  // The absolute indicator anchor mirrors to the physical right in RTL.
+  const targetX = (isRTL ? -1 : 1) * selectedIndex * OPTION_SIZE
+  const indicatorX = useSharedValue(targetX)
 
   useEffect(() => {
-    const targetX = selectedIndex * OPTION_SIZE
     indicatorX.value = reducedMotion ? targetX : withSpring(targetX, INDICATOR_SPRING_CONFIG)
-  }, [indicatorX, reducedMotion, selectedIndex])
+  }, [indicatorX, reducedMotion, targetX])
 
   const indicatorStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: indicatorX.value }],

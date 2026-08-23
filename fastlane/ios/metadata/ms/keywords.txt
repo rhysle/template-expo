@@ -1,1 +1,1 @@
-bersih,telefon,stereo,ujian,frekuensi,hertz,audio,bunyi,bising,habuk,lembap,nada,desibel
+bersih,telefon,stereo,ujian,frekuensi,audio,bunyi,bising,habuk,lembap,nada,desibel,teredam,dB,baiki

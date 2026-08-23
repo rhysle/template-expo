@@ -1,29 +1,30 @@
-import {
-  LockKeyIcon,
-  MicrophoneIcon,
-  ShieldCheckIcon,
-  WarningCircleIcon,
-} from 'phosphor-react-native'
+import { MicrophoneIcon, ShieldCheckIcon, WarningCircleIcon } from 'phosphor-react-native'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Linking, useWindowDimensions, View } from 'react-native'
 
-import { AudioToolScreen, CircularAudioButton, DbMeterGauge, MascotHero } from '@/components/audio'
-import { InlineNotice, PermissionSheet, Pressable, StatusBadge, Text } from '@/components/base'
+import {
+  AudioToolScreen,
+  CircularAudioButton,
+  DbMeterGauge,
+  DbSessionSheet,
+  DbStatsReport,
+  MascotHero,
+} from '@/components/audio'
+import { InlineNotice, PermissionSheet, StatusBadge, Text } from '@/components/base'
+import { type DbActivityRecord, getActivitySnapshot } from '@/services/activity'
 import { usePreventInterstitialAd, useRequestInterstitialAd } from '@/services/ads'
 import {
   audioController,
-  classifyMeterBand,
   type MeterBand,
   useAudioController,
   useAudioToolLifecycle,
 } from '@/services/audio'
 import { type PaywallSource, usePremiumGate } from '@/services/revenueCat'
-import { useAppReview } from '@/services/storeReview'
 import { useAudioPreferencesState } from '@/stores/features/audioPreferences'
-import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
+import { createThemedStyles, useTheme, useThemedStyles } from '@/theme'
 
-const DB_STATS_PAYWALL_SOURCE = 'db_stats' satisfies PaywallSource
+const DB_INSIGHTS_PAYWALL_SOURCE = 'db_advanced' satisfies PaywallSource
 const MASCOT_SOURCES: Record<MeterBand, number> = {
   veryQuiet: require('@/assets/images/mascot/db-very-quiet.png'),
   normal: require('@/assets/images/mascot/db-normal.png'),
@@ -38,16 +39,17 @@ export default function DbMeterScreen() {
   const { height } = useWindowDimensions()
   const snapshot = useAudioController()
   const requestInterstitialAd = useRequestInterstitialAd()
-  const { requestReview } = useAppReview()
   const { premiumState, requirePremium } = usePremiumGate()
   const { hapticsEnabled } = useAudioPreferencesState()
   const [permissionSheetVisible, setPermissionSheetVisible] = useState(false)
   const [isCheckingPermission, setIsCheckingPermission] = useState(false)
+  const [completedSession, setCompletedSession] = useState<DbActivityRecord | null>(null)
   usePreventInterstitialAd('db_meter_permission', isCheckingPermission || permissionSheetVisible)
   useAudioToolLifecycle()
 
   const isRunning = snapshot.activeTool === 'meter' && snapshot.status === 'running'
   const isStarting = snapshot.activeTool === 'meter' && snapshot.status === 'starting'
+  const isStopping = snapshot.activeTool === 'meter' && snapshot.status === 'stopping'
   const isActive = isRunning || isStarting
   const isLastMeterSession = snapshot.lastTool === 'meter'
   const isCompactLayout = height < 900
@@ -82,15 +84,19 @@ export default function DbMeterScreen() {
   const statusTone = bandTones[meter.band]
   const readingColor = statusColor
 
-  const getStatColor = (value: number) => bandColors[classifyMeterBand(value)]
-
   const handleMainPress = async () => {
+    if (isStopping) return
+
     if (isActive) {
       const wasRunning = isRunning
+      const previousLatestSessionId = getActivitySnapshot().db[0]?.id
       await audioController.stop('manual')
       if (wasRunning) {
-        const didRequestReview = await requestReview()
-        if (!didRequestReview) await requestInterstitialAd()
+        const latestSession = getActivitySnapshot().db[0]
+        await requestInterstitialAd()
+        if (latestSession && latestSession.id !== previousLatestSessionId) {
+          setCompletedSession(latestSession)
+        }
       }
       return
     }
@@ -168,59 +174,20 @@ export default function DbMeterScreen() {
         />
       </View>
 
-      <Pressable
-        accessibilityRole={premiumState === 'premium' ? undefined : 'button'}
-        accessibilityLabel={
-          premiumState === 'premium' ? undefined : t('audioTools.meter.unlockStats')
-        }
-        accessibilityHint={premiumState === 'premium' ? undefined : t('premium.lockedHint')}
-        disabled={premiumState === 'premium'}
-        haptic={premiumState !== 'premium'}
-        style={styles.statsRowContainer}
-        onPress={() =>
-          requirePremium(DB_STATS_PAYWALL_SOURCE, () => {
-            // Values are already rendered when Premium is active.
-          })
-        }>
-        <View style={styles.statsRow}>
-          {[
-            { label: t('audioTools.meter.minimum'), value: meter.minimumDb },
-            { label: t('audioTools.meter.average'), value: meter.averageDb },
-            { label: t('audioTools.meter.maximum'), value: meter.maximumDb },
-          ].map((stat, index) => (
-            <View key={stat.label} style={[styles.stat, index > 0 && styles.statDivider]}>
-              <Text variant="caption" tone="secondary" align="center">
-                {stat.label}
-              </Text>
-              {premiumState === 'premium' ? (
-                <Text
-                  variant="subtitle"
-                  weight="bold"
-                  align="center"
-                  style={[styles.statValue, { color: getStatColor(stat.value) }]}>
-                  {Math.round(stat.value)} dB
-                </Text>
-              ) : (
-                <View style={styles.lockedStatValue}>
-                  <LockKeyIcon size={iconSizes.sm} color={theme.colors.text.muted} weight="fill" />
-                  <Text
-                    variant="subtitle"
-                    weight="bold"
-                    align="center"
-                    style={[styles.statValue, { color: theme.colors.text.muted }]}>
-                    dB
-                  </Text>
-                </View>
-              )}
-            </View>
-          ))}
-        </View>
-      </Pressable>
+      <View style={styles.statsRowContainer}>
+        <DbStatsReport
+          minimumDb={meter.minimumDb}
+          averageDb={meter.averageDb}
+          maximumDb={meter.maximumDb}
+          style={styles.statsReport}
+        />
+      </View>
 
       <View style={[styles.controls, isCompactLayout && styles.controlsCompact]}>
         <CircularAudioButton
           active={isActive}
-          loading={isCheckingPermission}
+          loading={isCheckingPermission || isStopping}
+          disabled={isStopping}
           haptic={hapticsEnabled}
           accessibilityLabel={isActive ? t('audioTools.meter.stop') : t('audioTools.meter.start')}
           onPress={() => void handleMainPress()}
@@ -246,6 +213,18 @@ export default function DbMeterScreen() {
         actionLabel={t('common.openSettings')}
         onAction={handleOpenSettings}
         onDismiss={() => setPermissionSheetVisible(false)}
+      />
+
+      <DbSessionSheet
+        visible={completedSession !== null}
+        record={completedSession}
+        premiumState={premiumState}
+        onUpgrade={() =>
+          requirePremium(DB_INSIGHTS_PAYWALL_SOURCE, () => {
+            // The report updates automatically when Premium becomes active.
+          })
+        }
+        onDismiss={() => setCompletedSession(null)}
       />
     </AudioToolScreen>
   )
@@ -287,30 +266,8 @@ const createStyles = createThemedStyles((t) => ({
   statsRowContainer: {
     opacity: 1,
   },
-  statsRow: {
-    flexDirection: 'row',
+  statsReport: {
     marginTop: t.spacing.md,
-    paddingVertical: t.spacing.sm,
-  },
-  stat: {
-    minWidth: 0,
-    flex: 1,
-    alignItems: 'center',
-    gap: t.spacing.xs,
-  },
-  statDivider: {
-    borderLeftWidth: 1,
-    borderLeftColor: t.colors.border.subtle,
-  },
-  statValue: {
-    fontVariant: ['tabular-nums'],
-  },
-  lockedStatValue: {
-    minHeight: 24,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: t.spacing.xs,
   },
   controls: {
     alignItems: 'center',

@@ -1,1 +1,1 @@
-
+telefón,stereo,test,frekvencia,hertz,audio,hluk,prach,vlhkosť,tón,decibel,nečistota,oprava,tlmený

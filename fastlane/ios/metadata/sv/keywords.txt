@@ -1,1 +1,1 @@
-ren,mobil,stereo,test,frekvens,hertz,audio,ljud,buller,damm,fukt,skräp,ton,decibel
+ren,mobil,stereo,test,frekvens,audio,ljud,buller,damm,fukt,skräp,ton,decibel,dämpat,våt,smuts,fixa

@@ -1,7 +1,9 @@
+Czysta fala usuwa wodę i naprawia głuchy dźwięk; test tonów, stereo i dB.
+
 Głośnik brzmi głucho po kontakcie z wodą? Czyszczenie Głośnika pomaga wypchnąć uwięzioną wodę, luźny kurz i zabrudzenia za pomocą prowadzonego, trzystopniowego dźwięku czyszczącego. Potem od razu sprawdzisz efekt.
 
 WYCZYŚĆ I SPRAWDŹ GŁOŚNIK
-• Uruchom cykl usuwania wody na 30, 60 lub 90 sekund
+• Uruchamiaj bezpłatnie nielimitowane cykle 30 s; Premium dodaje 60/90 s i tryb Turbo
 • Generuj precyzyjne tony od 20 do 20 000 Hz
 • Testuj lewy, prawy i oba kanały stereo
 • Oszacuj hałas otoczenia miernikiem dB na żywo
@@ -10,7 +12,7 @@ WYCZYŚĆ I SPRAWDŹ GŁOŚNIK
 CZTERY NARZĘDZIA AUDIO, JEDEN PRYWATNY ZESTAW
 Czyszczenie głośnika, generator tonów, test stereo i miernik dźwięku działają na urządzeniu. Próbki mikrofonu są przetwarzane w pamięci i nigdy nie są zapisywane ani wysyłane.
 
-Bezpłatnie: tony sinusoidalne, ręczny test stereo i szacowanie dB na żywo. Premium odblokowuje wszystkie cykle, dodatkowe przebiegi, test automatyczny, szczegółowe statystyki i korzystanie bez reklam.
+Bezpłatnie: nielimitowane cykle 30 s, tony sinusoidalne, ręczny test stereo, dB na żywo oraz wartości minimalna, średnia i maksymalna. Premium odblokowuje cykle 60/90 s, tryb Turbo, dodatkowe przebiegi, test automatyczny, raporty sesji dźwiękowych, prywatną historię aktywności i korzystanie bez reklam.
 
 Ułóż urządzenie głośnikiem w dół, zacznij od niskiej głośności, uruchom cykl i sprawdź dźwięk. W razie potrzeby powtórz.
 

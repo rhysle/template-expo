@@ -1,7 +1,7 @@
 Zvuči li zvučnik prigušeno nakon doticaja s vodom? Čistač Zvučnika pomaže izbaciti zarobljenu vodu, prašinu i nečistoće vođenim trostupanjskim zvukom za čišćenje. Zatim odmah možete provjeriti rezultat.
 
 OČISTITE I TESTIRAJTE ZVUČNIK
-• Pokrenite ciklus izbacivanja vode od 30, 60 ili 90 sekundi
+• Besplatno pokrećite neograničene cikluse od 30 sekundi; Premium dodaje 60/90 sekundi i Turbo
 • Generirajte precizne tonove od 20 do 20.000 Hz
 • Testirajte lijevi, desni i oba stereo kanala
 • Procijenite okolnu buku mjeračem dB uživo
@@ -10,7 +10,7 @@ OČISTITE I TESTIRAJTE ZVUČNIK
 ČETIRI AUDIO ALATA, JEDAN PRIVATAN KOMPLET
 Čišćenje zvučnika, generator tonova, stereo test i mjerač zvuka rade na uređaju. Uzorci mikrofona obrađuju se u memoriji i nikad se ne spremaju niti prenose.
 
-Besplatno su dostupni sinusni tonovi, ručni stereo test i procjena dB uživo. Premium otključava sve cikluse, dodatne valne oblike, automatski stereo test, detaljnu statistiku i korištenje bez oglasa.
+Besplatno dobivate neograničene cikluse od 30 sekundi, sinusne tonove, ručni stereo test, dB uživo te minimum, prosjek i maksimum. Premium otključava cikluse od 60/90 sekundi, Turbo, dodatne valne oblike, automatski test, izvješća zvučnih sesija, privatnu povijest aktivnosti i korištenje bez oglasa.
 
 Okrenite zvučnik prema dolje, počnite s niskom glasnoćom, pokrenite ciklus i testirajte zvuk. Ponovite ako je i dalje prigušen.
 

@@ -1,20 +1,24 @@
+Clear wave water eject fixes muffled speakers; test tones, stereo and sound dB.
+
 Muffled speaker after a splash? Water Eject – Speaker Cleaner helps push out trapped water, loose dust, and debris with a guided three-stage cleaning sound—then lets you check the result.
 
 CLEAR AND CHECK YOUR SPEAKER
-• Run guided 30, 60, or 90-second Water Eject cycles
+• Run unlimited 30-second Water Eject cycles free
+• Unlock 60/90-second cycles and Turbo Mode with Premium
 • Generate precise tones from 20 to 20,000 Hz
 • Test left, right, and both stereo channels
 • Estimate nearby sound levels with a live dB meter
-• Review minimum, average, and maximum session estimates
+• View minimum, average, and maximum session estimates free
+• Keep a private on-device history of cleaning and sound sessions with Premium
 
 FOUR AUDIO TOOLS, ONE PRIVATE TOOLKIT
-Use speaker cleaning, a tone generator, a stereo test, and a sound meter without sending audio to a server. Microphone samples are processed in memory and are never saved or uploaded.
+Use speaker cleaning, a tone generator, a stereo test, and a sound meter without sending audio to a server. Microphone samples are processed in memory and are never saved or uploaded. Rounded session estimates and cleaning activity can be stored locally and cleared in Settings.
 
 FREE TOOLS
-Generate sine tones, test stereo channels manually, and view live estimated dB levels with clear safety bands.
+Run unlimited 30-second cleaning cycles, generate sine tones, test stereo channels manually, and view live estimated dB levels with minimum, average, and maximum readings.
 
 PREMIUM
-Unlock full guided cleaning cycles, square/triangle/sawtooth waveforms, automatic stereo testing, detailed dB statistics, and an ad-free experience.
+Unlock 60/90-second cleaning cycles, Turbo Mode, square/triangle/sawtooth waveforms, automatic stereo testing, detailed sound-session reports, private activity history, and an ad-free experience.
 
 HOW TO USE WATER EJECT
 Place the device speaker-side down, start at a low volume, run a cleaning cycle, and test the speaker. Repeat if the sound is still muffled.

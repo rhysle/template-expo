@@ -1,1 +1,1 @@
-Poista vettä, puhdista kaiutin ja testaa äänet, stereo sekä melutaso.
+Kirkas aalto poistaa veden ja korjaa vaimean äänen; testaa stereo ja dB.

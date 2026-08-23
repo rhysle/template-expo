@@ -16,18 +16,18 @@
 
 - **Problem:** Water, loose dust, or debris can leave a phone speaker sounding muffled, while users often need separate apps to test tones, stereo channels, and nearby sound levels.
 - **Target Audience:** Smartphone owners who want a quick, guided way to check and care for their speakers, plus hobbyists who need simple audio test tools.
-- **Unique Differentiator:** One privacy-first toolkit combines guided three-stage speaker-cleaning cycles, a 20–20,000 Hz tone generator, stereo channel testing, and an estimated dB meter.
-- **Elevator Pitch:** Clear and check your phone speaker with guided Water Eject cycles and four practical audio tools that process sound on device.
+- **Unique Differentiator:** One privacy-first toolkit combines unlimited free 30-second Water Eject cycles, focused Premium routines, precise tone generation, stereo testing, and an estimated dB meter with device-only activity history.
+- **Elevator Pitch:** Run guided 30-second Water Eject cycles free, then unlock longer Turbo cleaning, advanced audio testing, and locally saved insights with Premium.
 
 ## Competitors
 
-| App | App ID / package | Strengths | Weaknesses or opening |
-| --- | --- | --- | --- |
-| Water Eject ‒ Speaker Cleaner | Apple 6499516431 | 30K+ US ratings; exact-match positioning; multiple audio tools | Music-category positioning and generic copy leave room for a safer, privacy-led utility message |
-| Clear Wave | Apple 1557211189 | 36K+ US ratings; recognizable clean-wave concept | Less explicit title intent; feature set and description are broad |
-| Sonic \| Water Eject | Apple 986999895 | 20K+ US ratings; established tone-generator heritage | Water-eject benefit is secondary to the brand |
-| Decibel X | Apple 448155923 | 160K+ US ratings; authority in sound measurement | Specialized meter rather than an all-in-one speaker-care toolkit |
-| Speaker Cleaner - Remove Water | Google com.mobiletrendyapps.speaker.cleaner.remove.water | 10M+ downloads; exact-match title; strong category presence | Crowded, keyword-heavy positioning; differentiation can focus on guided cycles, privacy, and the complete toolkit |
+| App                            | App ID / package                                         | Strengths                                                      | Weaknesses or opening                                                                                             |
+| ------------------------------ | -------------------------------------------------------- | -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| Water Eject ‒ Speaker Cleaner  | Apple 6499516431                                         | 30K+ US ratings; exact-match positioning; multiple audio tools | Music-category positioning and generic copy leave room for a safer, privacy-led utility message                   |
+| Clear Wave                     | Apple 1557211189                                         | 36K+ US ratings; recognizable clean-wave concept               | Less explicit title intent; feature set and description are broad                                                 |
+| Sonic \| Water Eject           | Apple 986999895                                          | 20K+ US ratings; established tone-generator heritage           | Water-eject benefit is secondary to the brand                                                                     |
+| Decibel X                      | Apple 448155923                                          | 160K+ US ratings; authority in sound measurement               | Specialized meter rather than an all-in-one speaker-care toolkit                                                  |
+| Speaker Cleaner - Remove Water | Google com.mobiletrendyapps.speaker.cleaner.remove.water | 10M+ downloads; exact-match title; strong category presence    | Crowded, keyword-heavy positioning; differentiation can focus on guided cycles, privacy, and the complete toolkit |
 
 ## Current ASO State
 
@@ -53,5 +53,5 @@
 ## Markets
 
 - **Primary:** United States
-- **Secondary:** Every storefront represented by the 33 project locales
-- **Languages:** Arabic, Bengali, Czech, Danish, German, Greek, English, Spanish, Finnish, French, Hebrew, Hindi, Croatian, Hungarian, Indonesian, Italian, Japanese, Korean, Malay, Norwegian Bokmål, Dutch, Polish, Portuguese, Brazilian Portuguese, Romanian, Russian, Swedish, Thai, Turkish, Ukrainian, Vietnamese, Simplified Chinese, and Traditional Chinese
+- **Secondary:** Every storefront represented by the 37 project locales
+- **Languages:** Arabic, Bengali, Catalan, Czech, Danish, German, Greek, English, Spanish (Spain and Mexico), Finnish, French (France and Canada), Hebrew, Hindi, Croatian, Hungarian, Indonesian, Italian, Japanese, Korean, Malay, Norwegian Bokmål, Dutch, Polish, Portuguese, Brazilian Portuguese, Romanian, Russian, Slovak, Swedish, Thai, Turkish, Ukrainian, Vietnamese, Simplified Chinese, and Traditional Chinese

@@ -1,1 +1,1 @@
-čistit,telefon,stereo,test,frekvence,hertz,audio,zvuk,hluk,prach,vlhkost,tón,decibel
+čistit,telefon,stereo,test,frekvence,audio,zvuk,hluk,prach,vlhkost,tón,decibel,tlumený,mobil,opravit

@@ -1,1 +1,1 @@
-temizle,telefon,stereo,test,frekans,hertz,ses,gürültü,toz,nem,kir,audio,ton,desibel
+temizle,telefon,stereo,test,frekans,hertz,ses,gürültü,toz,nem,kir,audio,ton,desibel,boğuk,onarım,cep

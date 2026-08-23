@@ -1,3 +1,4 @@
+export * from './activityStorage'
 export type { PersistStorage, SyncKVStorage } from './core/contracts'
 export * from './debugLanguageStorage'
 export * from './queryStorage'

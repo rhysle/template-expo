@@ -1,1 +1,1 @@
-Izbacite vodu, očistite zvučnik i testirajte tonove, stereo i razinu buke.
+Bistar val izbacuje vodu i popravlja prigušen zvuk; test tona, sterea i dB.

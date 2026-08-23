@@ -50,7 +50,7 @@
     "otaUpdateId": "Päivitys: {{updateId}}",
     "upgradeBanner": {
       "title": "Päivitä Premiumiin",
-      "subtitle": "Avaa vedenpoisto, edistyneet ääniohjaimet ja mainokseton kokemus"
+      "subtitle": "Avaa pidempi Turbo-puhdistus, edistyneet äänisäätimet ja mainokseton käyttökokemus"
     },
     "audio": {
       "section": "Ääni ja mittari",
@@ -60,6 +60,15 @@
       "hapticsSubtitle": "Käytä kosketuspalautetta äänityökaluissa",
       "safety": "Äänen turvallisuus ja tietosuoja",
       "safetySubtitle": "Toisto-, mikrofoni- ja mittausopastus"
+    },
+    "activity": {
+      "section": "Toimintatiedot",
+      "saved": "Tallennettu toiminta",
+      "clear": "Tyhjennä toimintahistoria",
+      "clearSubtitle": "Poista paikallisesti tallennetut puhdistus- ja ääniistunnot",
+      "clearConfirmTitle": "Poistetaanko kaikki toiminta?",
+      "clearConfirmBody": "Tämä poistaa pysyvästi tallennetut puhdistus- ja ääniistunnot tältä laitteelta. Seuraava ilmainen siivousaikasi ei muutu.",
+      "cleared": "Toimintahistoria tyhjennettiin"
     }
   },
   "audioTools": {
@@ -68,21 +77,31 @@
       "error": "Ääntä ei voitu käynnistää. Tarkista nykyinen lähtö ja yritä uudelleen."
     },
     "eject": {
-      "subtitle": "Tehokas 3-vaiheinen äänijakso kohdistuu loukkuun jääneeseen veteen, irtonaiseen pölyyn ja roskoihin.",
-      "safe": "Valmis puhdistettavaksi",
-      "completed": "Puhdistusjakso valmis",
-      "remaining": "{{time}} jäljellä",
       "start": "Aloita siivous",
       "stop": "Lopeta siivoaminen",
-      "idleHint": "Aseta laite kaiutinpuoli alaspäin ennen kuin aloitat.",
-      "runningHint": "Pidä laite paikallaan ja kaukana korvistasi.",
-      "completedHint": "Testaa kaiutintasi ja toista jakso, jos ääni on edelleen vaimea.",
       "externalTitle": "Irrota ulkoinen ääni",
       "externalBody": "Kaiuttimien puhdistus toimii laitteen kaiuttimen kautta, ei kuulokkeiden tai Bluetooth-lähtöjen kautta.",
-      "phase": {
-        "water": "Vedenpoistopulssi",
-        "debris": "Pölyn ja roskien tärinä",
-        "finish": "Lakaisua viimeistellään"
+      "turbo": {
+        "title": "Turbo-tila",
+        "guide": {
+          "title": "Turbo-tila",
+          "description": "Tehokkaampi puhdistusohjelma pinttyneelle vedelle ja roskille.",
+          "frequency": "Käyttää viittä erillistä kaksoistaajuusvaihetta, jotka kehittyvät koko syklin ajan.",
+          "duration": "Turbo voi hetkeksi ylittää järjestelmän äänenvoimakkuuden rajan. Käytä sitä vain lyhyisiin puhdistusjaksoihin.",
+          "cta": "Ota Turbo käyttöön"
+        }
+      },
+      "help": {
+        "title": "Kuinka käyttää",
+        "disconnect": "Irrota kuulokkeet ja Bluetooth-laitteet, jotta puhdistusääni kuuluu tämän laitteen läpi.",
+        "position": "Aseta laite kaiutinpuoli alaspäin kuivalle alustalle ja pidä kaiutinaukot vapaina.",
+        "start": "Lisää laitteen äänenvoimakkuutta, napauta Aloita puhdistus ja pidä laitetta paikallaan, kunnes sykli on päättynyt.",
+        "hearingTitle": "Suojaa kuulosi",
+        "hearingWarning": "Älä käytä kuulokkeita testattaessa Eject. Kovat kaiuttimen puhdistusäänet voivat vahingoittaa kuuloa."
+      },
+      "routine": {
+        "standard": "Vakio",
+        "turbo": "Turbo"
       }
     },
     "tone": {
@@ -96,9 +115,8 @@
         "triangle": "Kolmio",
         "sawtooth": "Sahahammas"
       },
-      "play": "Toistoääni",
+      "play": "Toista ääni",
       "stop": "Pysäytysääni",
-      "volumeHint": "Pidä äänenvoimakkuus alhaisena ja kaiutin kaukana korvilta.",
       "band": {
         "veryLow": "Erittäin alhainen",
         "low": "Matala",
@@ -109,8 +127,8 @@
       }
     },
     "stereo": {
-      "auto": "Automaattinen vaihtoehto",
-      "autoHint": "Pyöritä vasemmalle, oikealle ja molemmille",
+      "auto": "Automaattinen vuorottelu",
+      "autoHint": "Vuorottele vasenta, oikeaa ja molempia kanavia",
       "tapToChange": "Vaihda kanavaa napauttamalla kaiuttimia",
       "start": "Aloita testi",
       "helpTitle": "Stereotestin käyttäminen",
@@ -120,7 +138,7 @@
       "helpStop": "Käytä Pysäytä testi aina, kun haluat lopettaa toiston.",
       "left": "Vasen",
       "right": "Oikea",
-      "positionLeft": "Vasemmalla kanavalla",
+      "positionLeft": "Vasen kanava toistetaan",
       "positionCenter": "Molemmat kanavat toistetaan",
       "positionRight": "Oikea kanava toistetaan",
       "idlePosition": "Aloita napauttamalla kaiutinta",
@@ -131,11 +149,11 @@
       "start": "Aloita mittaus",
       "stop": "Lopeta mittaus",
       "permissionTitle": "Mikrofonin käyttö on pois päältä",
-      "permissionBody": "Mikrofonia käytetään vain dB-mittarin ollessa käynnissä lähellä olevien äänitasojen arvioimiseksi. Ääni käsitellään laitteellasi, eikä sitä koskaan tallenneta tai ladata.",
+      "permissionBody": "Mikrofonia käytetään vain dB-mittarin ollessa käynnissä ympäristön äänitason arviointiin. Ääninäytteet käsitellään muistissa, eikä niitä koskaan tallenneta tai lähetetä. Istunnon pyöristetyt arviot tallennetaan vain tähän laitteeseen, ja ne voi poistaa Asetuksissa.",
       "minimum": "Vähintään",
       "average": "Keskimääräinen",
       "maximum": "Enintään",
-      "unlockStats": "Avaa yksityiskohtaiset dB-istuntotilastot",
+      "timeline": "Arvioitu äänitason aikajana",
       "status": {
         "veryQuiet": "Erittäin hiljainen",
         "normal": "Normaali",
@@ -157,17 +175,17 @@
         "everydayLevels": "Päivittäiset äänitasot",
         "examplesApproximate": "Esimerkit ovat likimääräisiä ja vaihtelevat etäisyyden mukaan.",
         "currentEstimate": "Nykyinen arvio",
-        "exposureTitle": "Valotusajalla on merkitystä",
-        "exposureDescription": "NIOSH-työnohjaus; jokainen +3 dB puolittaa suositellun ajan.",
-        "useItWell": "Käytä sitä hyvin",
+        "exposureTitle": "Melualtistuksen kestolla on merkitystä",
+        "exposureDescription": "NIOSH:n työpaikkamelua koskevan ohjeen mukaan jokainen 3 dB:n lisäys puolittaa suositellun altistusajan.",
+        "useItWell": "Mittausvinkit",
         "tipMicrophoneTitle": "Pidä mikrofoni suojattuna",
-        "tipMicrophoneBody": "Vältä peittämästä sitä kädelläsi tai kotelollasi.",
+        "tipMicrophoneBody": "Älä peitä mikrofonia kädellä tai puhelimen kuorella.",
         "tipPositionTitle": "Mittaa missä kuuntelet",
         "tipPositionBody": "Siirrä laite sijaintiin, jonka haluat arvioida.",
         "tipProtectTitle": "Jos se tuntuu liian kovalta, suojaa korvasi",
         "tipProtectBody": "Siirry kauemmas lähteestä tai käytä kuulosuojaimia.",
         "reference": {
-          "concertSpeaker": "Konserttipuhuja",
+          "concertSpeaker": "Konserttikaiutin",
           "sirenNightclub": "Sireeni tai yökerho",
           "lawnMower": "Ruohonleikkuri",
           "busyStreet": "Vilkas katu",
@@ -188,7 +206,7 @@
       "estimateTitle": "Arvioidut äänitasot",
       "estimateBody": "Puhelimen mikrofonit ilmoittavat digitaalisen signaalitason laboratorion SPL:n sijaan. Sovellus käyttää arviota, joka vaihtelee laitteittain.",
       "privacyTitle": "Mikrofonin tietosuoja",
-      "privacyBody": "Mikrofoni toimii vain, kun dB-mittari on aktiivinen. Näytteet käsitellään muistissa, eikä niitä koskaan tallenneta tai ladata.",
+      "privacyBody": "Mikrofoni on käytössä vain dB-mittarin ollessa aktiivinen. Näytteet käsitellään muistissa, eikä niitä koskaan tallenneta tai lähetetä. Istunnon pyöristetyt arviot voidaan tallentaa paikallisesti toimintahistoriaan, ja ne voi poistaa Asetuksissa.",
       "limitationsTitle": "Tärkeitä rajoituksia",
       "limitationsBody": "Tämä sovellus ei voi taata veden tai pölyn poistamista. Älä työnnä esineitä kaiuttimeen äläkä käytä näitä työkaluja ammattimaisen korjauksen, kalibroitujen laitteiden, lääketieteellisten neuvojen tai kuulonsuojausohjeiden korvaamiseen."
     }
@@ -197,12 +215,30 @@
     "title": "Avaa täydellinen äänityökalupakettisi",
     "subtitle": "Puhdista kaiutin, käytä lisäsäätimiä ja poista kaikki mainokset.",
     "ctaFreeTrial": "Kokeile ilmaiseksi",
+    "trialDisclaimer": "Peruuta milloin tahansa. Maksua ei veloiteta nyt",
+    "subscriptionDisclaimer": "Peruuta milloin tahansa.",
+    "lifetimeDisclaimer": "Maksa kerran. Ei toistuvia maksuja.",
     "restore": "Palauta ostokset",
     "terms": "Käyttöehdot",
     "privacy": "Tietosuojakäytäntö",
     "then": "sitten",
     "trial": "{{count}}-{{unit}} ilmainen kokeilu",
     "save": "Säästä {{percent}}%",
+    "availability": {
+      "loading": "Tarkistetaan ostovaihtoehtoja…",
+      "temporary_error": {
+        "title": "Ostovaihtoehtoja ei voitu ladata",
+        "subtitle": "Tarkista yhteys ja yritä uudelleen."
+      },
+      "configuration_error": {
+        "title": "Ostovaihtoehdot eivät ole saatavilla",
+        "subtitle": "Kauppa ei voinut ladata tämän sovelluksen tuotteita. Yritä hetken kuluttua uudelleen."
+      },
+      "purchase_not_allowed": {
+        "title": "Ostoja ei tueta tällä laitteella",
+        "subtitle": "Tällä laitteella tai kauppatilillä ei voi tehdä sovelluksen sisäisiä ostoja."
+      }
+    },
     "trialUnit": {
       "day": "päivä",
       "week": "viikko",
@@ -216,27 +252,52 @@
       "year": "vuodessa",
       "lifetime": "Kertaostos"
     },
-    "features": {
-      "waterEject": {
-        "title": "Täydellinen vedenpoisto",
-        "description": "Suorita ohjattuja 30, 60 ja 90 sekunnin kaiuttimien puhdistusjaksoja."
-      },
-      "waveforms": {
-        "title": "Kehittyneet ääniaaltomuodot",
-        "description": "Käytä neliö-, kolmio- ja sahahammassävyjä koko taajuusalueella."
-      },
-      "stereoAuto": {
-        "title": "Automaattinen stereotestaus",
-        "description": "Pyöritä vasemman, oikean ja molempien kanavien välillä handsfree-tilassa."
-      },
-      "dbStats": {
-        "title": "Yksityiskohtaiset dB-tilastot",
-        "description": "Katso kunkin istunnon vähimmäis-, keskiarvo- ja enimmäisarviot."
-      },
-      "adFree": {
-        "title": "Ei mainoksen keskeytyksiä",
-        "description": "Käytä kaikkia äänityökaluja ilman bannereita tai koko näytön mainoksia."
+    "comparison": {
+      "features": "Ominaisuudet",
+      "free": "Ilmainen",
+      "pro": "Pro",
+      "included": "Sisältyy",
+      "excluded": "Ei sisälly",
+      "unlimited": "Rajoittamaton",
+      "rows": {
+        "cleaningDuration": {
+          "title": "Puhdistuksen kesto",
+          "free": "30 sekuntia",
+          "pro": "30/60/90 sekuntia"
+        },
+        "turbo": {
+          "title": "Turbo-tila"
+        },
+        "waveforms": {
+          "title": "Aaltomuoto",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "Stereotesti",
+          "free": "Manuaalinen",
+          "pro": "Automaattinen"
+        },
+        "soundInsights": {
+          "title": "Äänitason analyysi",
+          "free": "Perus",
+          "pro": "Edistynyt"
+        },
+        "activityHistory": {
+          "title": "Toimintahistoria"
+        },
+        "adExperience": {
+          "title": "Mainokset",
+          "free": "Mainokset",
+          "pro": "Ei mainoksia"
+        }
       }
+    },
+    "context": {
+      "historyTitle": "Avaa tallennettu toimintasi",
+      "historySubtitle": "Tälle laitteelle on jo tallennettu {{cleaning}} kaiuttimen puhdistusta ja {{db}} äänimittausta.",
+      "cleaningSubtitle": "Puhdista laitteen kaiutin milloin tahansa pidemmillä jaksoilla ja Turbon monivaiheisella puhdistusaallolla.",
+      "dbSubtitle": "Avaa tämän istunnon koko analyysi ja palaa tallennettuihin ääniraportteihin."
     },
     "feedback": {
       "subscribeSuccess": "Tervetuloa! Premium-käyttöoikeutesi on aktiivinen.",
@@ -251,6 +312,87 @@
       "month": "Kuukausittain",
       "year": "Vuosittain",
       "lifetime": "Elinikäinen"
+    }
+  },
+  "activity": {
+    "history": "Toimintahistoria",
+    "cleaning": "Puhdistus",
+    "soundSessions": "Ääni-istunnot",
+    "savedCount": "{{cleaning}} siivoustoiminta · {{db}} ääniistuntoa tallennettu",
+    "emptyTitle": "Ei vielä tallennettuja tapahtumia",
+    "emptyBody": "Valmiit siivous- ja äänisessiot näkyvät täällä.",
+    "select": "Valitse",
+    "selectAll": "Valitse Kaikki",
+    "deselectAll": "Poista kaikki valinta",
+    "selectedCount": "{{count}} valittu",
+    "delete": "Poistaa",
+    "deleteSelected": "Poista ({{count}})",
+    "deleteConfirmTitleSingle": "Poistetaanko tämä toiminta?",
+    "deleteConfirmTitleMultiple": "Poistetaanko {{count}} toiminnot?",
+    "deleteConfirmBodySingle": "Tämä poistaa valitun toiminnan pysyvästi tältä laitteelta.",
+    "deleteConfirmBodyMultiple": "Tämä poistaa pysyvästi {{count}} valitut toiminnot tältä laitteelta.",
+    "deletedSingle": "Toiminta poistettu",
+    "deletedMultiple": "{{count}} toimintaa poistettu",
+    "dbSession": "Äänitasoinen istunto",
+    "duration": "{{seconds}} sekuntia",
+    "cleaningDetail": "Siivoustoiminta",
+    "dbDetail": "Ääni-istunto",
+    "mode": "Puhdistustila",
+    "durationLabel": "Kesto",
+    "result": "Tulos",
+    "report": {
+      "title": "Äänitason analyysi",
+      "subtitle": "Henkilökohtainen katsaus tähän istuntoon",
+      "premium": "Premium",
+      "sessionSummary": "Keskiarvo {{average}} dB · Huippu {{maximum}} dB · {{seconds}} s",
+      "environmentRating": "Ympäristöluokitus",
+      "suitableFor": "Sopii käytettäväksi",
+      "recommendation": "Suositus",
+      "unlockTitle": "Katso mitä tämä äänitaso tarkoittaa",
+      "unlockBody": "Avaa koko ympäristöluokitus, sopivat aktiviteetit ja kuuntelusuositus.",
+      "unlockAction": "Avaa koko raportti",
+      "disclaimer": "Puhelimen mikrofoniarviot vaihtelevat laitteen ja sijainnin mukaan. Tämä raportti on yleisohje, ei kalibroitu mittaus tai lääketieteellinen neuvo.",
+      "profile": {
+        "veryQuiet": {
+          "label": "Erittäin hiljainen",
+          "range": "Alle 30 dB",
+          "overview": "Tämä istunto ehdottaa erittäin rauhallista ympäristöä, jossa on vähän kilpailevaa taustaääntä.",
+          "suitable": "Hiljainen lepo, lukeminen, keskittynyt kirjoittaminen, meditaatio ja muut toiminnot, jotka hyötyvät vähäisestä häiriöstä.",
+          "recommendation": "Pidä mikrofoni peittämättä ja mittaa, missä normaalisti istut tai nukut. Hyvin alhaiset arviot voivat myös tarkoittaa, että puhelimen mikrofoni on tukossa."
+        },
+        "normal": {
+          "label": "Normaali",
+          "range": "30-69 dB",
+          "overview": "Tämä istunto istuu tavallisella arkialueella, joka muistuttaa hiljaista kotia, toimistoa tai normaalia keskustelua etäisyydestä riippuen.",
+          "suitable": "Keskustelu, työpöytätyö, rento kuuntelu, opiskelu ja useimmat päivittäiset sisäaktiviteetit.",
+          "recommendation": "Jos tarvitset syvempää keskittymistä, vähennä lähellä olevia ääniä tai siirry kauemmas äänilähteestä ja vertaa toista istuntoa."
+        },
+        "loud": {
+          "label": "äänekäs",
+          "range": "70-99 dB",
+          "overview": "Tämä istunto ehdottaa kovaäänistä ympäristöä, jossa ääni voi muuttua väsyttäväksi tai epämukavaksi ajan myötä.",
+          "suitable": "Lyhyet tarkastukset vilkkailta kaduilta, laitteista, tapahtumista tai musiikin toistosta, jossa haluat ymmärtää muuttuvia tasoja.",
+          "recommendation": "Pienennä lähteen äänenvoimakkuutta, lisää etäisyyttä, pidä hiljaisia ​​taukoja ja harkitse kuulonsuojaimia, kun altistuminen jatkuu."
+        },
+        "danger": {
+          "label": "Mahdollisesti vaarallinen",
+          "range": "100 dB tai enemmän",
+          "overview": "Tämä istunto ehdottaa erittäin intensiivistä ääniympäristöä, joka ansaitsee välittömän huomion.",
+          "suitable": "Vain lyhyet turvatarkastukset. Vältä käyttämästä tätä ympäristöä kuunteluun, työhön, lepoon tai pitkäaikaiseen toimintaan.",
+          "recommendation": "Siirry kauemmas lähteestä, vähennä äänenvoimakkuutta, jos mahdollista, ja käytä asianmukaisia ​​kuulosuojaimia. Älä luota puhelimen arvioon turvallisen altistuksen määrittämisessä."
+        }
+      }
+    },
+    "stopReason": {
+      "completed": "Valmis",
+      "manual": "Pysäytys manuaalisesti",
+      "blur": "Pysähtyi näytöltä poistumisen jälkeen",
+      "background": "Pysähtyi taustalle",
+      "interruption": "Keskeytetty",
+      "route-change": "Äänireittiä muutettu",
+      "replaced": "Vaihdettu toisella työkalulla",
+      "error": "Pysäytyi virheen takia",
+      "incomplete": "Epätäydellinen"
     }
   },
   "otaUpdate": {

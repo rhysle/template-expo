@@ -1,5 +1,5 @@
 import { Image } from 'expo-image'
-import { SpeakerLowIcon, WaveformIcon } from 'phosphor-react-native'
+import { WaveformIcon } from 'phosphor-react-native'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
@@ -38,7 +38,6 @@ import {
   useAudioToolLifecycle,
 } from '@/services/audio'
 import { type PaywallSource, usePremiumGate } from '@/services/revenueCat'
-import { useAppReview } from '@/services/storeReview'
 import { useAudioPreferencesState } from '@/stores/features/audioPreferences'
 import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
 
@@ -55,7 +54,6 @@ export default function ToneGeneratorScreen() {
   const { height, width } = useWindowDimensions()
   const snapshot = useAudioController()
   const requestInterstitialAd = useRequestInterstitialAd()
-  const { requestReview } = useAppReview()
   const { premiumState, requirePremium } = usePremiumGate()
   const {
     hapticsEnabled,
@@ -164,10 +162,7 @@ export default function ToneGeneratorScreen() {
     if (isActive) {
       const wasRunning = isRunning
       await audioController.stop('manual')
-      if (wasRunning) {
-        const didRequestReview = await requestReview()
-        if (!didRequestReview) await requestInterstitialAd()
-      }
+      if (wasRunning) await requestInterstitialAd()
     } else {
       void audioController.startTone(frequencyHz, activeWaveform)
     }
@@ -223,12 +218,6 @@ export default function ToneGeneratorScreen() {
         style={{ color: isActive ? theme.colors.status.error : theme.colors.primary.main }}>
         {isActive ? t('audioTools.tone.stop') : t('audioTools.tone.play')}
       </Text>
-      <View style={styles.safetyCue}>
-        <SpeakerLowIcon size={iconSizes.md} color={theme.colors.text.secondary} weight="regular" />
-        <Text variant="caption" tone="secondary" align="center" style={styles.safetyText}>
-          {t('audioTools.tone.volumeHint')}
-        </Text>
-      </View>
     </View>
   )
 
@@ -449,15 +438,5 @@ const createStyles = createThemedStyles((t) => ({
   actionDockCompact: {
     gap: t.spacing.xs,
     paddingVertical: t.spacing.sm,
-  },
-  safetyCue: {
-    maxWidth: 420,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: t.spacing.sm,
-  },
-  safetyText: {
-    flexShrink: 1,
   },
 }))

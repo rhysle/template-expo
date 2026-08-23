@@ -1,1 +1,1 @@
-Távolítsa el a vizet, tisztítsa a hangszórót, tesztelje a hangot és a dB-t.
+Tiszta hullám eltávolítja a vizet, javítja a tompa hangot; sztereó- és dB-teszt.

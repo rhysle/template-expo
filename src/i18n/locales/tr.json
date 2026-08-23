@@ -50,7 +50,7 @@
     "otaUpdateId": "Güncelleme: {{updateId}}",
     "upgradeBanner": {
       "title": "Premium'a Yükseltin",
-      "subtitle": "Su Çıkarma, gelişmiş ses kontrolleri ve reklamsız bir deneyimin kilidini açın"
+      "subtitle": "Daha uzun Turbo temizliğin, gelişmiş ses kontrollerinin ve reklamsız deneyimin kilidini açın"
     },
     "audio": {
       "section": "Ses ve Ölçer",
@@ -60,6 +60,15 @@
       "hapticsSubtitle": "Ses araçlarında dokunsal geri bildirimi kullanın",
       "safety": "Ses Güvenliği ve Gizliliği",
       "safetySubtitle": "Oynatma, mikrofon ve ölçüm kılavuzu"
+    },
+    "activity": {
+      "section": "Etkinlik Verileri",
+      "saved": "Kayıtlı Etkinlik",
+      "clear": "Etkinlik Geçmişini Temizle",
+      "clearSubtitle": "Yerel olarak kaydedilen temizleme ve ses oturumlarını kaldırın",
+      "clearConfirmTitle": "Tüm etkinlikler temizlensin mi?",
+      "clearConfirmBody": "Bu, kayıtlı temizleme ve ses oturumlarını bu cihazdan kalıcı olarak kaldırır. Bir sonraki ücretsiz temizlik süreniz değişmeyecektir.",
+      "cleared": "Etkinlik geçmişi temizlendi"
     }
   },
   "audioTools": {
@@ -68,21 +77,31 @@
       "error": "Ses başlatılamadı. Mevcut çıkışı kontrol edin ve tekrar deneyin."
     },
     "eject": {
-      "subtitle": "Güçlü bir 3 aşamalı ses döngüsü, sıkışan suyu, gevşek tozu ve döküntüleri hedef alır.",
-      "safe": "Temizlemeye hazır",
-      "completed": "Temizleme döngüsü tamamlandı",
-      "remaining": "{{time}} kaldı",
       "start": "Temizlemeye başlayın",
       "stop": "Temizlemeyi bırakın",
-      "idleHint": "Başlamadan önce cihazı hoparlör tarafı aşağı bakacak şekilde yerleştirin.",
-      "runningHint": "Cihazı hareketsiz ve kulaklarınızdan uzak tutun.",
-      "completedHint": "Hoparlörünüzü test edin ve ses hâlâ boğuksa döngüyü tekrarlayın.",
       "externalTitle": "Harici ses bağlantısını kesin",
       "externalBody": "Hoparlör temizliği, kulaklık veya Bluetooth çıkışları üzerinden değil, cihazın hoparlörü üzerinden yapılır.",
-      "phase": {
-        "water": "Su çıkarma darbesi",
-        "debris": "Toz ve döküntü sarsıntısı",
-        "finish": "Taramayı bitirme"
+      "turbo": {
+        "title": "Turbo Modu",
+        "guide": {
+          "title": "Turbo Modu",
+          "description": "İnatçı su ve döküntüler için daha güçlü bir temizleme döngüsü.",
+          "frequency": "Tüm döngü boyunca gelişmeye devam eden beş farklı çift frekanslı aşamayı kullanır.",
+          "duration": "Turbo, sistem ses seviyesi sınırını kısa süreliğine aşabilir. Sadece kısa temizleme döngüleri için kullanın.",
+          "cta": "Turbo'yu Etkinleştir"
+        }
+      },
+      "help": {
+        "title": "Nasıl kullanılır",
+        "disconnect": "Temizleme sesinin bu cihaz üzerinden çalınması için kulaklıkların ve Bluetooth cihazlarının bağlantısını kesin.",
+        "position": "Cihazı hoparlör tarafı aşağıya bakacak şekilde kuru bir yüzeye yerleştirin ve hoparlör açıklıklarını açık tutun.",
+        "start": "Cihazın sesini açın, Temizlemeyi başlat'a dokunun ve döngü bitene kadar cihazı sabit tutun.",
+        "hearingTitle": "İşitme duyunuzu koruyun",
+        "hearingWarning": "Eject testini yaparken kulaklık takmayın. Yüksek hoparlör temizleme tonları işitme hasarına neden olabilir."
+      },
+      "routine": {
+        "standard": "Standart",
+        "turbo": "Turbo"
       }
     },
     "tone": {
@@ -98,7 +117,6 @@
       },
       "play": "Sesi çal",
       "stop": "Durdurma sesi",
-      "volumeHint": "Sesi düşük tutun ve hoparlörü kulaklarınızdan uzak tutun.",
       "band": {
         "veryLow": "Çok düşük",
         "low": "Düşük",
@@ -109,8 +127,8 @@
       }
     },
     "stereo": {
-      "auto": "Otomatik alternatif",
-      "autoHint": "Sola, sağa ve her ikisine de git",
+      "auto": "Otomatik geçiş",
+      "autoHint": "Sol, sağ ve her iki kanal arasında geçiş yap",
       "tapToChange": "Kanalları değiştirmek için hoparlörlere dokunun",
       "start": "Testi başlat",
       "helpTitle": "Stereo Testi nasıl kullanılır",
@@ -131,11 +149,11 @@
       "start": "Ölçmeye başlayın",
       "stop": "Ölçümü durdurun",
       "permissionTitle": "Mikrofon erişimi kapalı",
-      "permissionBody": "Mikrofon erişimi yalnızca dB Ölçer çalışırken yakındaki ses seviyelerini tahmin etmek için kullanılır. Ses cihazınızda işlenir ve hiçbir zaman kaydedilmez veya yüklenmez.",
+      "permissionBody": "Mikrofon erişimi yalnızca dB ölçer çalışırken yakındaki ses seviyelerini tahmin etmek için kullanılır. Ses örnekleri bellekte işlenir ve hiçbir zaman kaydedilmez veya yüklenmez. Oturumun yuvarlanmış tahminleri yalnızca bu cihazda saklanır ve Ayarlar’dan silinebilir.",
       "minimum": "Minimum",
       "average": "Ortalama",
       "maximum": "Maksimum",
-      "unlockStats": "Ayrıntılı dB oturumu istatistiklerinin kilidini açın",
+      "timeline": "Tahmini ses seviyesi zaman çizelgesi",
       "status": {
         "veryQuiet": "Çok sessiz",
         "normal": "Normal",
@@ -157,17 +175,17 @@
         "everydayLevels": "Günlük ses seviyeleri",
         "examplesApproximate": "Örnekler yaklaşıktır ve mesafeye göre değişir.",
         "currentEstimate": "Mevcut tahmin",
-        "exposureTitle": "Maruz kalma süresi önemlidir",
-        "exposureDescription": "NIOSH mesleki rehberliği; her +3 dB önerilen süreyi yarıya indirir.",
-        "useItWell": "İyi kullanın",
+        "exposureTitle": "Gürültüye maruz kalma süresi önemlidir",
+        "exposureDescription": "NIOSH iş yeri gürültüsü yönergelerine göre her 3 dB artış, önerilen maruz kalma süresini yarıya indirir.",
+        "useItWell": "Ölçüm ipuçları",
         "tipMicrophoneTitle": "Mikrofonu açık tutun",
-        "tipMicrophoneBody": "Elinizle veya kılıfınızla kapatmaktan kaçının.",
+        "tipMicrophoneBody": "Mikrofonu elinizle veya telefon kılıfıyla kapatmayın.",
         "tipPositionTitle": "Nerede dinlediğinizi ölçün",
         "tipPositionBody": "Cihazı değerlendirmek istediğiniz konuma taşıyın.",
         "tipProtectTitle": "Çok gürültülü geliyorsa kulaklarınızı koruyun",
         "tipProtectBody": "Kaynaktan uzaklaşın veya işitme koruması kullanın.",
         "reference": {
-          "concertSpeaker": "Konser konuşmacısı",
+          "concertSpeaker": "Konser hoparlörü",
           "sirenNightclub": "Siren veya gece kulübü",
           "lawnMower": "Çim biçme makinesi",
           "busyStreet": "Kalabalık cadde",
@@ -188,7 +206,7 @@
       "estimateTitle": "Tahmini ses seviyeleri",
       "estimateBody": "Telefon mikrofonları laboratuvar SPL'si yerine dijital sinyal seviyesini bildirir. Uygulama, cihaza göre değişen bir tahmin uygular.",
       "privacyTitle": "Mikrofon gizliliği",
-      "privacyBody": "Mikrofon yalnızca dB Ölçer etkinken çalışır. Örnekler hafızada işlenir ve hiçbir zaman kaydedilmez veya yüklenmez.",
+      "privacyBody": "Mikrofon yalnızca dB ölçer etkinken çalışır. Örnekler bellekte işlenir ve hiçbir zaman kaydedilmez veya yüklenmez. Oturumun yuvarlanmış tahminleri etkinlik geçmişi için cihazda saklanabilir ve Ayarlar’dan silinebilir.",
       "limitationsTitle": "Önemli sınırlamalar",
       "limitationsBody": "Bu uygulama su veya toz gidermeyi garanti edemez. Hoparlörün içine nesneler sokmayın ve bu araçları profesyonel onarım, kalibre edilmiş ekipman, tıbbi tavsiye veya işitme koruması kılavuzunun yerine kullanmayın."
     }
@@ -197,12 +215,30 @@
     "title": "Eksiksiz Ses Araç Setinizin Kilidini Açın",
     "subtitle": "Hoparlörünüzü temizleyin, gelişmiş kontrollere erişin ve tüm reklamları kaldırın.",
     "ctaFreeTrial": "Ücretsiz Deneyin",
+    "trialDisclaimer": "İstediğiniz zaman iptal edin. Şimdi ödeme yok",
+    "subscriptionDisclaimer": "İstediğiniz zaman iptal edin.",
+    "lifetimeDisclaimer": "Bir kez ödeyin. Tekrarlayan ücret yok.",
     "restore": "Satın Alınanları Geri Yükle",
     "terms": "Hizmet Şartları",
     "privacy": "Gizlilik Politikası",
     "then": "sonra",
     "trial": "{{count}}-{{unit}} ücretsiz deneme",
     "save": "Tasarruf edin {{percent}}%",
+    "availability": {
+      "loading": "Satın alma seçenekleri kontrol ediliyor…",
+      "temporary_error": {
+        "title": "Satın alma seçenekleri yüklenemedi",
+        "subtitle": "Bağlantınızı kontrol edip tekrar deneyin."
+      },
+      "configuration_error": {
+        "title": "Satın alma seçenekleri kullanılamıyor",
+        "subtitle": "Mağaza bu uygulamanın ürünlerini yükleyemedi. Lütfen kısa süre sonra tekrar deneyin."
+      },
+      "purchase_not_allowed": {
+        "title": "Bu cihazda satın alma desteklenmiyor",
+        "subtitle": "Bu cihaz veya mağaza hesabı uygulama içi satın alma işlemi yapamıyor."
+      }
+    },
     "trialUnit": {
       "day": "gün",
       "week": "hafta",
@@ -216,27 +252,52 @@
       "year": "yıllık",
       "lifetime": "Tek seferlik satın alma"
     },
-    "features": {
-      "waterEject": {
-        "title": "Su Tahliyesini Tamamlayın",
-        "description": "Kılavuzlu 30, 60 ve 90 saniyelik hoparlör temizleme döngülerini çalıştırın."
-      },
-      "waveforms": {
-        "title": "Gelişmiş Ton Dalga Formları",
-        "description": "Tam frekans aralığında kare, üçgen ve testere dişi tonlarını kullanın."
-      },
-      "stereoAuto": {
-        "title": "Otomatik Stereo Testi",
-        "description": "Eller serbest olarak sol, sağ ve her iki kanal arasında geçiş yapın."
-      },
-      "dbStats": {
-        "title": "Ayrıntılı dB İstatistikleri",
-        "description": "Her oturum için minimum, ortalama ve maksimum tahminleri görün."
-      },
-      "adFree": {
-        "title": "Sıfır Reklam Kesintisi",
-        "description": "Tüm ses araçlarını banner'lar veya tam ekran reklamlar olmadan kullanın."
+    "comparison": {
+      "features": "Özellikler",
+      "free": "Ücretsiz",
+      "pro": "Pro",
+      "included": "Dahil",
+      "excluded": "Dahil değil",
+      "unlimited": "Sınırsız",
+      "rows": {
+        "cleaningDuration": {
+          "title": "Temizleme süresi",
+          "free": "30 saniye",
+          "pro": "30/60/90 saniye"
+        },
+        "turbo": {
+          "title": "Turbo Modu"
+        },
+        "waveforms": {
+          "title": "Dalga Formu",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "Stereo Testi",
+          "free": "Manuel",
+          "pro": "Otomatik"
+        },
+        "soundInsights": {
+          "title": "Ses seviyesi analizi",
+          "free": "Temel",
+          "pro": "Gelişmiş"
+        },
+        "activityHistory": {
+          "title": "Etkinlik Geçmişi"
+        },
+        "adExperience": {
+          "title": "Reklamlar",
+          "free": "Reklamlar",
+          "pro": "Reklamsız"
+        }
       }
+    },
+    "context": {
+      "historyTitle": "Kayıtlı Etkinliğinizin Kilidini Açın",
+      "historySubtitle": "Bu cihazda {{cleaning}} hoparlör temizliği ve {{db}} ses ölçümü zaten kayıtlı.",
+      "cleaningSubtitle": "Daha uzun döngüler ve çok aşamalı Turbo temizleme dalgasıyla cihazın hoparlörünü istediğiniz zaman temizleyin.",
+      "dbSubtitle": "Bu oturumun tam analizinin kilidini açın ve kayıtlı ses raporlarını tekrar ziyaret edin."
     },
     "feedback": {
       "subscribeSuccess": "Hoş geldiniz! Premium erişiminiz aktif.",
@@ -251,6 +312,87 @@
       "month": "Aylık",
       "year": "Yıllık",
       "lifetime": "Ömür boyu"
+    }
+  },
+  "activity": {
+    "history": "Etkinlik Geçmişi",
+    "cleaning": "Temizlik",
+    "soundSessions": "Ses Oturumları",
+    "savedCount": "{{cleaning}} temizlik faaliyetleri · {{db}} ses oturumları kaydedildi",
+    "emptyTitle": "Henüz kayıtlı etkinlik yok",
+    "emptyBody": "Tamamlanan temizlik ve ses oturumları burada görünecektir.",
+    "select": "Seçme",
+    "selectAll": "Tümünü Seç",
+    "deselectAll": "Tümünün Seçimini Kaldır",
+    "selectedCount": "{{count}} seçildi",
+    "delete": "Silmek",
+    "deleteSelected": "Sil ({{count}})",
+    "deleteConfirmTitleSingle": "Bu aktivite silinsin mi?",
+    "deleteConfirmTitleMultiple": "{{count}} etkinlikleri silinsin mi?",
+    "deleteConfirmBodySingle": "Bu, seçilen etkinliği bu cihazdan kalıcı olarak kaldırır.",
+    "deleteConfirmBodyMultiple": "Bu, seçilen {{count}} etkinlikleri bu cihazdan kalıcı olarak kaldırır.",
+    "deletedSingle": "Etkinlik silindi",
+    "deletedMultiple": "{{count}} etkinlikler silindi",
+    "dbSession": "Ses seviyesi oturumu",
+    "duration": "{{seconds}} saniye",
+    "cleaningDetail": "Temizlik faaliyeti",
+    "dbDetail": "Ses oturumu",
+    "mode": "Temizleme modu",
+    "durationLabel": "Süre",
+    "result": "Sonuç",
+    "report": {
+      "title": "Ses seviyesi analizi",
+      "subtitle": "Bu oturuma kişiselleştirilmiş bir bakış",
+      "premium": "Premium",
+      "sessionSummary": "Ortalama {{average}} dB · Tepe {{maximum}} dB · {{seconds}} sn",
+      "environmentRating": "Çevre derecelendirmesi",
+      "suitableFor": "Şunun için uygun:",
+      "recommendation": "Tavsiye",
+      "unlockTitle": "Bu ses seviyesinin ne anlama geldiğini görün",
+      "unlockBody": "Tam ortam derecelendirmesinin, uygun etkinliklerin ve dinleme önerilerinin kilidini açın.",
+      "unlockAction": "Tam raporun kilidini açın",
+      "disclaimer": "Telefon mikrofonu tahminleri cihaza ve yerleşime göre değişir. Bu rapor, kalibre edilmiş bir ölçüm veya tıbbi tavsiye değil, genel bir kılavuzdur.",
+      "profile": {
+        "veryQuiet": {
+          "label": "Çok sessiz",
+          "range": "30 dB'nin altında",
+          "overview": "Bu oturum, çok az arka plan sesinin olduğu çok sakin bir ortam öneriyor.",
+          "suitable": "Sessiz dinlenme, okuma, odaklanmış yazma, meditasyon ve dikkatin dağılmasının minimum düzeyde olduğu diğer aktiviteler.",
+          "recommendation": "Mikrofonu açık tutun ve normalde nerede oturduğunuzu veya uyuduğunuzu ölçün. Tahminlerin çok düşük olması, telefon mikrofonunun engellendiği anlamına da gelebilir."
+        },
+        "normal": {
+          "label": "Normal",
+          "range": "30–69 dB",
+          "overview": "Bu oturum, sessiz bir ev, ofis veya mesafeye bağlı olarak normal bir sohbete benzer şekilde, ortak bir günlük aralıkta yer alır.",
+          "suitable": "Konuşma, masa başı çalışma, gündelik dinleme, ders çalışma ve günlük iç mekan aktivitelerinin çoğu.",
+          "recommendation": "Daha derin odaklanmaya ihtiyacınız varsa yakındaki sesleri azaltın veya ses kaynağından uzaklaşıp başka bir oturumu karşılaştırın."
+        },
+        "loud": {
+          "label": "Yüksek sesle",
+          "range": "70–99 dB",
+          "overview": "Bu oturum, sesin zamanla yorucu veya rahatsız edici hale gelebileceği gürültülü bir ortamı önermektedir.",
+          "suitable": "Değişen seviyeleri anlamak istediğiniz kalabalık caddelerin, cihazların, etkinliklerin veya müzik çalmanın kısa kontrolleri.",
+          "recommendation": "Kaynak sesini azaltın, mesafenizi artırın, sessiz molalar verin ve maruziyet devam ettiğinde işitme korumasını düşünün."
+        },
+        "danger": {
+          "label": "Potansiyel olarak tehlikeli",
+          "range": "100 dB veya daha yüksek",
+          "overview": "Bu oturum, hemen ilgilenilmesi gereken çok yoğun bir ses ortamını akla getiriyor.",
+          "suitable": "Yalnızca kısa güvenlik kontrolleri. Bu ortamı dinlemek, çalışmak, dinlenmek veya uzun süreli aktiviteler için kullanmaktan kaçının.",
+          "recommendation": "Kaynaktan uzaklaşın, mümkünse ses seviyesini azaltın ve uygun işitme koruması kullanın. Güvenli maruziyeti belirlemek için telefon tahminine güvenmeyin."
+        }
+      }
+    },
+    "stopReason": {
+      "completed": "Tamamlanmış",
+      "manual": "Manuel olarak durduruldu",
+      "blur": "Ekrandan çıktıktan sonra durduruldu",
+      "background": "Arka planda durduruldu",
+      "interruption": "Kesintiye uğradı",
+      "route-change": "Ses rotası değiştirildi",
+      "replaced": "Başka bir araçla değiştirildi",
+      "error": "Bir hata nedeniyle durduruldu",
+      "incomplete": "Tamamlanmamış"
     }
   },
   "otaUpdate": {

@@ -10,6 +10,7 @@ interface OnboardingPageProps {
   screenWidth: number
   animationType: OnboardingAnimationType
   currentIndex: SharedValue<number>
+  horizontalDirection: 1 | -1
   scrollPosition: SharedValue<number>
 }
 
@@ -19,12 +20,15 @@ export const OnboardingPage = ({
   screenWidth,
   animationType,
   currentIndex,
+  horizontalDirection,
   scrollPosition,
 }: OnboardingPageProps) => {
   const animatedStyle = useAnimatedStyle(() => {
     if (animationType === 'slide') {
       return {
-        transform: [{ translateX: pageIndex * screenWidth - scrollPosition.value }],
+        transform: [
+          { translateX: horizontalDirection * (pageIndex * screenWidth - scrollPosition.value) },
+        ],
       }
     }
 

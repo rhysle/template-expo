@@ -9,7 +9,7 @@ import type { MonetizationConfig } from '../../scripts/monetization/types'
  * the iOS bundle identifier from app.json.
  */
 export const monetizationConfig = {
-  enabledProducts: ['weekly', 'yearly', 'lifetime'],
+  enabledProducts: ['weekly', 'lifetime'],
 
   // Set to null to disable trials. Change target to move the one cross-store
   // trial to another enabled subscription, or use e.g. '7-days' for one week.
@@ -72,7 +72,7 @@ export const monetizationConfig = {
       revenueCatPackageLookupKey: '$rc_annual',
     },
     lifetime: {
-      priceUsd: '49.99',
+      priceUsd: '29.99',
       referenceName: 'Premium Lifetime',
       appleProductId: 'premium_lifetime',
       appleReviewScreenshotPath: './fastlane/monetization/review/paywall.png',

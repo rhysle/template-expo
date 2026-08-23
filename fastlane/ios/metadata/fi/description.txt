@@ -1,7 +1,7 @@
 Kuulostaako kaiutin vaimealta kastumisen jälkeen? Kaiuttimen Puhdistus auttaa työntämään loukkuun jäänyttä vettä, irtopölyä ja likaa ulos ohjatulla kolmivaiheisella puhdistusäänellä. Sen jälkeen voit testata tuloksen.
 
 PUHDISTA JA TESTAA KAIUTIN
-• Suorita 30, 60 tai 90 sekunnin vedenpoistojakso
+• Suorita rajattomasti ilmaisia 30 sekunnin jaksoja; Premium lisää 60/90 sekuntia ja Turbo-tilan
 • Luo tarkkoja ääniä välillä 20–20 000 Hz
 • Testaa vasen, oikea ja molemmat stereokanavat
 • Arvioi ympäristön melutaso suoralla dB-mittarilla
@@ -10,7 +10,7 @@ PUHDISTA JA TESTAA KAIUTIN
 NELJÄ ÄÄNITYÖKALUA, YKSI YKSITYINEN PAKETTI
 Kaiuttimen puhdistus, äänigeneraattori, stereotesti ja äänimittari toimivat laitteella. Mikrofoninäytteet käsitellään muistissa, eikä niitä tallenneta tai lähetetä.
 
-Ilmaiset työkalut sisältävät siniaallot, manuaalisen stereotestin ja suoran dB-arvion. Premium avaa kaikki puhdistusjaksot, muut aaltomuodot, automaattisen stereotestin, tarkat dB-tilastot ja mainoksettoman käytön.
+Ilmaiseksi saat rajattomat 30 sekunnin puhdistusjaksot, siniaallot, manuaalisen stereotestin, suoran dB-arvion sekä minimin, keskiarvon ja maksimin. Premium avaa 60/90 sekunnin jaksot, Turbo-tilan, muut aaltomuodot, automaattisen testin, ääniraportit, yksityisen toimintahistorian ja mainoksettoman käytön.
 
 Aseta kaiutin alaspäin, aloita pienellä äänenvoimakkuudella, suorita jakso ja testaa ääni. Toista tarvittaessa.
 

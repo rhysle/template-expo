@@ -1,9 +1,9 @@
-Loa điện thoại bị rè hoặc nghe nhỏ sau khi dính nước? Đẩy Nước Khỏi Loa là app đẩy nước giúp đẩy nước ra khỏi loa bằng chu kỳ âm thanh 3 giai đoạn có hướng dẫn. Sau khi vệ sinh loa, bạn có thể kiểm tra âm thanh và đo độ ồn ngay trên điện thoại.
+Đẩy nước, sửa loa bị rè và nghẹt; kiểm tra tần số, stereo và độ ồn dB.
 
-Ứng dụng hỗ trợ làm sạch loa khỏi nước đọng, bụi và tạp chất, rồi cho bạn kiểm tra kết quả ngay.
+Loa bị rè hoặc nghe nhỏ sau khi dính nước? Làm Sạch Loa giúp đẩy nước đọng, bụi và tạp chất ra ngoài bằng âm thanh làm sạch 3 giai đoạn có hướng dẫn, sau đó cho bạn kiểm tra kết quả ngay.
 
-ĐẨY NƯỚC, VỆ SINH VÀ KIỂM TRA LOA
-• Chạy chu kỳ đẩy nước 30, 60 hoặc 90 giây
+LÀM SẠCH VÀ KIỂM TRA LOA
+• Chạy miễn phí không giới hạn chu kỳ 30 giây; Premium thêm 60/90 giây và chế độ Turbo
 • Tạo âm chính xác từ 20 đến 20.000 Hz
 • Kiểm tra kênh stereo trái, phải và cả hai
 • Ước tính tiếng ồn xung quanh bằng máy đo dB trực tiếp
@@ -12,7 +12,7 @@ Loa điện thoại bị rè hoặc nghe nhỏ sau khi dính nước? Đẩy Nư
 BỐN CÔNG CỤ ÂM THANH, MỘT BỘ CÔNG CỤ RIÊNG TƯ
 Làm sạch loa, tạo tần số, kiểm tra stereo và đo âm thanh đều hoạt động trên thiết bị. Mẫu micrô được xử lý trong bộ nhớ, không bao giờ được lưu hoặc tải lên.
 
-Miễn phí: sóng sin, kiểm tra stereo thủ công và ước tính dB trực tiếp. Premium mở toàn bộ chu kỳ, thêm dạng sóng, kiểm tra tự động, thống kê chi tiết và trải nghiệm không quảng cáo.
+Miễn phí: chu kỳ làm sạch 30 giây không giới hạn, sóng sin, kiểm tra stereo thủ công, dB trực tiếp cùng mức thấp nhất, trung bình và cao nhất. Premium mở chu kỳ 60/90 giây, chế độ Turbo, thêm dạng sóng, kiểm tra tự động, báo cáo phiên âm thanh, lịch sử hoạt động riêng tư và trải nghiệm không quảng cáo.
 
 Đặt loa hướng xuống, bắt đầu với âm lượng thấp, chạy một chu kỳ rồi kiểm tra âm thanh. Lặp lại nếu loa vẫn bị rè.
 

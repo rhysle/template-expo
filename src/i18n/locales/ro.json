@@ -50,7 +50,7 @@
     "otaUpdateId": "Actualizare: {{updateId}}",
     "upgradeBanner": {
       "title": "Faceți upgrade la Premium",
-      "subtitle": "Deblocați evacuarea apei, comenzile audio avansate și o experiență fără anunțuri"
+      "subtitle": "Deblochează curățarea Turbo mai lungă, comenzile audio avansate și utilizarea fără reclame"
     },
     "audio": {
       "section": "Audio și contor",
@@ -60,6 +60,15 @@
       "hapticsSubtitle": "Utilizați feedbackul tactil în instrumentele de sunet",
       "safety": "Siguranță și confidențialitate audio",
       "safetySubtitle": "Îndrumări pentru redare, microfon și măsurare"
+    },
+    "activity": {
+      "section": "Date de activitate",
+      "saved": "Activitate salvată",
+      "clear": "Ștergeți istoricul activităților",
+      "clearSubtitle": "Eliminați sesiunile de curățare și sunet salvate local",
+      "clearConfirmTitle": "Ștergeți toată activitatea?",
+      "clearConfirmBody": "Acest lucru elimină definitiv sesiunile de curățare și sunet salvate de pe acest dispozitiv. Următoarea perioadă de curățenie gratuită nu se va schimba.",
+      "cleared": "Istoricul activităților a fost șters"
     }
   },
   "audioTools": {
@@ -68,21 +77,31 @@
       "error": "Audio nu a putut porni. Verificați ieșirea curentă și încercați din nou."
     },
     "eject": {
-      "subtitle": "Un ciclu sonor puternic în 3 etape vizează apa prinsă, praful slăbit și resturile.",
-      "safe": "Gata de curățat",
-      "completed": "Ciclul de curățare finalizat",
-      "remaining": "{{time}} rămas",
       "start": "Începeți curățarea",
       "stop": "Opriți curățarea",
-      "idleHint": "Așezați dispozitivul cu difuzorul în jos înainte de a începe.",
-      "runningHint": "Țineți dispozitivul nemișcat și departe de urechi.",
-      "completedHint": "Testați difuzorul și repetați ciclul dacă sunetul este încă înăbușit.",
       "externalTitle": "Deconectați sunetul extern",
       "externalBody": "Curățarea difuzoarelor funcționează prin difuzorul dispozitivului, nu prin căști sau prin ieșirile Bluetooth.",
-      "phase": {
-        "water": "Puls de evacuare a apei",
-        "debris": "Se agită praf și resturi",
-        "finish": "Finalizare măturare"
+      "turbo": {
+        "title": "Modul Turbo",
+        "guide": {
+          "title": "Modul Turbo",
+          "description": "Un ciclu de curățare mai puternic pentru apă și reziduuri rezistente.",
+          "frequency": "Utilizează cinci etape distincte cu frecvență dublă care continuă să evolueze pe parcursul întregului ciclu.",
+          "duration": "Turbo poate depăși pentru scurt timp limita de volum a sistemului. Utilizați-l numai pentru cicluri scurte de curățare.",
+          "cta": "Activați Turbo"
+        }
+      },
+      "help": {
+        "title": "Cum se utilizează",
+        "disconnect": "Deconectați căștile și dispozitivele Bluetooth, astfel încât sunetul de curățare să fie redat prin acest dispozitiv.",
+        "position": "Așezați dispozitivul cu difuzorul în jos pe o suprafață uscată și păstrați deschiderile difuzoarelor libere.",
+        "start": "Măriți volumul dispozitivului, atingeți Începeți curățarea și mențineți dispozitivul nemișcat până când ciclul se termină.",
+        "hearingTitle": "Protejați-vă auzul",
+        "hearingWarning": "Nu purtați căști în timp ce testați Eject. Tonurile puternice de curățare a difuzoarelor pot cauza deteriorarea auzului."
+      },
+      "routine": {
+        "standard": "Standard",
+        "turbo": "Turbo"
       }
     },
     "tone": {
@@ -98,7 +117,6 @@
       },
       "play": "Ton de redare",
       "stop": "Ton de oprire",
-      "volumeHint": "Țineți volumul scăzut și difuzorul departe de urechi.",
       "band": {
         "veryLow": "Foarte scăzut",
         "low": "Scăzut",
@@ -110,7 +128,7 @@
     },
     "stereo": {
       "auto": "Alternare automată",
-      "autoHint": "Mergeți la stânga, la dreapta și ambele",
+      "autoHint": "Comută între canalul stâng, drept și ambele",
       "tapToChange": "Atingeți difuzoare pentru a schimba canalele",
       "start": "Începe testul",
       "helpTitle": "Cum se utilizează Testul stereo",
@@ -119,7 +137,7 @@
       "helpAuto": "Utilizați Alternarea automată pentru a comuta între stânga, dreapta și ambele canale.",
       "helpStop": "Folosiți Opriți testul oricând doriți să opriți redarea.",
       "left": "Stânga",
-      "right": "Corect",
+      "right": "Dreapta",
       "positionLeft": "Canal stânga în redare",
       "positionCenter": "Se redă ambele canale",
       "positionRight": "Se redă canalul din dreapta",
@@ -131,11 +149,11 @@
       "start": "Începeți măsurarea",
       "stop": "Nu mai măsurați",
       "permissionTitle": "Accesul la microfon este dezactivat",
-      "permissionBody": "Accesul la microfon este utilizat numai în timp ce dB Meter funcționează pentru a estima nivelurile de sunet din apropiere. Audio este procesat pe dispozitivul dvs. și nu este niciodată salvat sau încărcat.",
+      "permissionBody": "Accesul la microfon este utilizat numai cât timp funcționează sonometrul dB, pentru a estima nivelurile sonore din apropiere. Mostrele audio sunt procesate în memorie și nu sunt salvate sau încărcate niciodată. Estimările rotunjite ale sesiunii sunt stocate numai pe acest dispozitiv și pot fi șterse din Setări.",
       "minimum": "Minimum",
       "average": "Medie",
       "maximum": "Maxim",
-      "unlockStats": "Deblocați statistici detaliate privind sesiunile dB",
+      "timeline": "Cronologie estimată a nivelului de sunet",
       "status": {
         "veryQuiet": "Foarte silențios",
         "normal": "Normal",
@@ -157,17 +175,17 @@
         "everydayLevels": "Nivelurile de sunet zilnice",
         "examplesApproximate": "Exemplele sunt aproximative și variază în funcție de distanță.",
         "currentEstimate": "Estimarea curentă",
-        "exposureTitle": "Timpul de expunere contează",
-        "exposureDescription": "NIOSH orientare ocupațională; fiecare +3 dB înjumătăţeşte timpul recomandat.",
-        "useItWell": "Folosește-l bine",
+        "exposureTitle": "Durata expunerii la zgomot contează",
+        "exposureDescription": "Conform ghidului NIOSH privind zgomotul la locul de muncă, fiecare creștere de 3 dB înjumătățește timpul de expunere recomandat.",
+        "useItWell": "Sfaturi pentru măsurare",
         "tipMicrophoneTitle": "Păstrați microfonul descoperit",
-        "tipMicrophoneBody": "Evitați să-l acoperiți cu mâna sau cu carcasa.",
+        "tipMicrophoneBody": "Evitați să acoperiți microfonul cu mâna sau cu husa telefonului.",
         "tipPositionTitle": "Măsurați unde ascultați",
         "tipPositionBody": "Mutați dispozitivul în locația pe care doriți să o evaluați.",
         "tipProtectTitle": "Dacă se simte prea tare, protejează-ți urechile",
         "tipProtectBody": "Îndepărtați-vă de sursă sau folosiți protecție pentru auz.",
         "reference": {
-          "concertSpeaker": "Difuzor concert",
+          "concertSpeaker": "Difuzor de concert",
           "sirenNightclub": "Sirenă sau club de noapte",
           "lawnMower": "Mașină de tuns iarba",
           "busyStreet": "Stradă aglomerată",
@@ -188,7 +206,7 @@
       "estimateTitle": "Niveluri de sunet estimate",
       "estimateBody": "Microfoanele telefonului raportează nivelul semnalului digital mai degrabă decât SPL de laborator. Aplicația aplică o estimare care variază în funcție de dispozitiv.",
       "privacyTitle": "Confidențialitatea microfonului",
-      "privacyBody": "Microfonul funcționează numai când dB Meter este activ. Mostrele sunt procesate în memorie și nu sunt niciodată salvate sau încărcate.",
+      "privacyBody": "Microfonul funcționează numai cât timp sonometrul dB este activ. Mostrele sunt procesate în memorie și nu sunt salvate sau încărcate niciodată. Estimările rotunjite ale unei sesiuni pot fi stocate local în istoricul activității și pot fi șterse din Setări.",
       "limitationsTitle": "Limitări importante",
       "limitationsBody": "Această aplicație nu poate garanta eliminarea apei sau a prafului. Nu introduceți obiecte în difuzor și nu utilizați aceste instrumente ca înlocuitor pentru reparații profesionale, echipamente calibrate, sfaturi medicale sau îndrumări de protecție a auzului."
     }
@@ -197,12 +215,30 @@
     "title": "Deblocați setul dvs. complet de instrumente audio",
     "subtitle": "Curățați-vă difuzorul, accesați comenzi avansate și eliminați fiecare anunț.",
     "ctaFreeTrial": "Încercați gratuit",
+    "trialDisclaimer": "Anulează oricând. Nu plătești nimic acum",
+    "subscriptionDisclaimer": "Anulează oricând.",
+    "lifetimeDisclaimer": "Plătești o singură dată. Fără taxe recurente.",
     "restore": "Restabiliți achizițiile",
     "terms": "Termeni și condiții",
     "privacy": "Politica de confidențialitate",
     "then": "apoi",
     "trial": "{{count}}-{{unit}} încercare gratuită",
-    "save": "Salvați {{percent}}%",
+    "save": "Economisiți {{percent}}%",
+    "availability": {
+      "loading": "Se verifică opțiunile de achiziție…",
+      "temporary_error": {
+        "title": "Opțiunile de achiziție nu au putut fi încărcate",
+        "subtitle": "Verificați conexiunea și încercați din nou."
+      },
+      "configuration_error": {
+        "title": "Opțiunile de achiziție nu sunt disponibile",
+        "subtitle": "Magazinul nu a putut încărca produsele acestei aplicații. Încercați din nou în scurt timp."
+      },
+      "purchase_not_allowed": {
+        "title": "Achizițiile nu sunt acceptate pe acest dispozitiv",
+        "subtitle": "Acest dispozitiv sau cont de magazin nu poate efectua achiziții în aplicație."
+      }
+    },
     "trialUnit": {
       "day": "zi",
       "week": "săptămână",
@@ -216,27 +252,52 @@
       "year": "pe an",
       "lifetime": "Achiziție unică"
     },
-    "features": {
-      "waterEject": {
-        "title": "Evacuarea completă a apei",
-        "description": "Rulați cicluri ghidate de curățare a difuzoarelor de 30, 60 și 90 de secunde."
-      },
-      "waveforms": {
-        "title": "Forme de undă ton avansate",
-        "description": "Folosiți tonuri pătrate, triunghiulare și dinți de ferăstrău pe întregul interval de frecvență."
-      },
-      "stereoAuto": {
-        "title": "Testare stereo automată",
-        "description": "Comutați între stânga, dreapta și ambele canale fără mâini."
-      },
-      "dbStats": {
-        "title": "Statistici detaliate dB",
-        "description": "Vedeți estimările minime, medii și maxime pentru fiecare sesiune."
-      },
-      "adFree": {
-        "title": "Zero întreruperi publicitare",
-        "description": "Folosiți fiecare instrument audio fără bannere sau anunțuri pe ecran complet."
+    "comparison": {
+      "features": "Funcții",
+      "free": "Gratuit",
+      "pro": "Pro",
+      "included": "Inclus",
+      "excluded": "Nu este inclus",
+      "unlimited": "Nelimitat",
+      "rows": {
+        "cleaningDuration": {
+          "title": "Durata curățării",
+          "free": "30 secunde",
+          "pro": "30/60/90 secunde"
+        },
+        "turbo": {
+          "title": "Modul Turbo"
+        },
+        "waveforms": {
+          "title": "Formă de undă",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "Test stereo",
+          "free": "Manual",
+          "pro": "Automat"
+        },
+        "soundInsights": {
+          "title": "Analiza nivelului sonor",
+          "free": "De bază",
+          "pro": "Avansat"
+        },
+        "activityHistory": {
+          "title": "Istoricul activității"
+        },
+        "adExperience": {
+          "title": "Reclame",
+          "free": "Reclame",
+          "pro": "Fără reclame"
+        }
       }
+    },
+    "context": {
+      "historyTitle": "Deblocați activitatea salvată",
+      "historySubtitle": "Pe acest dispozitiv sunt deja salvate {{cleaning}} curățări ale difuzorului și {{db}} măsurători de sunet.",
+      "cleaningSubtitle": "Curăță difuzorul oricând cu cicluri mai lungi și unda de curățare Turbo în mai multe etape.",
+      "dbSubtitle": "Deblocați analiza completă pentru această sesiune și revedeți rapoartele audio salvate."
     },
     "feedback": {
       "subscribeSuccess": "Bun venit! Accesul dvs. premium este activ.",
@@ -251,6 +312,87 @@
       "month": "Lunar",
       "year": "Anual",
       "lifetime": "Durată de viață"
+    }
+  },
+  "activity": {
+    "history": "Istoricul activității",
+    "cleaning": "Curatenie",
+    "soundSessions": "Sesiuni de sunet",
+    "savedCount": "{{cleaning}} activități de curățare · {{db}} sesiuni de sunet salvate",
+    "emptyTitle": "Nicio activitate salvată încă",
+    "emptyBody": "Sesiunile de curățare și sunet finalizate vor apărea aici.",
+    "select": "Selecta",
+    "selectAll": "Selectați Toate",
+    "deselectAll": "Deselectați Toate",
+    "selectedCount": "{{count}} selectat",
+    "delete": "Şterge",
+    "deleteSelected": "Șterge ({{count}})",
+    "deleteConfirmTitleSingle": "Ștergeți această activitate?",
+    "deleteConfirmTitleMultiple": "Ștergeți {{count}} activități?",
+    "deleteConfirmBodySingle": "Aceasta elimină definitiv activitatea selectată de pe acest dispozitiv.",
+    "deleteConfirmBodyMultiple": "Aceasta elimină definitiv {{count}} activitățile selectate de pe acest dispozitiv.",
+    "deletedSingle": "Activitate ștearsă",
+    "deletedMultiple": "{{count}} activități șterse",
+    "dbSession": "Sesiune la nivel de sunet",
+    "duration": "{{seconds}} secunde",
+    "cleaningDetail": "Activitate de curatenie",
+    "dbDetail": "Sesiune de sunet",
+    "mode": "Modul de curățare",
+    "durationLabel": "Durată",
+    "result": "Rezultat",
+    "report": {
+      "title": "Analiza nivelului sonor",
+      "subtitle": "O privire personalizată asupra acestei sesiuni",
+      "premium": "Premium",
+      "sessionSummary": "Medie {{average}} dB · Vârf {{maximum}} dB · {{seconds}} sec",
+      "environmentRating": "Evaluarea mediului",
+      "suitableFor": "Potrivit pentru",
+      "recommendation": "Recomandare",
+      "unlockTitle": "Vezi ce înseamnă acest nivel de sunet",
+      "unlockBody": "Deblocați evaluarea completă a mediului, activitățile adecvate și recomandarea de ascultare.",
+      "unlockAction": "Deblocați raportul complet",
+      "disclaimer": "Estimările pentru microfonul telefonului variază în funcție de dispozitiv și de plasare. Acest raport este o orientare generală, nu o măsurătoare calibrată sau un sfat medical.",
+      "profile": {
+        "veryQuiet": {
+          "label": "Foarte liniștit",
+          "range": "Sub 30 dB",
+          "overview": "Această sesiune sugerează un mediu foarte calm, cu puțin sunet de fundal concurent.",
+          "suitable": "Odihnă liniștită, citit, scris concentrat, meditație și alte activități care beneficiază de distragere minimă a atenției.",
+          "recommendation": "Ține microfonul descoperit și măsoară unde stai sau dormi în mod normal. Estimările foarte scăzute pot însemna, de asemenea, că microfonul telefonului este obstrucționat."
+        },
+        "normal": {
+          "label": "Normal",
+          "range": "30–69 dB",
+          "overview": "Această sesiune se află într-un interval comun de zi cu zi, similar cu o casă liniștită, un birou sau o conversație normală, în funcție de distanță.",
+          "suitable": "Conversație, lucru la birou, ascultare ocazională, studiu și majoritatea activităților zilnice în interior.",
+          "recommendation": "Dacă aveți nevoie de o concentrare mai profundă, reduceți vocile din apropiere sau îndepărtați-vă de sursa de sunet și comparați o altă sesiune."
+        },
+        "loud": {
+          "label": "Tare",
+          "range": "70–99 dB",
+          "overview": "Această sesiune sugerează un mediu puternic în care sunetul poate deveni obositor sau inconfortabil în timp.",
+          "suitable": "Scurte verificări ale străzilor aglomerate, aparatelor, evenimentelor sau redării muzicii unde doriți să înțelegeți schimbarea nivelurilor.",
+          "recommendation": "Reduceți volumul sursei, măriți distanța, luați pauze de liniște și luați în considerare protecția auzului atunci când expunerea continuă."
+        },
+        "danger": {
+          "label": "Potenţial periculos",
+          "range": "100 dB sau mai mare",
+          "overview": "Această sesiune sugerează un mediu sonor foarte intens care merită o atenție imediată.",
+          "suitable": "Numai verificări de siguranță scurte. Evitați utilizarea acestui mediu pentru ascultare, muncă, odihnă sau activitate prelungită.",
+          "recommendation": "Îndepărtați-vă de sursă, reduceți volumul atunci când este posibil și utilizați o protecție adecvată pentru auz. Nu vă bazați pe o estimare telefonică pentru a determina expunerea în siguranță."
+        }
+      }
+    },
+    "stopReason": {
+      "completed": "Terminat",
+      "manual": "Oprit manual",
+      "blur": "S-a oprit după ce ați părăsit ecranul",
+      "background": "S-a oprit în fundal",
+      "interruption": "Întrerupt",
+      "route-change": "Ruta audio a fost schimbată",
+      "replaced": "Înlocuit cu un alt instrument",
+      "error": "Oprit de o eroare",
+      "incomplete": "Incomplet"
     }
   },
   "otaUpdate": {

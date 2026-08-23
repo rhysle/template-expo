@@ -1,7 +1,9 @@
+Onde claire retire l’eau et répare le son étouffé; test des sons, stéréo et dB.
+
 Le haut-parleur semble étouffé après une éclaboussure ? Nettoyer Haut-Parleur aide à expulser l’eau piégée, la poussière et les débris avec un son de nettoyage guidé en trois phases. Vous pouvez ensuite vérifier le résultat.
 
 NETTOYEZ ET TESTEZ LE HAUT-PARLEUR
-• Lancez un cycle d’éjection de 30, 60 ou 90 secondes
+• Lancez gratuitement des cycles illimités de 30 s ; Premium ajoute 60/90 s et le mode Turbo
 • Générez des sons précis de 20 à 20 000 Hz
 • Testez les canaux stéréo gauche, droit et les deux
 • Estimez le bruit ambiant avec un dB-mètre en direct
@@ -10,7 +12,7 @@ NETTOYEZ ET TESTEZ LE HAUT-PARLEUR
 QUATRE OUTILS AUDIO, UN ESPACE PRIVÉ
 Le nettoyage, le générateur de sons, le test stéréo et le sonomètre fonctionnent sur l’appareil. Les échantillons du micro sont traités en mémoire et ne sont jamais enregistrés ni envoyés.
 
-Gratuit : sons sinusoïdaux, test stéréo manuel et estimation des dB en direct. Premium débloque tous les cycles, d’autres formes d’onde, le test automatique, les statistiques détaillées et l’utilisation sans publicité.
+Gratuit : cycles illimités de 30 s, sons sinusoïdaux, test stéréo manuel, dB en direct et valeurs minimale, moyenne et maximale. Premium débloque les cycles de 60/90 s, le mode Turbo, d’autres formes d’onde, le test automatique, les rapports sonores, l’historique privé d’activité et l’utilisation sans publicité.
 
 Placez le haut-parleur vers le bas, commencez à faible volume, lancez un cycle puis testez le son. Recommencez s’il reste étouffé.
 

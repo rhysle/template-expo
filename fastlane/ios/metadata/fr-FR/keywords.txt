@@ -1,1 +1,1 @@
-propre,téléphone,stéréo,test,fréquence,hertz,audio,bruit,poussière,humidité,débris,ton,décibel
+propre,téléphone,stéréo,test,fréquence,audio,bruit,poussière,humidité,débris,ton,décibel,son,réparer

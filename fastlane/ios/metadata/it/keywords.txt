@@ -1,1 +1,1 @@
-pulito,telefono,stereo,test,frequenza,hertz,audio,suono,rumore,polvere,umidità,tono,decibel
+pulito,telefono,stereo,test,frequenza,audio,suono,rumore,polvere,umidità,decibel,ovattato,ripara,Hz

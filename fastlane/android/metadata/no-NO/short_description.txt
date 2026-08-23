@@ -1,1 +1,1 @@
-Fjern vann, rens høyttaleren og test toner, stereo og lydnivå.
+Klar bølge fjerner vann og fikser dempet lyd; test toner, stereo og dB.

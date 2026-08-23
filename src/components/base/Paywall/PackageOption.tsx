@@ -1,3 +1,4 @@
+import { SealCheckIcon } from 'phosphor-react-native'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
 import type { PurchasesPackage } from 'react-native-purchases'
@@ -5,7 +6,7 @@ import Animated, { FadeIn } from 'react-native-reanimated'
 
 import { Pressable } from '@/components/base/Pressable'
 import { Text } from '@/components/base/Text'
-import { createThemedStyles, useThemedStyles } from '@/theme'
+import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
 
 import { getPeriodKey, type PeriodKey } from './savings'
 
@@ -26,6 +27,7 @@ export const PackageOption = ({
 }: PackageOptionProps) => {
   const styles = useThemedStyles(createStyles)
   const { t } = useTranslation()
+  const { colors } = useTheme()
   const { product } = pkg
 
   const periodKey = getPeriodKey(product.subscriptionPeriod)
@@ -71,14 +73,24 @@ export const PackageOption = ({
         accessibilityState={{ selected }}>
         <View style={styles.content}>
           <View style={styles.titleRow}>
-            <Text variant="body" weight="semibold">
-              {isFreeTrialAvailable
-                ? t('paywall.trial', {
-                    count: trialPeriodCount,
-                    unit: trialUnitLabels[trialPeriodUnit] ?? trialPeriodUnit,
-                  })
-                : localizedTitle}
-            </Text>
+            <View style={styles.titleWithTrialBadge}>
+              <Text variant="body" weight="semibold" numberOfLines={2} style={styles.packageTitle}>
+                {isFreeTrialAvailable
+                  ? t('paywall.trial', {
+                      count: trialPeriodCount,
+                      unit: trialUnitLabels[trialPeriodUnit] ?? trialPeriodUnit,
+                    })
+                  : localizedTitle}
+              </Text>
+              {isFreeTrialAvailable ? (
+                <SealCheckIcon
+                  aria-hidden
+                  size={iconSizes.md}
+                  weight="fill"
+                  color={colors.primary.main}
+                />
+              ) : null}
+            </View>
             {savingsPercent !== undefined && savingsPercent > 0 ? (
               <View style={styles.savingsPill}>
                 <Text variant="caption" weight="semibold" style={styles.savingsPillText}>
@@ -113,6 +125,7 @@ const createStyles = createThemedStyles((t) => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    gap: t.spacing.md,
     paddingHorizontal: t.spacing.lg,
     paddingVertical: t.spacing.md,
     borderRadius: t.borderRadius.lg,
@@ -125,14 +138,24 @@ const createStyles = createThemedStyles((t) => ({
   },
   content: {
     flex: 1,
+    minWidth: 0,
     gap: t.spacing.xs,
-    marginRight: t.spacing.md,
   },
   titleRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: t.spacing.md,
     flexWrap: 'wrap',
+  },
+  titleWithTrialBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexShrink: 1,
+    minWidth: 0,
+    gap: t.spacing.xs,
+  },
+  packageTitle: {
+    flexShrink: 1,
   },
   savingsPill: {
     paddingHorizontal: t.spacing.sm,
@@ -145,6 +168,7 @@ const createStyles = createThemedStyles((t) => ({
   },
   priceContainer: {
     alignItems: 'flex-end',
+    flexShrink: 0,
     gap: 2,
   },
   priceRow: {

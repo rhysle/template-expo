@@ -1,0 +1,423 @@
+{
+  "common": {
+    "back": "Späť",
+    "cancel": "Zrušiť",
+    "close": "Zavrieť",
+    "confirm": "Potvrdiť",
+    "continue": "Pokračovať",
+    "done": "Hotovo",
+    "getStarted": "Začať",
+    "next": "Ďalej",
+    "ok": "OK",
+    "openSettings": "Otvoriť nastavenia",
+    "reset": "Obnoviť",
+    "retry": "Skúsiť znova",
+    "restart": "Reštartovať",
+    "save": "Uložiť",
+    "skip": "Preskočiť",
+    "start": "Spustiť",
+    "stop": "Zastaviť"
+  },
+  "premium": {
+    "lockedHint": "Otvorí obrazovku prechodu na Premium",
+    "accessChecking": "Kontroluje sa prístup Premium…",
+    "accessUnknown": "Pripojte sa na internet a skontrolujte prístup Premium."
+  },
+  "tabs": {
+    "eject": "Vytlačenie",
+    "toneGenerator": "Generátor tónov",
+    "stereoTest": "Stereo test",
+    "dbMeter": "Merač dB"
+  },
+  "settings": {
+    "title": "Nastavenia",
+    "subtitle": "Nastavte nástroje reproduktora a merač zvuku",
+    "support": "Podpora",
+    "contactSupport": "Kontaktovať podporu",
+    "contactSupportSubtitle": "Sme tu, aby sme vám pomohli",
+    "contactSupportError": "Nepodarilo sa otvoriť e-mailovú aplikáciu",
+    "rateApp": "Ohodnoťte nás",
+    "rateAppSubtitle": "Páči sa vám aplikácia? Napíšte recenziu",
+    "shareApp": "Zdieľať",
+    "shareAppSubtitle": "Povedzte o aplikácii priateľom a rodine",
+    "shareMessage": "Vyskúšajte {{appName}}!",
+    "shareMessageWithUrl": "Vyskúšajte {{appName}}! Stiahnite si ju tu: {{url}}",
+    "userId": "ID používateľa",
+    "userIdCopied": "ID používateľa bolo skopírované",
+    "legalSection": "Právne informácie",
+    "privacyConsent": "Súkromie a súhlas",
+    "version": "Verzia {{version}}",
+    "otaUpdateId": "Aktualizácia: {{updateId}}",
+    "upgradeBanner": {
+      "title": "Prejsť na Premium",
+      "subtitle": "Odomknite dlhšie čistenie Turbo, pokročilé ovládanie zvuku a používanie bez reklám"
+    },
+    "audio": {
+      "section": "Zvuk a merač",
+      "ejectDuration": "Trvanie čistenia",
+      "durationValue": "{{count}} sekúnd",
+      "haptics": "Haptická odozva",
+      "hapticsSubtitle": "Používať dotykovú odozvu v zvukových nástrojoch",
+      "safety": "Bezpečnosť zvuku a súkromie",
+      "safetySubtitle": "Pokyny k prehrávaniu, mikrofónu a meraniu"
+    },
+    "activity": {
+      "section": "Údaje o aktivite",
+      "saved": "Uložená aktivita",
+      "clear": "Vymazať históriu aktivít",
+      "clearSubtitle": "Odstrániť lokálne uložené relácie čistenia a zvuku",
+      "clearConfirmTitle": "Vymazať všetky aktivity?",
+      "clearConfirmBody": "Týmto sa z tohto zariadenia natrvalo odstránia uložené relácie čistenia a zvuku. Čas ďalšieho bezplatného čistenia sa nezmení.",
+      "cleared": "História aktivít bola vymazaná"
+    }
+  },
+  "audioTools": {
+    "common": {
+      "mascot": "Maskot vytlačenia vody",
+      "error": "Zvuk sa nepodarilo spustiť. Skontrolujte aktuálny výstup a skúste to znova."
+    },
+    "eject": {
+      "start": "Spustiť čistenie",
+      "stop": "Zastaviť čistenie",
+      "externalTitle": "Odpojiť externý zvuk",
+      "externalBody": "Čistenie reproduktora funguje cez reproduktor zariadenia, nie cez slúchadlá ani výstupy Bluetooth.",
+      "turbo": {
+        "title": "Režim Turbo",
+        "guide": {
+          "title": "Režim Turbo",
+          "description": "Silnejší čistiaci cyklus na odolnú vodu a nečistoty.",
+          "frequency": "Používa päť rôznych dvojfrekvenčných fáz, ktoré sa počas celého cyklu neustále menia.",
+          "duration": "Režim Turbo môže na krátky čas prekročiť systémový limit hlasitosti. Používajte ho len na krátke čistiace cykly.",
+          "cta": "Zapnúť režim Turbo"
+        }
+      },
+      "help": {
+        "title": "Ako používať",
+        "disconnect": "Odpojte slúchadlá a zariadenia Bluetooth, aby sa čistiaci zvuk prehrával cez toto zariadenie.",
+        "position": "Položte zariadenie reproduktorom nadol na suchý povrch a nechajte otvory reproduktora voľné.",
+        "start": "Zvýšte hlasitosť zariadenia, klepnite na Spustiť čistenie a nehýbte zariadením, kým sa cyklus neskončí.",
+        "hearingTitle": "Chráňte si sluch",
+        "hearingWarning": "Počas testu vytlačenia nepoužívajte slúchadlá. Hlasné čistiace tóny môžu poškodiť sluch."
+      },
+      "routine": {
+        "standard": "Štandardný",
+        "turbo": "Turbo"
+      }
+    },
+    "tone": {
+      "currentFrequency": "Aktuálna frekvencia",
+      "frequencyValue": "{{frequency}} Hz",
+      "waveformLabel": "Priebeh {{waveform}} pri frekvencii {{frequency}} hertzov",
+      "waveform": {
+        "label": "Priebeh",
+        "sine": "Sínusový",
+        "square": "Obdĺžnikový",
+        "triangle": "Trojuholníkový",
+        "sawtooth": "Pílový"
+      },
+      "play": "Prehrať tón",
+      "stop": "Zastaviť tón",
+      "band": {
+        "veryLow": "Veľmi nízka",
+        "low": "Nízka",
+        "midLow": "Nižšia stredná",
+        "mid": "Stredná",
+        "high": "Vysoká",
+        "veryHigh": "Veľmi vysoká"
+      }
+    },
+    "stereo": {
+      "auto": "Automatické striedanie",
+      "autoHint": "Strieda ľavý, pravý a oba kanály",
+      "tapToChange": "Kanál zmeníte klepnutím na reproduktor",
+      "start": "Spustiť test",
+      "helpTitle": "Ako používať stereo test",
+      "helpTap": "Klepnutím na ľavý alebo pravý reproduktor okamžite otestujete daný kanál.",
+      "helpBoth": "Zapnite oba reproduktory a prehrajte testovací tón cez oba kanály.",
+      "helpAuto": "Pomocou automatického striedania prepínajte medzi ľavým, pravým a oboma kanálmi.",
+      "helpStop": "Prehrávanie môžete kedykoľvek ukončiť pomocou možnosti Zastaviť test.",
+      "left": "Vľavo",
+      "right": "Vpravo",
+      "positionLeft": "Prehráva sa ľavý kanál",
+      "positionCenter": "Prehrávajú sa oba kanály",
+      "positionRight": "Prehráva sa pravý kanál",
+      "idlePosition": "Začnite klepnutím na reproduktor",
+      "stop": "Zastaviť test"
+    },
+    "meter": {
+      "estimated": "Odhadované dB",
+      "start": "Spustiť meranie",
+      "stop": "Zastaviť meranie",
+      "permissionTitle": "Prístup k mikrofónu je vypnutý",
+      "permissionBody": "Prístup k mikrofónu sa používa iba počas činnosti merača dB na odhad úrovne zvuku v okolí. Zvukové vzorky sa spracúvajú v pamäti a nikdy sa neukladajú ani nenahrávajú. Zaokrúhlené odhady relácií sa ukladajú iba v tomto zariadení a možno ich vymazať v Nastaveniach.",
+      "minimum": "Minimum",
+      "average": "Priemer",
+      "maximum": "Maximum",
+      "timeline": "Časová os odhadovanej úrovne zvuku",
+      "status": {
+        "veryQuiet": "Veľmi tiché",
+        "normal": "Bežné",
+        "loud": "Hlasné",
+        "danger": "Nebezpečné"
+      },
+      "description": {
+        "veryQuiet": "Knižnica, tiché dýchanie",
+        "normal": "Rozhovor, kancelária",
+        "loud": "Rušná ulica, hlasná hudba",
+        "danger": "Koncert, siréna"
+      },
+      "help": {
+        "title": "Sprievodca meračom dB",
+        "howToMeasure": "Ako merať",
+        "stepPlace": "Položte telefón tam, kde chcete skontrolovať zvuk.",
+        "stepUncovered": "Nechajte mikrofón odkrytý.",
+        "stepStart": "Klepnite na Spustiť meranie a sledujte živý odhad.",
+        "everydayLevels": "Bežné úrovne zvuku",
+        "examplesApproximate": "Príklady sú približné a menia sa podľa vzdialenosti.",
+        "currentEstimate": "Aktuálny odhad",
+        "exposureTitle": "Na dĺžke vystavenia hluku záleží",
+        "exposureDescription": "Podľa usmernení NIOSH pre hluk na pracovisku každé zvýšenie o 3 dB skracuje odporúčaný čas expozície na polovicu.",
+        "useItWell": "Tipy na meranie",
+        "tipMicrophoneTitle": "Nechajte mikrofón odkrytý",
+        "tipMicrophoneBody": "Nezakrývajte mikrofón rukou ani krytom telefónu.",
+        "tipPositionTitle": "Merajte tam, kde počúvate",
+        "tipPositionBody": "Presuňte zariadenie na miesto, ktoré chcete posúdiť.",
+        "tipProtectTitle": "Ak je zvuk príliš hlasný, chráňte si sluch",
+        "tipProtectBody": "Vzdiaľte sa od zdroja alebo použite ochranu sluchu.",
+        "reference": {
+          "concertSpeaker": "Koncertný reproduktor",
+          "sirenNightclub": "Siréna alebo nočný klub",
+          "lawnMower": "Kosačka",
+          "busyStreet": "Rušná ulica",
+          "conversation": "Rozhovor",
+          "quietHome": "Tichý domov",
+          "whisper": "Šepot",
+          "hearingThreshold": "Prah počutia"
+        }
+      }
+    },
+    "safety": {
+      "title": "Bezpečnosť zvuku a súkromie",
+      "intro": "Používajte tieto nástroje opatrne a uvedomte si, čo váš telefón dokáže a nedokáže merať.",
+      "playbackTitle": "Bezpečné prehrávanie",
+      "playbackBody": "Začnite pri nízkej hlasitosti, postupne ju zvyšujte, držte reproduktor ďalej od uší a zastavte, ak je zvuk nepríjemný.",
+      "routingTitle": "Smerovanie zvuku",
+      "routingBody": "Čistiaci zvuk musí používať reproduktor zariadenia. Stereo oddelenie závisí od pripojeného reproduktora alebo slúchadiel.",
+      "estimateTitle": "Odhadované úrovne zvuku",
+      "estimateBody": "Mikrofóny telefónu zaznamenávajú úroveň digitálneho signálu, nie laboratórnu hodnotu SPL. Aplikácia používa odhad, ktorý sa líši podľa zariadenia.",
+      "privacyTitle": "Súkromie mikrofónu",
+      "privacyBody": "Mikrofón funguje iba vtedy, keď je aktívny merač dB. Vzorky sa spracúvajú v pamäti a nikdy sa neukladajú ani nenahrávajú. Zaokrúhlené odhady relácií sa môžu ukladať lokálne do histórie aktivít a možno ich vymazať v Nastaveniach.",
+      "limitationsTitle": "Dôležité obmedzenia",
+      "limitationsBody": "Táto aplikácia nemôže zaručiť odstránenie vody ani prachu. Nevkladajte do reproduktora žiadne predmety a nepoužívajte tieto nástroje ako náhradu profesionálnej opravy, kalibrovaného zariadenia, lekárskeho poradenstva ani pokynov na ochranu sluchu."
+    }
+  },
+  "paywall": {
+    "title": "Odomknite kompletnú sadu zvukových nástrojov",
+    "subtitle": "Vyčistite reproduktor, získajte pokročilé ovládanie a odstráňte všetky reklamy.",
+    "ctaFreeTrial": "Vyskúšať zadarmo",
+    "trialDisclaimer": "Zrušte kedykoľvek. Teraz nič neplatíte",
+    "subscriptionDisclaimer": "Zrušte kedykoľvek.",
+    "lifetimeDisclaimer": "Zaplaťte raz. Žiadne opakované platby.",
+    "restore": "Obnoviť nákupy",
+    "terms": "Podmienky používania",
+    "privacy": "Zásady ochrany osobných údajov",
+    "then": "potom",
+    "trial": "Bezplatná skúšobná verzia na {{count}} {{unit}}",
+    "save": "Ušetrite {{percent}} %",
+    "availability": {
+      "loading": "Kontrolujú sa možnosti nákupu…",
+      "temporary_error": {
+        "title": "Možnosti nákupu sa nepodarilo načítať",
+        "subtitle": "Skontrolujte pripojenie a skúste to znova."
+      },
+      "configuration_error": {
+        "title": "Možnosti nákupu nie sú k dispozícii",
+        "subtitle": "Obchodu sa nepodarilo načítať produkty tejto aplikácie. Skúste to o chvíľu znova."
+      },
+      "purchase_not_allowed": {
+        "title": "Nákupy nie sú na tomto zariadení podporované",
+        "subtitle": "Toto zariadenie alebo účet obchodu nemôže uskutočňovať nákupy v aplikácii."
+      }
+    },
+    "trialUnit": {
+      "day": "deň",
+      "week": "týždeň",
+      "month": "mesiac",
+      "year": "rok"
+    },
+    "period": {
+      "day": "za deň",
+      "week": "za týždeň",
+      "month": "za mesiac",
+      "year": "za rok",
+      "lifetime": "Jednorazový nákup"
+    },
+    "comparison": {
+      "features": "Funkcie",
+      "free": "Zadarmo",
+      "pro": "Pro",
+      "included": "Zahrnuté",
+      "excluded": "Nezahrnuté",
+      "unlimited": "Neobmedzené",
+      "rows": {
+        "cleaningDuration": {
+          "title": "Trvanie čistenia",
+          "free": "30 s",
+          "pro": "30/60/90 s"
+        },
+        "turbo": {
+          "title": "Režim Turbo"
+        },
+        "waveforms": {
+          "title": "Priebehy tónov",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "Stereo test",
+          "free": "Manuálny",
+          "pro": "Automatický"
+        },
+        "soundInsights": {
+          "title": "Analýza zvuku",
+          "free": "Základná",
+          "pro": "Pokročilá"
+        },
+        "activityHistory": {
+          "title": "História aktivít"
+        },
+        "adExperience": {
+          "title": "Reklamy",
+          "free": "S reklamami",
+          "pro": "Bez reklám"
+        }
+      }
+    },
+    "context": {
+      "historyTitle": "Odomknite uloženú aktivitu",
+      "historySubtitle": "V tomto zariadení je už uložených {{cleaning}} čistení reproduktora a {{db}} meraní zvuku.",
+      "cleaningSubtitle": "Čistite kedykoľvek pomocou dlhších cyklov a viacstupňovej čistiacej vlny Turbo.",
+      "dbSubtitle": "Odomknite úplnú analýzu tejto relácie a znova si pozrite uložené zvukové správy."
+    },
+    "feedback": {
+      "subscribeSuccess": "Vitajte! Váš prístup Premium je aktívny.",
+      "subscribeError": "Vyskytol sa problém. Skúste to znova.",
+      "restoreSuccess": "Prístup Premium bol úspešne obnovený!",
+      "restoreNotFound": "Nenašiel sa žiadny aktívny nákup Premium.",
+      "restoreError": "Nákupy sa nepodarilo obnoviť. Skúste to znova."
+    },
+    "packageTitle": {
+      "day": "Denné",
+      "week": "Týždenné",
+      "month": "Mesačné",
+      "year": "Ročné",
+      "lifetime": "Doživotné"
+    }
+  },
+  "activity": {
+    "history": "História aktivít",
+    "cleaning": "Čistenie",
+    "soundSessions": "Zvukové relácie",
+    "savedCount": "Uložené: {{cleaning}} aktivít čistenia · {{db}} zvukových relácií",
+    "emptyTitle": "Zatiaľ nie je uložená žiadna aktivita",
+    "emptyBody": "Dokončené relácie čistenia a zvuku sa zobrazia tu.",
+    "select": "Vybrať",
+    "selectAll": "Vybrať všetko",
+    "deselectAll": "Zrušiť výber všetkého",
+    "selectedCount": "Vybrané: {{count}}",
+    "delete": "Odstrániť",
+    "deleteSelected": "Odstrániť ({{count}})",
+    "deleteConfirmTitleSingle": "Odstrániť túto aktivitu?",
+    "deleteConfirmTitleMultiple": "Odstrániť {{count}} aktivít?",
+    "deleteConfirmBodySingle": "Týmto sa vybraná aktivita natrvalo odstráni z tohto zariadenia.",
+    "deleteConfirmBodyMultiple": "Týmto sa {{count}} vybraných aktivít natrvalo odstráni z tohto zariadenia.",
+    "deletedSingle": "Aktivita bola odstránená",
+    "deletedMultiple": "Počet odstránených aktivít: {{count}}",
+    "dbSession": "Relácia úrovne zvuku",
+    "duration": "{{seconds}} sekúnd",
+    "cleaningDetail": "Aktivita čistenia",
+    "dbDetail": "Zvuková relácia",
+    "mode": "Režim čistenia",
+    "durationLabel": "Trvanie",
+    "result": "Výsledok",
+    "report": {
+      "title": "Analýza zvuku",
+      "subtitle": "Prispôsobený pohľad na túto reláciu",
+      "premium": "Premium",
+      "sessionSummary": "Priemer {{average}} dB · Maximum {{maximum}} dB · {{seconds}} s",
+      "environmentRating": "Hodnotenie prostredia",
+      "suitableFor": "Vhodné na",
+      "recommendation": "Odporúčanie",
+      "unlockTitle": "Zistite, čo táto úroveň zvuku znamená",
+      "unlockBody": "Odomknite úplné hodnotenie prostredia, vhodné aktivity a odporúčanie na počúvanie.",
+      "unlockAction": "Odomknúť celú správu",
+      "disclaimer": "Odhady mikrofónu telefónu sa líšia podľa zariadenia a umiestnenia. Táto správa poskytuje všeobecné usmernenie, nie kalibrované meranie ani lekársku radu.",
+      "profile": {
+        "veryQuiet": {
+          "label": "Veľmi tiché",
+          "range": "Menej ako 30 dB",
+          "overview": "Táto relácia naznačuje veľmi pokojné prostredie s malým množstvom rušivého hluku v pozadí.",
+          "suitable": "Tichý odpočinok, čítanie, sústredené písanie, meditácia a iné aktivity, ktorým prospieva minimum rušivých vplyvov.",
+          "recommendation": "Nechajte mikrofón odkrytý a merajte tam, kde bežne sedíte alebo spíte. Veľmi nízke odhady môžu tiež znamenať, že je mikrofón telefónu zakrytý."
+        },
+        "normal": {
+          "label": "Bežné",
+          "range": "30–69 dB",
+          "overview": "Táto relácia je v bežnom každodennom rozsahu, podobnom tichému domovu, kancelárii alebo normálnemu rozhovoru v závislosti od vzdialenosti.",
+          "suitable": "Rozhovor, práca za stolom, bežné počúvanie, štúdium a väčšina každodenných aktivít v interiéri.",
+          "recommendation": "Ak sa potrebujete lepšie sústrediť, stíšte hlasy v okolí alebo sa vzdiaľte od zdroja zvuku a porovnajte ďalšiu reláciu."
+        },
+        "loud": {
+          "label": "Hlasné",
+          "range": "70–99 dB",
+          "overview": "Táto relácia naznačuje hlasné prostredie, v ktorom môže byť zvuk časom únavný alebo nepríjemný.",
+          "suitable": "Krátke kontroly rušných ulíc, spotrebičov, podujatí alebo prehrávania hudby, pri ktorých chcete sledovať zmenu úrovní.",
+          "recommendation": "Znížte hlasitosť zdroja, zväčšite vzdialenosť, robte si tiché prestávky a pri dlhšom vystavení zvážte ochranu sluchu."
+        },
+        "danger": {
+          "label": "Potenciálne nebezpečné",
+          "range": "100 dB alebo viac",
+          "overview": "Táto relácia naznačuje veľmi intenzívne zvukové prostredie, ktoré si vyžaduje okamžitú pozornosť.",
+          "suitable": "Len na krátke bezpečnostné kontroly. Nepoužívajte toto prostredie na počúvanie, prácu, odpočinok ani dlhšiu činnosť.",
+          "recommendation": "Vzdiaľte sa od zdroja, ak je to možné, znížte hlasitosť a použite vhodnú ochranu sluchu. Pri určovaní bezpečného vystavenia sa nespoliehajte na odhad telefónu."
+        }
+      }
+    },
+    "stopReason": {
+      "completed": "Dokončené",
+      "manual": "Zastavené manuálne",
+      "blur": "Zastavené po opustení obrazovky",
+      "background": "Zastavené na pozadí",
+      "interruption": "Prerušené",
+      "route-change": "Trasa zvuku bola zmenená",
+      "replaced": "Nahradené iným nástrojom",
+      "error": "Zastavené pre chybu",
+      "incomplete": "Nedokončené"
+    }
+  },
+  "otaUpdate": {
+    "updateReady": "Nová aktualizácia je pripravená — reštartujte aplikáciu"
+  },
+  "errorBoundary": {
+    "title": "Vyskytol sa problém",
+    "message": "Vyskytla sa neočakávaná chyba. Skúste to znova."
+  },
+  "onboarding": {
+    "waterEject": {
+      "title": "Rýchlo odstráňte\nvodu a prach",
+      "description": "Prehrajte silný čistiaci zvuk, ktorý pomôže vytlačiť zachytenú vodu a prach z reproduktora."
+    },
+    "toneGenerator": {
+      "title": "Vytvorte\nsprávny tón",
+      "description": "Vyberte si rôzne frekvencie na testovanie, ladenie, maskovanie hluku alebo ľubovoľnú kontrolu zvuku."
+    },
+    "dbMeter": {
+      "title": "Zistite, aký\nhlasný je zvuk",
+      "description": "Pomocou merača dB odhadnite úroveň hluku v okolí a rozhodujte sa pri počúvaní rozumnejšie."
+    },
+    "privacy": {
+      "title": "Súkromne a v zariadení",
+      "description": "Zvuk sa spracúva priamo v telefóne a aplikácia poskytuje jasné pokyny k bezpečnosti a mikrofónu."
+    }
+  }
+}

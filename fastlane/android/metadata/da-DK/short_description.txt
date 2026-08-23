@@ -1,1 +1,1 @@
-Fjern vand, rens højttaleren, test toner og stereo, og mål lydniveau.
+Klar bølge fjerner vand og fikser dæmpet lyd; test toner, stereo og dB.

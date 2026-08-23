@@ -50,7 +50,7 @@
     "otaUpdateId": "更新: {{updateId}}",
     "upgradeBanner": {
       "title": "升級到高級版",
-      "subtitle": "解鎖喇叭排水、進階音訊控制和無廣告體驗"
+      "subtitle": "解鎖更長的 Turbo 清潔、進階音訊控制和無廣告體驗"
     },
     "audio": {
       "section": "音訊與測量",
@@ -60,6 +60,15 @@
       "hapticsSubtitle": "在聲音工具中使用觸覺反饋",
       "safety": "音頻安全和隱私",
       "safetySubtitle": "播放、麥克風和測量指南"
+    },
+    "activity": {
+      "section": "活動數據",
+      "saved": "已儲存的活動",
+      "clear": "清除活動歷史記錄",
+      "clearSubtitle": "刪除本地保存的清潔和聲音會話",
+      "clearConfirmTitle": "清除所有活動？",
+      "clearConfirmBody": "這將從該裝置中永久刪除已儲存的清潔和聲音會話。下次免費清潔的時間不會改變。",
+      "cleared": "活動記錄已清除"
     }
   },
   "audioTools": {
@@ -68,58 +77,67 @@
       "error": "音頻無法啓動。檢查當前輸出，然後重試。"
     },
     "eject": {
-      "subtitle": "強勁的三階段聲音循環，協助清除喇叭中殘留的水分、鬆動的灰塵和碎屑。",
-      "safe": "可以開始清理",
-      "completed": "清潔循環完成",
-      "remaining": "剩餘 {{time}}",
       "start": "開始清理",
       "stop": "停止清潔",
-      "idleHint": "在開始之前，將設備揚聲器一側向下放置。",
-      "runningHint": "保持設備靜止，遠離耳朵。",
-      "completedHint": "測試您的揚聲器，如果聲音仍然低沈，請重復該循環。",
       "externalTitle": "斷開外部音頻連接",
       "externalBody": "揚聲器清潔通過設備揚聲器進行，而不是通過耳機或藍牙輸出。",
-      "phase": {
-        "water": "水噴射脈衝",
-        "debris": "粉塵和碎屑震動",
-        "finish": "整理掃描"
+      "turbo": {
+        "title": "渦輪模式",
+        "guide": {
+          "title": "渦輪模式",
+          "description": "針對頑固水和碎片的更強清潔循環。",
+          "frequency": "使用五個不同的雙頻階段，在整個週期中不斷發展。",
+          "duration": "Turbo 可能會短暫超出系統音量限制。僅用於短清潔週期。",
+          "cta": "啟用渦輪增壓"
+        }
+      },
+      "help": {
+        "title": "如何使用",
+        "disconnect": "斷開耳機和藍牙設備的連接，以便透過該裝置播放清潔聲音。",
+        "position": "將設備揚聲器一側朝下放在乾燥的表面上，並保持揚聲器開口暢通。",
+        "start": "調高裝置音量，點擊開始清潔，然後保持裝置靜止直到循環結束。",
+        "hearingTitle": "保護您的聽力",
+        "hearingWarning": "測試 Eject 時請勿佩戴耳機。響亮的揚聲器清潔音可能會損害聽力。"
+      },
+      "routine": {
+        "standard": "標準",
+        "turbo": "Turbo"
       }
     },
     "tone": {
-      "currentFrequency": "泵的當前頻率",
+      "currentFrequency": "目前頻率",
       "frequencyValue": "{{frequency}} Hz",
-      "waveformLabel": "{{frequency}}赫茲{{waveform}}波形",
+      "waveformLabel": "{{frequency}} 赫茲的{{waveform}}",
       "waveform": {
         "label": "波形",
-        "sine": "正弦",
-        "square": "正方形",
-        "triangle": "B型圖案",
-        "sawtooth": "鋸齒"
+        "sine": "正弦波",
+        "square": "方波",
+        "triangle": "三角波",
+        "sawtooth": "鋸齒波"
       },
-      "play": "播放提示音",
+      "play": "播放測試音",
       "stop": "停止提示音",
-      "volumeHint": "保持低音量，並使揚聲器遠離耳朵。",
       "band": {
         "veryLow": "極低",
         "low": "低",
         "midLow": "低中",
         "mid": "中",
         "high": "高",
-        "veryHigh": "非常"
+        "veryHigh": "極高"
       }
     },
     "stereo": {
-      "auto": "自動替換",
-      "autoHint": "左右循環，兩者兼而有之",
+      "auto": "自動切換",
+      "autoHint": "依序切換左聲道、右聲道和雙聲道",
       "tapToChange": "輕觸揚聲器以更改頻道",
       "start": "開始測試",
       "helpTitle": "如何使用立體聲測試",
       "helpTap": "輕觸左側或右側揚聲器以立即測試該頻道。",
       "helpBoth": "打開兩個揚聲器，通過兩個頻道播放測試音。",
-      "helpAuto": "使用Auto alternate在左通道、右通道和兩個通道之間循環。",
+      "helpAuto": "使用自動切換依序測試左聲道、右聲道和雙聲道。",
       "helpStop": "每當您想結束播放時，請使用停止測試。",
-      "left": "Left",
-      "right": "右邊",
+      "left": "左側",
+      "right": "右側",
       "positionLeft": "左聲道播放",
       "positionCenter": "兩個頻道都在播放",
       "positionRight": "右聲道播放",
@@ -131,11 +149,11 @@
       "start": "開始測量",
       "stop": "停止測量",
       "permissionTitle": "麥克風訪問已關閉",
-      "permissionBody": "麥克風訪問僅在分貝計運行時使用，以估計附近的聲級。音頻會在您的設備上進行處理，不會保存或上傳。",
+      "permissionBody": "僅在分貝計運作時使用麥克風來估算周圍的聲音級別。音訊樣本只在記憶體中處理，絕不會儲存或上傳。每次測量的取整估算值只儲存在本裝置上，並可在「設定」中清除。",
       "minimum": "Minimun",
       "average": "一般",
       "maximum": "最大次數",
-      "unlockStats": "解鎖詳細的dB會話統計",
+      "timeline": "估計聲級時間線",
       "status": {
         "veryQuiet": "很安靜",
         "normal": "普通",
@@ -157,17 +175,17 @@
         "everydayLevels": "日常聲級",
         "examplesApproximate": "示例為近似值，因距離而異。",
         "currentEstimate": "當前估計數",
-        "exposureTitle": "曝光時間很重要",
-        "exposureDescription": "NIOSH職業指導；每+3 dB將推薦時間減半。",
-        "useItWell": "好好使用",
+        "exposureTitle": "噪音暴露時間很重要",
+        "exposureDescription": "根據 NIOSH 的工作場所噪音指引，噪音每增加 3 dB，建議暴露時間就會減半。",
+        "useItWell": "測量技巧",
         "tipMicrophoneTitle": "保持麥克風未被遮蓋",
-        "tipMicrophoneBody": "避免用手或外殼遮蓋。",
+        "tipMicrophoneBody": "請勿用手或手機殼遮擋麥克風。",
         "tipPositionTitle": "衡量您傾聽的地方",
         "tipPositionBody": "將設備移動到要評估的位置。",
         "tipProtectTitle": "如果感覺太大聲，請保護您的耳朵",
         "tipProtectBody": "遠離源頭或使用聽力保護裝置。",
         "reference": {
-          "concertSpeaker": "音樂會演講者",
+          "concertSpeaker": "演唱會揚聲器",
           "sirenNightclub": "警笛或夜總會",
           "lawnMower": "割草機",
           "busyStreet": "車水馬龍",
@@ -188,7 +206,7 @@
       "estimateTitle": "估計聲級",
       "estimateBody": "手機麥克風報告數字信號電平，而不是實驗室SPL。車主端應用的預估車費因設備而異。",
       "privacyTitle": "麥克風隱私",
-      "privacyBody": "麥克風僅在dB儀表處於活動狀態時運行。樣本在內存中處理，從不保存或上傳。",
+      "privacyBody": "麥克風僅在分貝計運作時工作。樣本只在記憶體中處理，絕不會儲存或上傳。測量的取整估算值可能會儲存在本裝置的活動記錄中，並可在「設定」中清除。",
       "limitationsTitle": "重要限制",
       "limitationsBody": "此應用程序無法保證除水或除塵。請勿將物體插入揚聲器，也不要將這些工具用作專業維修、校准設備、醫療建議或聽力保護指南的替代品。"
     }
@@ -197,12 +215,30 @@
     "title": "解鎖完整的音頻工具包",
     "subtitle": "清潔揚聲器，訪問高級控件，並刪除每個廣告。",
     "ctaFreeTrial": "免費試用",
+    "trialDisclaimer": "可隨時取消。現在無需付款",
+    "subscriptionDisclaimer": "可隨時取消。",
+    "lifetimeDisclaimer": "一次付費。無定期扣款。",
     "restore": "恢復購買",
     "terms": "服務條款",
     "privacy": "隱私條款",
-    "then": "then",
+    "then": "然後",
     "trial": "{{count}} - {{unit}}免費試用",
     "save": "節省{{percent}} %",
+    "availability": {
+      "loading": "正在檢查購買選項…",
+      "temporary_error": {
+        "title": "無法載入購買選項",
+        "subtitle": "請檢查網路連線，然後再試一次。"
+      },
+      "configuration_error": {
+        "title": "購買選項無法使用",
+        "subtitle": "商店無法載入此 App 的產品。請稍後再試。"
+      },
+      "purchase_not_allowed": {
+        "title": "此裝置不支援購買",
+        "subtitle": "此裝置或商店帳號無法進行 App 內購買。"
+      }
+    },
     "trialUnit": {
       "day": "天",
       "week": "星期",
@@ -216,27 +252,52 @@
       "year": "每年",
       "lifetime": "一次性購買"
     },
-    "features": {
-      "waterEject": {
-        "title": "完成水噴射",
-        "description": "運行30、60和90秒的揚聲器清潔週期。"
-      },
-      "waveforms": {
-        "title": "高級色調波形",
-        "description": "在整個頻率範圍內使用正方形、三角形和鋸齒形音調。"
-      },
-      "stereoAuto": {
-        "title": "自動立體聲測試",
-        "description": "在左通道、右通道和兩個通道之間免提循環。"
-      },
-      "dbStats": {
-        "title": "詳細分貝統計",
-        "description": "查看每個會話的最小值、平均值和最大值。"
-      },
-      "adFree": {
-        "title": "零廣告中斷",
-        "description": "使用沒有橫幅或全屏廣告的所有音頻工具。"
+    "comparison": {
+      "features": "功能",
+      "free": "免費",
+      "pro": "Pro",
+      "included": "包含",
+      "excluded": "不包含",
+      "unlimited": "無限制",
+      "rows": {
+        "cleaningDuration": {
+          "title": "清潔持續時間",
+          "free": "30 秒",
+          "pro": "30/60/90 秒"
+        },
+        "turbo": {
+          "title": "渦輪模式"
+        },
+        "waveforms": {
+          "title": "波形",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "立體聲測試",
+          "free": "手動",
+          "pro": "自動"
+        },
+        "soundInsights": {
+          "title": "聲音級別分析",
+          "free": "基本",
+          "pro": "進階"
+        },
+        "activityHistory": {
+          "title": "活動歷史"
+        },
+        "adExperience": {
+          "title": "有廣告",
+          "free": "有廣告",
+          "pro": "無廣告"
+        }
       }
+    },
+    "context": {
+      "historyTitle": "解鎖您已儲存的活動",
+      "historySubtitle": "此裝置上已儲存 {{cleaning}} 次揚聲器清潔和 {{db}} 次聲音測量。",
+      "cleaningSubtitle": "使用更長的週期和多階段 Turbo 清潔聲波，隨時清潔裝置揚聲器。",
+      "dbSubtitle": "解鎖本次測量的完整分析，並重新查看已儲存的聲音報告。"
     },
     "feedback": {
       "subscribeSuccess": "歡迎！您的高級訪問權限已激活。",
@@ -251,6 +312,87 @@
       "month": "每月",
       "year": "每年",
       "lifetime": "終身"
+    }
+  },
+  "activity": {
+    "history": "活動歷史",
+    "cleaning": "打掃",
+    "soundSessions": "聲音測量記錄",
+    "savedCount": "{{cleaning}} 次清潔 · 已儲存 {{db}} 次聲音測量",
+    "emptyTitle": "尚未保存活動",
+    "emptyBody": "已完成的清潔和聲音會話將顯示在此。",
+    "select": "選擇",
+    "selectAll": "選擇全部",
+    "deselectAll": "取消全選",
+    "selectedCount": "已選擇 {{count}}",
+    "delete": "刪除",
+    "deleteSelected": "刪除 ({{count}})",
+    "deleteConfirmTitleSingle": "刪除此活動？",
+    "deleteConfirmTitleMultiple": "刪除 {{count}} 活動？",
+    "deleteConfirmBodySingle": "這將從該裝置中永久刪除選定的活動。",
+    "deleteConfirmBodyMultiple": "這將從該裝置中永久刪除 {{count}} 選定的活動。",
+    "deletedSingle": "活動已刪除",
+    "deletedMultiple": "{{count}} 活動已刪除",
+    "dbSession": "聲級測量",
+    "duration": "{{seconds}} 秒",
+    "cleaningDetail": "清潔活動",
+    "dbDetail": "聲音測量",
+    "mode": "清潔模式",
+    "durationLabel": "期間",
+    "result": "結果",
+    "report": {
+      "title": "聲音級別分析",
+      "subtitle": "本次聲音測量的個人化分析",
+      "premium": "Premium",
+      "sessionSummary": "平均值 {{average}} dB · 峰值 {{maximum}} dB · {{seconds}} 秒",
+      "environmentRating": "環境等級",
+      "suitableFor": "適合於",
+      "recommendation": "推薦",
+      "unlockTitle": "看看這個聲級意味著什麼",
+      "unlockBody": "解鎖完整的環境評級、適合的活動和聽力推薦。",
+      "unlockAction": "解鎖完整報告",
+      "disclaimer": "手機麥克風的估計值因設備和放置位置而異。本報告是一般指導，而不是校準測量或醫療建議。",
+      "profile": {
+        "veryQuiet": {
+          "label": "很安靜",
+          "range": "低於30分貝",
+          "overview": "本次測量顯示環境非常安靜，幾乎沒有令人分心的背景噪音。",
+          "suitable": "安靜的休息、閱讀、專注寫作、冥想和其他活動，這些活動都受益於盡量減少干擾。",
+          "recommendation": "保持麥克風不被遮蓋並測量您通常坐或睡的位置。估計值過低也可能意味著手機麥克風被遮住。"
+        },
+        "normal": {
+          "label": "普通",
+          "range": "30–69 分貝",
+          "overview": "此會話位於常見的日常範圍內，類似於安靜的家庭、辦公室或正常對話（取決於距離）。",
+          "suitable": "交談、案頭工作、休閒聆聽、學習以及大多數日常室內活動。",
+          "recommendation": "如果您需要更深入的注意力，請減少附近的聲音或遠離聲源並比較另一個會話。"
+        },
+        "loud": {
+          "label": "大聲",
+          "range": "70–99 分貝",
+          "overview": "本次測量顯示環境較為嘈雜，長時間處於其中可能會感到疲勞或不適。",
+          "suitable": "簡短檢查繁忙的街道、電器、活動或音樂播放，以了解您想要了解變化的程度。",
+          "recommendation": "降低音源音量、增加距離、安靜休息，並在持續暴露時考慮聽力保護。"
+        },
+        "danger": {
+          "label": "潛在危險",
+          "range": "100分貝或更高",
+          "overview": "本次測量顯示聲音環境非常強烈，需要立即注意。",
+          "suitable": "僅進行簡短的安全檢查。避免使用此環境進行聆聽、工作、休息或長時間活動。",
+          "recommendation": "遠離聲音來源，盡可能降低音量，並使用適當的聽力保護裝置。不要依靠手機估計來確定安全暴露。"
+        }
+      }
+    },
+    "stopReason": {
+      "completed": "完全的",
+      "manual": "手動停止",
+      "blur": "離開螢幕後停止",
+      "background": "停在後台",
+      "interruption": "被打斷",
+      "route-change": "音訊輸出已更改",
+      "replaced": "已替換為其他工具",
+      "error": "因錯誤而停止",
+      "incomplete": "不完整"
     }
   },
   "otaUpdate": {

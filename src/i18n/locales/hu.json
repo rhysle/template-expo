@@ -50,7 +50,7 @@
     "otaUpdateId": "Frissítés: {{updateId}}",
     "upgradeBanner": {
       "title": "Frissítés Premiumra",
-      "subtitle": "Oldja fel a vízkidobást, a fejlett hangvezérlést és a reklámmentes élményt"
+      "subtitle": "Oldja fel a hosszabb Turbo tisztítást, a fejlett hangvezérlést és a hirdetésmentes használatot"
     },
     "audio": {
       "section": "Hang és mérő",
@@ -60,6 +60,15 @@
       "hapticsSubtitle": "Használjon tapintható visszajelzést a hangeszközökben",
       "safety": "Hangbiztonság és adatvédelem",
       "safetySubtitle": "Lejátszási, mikrofon- és mérési útmutató"
+    },
+    "activity": {
+      "section": "Tevékenységi adatok",
+      "saved": "Mentett tevékenység",
+      "clear": "Tevékenységelőzmények törlése",
+      "clearSubtitle": "Távolítsa el a helyileg mentett tisztító- és hangmunkameneteket",
+      "clearConfirmTitle": "Törli az összes tevékenységet?",
+      "clearConfirmBody": "Ezzel véglegesen eltávolítja a mentett tisztítási és hangkezelési munkameneteket az eszközről. A következő ingyenes takarítás ideje nem változik.",
+      "cleared": "A tevékenységelőzmények törölve"
     }
   },
   "audioTools": {
@@ -68,21 +77,31 @@
       "error": "A hangot nem sikerült elindítani. Ellenőrizze az aktuális kimenetet, és próbálja újra."
     },
     "eject": {
-      "subtitle": "Egy erőteljes, 3 fokozatú hangciklus a beszorult vizet, laza port és törmeléket célozza meg.",
-      "safe": "Tisztításra kész",
-      "completed": "A tisztítási ciklus befejeződött",
-      "remaining": "{{time}} maradt",
       "start": "Kezdje el a takarítást",
       "stop": "Hagyja abba a takarítást",
-      "idleHint": "Indítás előtt helyezze az eszközt a hangszóróval lefelé.",
-      "runningHint": "Tartsa a készüléket mozdulatlanul, távol a fülétől.",
-      "completedHint": "Tesztelje a hangszórót, és ismételje meg a ciklust, ha a hang továbbra is tompa.",
       "externalTitle": "A külső hang leválasztása",
       "externalBody": "A hangszórók tisztítása az eszköz hangszóróján keresztül működik, nem a fejhallgatón vagy a Bluetooth-kimeneteken keresztül.",
-      "phase": {
-        "water": "Vízkidobó impulzus",
-        "debris": "Por és törmelék rázása",
-        "finish": "Seprés befejezése"
+      "turbo": {
+        "title": "Turbó mód",
+        "guide": {
+          "title": "Turbó mód",
+          "description": "Erősebb tisztítási ciklus a makacs vízhez és törmelékhez.",
+          "frequency": "Öt különálló kétfrekvenciás fokozatot használ, amelyek a teljes ciklus alatt folyamatosan fejlődnek.",
+          "duration": "A Turbo rövid időre túllépheti a rendszer hangerőkorlátját. Csak rövid tisztítási ciklusokhoz használja.",
+          "cta": "Turbo engedélyezése"
+        }
+      },
+      "help": {
+        "title": "Hogyan kell használni",
+        "disconnect": "Húzza ki a fejhallgatót és a Bluetooth-eszközöket, hogy a tisztító hang hallható legyen ezen az eszközön.",
+        "position": "Helyezze a készüléket a hangszóró oldalával lefelé egy száraz felületre, és tartsa szabadon a hangszórónyílásokat.",
+        "start": "Növelje az eszköz hangerejét, érintse meg a Tisztítás indítása elemet, és tartsa mozdulatlanul az eszközt a ciklus végéig.",
+        "hearingTitle": "Védje hallását",
+        "hearingWarning": "Ne viseljen fejhallgatót a Eject tesztelése közben. A hangos hangszórótisztító hangok halláskárosodást okozhatnak."
+      },
+      "routine": {
+        "standard": "Standard",
+        "turbo": "Turbo"
       }
     },
     "tone": {
@@ -96,9 +115,8 @@
         "triangle": "Háromszög",
         "sawtooth": "Fűrészfog"
       },
-      "play": "Lejátszási hang",
+      "play": "Hang lejátszása",
       "stop": "Leállító hang",
-      "volumeHint": "Tartsa alacsonyan a hangerőt, és tartsa távol a hangszórót a fülétől.",
       "band": {
         "veryLow": "Nagyon alacsony",
         "low": "Alacsony",
@@ -109,8 +127,8 @@
       }
     },
     "stereo": {
-      "auto": "Automatikus alternatíva",
-      "autoHint": "Biciklizés balra, jobbra és mindkettőre",
+      "auto": "Automatikus váltás",
+      "autoHint": "Váltás a bal, a jobb és mindkét csatorna között",
       "tapToChange": "Koppintson a hangszórókra a csatornaváltáshoz",
       "start": "Teszt indítása",
       "helpTitle": "A sztereóteszt használata",
@@ -118,11 +136,11 @@
       "helpBoth": "Kapcsolja be mindkét hangszórót a teszthang mindkét csatornán történő lejátszásához.",
       "helpAuto": "Használja az Automatikus váltakozást a bal, jobb és mindkét csatorna közötti váltáshoz.",
       "helpStop": "Használja a Teszt leállítása funkciót, amikor le szeretné állítani a lejátszást.",
-      "left": "Balra",
-      "right": "Jobbra",
-      "positionLeft": "Lejátszás a bal csatornáról",
+      "left": "Bal",
+      "right": "Jobb",
+      "positionLeft": "A bal csatorna szól",
       "positionCenter": "Mindkét csatorna lejátszása",
-      "positionRight": "A megfelelő csatorna lejátszása",
+      "positionRight": "A jobb csatorna szól",
       "idlePosition": "A kezdéshez koppintson egy hangszóróra",
       "stop": "Teszt leállítása"
     },
@@ -131,11 +149,11 @@
       "start": "Kezdje el a mérést",
       "stop": "A mérés leállítása",
       "permissionTitle": "A mikrofon hozzáférés ki van kapcsolva",
-      "permissionBody": "A mikrofonhoz való hozzáférés csak a dB-mérő működése közben használható a közeli hangszintek becslésére. A hangot az eszközöd dolgozza fel, és soha nem menti vagy tölti fel.",
+      "permissionBody": "A mikrofonhoz való hozzáférést csak a dB-mérő működése közben használjuk a közeli hangszint becslésére. A hangminták feldolgozása a memóriában történik, és azokat soha nem mentjük vagy töltjük fel. A munkamenetek kerekített becsléseit csak ezen az eszközön tároljuk, és a Beállításokban törölhetők.",
       "minimum": "Minimum",
       "average": "Átlagos",
       "maximum": "Maximum",
-      "unlockStats": "Részletes dB munkamenet-statisztikák feloldása",
+      "timeline": "Becsült hangszint idővonal",
       "status": {
         "veryQuiet": "Nagyon csendes",
         "normal": "Normál",
@@ -157,11 +175,11 @@
         "everydayLevels": "Mindennapi hangszintek",
         "examplesApproximate": "A példák hozzávetőlegesek, és a távolság függvényében változnak.",
         "currentEstimate": "Jelenlegi becslés",
-        "exposureTitle": "Az expozíciós idő számít",
-        "exposureDescription": "NIOSH foglalkozási tanácsadás; minden +3 dB felére csökkenti az ajánlott időt.",
-        "useItWell": "Használd jól",
+        "exposureTitle": "A zajterhelés időtartama számít",
+        "exposureDescription": "A NIOSH munkahelyi zajra vonatkozó útmutatása szerint minden 3 dB-es növekedés felére csökkenti az ajánlott expozíciós időt.",
+        "useItWell": "Mérési tippek",
         "tipMicrophoneTitle": "Tartsa fedetlenül a mikrofont",
-        "tipMicrophoneBody": "Ne takarja el a kezével vagy a tokkal.",
+        "tipMicrophoneBody": "Ne takarja el a mikrofont a kezével vagy a telefontokkal.",
         "tipPositionTitle": "Mérje meg, hol hallgat",
         "tipPositionBody": "Vigye az eszközt arra a helyre, amelyet értékelni szeretne.",
         "tipProtectTitle": "Ha túl hangosnak érzi magát, védje a fülét",
@@ -188,7 +206,7 @@
       "estimateTitle": "Becsült hangszintek",
       "estimateBody": "A telefonmikrofonok digitális jelszintet jeleznek, nem pedig laboratóriumi SPL-t. Az alkalmazás eszközönként változó becslést alkalmaz.",
       "privacyTitle": "Mikrofon adatvédelem",
-      "privacyBody": "A mikrofon csak akkor működik, ha a dB-mérő aktív. A mintákat a memóriában dolgozzák fel, és soha nem mentik vagy töltik fel.",
+      "privacyBody": "A mikrofon csak az aktív dB-mérő mellett működik. A minták feldolgozása a memóriában történik, és azokat soha nem mentjük vagy töltjük fel. A munkamenetek kerekített becslései helyben tárolhatók a tevékenységelőzményekben, és a Beállításokban törölhetők.",
       "limitationsTitle": "Fontos korlátozások",
       "limitationsBody": "Ez az alkalmazás nem garantálja a víz és a por eltávolítását. Ne helyezzen tárgyakat a hangszóróba, és ne használja ezeket az eszközöket professzionális javítások, kalibrált berendezések, orvosi tanácsadás vagy hallásvédelmi útmutatás helyett."
     }
@@ -197,12 +215,30 @@
     "title": "Oldja fel a teljes audioeszközkészletet",
     "subtitle": "Tisztítsa meg a hangszórót, érje el a speciális vezérlőket, és távolítson el minden hirdetést.",
     "ctaFreeTrial": "Próbáld ki ingyen",
+    "trialDisclaimer": "Bármikor lemondható. Most nem kell fizetnie",
+    "subscriptionDisclaimer": "Bármikor lemondható.",
+    "lifetimeDisclaimer": "Fizessen egyszer. Nincsenek ismétlődő díjak.",
     "restore": "Vásárlások visszaállítása",
     "terms": "Általános Szerződési Feltételek",
     "privacy": "Adatvédelmi irányelvek",
     "then": "majd",
     "trial": "{{count}}-{{unit}} ingyenes próbaverzió",
-    "save": "Mentés {{percent}}%",
+    "save": "Spóroljon {{percent}}%-ot",
+    "availability": {
+      "loading": "Vásárlási lehetőségek ellenőrzése…",
+      "temporary_error": {
+        "title": "Nem sikerült betölteni a vásárlási lehetőségeket",
+        "subtitle": "Ellenőrizze a kapcsolatot, majd próbálja újra."
+      },
+      "configuration_error": {
+        "title": "A vásárlási lehetőségek nem érhetők el",
+        "subtitle": "Az áruház nem tudta betölteni az alkalmazás termékeit. Próbálja újra rövidesen."
+      },
+      "purchase_not_allowed": {
+        "title": "A vásárlás nem támogatott ezen az eszközön",
+        "subtitle": "Ezen az eszközön vagy ezzel az áruházi fiókkal nem lehet alkalmazáson belüli vásárlást végezni."
+      }
+    },
     "trialUnit": {
       "day": "nap",
       "week": "hét",
@@ -216,27 +252,52 @@
       "year": "évente",
       "lifetime": "Egyszeri vásárlás"
     },
-    "features": {
-      "waterEject": {
-        "title": "Teljes vízkidobás",
-        "description": "Futtasson irányított 30, 60 és 90 másodperces hangszóró-tisztítási ciklusokat."
-      },
-      "waveforms": {
-        "title": "Speciális hanghullámformák",
-        "description": "Használjon négyzet, háromszög és fűrészfog hangokat a teljes frekvenciatartományban."
-      },
-      "stereoAuto": {
-        "title": "Automatikus sztereóteszt",
-        "description": "Váltson a bal, jobb és mindkét csatorna között kihangosítva."
-      },
-      "dbStats": {
-        "title": "Részletes dB statisztika",
-        "description": "Tekintse meg a minimális, átlagos és maximális becsléseket minden munkamenethez."
-      },
-      "adFree": {
-        "title": "Zéró hirdetésmegszakítás",
-        "description": "Használjon minden hangeszközt szalaghirdetések vagy teljes képernyős hirdetések nélkül."
+    "comparison": {
+      "features": "Funkciók",
+      "free": "Ingyenes",
+      "pro": "Pro",
+      "included": "Tartalmazza",
+      "excluded": "Nem tartalmazza",
+      "unlimited": "Korlátlan",
+      "rows": {
+        "cleaningDuration": {
+          "title": "A tisztítás időtartama",
+          "free": "30 másodperc",
+          "pro": "30/60/90 másodperc"
+        },
+        "turbo": {
+          "title": "Turbó mód"
+        },
+        "waveforms": {
+          "title": "Hullámforma",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "Sztereóteszt",
+          "free": "Kézi",
+          "pro": "Automatikus"
+        },
+        "soundInsights": {
+          "title": "Hangszintelemzés",
+          "free": "Alap",
+          "pro": "Haladó"
+        },
+        "activityHistory": {
+          "title": "Tevékenységtörténet"
+        },
+        "adExperience": {
+          "title": "Hirdetések",
+          "free": "Hirdetések",
+          "pro": "Hirdetésmentes"
+        }
       }
+    },
+    "context": {
+      "historyTitle": "Oldja fel a mentett tevékenységeit",
+      "historySubtitle": "Ezen az eszközön már {{cleaning}} hangszórótisztítás és {{db}} hangmérés van mentve.",
+      "cleaningSubtitle": "Bármikor megtisztíthatja az eszköz hangszóróját hosszabb ciklusokkal és a Turbo többlépcsős tisztítóhullámával.",
+      "dbSubtitle": "Oldja fel a munkamenet teljes elemzését, és tekintse meg újra a mentett hangjelentéseket."
     },
     "feedback": {
       "subscribeSuccess": "Üdvözlünk! Prémium hozzáférése aktív.",
@@ -251,6 +312,87 @@
       "month": "Havi",
       "year": "Évente",
       "lifetime": "Élettartam"
+    }
+  },
+  "activity": {
+    "history": "Tevékenységtörténet",
+    "cleaning": "Tisztítás",
+    "soundSessions": "Hangos munkamenetek",
+    "savedCount": "{{cleaning}} takarítási tevékenységek · {{db}} hangmenet mentve",
+    "emptyTitle": "Még nincs mentett tevékenység",
+    "emptyBody": "Itt jelennek meg a befejezett tisztítási és hangosítási munkamenetek.",
+    "select": "Válassza ki",
+    "selectAll": "Válassza az Összes lehetőséget",
+    "deselectAll": "Törölje az Összes kijelölését",
+    "selectedCount": "{{count}} kiválasztva",
+    "delete": "Töröl",
+    "deleteSelected": "Törlés ({{count}})",
+    "deleteConfirmTitleSingle": "Törli ezt a tevékenységet?",
+    "deleteConfirmTitleMultiple": "Törli a {{count}} tevékenységet?",
+    "deleteConfirmBodySingle": "Ezzel véglegesen eltávolítja a kiválasztott tevékenységet erről az eszközről.",
+    "deleteConfirmBodyMultiple": "Ezzel véglegesen eltávolítja a {{count}} kiválasztott tevékenységet erről az eszközről.",
+    "deletedSingle": "Tevékenység törölve",
+    "deletedMultiple": "{{count}} tevékenység törölve",
+    "dbSession": "Hangszintű munkamenet",
+    "duration": "{{seconds}} másodperc",
+    "cleaningDetail": "Takarító tevékenység",
+    "dbDetail": "Hangülés",
+    "mode": "Tisztítási mód",
+    "durationLabel": "Időtartam",
+    "result": "Eredmény",
+    "report": {
+      "title": "Hangszintelemzés",
+      "subtitle": "Személyre szabott pillantás erre az ülésre",
+      "premium": "Premium",
+      "sessionSummary": "Átlagos {{average}} dB · Csúcs {{maximum}} dB · {{seconds}} mp",
+      "environmentRating": "Környezetvédelmi minősítés",
+      "suitableFor": "Alkalmas",
+      "recommendation": "Ajánlás",
+      "unlockTitle": "Nézze meg, mit jelent ez a hangerő",
+      "unlockBody": "Nyissa meg a teljes környezeti besorolást, a megfelelő tevékenységeket és a hallgatási javaslatokat.",
+      "unlockAction": "A teljes jelentés feloldása",
+      "disclaimer": "A telefon mikrofonjának becslései eszközönként és elhelyezésenként változnak. Ez a jelentés általános útmutatás, nem kalibrált mérés vagy orvosi tanács.",
+      "profile": {
+        "veryQuiet": {
+          "label": "Nagyon csendes",
+          "range": "30 dB alatt",
+          "overview": "Ez a munkamenet nagyon nyugodt környezetet sugall, kevés versengő háttérhanggal.",
+          "suitable": "Csendes pihenés, olvasás, koncentrált írás, meditáció és egyéb olyan tevékenységek, amelyeknél minimális a figyelemelvonás.",
+          "recommendation": "Tartsa fedetlenül a mikrofont, és mérje meg, hol ül vagy alszik. A nagyon alacsony becslések azt is jelenthetik, hogy a telefon mikrofonja akadályozott."
+        },
+        "normal": {
+          "label": "Normál",
+          "range": "30-69 dB",
+          "overview": "Ez a munkamenet egy hétköznapi tartományban zajlik, hasonlóan egy csendes otthoni, irodai vagy szokásos beszélgetéshez a távolságtól függően.",
+          "suitable": "Beszélgetés, asztali munka, kötetlen zenehallgatás, tanulás és a legtöbb napi beltéri tevékenység.",
+          "recommendation": "Ha mélyebb fókuszra van szüksége, csökkentse a közeli hangokat, vagy távolodjon el a hangforrástól, és hasonlítson össze egy másik munkamenetet."
+        },
+        "loud": {
+          "label": "Hangos",
+          "range": "70-99 dB",
+          "overview": "Ez a munkamenet olyan hangos környezetre utal, ahol a hang idővel fárasztóvá vagy kényelmetlenné válhat.",
+          "suitable": "A forgalmas utcák, készülékek, események vagy zenelejátszás rövid ellenőrzései, ahol meg szeretné érteni a változó szinteket.",
+          "recommendation": "Csökkentse a forrás hangerejét, növelje a távolságot, tartson csendes szüneteket, és vegye figyelembe a hallásvédelmet, ha az expozíció folytatódik."
+        },
+        "danger": {
+          "label": "Potenciálisan veszélyes",
+          "range": "100 dB vagy magasabb",
+          "overview": "Ez az ülés nagyon intenzív hangzási környezetet sugall, amely azonnali figyelmet érdemel.",
+          "suitable": "Csak rövid biztonsági ellenőrzések. Kerülje el ezt a környezetet hallgatásra, munkára, pihenésre vagy hosszabb tevékenységre.",
+          "recommendation": "Menjen távolabb a forrástól, ha lehetséges, csökkentse a hangerőt, és használjon megfelelő hallásvédőt. Ne hagyatkozzon telefonos becslésre a biztonságos expozíció meghatározásához."
+        }
+      }
+    },
+    "stopReason": {
+      "completed": "Befejezve",
+      "manual": "Manuálisan leállt",
+      "blur": "A képernyő elhagyása után leállt",
+      "background": "Megállt a háttérben",
+      "interruption": "Megszakított",
+      "route-change": "A hangútvonal megváltozott",
+      "replaced": "Más eszközre cserélve",
+      "error": "Hiba állította meg",
+      "incomplete": "Befejezetlen"
     }
   },
   "otaUpdate": {

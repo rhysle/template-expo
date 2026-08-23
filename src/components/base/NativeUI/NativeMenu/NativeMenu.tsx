@@ -5,6 +5,8 @@ import type { NativeMenuAction, NativeMenuProps } from './NativeMenu.types'
 const mapAction = (action: NativeMenuAction): MenuAction => ({
   id: action.id,
   title: action.label,
+  image: action.image,
+  imageColor: action.imageColor,
   attributes:
     action.disabled || action.destructive
       ? {

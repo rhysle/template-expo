@@ -1,39 +1,44 @@
-import {
-  BroomIcon,
-  CheckCircleIcon,
-  DeviceMobileSpeakerIcon,
-  DropIcon,
-  ShieldCheckIcon,
-  SparkleIcon,
-  SpeakerSlashIcon,
-} from 'phosphor-react-native'
-import { useEffect, useRef } from 'react'
+import { useIsFocused } from 'expo-router'
+import { LightningIcon, LockKeyIcon, SpeakerSlashIcon } from 'phosphor-react-native'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useWindowDimensions, View } from 'react-native'
+import { type LayoutChangeEvent, useWindowDimensions, View } from 'react-native'
 
 import {
   AudioToolScreen,
   CircularAudioButton,
+  EJECT_OCEAN_SURFACE_OFFSET,
   EjectDurationPill,
+  EjectOcean,
   MascotHero,
+  useEjectTilt,
 } from '@/components/audio'
-import { InlineNotice, ProgressRing, StatusBadge, Text } from '@/components/base'
+import { EjectTurboGuideSheet } from '@/components/audio/EjectTurboGuideSheet'
+import { InlineNotice, NativeToggle, Text } from '@/components/base'
+import { usePreventInterstitialAd, useRequestInterstitialAd } from '@/services/ads'
 import {
   audioController,
-  calculateProgress,
   getAudioResultState,
   useAudioController,
   useAudioToolLifecycle,
 } from '@/services/audio'
+import { AnalyticsAppEvents, trackEvent } from '@/services/firebase/analytics'
 import { type PaywallSource, usePremiumGate } from '@/services/revenueCat'
+import { useIsRTL } from '@/services/rtl'
 import { useAppReview } from '@/services/storeReview'
 import { useAudioPreferencesState } from '@/stores/features/audioPreferences'
 import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
 import { haptics } from '@/utils/haptics'
 
-const EJECT_START_PAYWALL_SOURCE = 'eject_start' satisfies PaywallSource
+const EJECT_TURBO_PAYWALL_SOURCE = 'eject_turbo' satisfies PaywallSource
 const EJECT_IDLE_MASCOT = require('@/assets/images/mascot/eject-idle.png')
 const EJECT_ACTIVE_MASCOT = require('@/assets/images/mascot/eject-active.png')
+const MASCOT_WATERLINE_RATIO = 0.64
+
+interface HeroLayout {
+  height: number
+  y: number
+}
 
 const formatDuration = (seconds: number) => {
   const safeSeconds = Math.max(Math.ceil(seconds), 0)
@@ -44,15 +49,25 @@ const formatDuration = (seconds: number) => {
 
 export default function EjectScreen() {
   const { t } = useTranslation()
+  const isFocused = useIsFocused()
   const theme = useTheme()
   const styles = useThemedStyles(createStyles)
-  const { height } = useWindowDimensions()
+  const isRTL = useIsRTL()
+  const { height, width } = useWindowDimensions()
   const snapshot = useAudioController()
   const { premiumState, requirePremium } = usePremiumGate()
   const { requestReview } = useAppReview()
-  const { ejectDurationSeconds, hapticsEnabled } = useAudioPreferencesState()
+  const requestInterstitialAd = useRequestInterstitialAd()
+  const { ejectDurationSeconds, ejectRoutineId, hapticsEnabled, setEjectRoutineId } =
+    useAudioPreferencesState()
   const wasRunningRef = useRef(false)
+  const enableTurboAfterDismissRef = useRef(false)
+  const [heroLayout, setHeroLayout] = useState<HeroLayout | null>(null)
+  const [turboGuideVisible, setTurboGuideVisible] = useState(false)
+  const [turboToggleRequested, setTurboToggleRequested] = useState(false)
+  const tiltDegrees = useEjectTilt()
   useAudioToolLifecycle()
+  usePreventInterstitialAd('eject_turbo_guide', turboGuideVisible)
 
   const isRunning = snapshot.activeTool === 'eject' && snapshot.status === 'running'
   const isStarting = snapshot.activeTool === 'eject' && snapshot.status === 'starting'
@@ -62,39 +77,26 @@ export default function EjectScreen() {
   const durationSeconds = snapshot.durationSeconds ?? ejectDurationSeconds
   const remainingSeconds = Math.max(durationSeconds - snapshot.elapsedSeconds, 0)
   const formattedRemaining = formatDuration(remainingSeconds)
-  const remainingText = t('audioTools.eject.remaining', { time: formattedRemaining })
-  const remainingLabel = remainingText.replace(formattedRemaining, '').trim()
-  const phase = snapshot.ejectPhase ?? 'water'
-  const phaseStatus = {
-    water: {
-      label: t('audioTools.eject.phase.water'),
-      icon: DropIcon,
-    },
-    debris: {
-      label: t('audioTools.eject.phase.debris'),
-      icon: BroomIcon,
-    },
-    finish: {
-      label: t('audioTools.eject.phase.finish'),
-      icon: SparkleIcon,
-    },
-  }[phase]
-  const progress = isActive
-    ? calculateProgress(snapshot.elapsedSeconds, durationSeconds)
-    : resultState === 'completed'
-      ? 1
-      : 0
+  const turboEnabled = premiumState === 'premium' && ejectRoutineId === 'turbo'
+  const turboToggleValue = turboEnabled || turboToggleRequested
+  const selectedRoutineId = turboEnabled ? 'turbo' : 'balanced'
   const isCompactLayout = height < 900
+  const oceanTop = heroLayout
+    ? Math.max(
+        heroLayout.y + heroLayout.height * MASCOT_WATERLINE_RATIO - EJECT_OCEAN_SURFACE_OFFSET,
+        0
+      )
+    : null
 
   useEffect(() => {
     void audioController.refreshOutputRoute()
   }, [])
 
   useEffect(() => {
-    if (premiumState !== 'premium' && snapshot.activeTool === 'eject') {
-      void audioController.stop('replaced')
+    if (premiumState === 'free' && ejectRoutineId === 'turbo') {
+      setEjectRoutineId('balanced')
     }
-  }, [premiumState, snapshot.activeTool])
+  }, [premiumState, ejectRoutineId, setEjectRoutineId])
 
   useEffect(() => {
     if (isRunning) {
@@ -105,156 +107,222 @@ export default function EjectScreen() {
     if (resultState === 'completed' && wasRunningRef.current) {
       wasRunningRef.current = false
       if (hapticsEnabled) void haptics.medium()
-      void requestReview()
+      void (async () => {
+        const reviewRequested = await requestReview()
+        if (!reviewRequested) await requestInterstitialAd()
+      })()
     } else if (!isActive) {
       wasRunningRef.current = false
     }
-  }, [hapticsEnabled, isActive, isRunning, requestReview, resultState])
+  }, [hapticsEnabled, isActive, isRunning, requestInterstitialAd, requestReview, resultState])
 
-  const handleMainPress = () => {
+  const handleMainPress = async () => {
     if (isActive) {
-      void audioController.stop('manual')
-    } else {
-      requirePremium(EJECT_START_PAYWALL_SOURCE, () => {
-        void audioController.startEject(ejectDurationSeconds)
-      })
+      const wasRunning = isRunning
+      await audioController.stop('manual')
+      if (wasRunning) await requestInterstitialAd()
+      return
     }
+
+    const isPremium = premiumState === 'premium'
+    const durationSeconds = isPremium ? ejectDurationSeconds : 30
+    const routineId = isPremium ? selectedRoutineId : 'balanced'
+    await audioController.startEject({
+      durationSeconds,
+      routineId,
+    })
   }
 
-  const status = isActive
-    ? { ...phaseStatus, tone: 'accent' as const }
-    : resultState === 'completed'
-      ? {
-          label: t('audioTools.eject.completed'),
-          tone: 'success' as const,
-          icon: CheckCircleIcon,
-        }
-      : { label: t('audioTools.eject.safe'), tone: 'success' as const, icon: ShieldCheckIcon }
+  const applyTurboChange = (enabled: boolean) => {
+    setEjectRoutineId(enabled ? 'turbo' : 'balanced')
+    trackEvent(AnalyticsAppEvents.TURBO_MODE_CHANGED, {
+      state: enabled ? 'enabled' : 'disabled',
+    })
+  }
+
+  const handleTurboChange = (enabled: boolean) => {
+    if (enabled) {
+      enableTurboAfterDismissRef.current = false
+      setTurboToggleRequested(true)
+      setTurboGuideVisible(true)
+      return
+    }
+
+    setTurboToggleRequested(false)
+    applyTurboChange(false)
+  }
+
+  const handleTurboGuideConfirm = () => {
+    enableTurboAfterDismissRef.current = true
+    setTurboGuideVisible(false)
+  }
+
+  const handleTurboGuideDismiss = () => {
+    const shouldEnableTurbo = enableTurboAfterDismissRef.current
+    enableTurboAfterDismissRef.current = false
+    setTurboToggleRequested(false)
+    setTurboGuideVisible(false)
+
+    if (!shouldEnableTurbo) return
+
+    requirePremium(EJECT_TURBO_PAYWALL_SOURCE, () => applyTurboChange(true))
+  }
+
+  const handleHeroLayout = ({ nativeEvent }: LayoutChangeEvent) => {
+    const { height: nextHeight, y: nextY } = nativeEvent.layout
+    setHeroLayout((current) => {
+      if (current?.height === nextHeight && current.y === nextY) return current
+      return { height: nextHeight, y: nextY }
+    })
+  }
 
   return (
-    <AudioToolScreen variant="focused">
-      <View style={styles.intro}>
-        <StatusBadge
-          label={status.label}
-          tone={status.tone}
-          icon={status.icon}
-          style={styles.status}
-        />
-        <Text variant="body" tone="secondary" align="center">
-          {t('audioTools.eject.subtitle')}
-        </Text>
-      </View>
-
-      <View style={styles.primaryInteraction}>
-        <View style={styles.heroSlot}>
-          <MascotHero
-            active={isActive}
-            compact={isCompactLayout}
-            fillAvailableSpace
-            source={isActive ? EJECT_ACTIVE_MASCOT : EJECT_IDLE_MASCOT}
-            style={styles.mascot}
+    <>
+      <AudioToolScreen variant="focused">
+        <View style={[styles.turboMode, isActive && styles.turboModeDisabled]}>
+          <View style={styles.turboTitleRow}>
+            <LightningIcon
+              size={iconSizes.sm}
+              color={turboEnabled ? theme.colors.primary.main : theme.colors.text.secondary}
+              weight={turboEnabled ? 'fill' : 'bold'}
+            />
+            <Text variant="body" weight="semibold">
+              {t('audioTools.eject.turbo.title')}
+            </Text>
+            {premiumState !== 'premium' ? (
+              <LockKeyIcon size={iconSizes.xs} color={theme.colors.text.muted} weight="fill" />
+            ) : null}
+          </View>
+          <NativeToggle
+            value={turboToggleValue}
+            onValueChange={handleTurboChange}
+            disabled={isActive}
+            style={styles.turboToggle}
+            testID="eject-turbo-toggle"
           />
         </View>
 
-        <View style={styles.controlSection}>
-          <View style={styles.controlCluster}>
-            <View style={styles.mainControlSlot}>
-              <View
-                accessibilityElementsHidden={!isActive}
-                accessibilityLabel={isActive ? remainingText : undefined}
-                accessibilityRole={isActive ? 'timer' : undefined}
-                importantForAccessibility={isActive ? 'auto' : 'no-hide-descendants'}
-                pointerEvents="none"
-                style={[styles.remainingTime, !isActive && styles.remainingTimeHidden]}>
-                <Text variant="title" weight="bold" tone="accent" style={styles.timer}>
-                  {formattedRemaining}
-                </Text>
-                {remainingLabel ? (
-                  <Text variant="body" tone="secondary" align="center">
-                    {remainingLabel}
-                  </Text>
-                ) : null}
-              </View>
+        <View style={styles.primaryInteraction}>
+          <View onLayout={handleHeroLayout} style={styles.heroSlot}>
+            <MascotHero
+              active={isActive}
+              adrift
+              compact={isCompactLayout}
+              fillAvailableSpace
+              source={isActive ? EJECT_ACTIVE_MASCOT : EJECT_IDLE_MASCOT}
+              style={styles.mascot}
+              tiltDegrees={tiltDegrees}
+            />
+          </View>
 
-              <View style={styles.mainControl}>
-                {isActive ? (
-                  <ProgressRing
-                    value={progress}
-                    maximumValue={1}
-                    strokeWidth={6}
-                    tone="error"
-                    accessibilityLabel={status.label}
-                    accessibilityValueText={remainingText}>
-                    <CircularAudioButton
-                      active
-                      haptic={hapticsEnabled}
-                      accessibilityLabel={t('audioTools.eject.stop')}
-                      onPress={handleMainPress}
-                    />
-                  </ProgressRing>
-                ) : (
+          {oceanTop !== null ? (
+            <EjectOcean
+              active={isActive}
+              turbo={isActive && selectedRoutineId === 'turbo'}
+              style={[
+                styles.ocean,
+                {
+                  top: oceanTop,
+                  width,
+                  transform: [{ translateX: (isRTL ? 1 : -1) * (width / 2) }],
+                },
+              ]}
+              tiltDegrees={tiltDegrees}
+            />
+          ) : null}
+
+          <View style={styles.controlSection}>
+            <View style={styles.controlCluster}>
+              <View style={styles.mainControlSlot}>
+                <View
+                  accessibilityElementsHidden={!isActive}
+                  accessibilityLabel={isActive ? formattedRemaining : undefined}
+                  accessibilityRole={isActive ? 'timer' : undefined}
+                  importantForAccessibility={isActive ? 'auto' : 'no-hide-descendants'}
+                  pointerEvents="none"
+                  style={[styles.remainingTime, !isActive && styles.remainingTimeHidden]}>
+                  <Text variant="title" weight="bold" tone="accent" style={styles.timer}>
+                    {formattedRemaining}
+                  </Text>
+                </View>
+
+                <View style={styles.mainControl}>
                   <CircularAudioButton
-                    active={false}
+                    active={isActive}
                     haptic={hapticsEnabled}
-                    accessibilityLabel={t('audioTools.eject.start')}
+                    pulsing={isFocused && !isActive}
+                    accessibilityLabel={
+                      isActive ? t('audioTools.eject.stop') : t('audioTools.eject.start')
+                    }
                     onPress={handleMainPress}
                   />
-                )}
-                <Text
-                  variant="subtitle"
-                  weight="semibold"
-                  tone={isActive ? 'error' : 'accent'}
-                  align="center">
-                  {isActive ? t('audioTools.eject.stop') : t('audioTools.eject.start')}
-                </Text>
+                  <Text
+                    variant="subtitle"
+                    weight="semibold"
+                    align="center"
+                    style={{
+                      color: isActive ? theme.colors.status.error : theme.colors.primary.main,
+                    }}>
+                    {isActive ? t('audioTools.eject.stop') : t('audioTools.eject.start')}
+                  </Text>
+                </View>
               </View>
+
+              <EjectDurationPill disabled={isActive} style={styles.durationPill} />
             </View>
-
-            <EjectDurationPill disabled={isActive} style={styles.durationPill} />
-          </View>
-
-          <View style={styles.guidance}>
-            <DeviceMobileSpeakerIcon
-              size={iconSizes.md}
-              color={theme.colors.text.secondary}
-              weight="regular"
-            />
-            <Text variant="caption" tone="secondary" align="center" style={styles.guidanceText}>
-              {isActive
-                ? t('audioTools.eject.runningHint')
-                : resultState === 'completed'
-                  ? t('audioTools.eject.completedHint')
-                  : t('audioTools.eject.idleHint')}
-            </Text>
           </View>
         </View>
-      </View>
 
-      {snapshot.outputRouteKind === 'external' ? (
-        <InlineNotice
-          title={t('audioTools.eject.externalTitle')}
-          tone="warning"
-          icon={SpeakerSlashIcon}>
-          {t('audioTools.eject.externalBody')}
-        </InlineNotice>
-      ) : null}
+        {snapshot.outputRouteKind === 'external' ? (
+          <InlineNotice
+            title={t('audioTools.eject.externalTitle')}
+            tone="warning"
+            icon={SpeakerSlashIcon}>
+            {t('audioTools.eject.externalBody')}
+          </InlineNotice>
+        ) : null}
 
-      {snapshot.status === 'error' && isLastEjectSession ? (
-        <InlineNotice tone="error">{t('audioTools.common.error')}</InlineNotice>
-      ) : null}
-    </AudioToolScreen>
+        {snapshot.status === 'error' && isLastEjectSession ? (
+          <InlineNotice tone="error">{t('audioTools.common.error')}</InlineNotice>
+        ) : null}
+      </AudioToolScreen>
+
+      <EjectTurboGuideSheet
+        visible={turboGuideVisible}
+        onConfirm={handleTurboGuideConfirm}
+        onDismiss={handleTurboGuideDismiss}
+      />
+    </>
   )
 }
 
 const createStyles = createThemedStyles((t) => ({
-  intro: {
-    alignItems: 'center',
-    gap: t.spacing.md,
-  },
-  status: {
+  turboMode: {
     alignSelf: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: t.spacing.xl,
+    paddingHorizontal: t.spacing.lg,
+    paddingVertical: t.spacing.md,
+    backgroundColor: t.colors.background.subtle,
+    borderCurve: 'continuous',
+    borderRadius: t.borderRadius.xl,
+  },
+  turboModeDisabled: {
+    opacity: 0.5,
+  },
+  turboTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: t.spacing.xs,
+  },
+  turboToggle: {
+    width: 56,
+    height: 36,
   },
   primaryInteraction: {
+    position: 'relative',
     minHeight: 0,
     flex: 1,
     alignItems: 'center',
@@ -262,16 +330,26 @@ const createStyles = createThemedStyles((t) => ({
     gap: t.spacing.md,
   },
   heroSlot: {
+    position: 'relative',
+    zIndex: 1,
     minHeight: 0,
     flex: 1,
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
   },
+  ocean: {
+    bottom: -t.spacing.lg,
+    left: '50%',
+    zIndex: 2,
+  },
   mascot: {
-    transform: [{ scale: 0.82 }],
+    flex: 0,
+    width: '82%',
+    height: '82%',
   },
   controlSection: {
+    zIndex: 3,
     width: '100%',
     alignItems: 'center',
     gap: t.spacing.md,
@@ -282,7 +360,6 @@ const createStyles = createThemedStyles((t) => ({
     marginBottom: t.spacing.md,
     alignSelf: 'center',
     alignItems: 'center',
-    gap: t.spacing.xs,
   },
   remainingTimeHidden: {
     opacity: 0,
@@ -311,16 +388,5 @@ const createStyles = createThemedStyles((t) => ({
     position: 'absolute',
     top: t.spacing.xs,
     right: 0,
-  },
-  guidance: {
-    maxWidth: 420,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: t.spacing.sm,
-    paddingHorizontal: t.spacing.sm,
-  },
-  guidanceText: {
-    flexShrink: 1,
   },
 }))

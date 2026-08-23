@@ -8,6 +8,8 @@ import { classifyMeterBand, type MeterBand } from '@/services/audio'
 import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
 import { withAlpha } from '@/utils/color'
 
+import { getDbMeterBandColors } from './dbMeterBands'
+
 const EXPOSURE_LEVELS = [
   { level: 85, hours: 8 },
   { level: 88, hours: 4 },
@@ -49,12 +51,7 @@ export const DbMeterHelpSheet = ({ visible, currentDb, onDismiss }: DbMeterHelpS
     loud: t('audioTools.meter.status.loud'),
     danger: t('audioTools.meter.status.danger'),
   }
-  const bandColors: Record<MeterBand, string> = {
-    veryQuiet: theme.colors.primary.main,
-    normal: theme.colors.status.success,
-    loud: theme.colors.status.warning,
-    danger: theme.colors.status.error,
-  }
+  const bandColors = getDbMeterBandColors(theme.colors)
   const currentBand = currentDb === null ? null : classifyMeterBand(currentDb)
   const chartRows: {
     value: number
@@ -95,7 +92,7 @@ export const DbMeterHelpSheet = ({ visible, currentDb, onDismiss }: DbMeterHelpS
     <NativeBottomSheet
       visible={visible}
       onDismiss={onDismiss}
-      snapPoints={['96%']}
+      preset="large"
       scrollable
       contentContainerStyle={styles.sheetContent}
       scrollHeader={
@@ -274,7 +271,7 @@ const createStyles = createThemedStyles((t) => ({
     gap: t.spacing.xl,
     paddingHorizontal: t.spacing.xl,
     paddingTop: 60 + t.spacing['3xl'],
-    paddingBottom: t.spacing['7xl'],
+    paddingBottom: t.spacing['9xl'],
   },
   sheetHeader: {
     alignSelf: 'stretch',
@@ -412,8 +409,8 @@ const createStyles = createThemedStyles((t) => ({
     gap: t.spacing.xs,
   },
   exposureDivider: {
-    borderLeftWidth: 1,
-    borderLeftColor: t.colors.border.subtle,
+    borderStartWidth: 1,
+    borderStartColor: t.colors.border.subtle,
   },
   tipList: {
     gap: t.spacing.md,

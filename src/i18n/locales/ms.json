@@ -50,7 +50,7 @@
     "otaUpdateId": "Kemas kini: {{updateId}}",
     "upgradeBanner": {
       "title": "Naik taraf kepada Premium",
-      "subtitle": "Buka Kunci Water Eject, kawalan audio lanjutan dan pengalaman tanpa iklan"
+      "subtitle": "Buka kunci pembersihan Turbo yang lebih lama, kawalan audio lanjutan dan pengalaman tanpa iklan"
     },
     "audio": {
       "section": "Audio & Meter",
@@ -60,6 +60,15 @@
       "hapticsSubtitle": "Gunakan maklum balas sentuhan dalam alatan bunyi",
       "safety": "Keselamatan & Privasi Audio",
       "safetySubtitle": "Main semula, mikrofon dan panduan ukuran"
+    },
+    "activity": {
+      "section": "Data Aktiviti",
+      "saved": "Aktiviti Disimpan",
+      "clear": "Kosongkan Sejarah Aktiviti",
+      "clearSubtitle": "Alih keluar sesi pembersihan dan bunyi yang disimpan secara setempat",
+      "clearConfirmTitle": "Kosongkan semua aktiviti?",
+      "clearConfirmBody": "Ini mengalih keluar sesi pembersihan dan bunyi yang disimpan secara kekal daripada peranti ini. Masa pembersihan percuma anda yang seterusnya tidak akan berubah.",
+      "cleared": "Sejarah aktiviti dikosongkan"
     }
   },
   "audioTools": {
@@ -68,21 +77,31 @@
       "error": "Audio tidak dapat dimulakan. Semak output semasa dan cuba lagi."
     },
     "eject": {
-      "subtitle": "Kitaran bunyi 3 peringkat yang berkuasa menyasarkan air yang terperangkap, habuk longgar dan serpihan.",
-      "safe": "Sedia untuk membersihkan",
-      "completed": "Kitaran pembersihan selesai",
-      "remaining": "{{time}} tinggal",
       "start": "Mula membersihkan",
       "stop": "Berhenti membersihkan",
-      "idleHint": "Letakkan pembesar suara peranti menghadap ke bawah sebelum memulakan.",
-      "runningHint": "Pastikan peranti dalam keadaan diam dan jauh dari telinga anda.",
-      "completedHint": "Uji pembesar suara anda dan ulangi kitaran jika bunyi masih tersekat.",
       "externalTitle": "Putuskan sambungan audio luaran",
       "externalBody": "Pembersihan pembesar suara berfungsi melalui pembesar suara peranti, bukan fon kepala atau output Bluetooth.",
-      "phase": {
-        "water": "Nadi semburan air",
-        "debris": "Debu & serpihan goncang",
-        "finish": "Sapuan penamat"
+      "turbo": {
+        "title": "Mod Turbo",
+        "guide": {
+          "title": "Mod Turbo",
+          "description": "Kitaran pembersihan yang lebih kuat untuk air degil dan serpihan.",
+          "frequency": "Menggunakan lima peringkat dwi-frekuensi berbeza yang terus berkembang melalui kitaran penuh.",
+          "duration": "Turbo boleh melebihi had volum sistem secara ringkas. Gunakannya hanya untuk kitaran pembersihan yang singkat.",
+          "cta": "Dayakan Turbo"
+        }
+      },
+      "help": {
+        "title": "Cara menggunakan",
+        "disconnect": "Putuskan sambungan fon kepala dan peranti Bluetooth supaya bunyi pembersihan dimainkan melalui peranti ini.",
+        "position": "Letakkan pembesar suara peranti menghadap ke bawah pada permukaan yang kering dan pastikan bukaan pembesar suara tetap jelas.",
+        "start": "Naikkan kelantangan peranti, ketik Mulakan pembersihan dan kekalkan peranti itu sehingga kitaran selesai.",
+        "hearingTitle": "Lindungi pendengaran anda",
+        "hearingWarning": "Jangan pakai fon kepala semasa menguji Eject. Nada pembersihan pembesar suara yang kuat boleh menyebabkan kerosakan pendengaran."
+      },
+      "routine": {
+        "standard": "Standard",
+        "turbo": "Turbo"
       }
     },
     "tone": {
@@ -96,9 +115,8 @@
         "triangle": "Segitiga",
         "sawtooth": "Gigi gergaji"
       },
-      "play": "Nada main",
+      "play": "Mainkan nada",
       "stop": "Nada henti",
-      "volumeHint": "Pastikan kelantangan rendah dan jauhkan pembesar suara dari telinga anda.",
       "band": {
         "veryLow": "Sangat rendah",
         "low": "Rendah",
@@ -109,14 +127,14 @@
       }
     },
     "stereo": {
-      "auto": "Auto ganti",
-      "autoHint": "Kitaran kiri, kanan dan kedua-duanya",
+      "auto": "Selang-seli automatik",
+      "autoHint": "Bergilir antara saluran kiri, kanan dan kedua-duanya",
       "tapToChange": "Ketik pembesar suara untuk menukar saluran",
       "start": "Mulakan ujian",
       "helpTitle": "Cara menggunakan Ujian Stereo",
       "helpTap": "Ketik pembesar suara kiri atau kanan untuk menguji saluran itu dengan segera.",
       "helpBoth": "Hidupkan kedua-dua pembesar suara untuk memainkan nada ujian melalui kedua-dua saluran.",
-      "helpAuto": "Gunakan Auto ganti untuk berkitar antara kiri, kanan dan kedua-dua saluran.",
+      "helpAuto": "Gunakan Selang-seli automatik untuk menguji saluran kiri, kanan dan kedua-duanya secara berturutan.",
       "helpStop": "Gunakan ujian Henti apabila anda mahu menamatkan main balik.",
       "left": "Kiri",
       "right": "Kanan",
@@ -131,11 +149,11 @@
       "start": "Mula mengukur",
       "stop": "Berhenti mengukur",
       "permissionTitle": "Akses mikrofon dimatikan",
-      "permissionBody": "Akses mikrofon digunakan hanya semasa Meter dB berjalan untuk menganggarkan tahap bunyi berdekatan. Audio diproses pada peranti anda dan tidak pernah disimpan atau dimuat naik.",
+      "permissionBody": "Akses mikrofon hanya digunakan semasa meter dB berjalan untuk menganggarkan tahap bunyi berdekatan. Sampel audio diproses dalam memori dan tidak pernah disimpan atau dimuat naik. Anggaran sesi yang dibundarkan hanya disimpan pada peranti ini dan boleh dipadamkan dalam Tetapan.",
       "minimum": "Minimum",
       "average": "Purata",
       "maximum": "Maksimum",
-      "unlockStats": "Buka kunci statistik sesi dB terperinci",
+      "timeline": "Garis masa tahap bunyi anggaran",
       "status": {
         "veryQuiet": "Sangat senyap",
         "normal": "Biasa",
@@ -157,11 +175,11 @@
         "everydayLevels": "Tahap bunyi setiap hari",
         "examplesApproximate": "Contoh adalah anggaran dan berbeza mengikut jarak.",
         "currentEstimate": "Anggaran semasa",
-        "exposureTitle": "Masa pendedahan penting",
-        "exposureDescription": "Panduan pekerjaan NIOSH; setiap +3 dB mengurangkan separuh masa yang disyorkan.",
-        "useItWell": "Gunakannya dengan baik",
+        "exposureTitle": "Tempoh pendedahan bunyi adalah penting",
+        "exposureDescription": "Menurut panduan NIOSH tentang bunyi di tempat kerja, setiap peningkatan 3 dB mengurangkan separuh tempoh pendedahan yang disyorkan.",
+        "useItWell": "Petua pengukuran",
         "tipMicrophoneTitle": "Pastikan mikrofon tidak bertutup",
-        "tipMicrophoneBody": "Elakkan menutupnya dengan tangan atau sarung anda.",
+        "tipMicrophoneBody": "Jangan tutup mikrofon dengan tangan atau sarung telefon.",
         "tipPositionTitle": "Ukur tempat anda mendengar",
         "tipPositionBody": "Alihkan peranti ke lokasi yang anda ingin nilai.",
         "tipProtectTitle": "Jika terasa terlalu kuat, lindungi telinga anda",
@@ -188,7 +206,7 @@
       "estimateTitle": "Anggaran tahap bunyi",
       "estimateBody": "Mikrofon telefon melaporkan tahap isyarat digital berbanding SPL makmal. Apl menggunakan anggaran yang berbeza mengikut peranti.",
       "privacyTitle": "Privasi mikrofon",
-      "privacyBody": "Mikrofon berfungsi hanya semasa Meter dB aktif. Sampel diproses dalam ingatan dan tidak pernah disimpan atau dimuat naik.",
+      "privacyBody": "Mikrofon hanya berjalan semasa meter dB aktif. Sampel diproses dalam memori dan tidak pernah disimpan atau dimuat naik. Anggaran sesi yang dibundarkan mungkin disimpan secara setempat dalam sejarah aktiviti dan boleh dipadamkan dalam Tetapan.",
       "limitationsTitle": "Had penting",
       "limitationsBody": "Apl ini tidak dapat menjamin penyingkiran air atau habuk. Jangan masukkan objek ke dalam pembesar suara, dan jangan gunakan alat ini sebagai pengganti pembaikan profesional, peralatan yang ditentukur, nasihat perubatan atau panduan perlindungan pendengaran."
     }
@@ -197,12 +215,30 @@
     "title": "Buka Kunci Kit Alat Audio Lengkap Anda",
     "subtitle": "Bersihkan pembesar suara anda, akses kawalan lanjutan dan alih keluar setiap iklan.",
     "ctaFreeTrial": "Cuba Secara Percuma",
+    "trialDisclaimer": "Batalkan pada bila-bila masa. Tiada bayaran dikenakan sekarang",
+    "subscriptionDisclaimer": "Batalkan pada bila-bila masa.",
+    "lifetimeDisclaimer": "Bayar sekali sahaja. Tiada caj berulang.",
     "restore": "Pulihkan Pembelian",
     "terms": "Syarat Perkhidmatan",
     "privacy": "Dasar Privasi",
     "then": "kemudian",
     "trial": "{{count}}-{{unit}} percubaan percuma",
     "save": "Jimat {{percent}}%",
+    "availability": {
+      "loading": "Menyemak pilihan pembelian…",
+      "temporary_error": {
+        "title": "Pilihan pembelian tidak dapat dimuatkan",
+        "subtitle": "Semak sambungan anda dan cuba lagi."
+      },
+      "configuration_error": {
+        "title": "Pilihan pembelian tidak tersedia",
+        "subtitle": "Gedung tidak dapat memuatkan produk aplikasi ini. Cuba lagi sebentar lagi."
+      },
+      "purchase_not_allowed": {
+        "title": "Pembelian tidak disokong pada peranti ini",
+        "subtitle": "Peranti atau akaun gedung ini tidak boleh membuat pembelian dalam aplikasi."
+      }
+    },
     "trialUnit": {
       "day": "hari",
       "week": "minggu",
@@ -216,27 +252,52 @@
       "year": "setahun",
       "lifetime": "Pembelian sekali"
     },
-    "features": {
-      "waterEject": {
-        "title": "Semburan Air Lengkap",
-        "description": "Jalankan kitaran pembersihan pembesar suara 30, 60 dan 90 saat berpandu."
-      },
-      "waveforms": {
-        "title": "Bentuk Gelombang Nada Lanjutan",
-        "description": "Gunakan nada segi empat sama, segi tiga dan gigi gergaji merentas julat frekuensi penuh."
-      },
-      "stereoAuto": {
-        "title": "Ujian Stereo Automatik",
-        "description": "Kitaran antara kiri, kanan dan kedua-dua saluran bebas tangan."
-      },
-      "dbStats": {
-        "title": "Statistik dB Terperinci",
-        "description": "Lihat anggaran minimum, purata dan maksimum untuk setiap sesi."
-      },
-      "adFree": {
-        "title": "Sifar Gangguan Iklan",
-        "description": "Gunakan setiap alat audio tanpa sepanduk atau iklan skrin penuh."
+    "comparison": {
+      "features": "Ciri",
+      "free": "Percuma",
+      "pro": "Pro",
+      "included": "Disertakan",
+      "excluded": "Tidak disertakan",
+      "unlimited": "Tanpa had",
+      "rows": {
+        "cleaningDuration": {
+          "title": "Tempoh pembersihan",
+          "free": "30 saat",
+          "pro": "30/60/90 saat"
+        },
+        "turbo": {
+          "title": "Mod Turbo"
+        },
+        "waveforms": {
+          "title": "Bentuk gelombang",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "Ujian Stereo",
+          "free": "Manual",
+          "pro": "Automatik"
+        },
+        "soundInsights": {
+          "title": "Analisis tahap bunyi",
+          "free": "Asas",
+          "pro": "Lanjutan"
+        },
+        "activityHistory": {
+          "title": "Sejarah Aktiviti"
+        },
+        "adExperience": {
+          "title": "Iklan",
+          "free": "Iklan",
+          "pro": "Tanpa iklan"
+        }
       }
+    },
+    "context": {
+      "historyTitle": "Buka Kunci Aktiviti Disimpan Anda",
+      "historySubtitle": "{{cleaning}} aktiviti pembersihan pembesar suara dan {{db}} pengukuran bunyi telah disimpan pada peranti ini.",
+      "cleaningSubtitle": "Bersihkan pembesar suara peranti pada bila-bila masa dengan kitaran lebih panjang dan gelombang pembersihan Turbo berbilang peringkat.",
+      "dbSubtitle": "Buka kunci analisis penuh untuk sesi ini dan lawati semula laporan bunyi yang disimpan."
     },
     "feedback": {
       "subscribeSuccess": "Selamat datang! Akses premium anda aktif.",
@@ -251,6 +312,87 @@
       "month": "Bulanan",
       "year": "Tahunan",
       "lifetime": "Seumur hidup"
+    }
+  },
+  "activity": {
+    "history": "Sejarah Aktiviti",
+    "cleaning": "Pembersihan",
+    "soundSessions": "Sesi Bunyi",
+    "savedCount": "{{cleaning}} aktiviti pembersihan · {{db}} sesi bunyi disimpan",
+    "emptyTitle": "Tiada aktiviti disimpan lagi",
+    "emptyBody": "Sesi pembersihan dan bunyi yang lengkap akan dipaparkan di sini.",
+    "select": "Pilih",
+    "selectAll": "Pilih Semua",
+    "deselectAll": "Nyahpilih Semua",
+    "selectedCount": "{{count}} dipilih",
+    "delete": "Padam",
+    "deleteSelected": "Padam ({{count}})",
+    "deleteConfirmTitleSingle": "Padamkan aktiviti ini?",
+    "deleteConfirmTitleMultiple": "Padamkan aktiviti {{count}}?",
+    "deleteConfirmBodySingle": "Ini mengalih keluar aktiviti yang dipilih secara kekal daripada peranti ini.",
+    "deleteConfirmBodyMultiple": "Ini mengalih keluar {{count}} aktiviti yang dipilih secara kekal daripada peranti ini.",
+    "deletedSingle": "Aktiviti dipadamkan",
+    "deletedMultiple": "{{count}} aktiviti dipadamkan",
+    "dbSession": "Sesi tahap bunyi",
+    "duration": "{{seconds}} saat",
+    "cleaningDetail": "Aktiviti pembersihan",
+    "dbDetail": "Sesi bunyi",
+    "mode": "Mod pembersihan",
+    "durationLabel": "Tempoh",
+    "result": "Hasilnya",
+    "report": {
+      "title": "Analisis tahap bunyi",
+      "subtitle": "Pandangan peribadi pada sesi ini",
+      "premium": "Premium",
+      "sessionSummary": "Purata {{average}} dB · Puncak {{maximum}} dB · {{seconds}} saat",
+      "environmentRating": "Penarafan persekitaran",
+      "suitableFor": "Sesuai untuk",
+      "recommendation": "Syor",
+      "unlockTitle": "Lihat maksud tahap bunyi ini",
+      "unlockBody": "Buka kunci penilaian persekitaran penuh, aktiviti yang sesuai dan cadangan mendengar.",
+      "unlockAction": "Buka kunci laporan penuh",
+      "disclaimer": "Anggaran mikrofon telefon berbeza mengikut peranti dan peletakan. Laporan ini adalah panduan umum, bukan ukuran yang ditentukur atau nasihat perubatan.",
+      "profile": {
+        "veryQuiet": {
+          "label": "sangat sunyi",
+          "range": "Di bawah 30 dB",
+          "overview": "Sesi ini mencadangkan persekitaran yang sangat tenang dengan sedikit bunyi latar belakang bersaing.",
+          "suitable": "Rehat senyap, membaca, menulis fokus, meditasi dan aktiviti lain yang mendapat manfaat daripada gangguan yang minimum.",
+          "recommendation": "Pastikan mikrofon tidak bertutup dan ukur tempat anda biasa duduk atau tidur. Anggaran yang sangat rendah juga boleh bermakna mikrofon telefon terhalang."
+        },
+        "normal": {
+          "label": "Biasa",
+          "range": "30–69 dB",
+          "overview": "Sesi ini berada dalam julat harian biasa, serupa dengan rumah, pejabat atau perbualan biasa yang tenang bergantung pada jarak.",
+          "suitable": "Perbualan, kerja meja, mendengar santai, belajar dan kebanyakan aktiviti dalaman harian.",
+          "recommendation": "Jika anda memerlukan fokus yang lebih mendalam, kurangkan suara berdekatan atau bergerak lebih jauh dari sumber bunyi dan bandingkan sesi lain."
+        },
+        "loud": {
+          "label": "Kuat",
+          "range": "70–99 dB",
+          "overview": "Sesi ini mencadangkan persekitaran yang kuat di mana bunyi mungkin menjadi meletihkan atau tidak selesa dari semasa ke semasa.",
+          "suitable": "Semakan singkat jalan yang sibuk, peralatan, acara atau main balik muzik di mana anda ingin memahami perubahan tahap.",
+          "recommendation": "Kurangkan kelantangan sumber, tingkatkan jarak anda, berehat senyap dan pertimbangkan perlindungan pendengaran apabila pendedahan berterusan."
+        },
+        "danger": {
+          "label": "Berpotensi berbahaya",
+          "range": "100 dB atau lebih tinggi",
+          "overview": "Sesi ini mencadangkan persekitaran bunyi yang sangat sengit yang patut diberi perhatian segera.",
+          "suitable": "Pemeriksaan keselamatan ringkas sahaja. Elakkan menggunakan persekitaran ini untuk mendengar, bekerja, berehat atau aktiviti lanjutan.",
+          "recommendation": "Beralih dari sumber, rendahkan kelantangan apabila boleh, dan gunakan perlindungan pendengaran yang sesuai. Jangan bergantung pada anggaran telefon untuk menentukan pendedahan yang selamat."
+        }
+      }
+    },
+    "stopReason": {
+      "completed": "Selesai",
+      "manual": "Berhenti secara manual",
+      "blur": "Berhenti selepas meninggalkan skrin",
+      "background": "Berhenti di latar belakang",
+      "interruption": "tergendala",
+      "route-change": "Laluan audio ditukar",
+      "replaced": "Digantikan dengan alat lain",
+      "error": "Dihentikan oleh ralat",
+      "incomplete": "tak lengkap"
     }
   },
   "otaUpdate": {

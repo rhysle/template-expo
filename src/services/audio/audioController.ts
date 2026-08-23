@@ -1,3 +1,4 @@
+import * as Crypto from 'expo-crypto'
 import { Platform } from 'react-native'
 import {
   AudioContext,
@@ -11,17 +12,21 @@ import {
 } from 'react-native-audio-api'
 import { VolumeManager } from 'react-native-volume-manager'
 
+import {
+  addCleaningActivity,
+  addDbActivity,
+  appendMeterTimelinePoint,
+  MIN_DB_SESSION_DURATION_SECONDS,
+} from '@/services/activity'
 import { AnalyticsAppEvents, trackEvent } from '@/services/firebase/analytics'
 
 import {
   calculateRms,
   classifyMeterBand,
   dbfsToEstimatedDb,
-  EJECT_CYCLE_DURATION_SECONDS,
-  EJECT_DEBRIS_FREQUENCY_HZ,
-  EJECT_DEBRIS_GAIN_SCALE,
-  EJECT_DEBRIS_PULSE_SECONDS,
-  EJECT_PHASE_DURATION_SECONDS,
+  EJECT_AUDIO_PROFILES,
+  EJECT_ROUTINES,
+  EJECT_TURBO_STEPS,
   EJECT_WAVEFORM_TYPE,
   getEjectPhase,
   getEjectScheduleWindows,
@@ -30,9 +35,13 @@ import {
 } from './audioMath'
 import type {
   AudioSnapshot,
+  AudioStartResult,
   AudioStopReason,
+  EjectRoutineId,
+  EjectStartConfig,
   MeterStartResult,
   MeterStats,
+  MeterTimelinePoint,
   OutputRouteKind,
   ToneWaveform,
 } from './types'
@@ -41,7 +50,8 @@ const EJECT_GAIN = 0.82
 const TOOL_GAIN = 0.35
 const GAIN_RAMP_SECONDS = 0.045
 const METER_SAMPLE_RATE = 16_000
-const METER_BUFFER_LENGTH = 1_600
+const METER_BUFFER_LENGTH = 3_200
+const METER_TIMELINE_INTERVAL_MS = 200
 const AUTO_STEREO_DURATION_SECONDS = 8
 const TOOL_SYSTEM_VOLUME = 0.5
 const EJECT_SYSTEM_VOLUME = 0.65
@@ -73,6 +83,7 @@ const createInitialSnapshot = (): AudioSnapshot => ({
   durationSeconds: null,
   frequencyHz: 440,
   ejectPhase: null,
+  ejectRoutineId: null,
   stereoPan: 0,
   stereoMode: null,
   meter: createEmptyMeterStats(),
@@ -107,7 +118,9 @@ class AudioController {
   private operation: Promise<void> = Promise.resolve()
   private context: AudioContext | null = null
   private oscillator: OscillatorNode | null = null
+  private ejectHarmonicOscillator: OscillatorNode | null = null
   private gain: GainNode | null = null
+  private ejectHarmonicGain: GainNode | null = null
   private panner: StereoPannerNode | null = null
   private recorder: AudioRecorder | null = null
   private ticker: ReturnType<typeof setInterval> | null = null
@@ -117,6 +130,9 @@ class AudioController {
   private interruptionSubscription: AudioEventSubscription | null = null
   private routeSubscription: AudioEventSubscription | null = null
   private systemListenersReady = false
+  private meterStartedAtMs: number | null = null
+  private lastMeterTimelineSampleIndex = -1
+  private meterTimeline: readonly MeterTimelinePoint[] = []
 
   getSnapshot = (): AudioSnapshot => this.snapshot
 
@@ -209,36 +225,98 @@ class AudioController {
     await this.refreshOutputRoute()
   }
 
-  private createEjectGraph = async () => {
+  private createEjectGraph = async (routineId: EjectRoutineId) => {
     const context = new AudioContext()
     await context.resume()
     const oscillator = context.createOscillator()
+    const harmonicOscillator = context.createOscillator()
     const gain = context.createGain()
+    const harmonicGain = context.createGain()
     const panner = context.createStereoPanner()
 
     oscillator.type = EJECT_WAVEFORM_TYPE
+    harmonicOscillator.type = routineId === 'turbo' ? 'triangle' : EJECT_WAVEFORM_TYPE
     oscillator.frequency.value = 165
+    harmonicOscillator.frequency.value = 660
     gain.gain.value = 0
+    harmonicGain.gain.value = 0
     panner.pan.value = 0
     oscillator.connect(gain)
+    harmonicOscillator.connect(harmonicGain)
     gain.connect(panner)
+    harmonicGain.connect(panner)
     panner.connect(context.destination)
 
     this.context = context
     this.oscillator = oscillator
+    this.ejectHarmonicOscillator = harmonicOscillator
     this.gain = gain
+    this.ejectHarmonicGain = harmonicGain
     this.panner = panner
-    return { context, oscillator, gain }
+    return { context, oscillator, harmonicOscillator, gain, harmonicGain }
+  }
+
+  private scheduleTurboEjectSession = (
+    oscillator: OscillatorNode,
+    harmonicOscillator: OscillatorNode,
+    gain: GainNode,
+    harmonicGain: GainNode,
+    startTime: number,
+    durationSeconds: number
+  ) => {
+    let stageStart = startTime
+
+    for (const [index, step] of EJECT_TURBO_STEPS.entries()) {
+      const isLastStep = index === EJECT_TURBO_STEPS.length - 1
+      const stageDuration = durationSeconds * step.durationWeight
+      const stageEnd = isLastStep ? startTime + durationSeconds : stageStart + stageDuration
+      const peakTime = stageStart + (stageEnd - stageStart) * step.peakAt
+      const attackEnd = stageStart + Math.min(0.06, (stageEnd - stageStart) / 2)
+      const releaseStart = Math.max(attackEnd, stageEnd - 0.08)
+
+      oscillator.frequency.setValueAtTime(step.startHz, stageStart)
+      oscillator.frequency.linearRampToValueAtTime(step.peakHz, peakTime)
+      oscillator.frequency.linearRampToValueAtTime(step.endHz, stageEnd)
+
+      harmonicOscillator.frequency.setValueAtTime(step.startHz * step.harmonicRatio, stageStart)
+      harmonicOscillator.frequency.linearRampToValueAtTime(
+        step.peakHz * step.harmonicRatio,
+        peakTime
+      )
+      harmonicOscillator.frequency.linearRampToValueAtTime(
+        step.endHz * step.harmonicRatio,
+        stageEnd
+      )
+
+      gain.gain.setValueAtTime(0, stageStart)
+      gain.gain.linearRampToValueAtTime(EJECT_GAIN * step.gainScale, attackEnd)
+      gain.gain.setValueAtTime(EJECT_GAIN * step.gainScale, releaseStart)
+      gain.gain.linearRampToValueAtTime(0, stageEnd)
+
+      harmonicGain.gain.setValueAtTime(0, stageStart)
+      harmonicGain.gain.linearRampToValueAtTime(EJECT_GAIN * step.harmonicGainScale, attackEnd)
+      harmonicGain.gain.setValueAtTime(EJECT_GAIN * step.harmonicGainScale, releaseStart)
+      harmonicGain.gain.linearRampToValueAtTime(0, stageEnd)
+
+      stageStart = stageEnd
+    }
   }
 
   private scheduleEjectWindow = (
     oscillator: OscillatorNode,
+    harmonicOscillator: OscillatorNode,
     gain: GainNode,
+    harmonicGain: GainNode,
     startTime: number,
     startOffsetSeconds: number,
-    endOffsetSeconds: number
+    endOffsetSeconds: number,
+    routineId: EjectRoutineId
   ) => {
     const windowEnd = startTime + endOffsetSeconds
+    const phaseDurations = EJECT_ROUTINES[routineId]
+    const profile = EJECT_AUDIO_PROFILES[routineId]
+    const harmonic = profile.harmonic
+    const cycleDuration = phaseDurations.water + phaseDurations.debris + phaseDurations.finish
 
     const scheduleEnvelope = (
       gain: GainNode,
@@ -257,49 +335,96 @@ class AudioController {
 
     const scheduleWater = (phaseStart: number, phaseEnd: number) => {
       const duration = phaseEnd - phaseStart
-      oscillator.frequency.setValueAtTime(155, phaseStart)
-      oscillator.frequency.linearRampToValueAtTime(230, phaseStart + duration * 0.58)
-      oscillator.frequency.linearRampToValueAtTime(165, phaseEnd)
-      scheduleEnvelope(gain, phaseStart, phaseEnd, EJECT_GAIN)
+      oscillator.frequency.setValueAtTime(profile.water.startHz, phaseStart)
+      oscillator.frequency.linearRampToValueAtTime(
+        profile.water.peakHz,
+        phaseStart + duration * profile.water.peakAt
+      )
+      oscillator.frequency.linearRampToValueAtTime(profile.water.endHz, phaseEnd)
+      scheduleEnvelope(gain, phaseStart, phaseEnd, EJECT_GAIN * profile.water.gainScale)
+      if (harmonic) {
+        harmonicOscillator.frequency.setValueAtTime(
+          profile.water.startHz * harmonic.ratio,
+          phaseStart
+        )
+        harmonicOscillator.frequency.linearRampToValueAtTime(
+          profile.water.peakHz * harmonic.ratio,
+          phaseStart + duration * profile.water.peakAt
+        )
+        harmonicOscillator.frequency.linearRampToValueAtTime(
+          profile.water.endHz * harmonic.ratio,
+          phaseEnd
+        )
+        scheduleEnvelope(harmonicGain, phaseStart, phaseEnd, EJECT_GAIN * harmonic.waterGainScale)
+      }
     }
 
     const scheduleDebris = (phaseStart: number, phaseEnd: number) => {
-      oscillator.frequency.setValueAtTime(EJECT_DEBRIS_FREQUENCY_HZ, phaseStart)
+      let pulseIndex = 0
       for (
         let pulseStart = phaseStart;
         pulseStart < phaseEnd;
-        pulseStart += EJECT_DEBRIS_PULSE_SECONDS
+        pulseStart += profile.debris.pulseSeconds
       ) {
-        const pulseEnd = Math.min(pulseStart + EJECT_DEBRIS_PULSE_SECONDS, phaseEnd)
+        const pulseEnd = Math.min(pulseStart + profile.debris.pulseSeconds, phaseEnd)
         const activeEnd = Math.max(pulseStart, pulseEnd - 0.14)
-        scheduleEnvelope(gain, pulseStart, activeEnd, EJECT_GAIN * EJECT_DEBRIS_GAIN_SCALE)
-        gain.gain.setValueAtTime(0, pulseEnd)
+        const pulseFrequency = pulseIndex % 2 === 0 ? profile.debris.lowHz : profile.debris.highHz
+        oscillator.frequency.setValueAtTime(pulseFrequency, pulseStart)
+        scheduleEnvelope(gain, pulseStart, activeEnd, EJECT_GAIN * profile.debris.gainScale)
+        if (harmonic) {
+          harmonicOscillator.frequency.setValueAtTime(pulseFrequency * harmonic.ratio, pulseStart)
+          scheduleEnvelope(
+            harmonicGain,
+            pulseStart,
+            activeEnd,
+            EJECT_GAIN * harmonic.debrisGainScale
+          )
+        }
+        pulseIndex += 1
       }
     }
 
     const scheduleFinish = (phaseStart: number, phaseEnd: number) => {
       const duration = phaseEnd - phaseStart
-      oscillator.frequency.setValueAtTime(190, phaseStart)
-      oscillator.frequency.linearRampToValueAtTime(560, phaseStart + duration * 0.5)
-      oscillator.frequency.linearRampToValueAtTime(240, phaseEnd)
-      scheduleEnvelope(gain, phaseStart, phaseEnd, EJECT_GAIN * 0.46)
+      oscillator.frequency.setValueAtTime(profile.finish.startHz, phaseStart)
+      oscillator.frequency.linearRampToValueAtTime(
+        profile.finish.peakHz,
+        phaseStart + duration * 0.5
+      )
+      oscillator.frequency.linearRampToValueAtTime(profile.finish.endHz, phaseEnd)
+      scheduleEnvelope(gain, phaseStart, phaseEnd, EJECT_GAIN * profile.finish.gainScale)
+      if (harmonic) {
+        harmonicOscillator.frequency.setValueAtTime(
+          profile.finish.startHz * harmonic.ratio,
+          phaseStart
+        )
+        harmonicOscillator.frequency.linearRampToValueAtTime(
+          profile.finish.peakHz * harmonic.ratio,
+          phaseStart + duration * 0.5
+        )
+        harmonicOscillator.frequency.linearRampToValueAtTime(
+          profile.finish.endHz * harmonic.ratio,
+          phaseEnd
+        )
+        scheduleEnvelope(harmonicGain, phaseStart, phaseEnd, EJECT_GAIN * harmonic.finishGainScale)
+      }
     }
 
     for (
       let cycleOffset = startOffsetSeconds;
       cycleOffset < endOffsetSeconds;
-      cycleOffset += EJECT_CYCLE_DURATION_SECONDS
+      cycleOffset += cycleDuration
     ) {
       const waterStart = startTime + cycleOffset
-      const waterEnd = Math.min(waterStart + EJECT_PHASE_DURATION_SECONDS.water, windowEnd)
+      const waterEnd = Math.min(waterStart + phaseDurations.water, windowEnd)
       if (waterStart < waterEnd) scheduleWater(waterStart, waterEnd)
 
-      const debrisStart = waterStart + EJECT_PHASE_DURATION_SECONDS.water
-      const debrisEnd = Math.min(debrisStart + EJECT_PHASE_DURATION_SECONDS.debris, windowEnd)
+      const debrisStart = waterStart + phaseDurations.water
+      const debrisEnd = Math.min(debrisStart + phaseDurations.debris, windowEnd)
       if (debrisStart < debrisEnd) scheduleDebris(debrisStart, debrisEnd)
 
-      const finishStart = debrisStart + EJECT_PHASE_DURATION_SECONDS.debris
-      const finishEnd = Math.min(finishStart + EJECT_PHASE_DURATION_SECONDS.finish, windowEnd)
+      const finishStart = debrisStart + phaseDurations.debris
+      const finishEnd = Math.min(finishStart + phaseDurations.finish, windowEnd)
       if (finishStart < finishEnd) scheduleFinish(finishStart, finishEnd)
     }
   }
@@ -307,20 +432,38 @@ class AudioController {
   private scheduleEjectSession = (
     context: AudioContext,
     oscillator: OscillatorNode,
+    harmonicOscillator: OscillatorNode,
     gain: GainNode,
+    harmonicGain: GainNode,
     startTime: number,
-    durationSeconds: number
+    durationSeconds: number,
+    routineId: EjectRoutineId
   ) => {
-    const windows = getEjectScheduleWindows(durationSeconds)
+    if (routineId === 'turbo') {
+      this.scheduleTurboEjectSession(
+        oscillator,
+        harmonicOscillator,
+        gain,
+        harmonicGain,
+        startTime,
+        durationSeconds
+      )
+      return
+    }
+
+    const windows = getEjectScheduleWindows(durationSeconds, routineId)
     const initialWindow = windows[0]
     if (!initialWindow) return
 
     this.scheduleEjectWindow(
       oscillator,
+      harmonicOscillator,
       gain,
+      harmonicGain,
       startTime,
       initialWindow.startSeconds,
-      initialWindow.endSeconds
+      initialWindow.endSeconds,
+      routineId
     )
 
     let nextWindowIndex = 1
@@ -346,13 +489,24 @@ class AudioController {
         this.snapshot.activeTool !== 'eject' ||
         this.context !== context ||
         this.oscillator !== oscillator ||
-        this.gain !== gain
+        this.ejectHarmonicOscillator !== harmonicOscillator ||
+        this.gain !== gain ||
+        this.ejectHarmonicGain !== harmonicGain
       ) {
         this.ejectScheduleTimer = null
         return
       }
 
-      this.scheduleEjectWindow(oscillator, gain, startTime, window.startSeconds, window.endSeconds)
+      this.scheduleEjectWindow(
+        oscillator,
+        harmonicOscillator,
+        gain,
+        harmonicGain,
+        startTime,
+        window.startSeconds,
+        window.endSeconds,
+        routineId
+      )
       nextWindowIndex += 1
       scheduleTimer()
     }
@@ -391,7 +545,7 @@ class AudioController {
     this.panner = panner
   }
 
-  startEject = (durationSeconds: number): Promise<void> =>
+  startEject = ({ durationSeconds, routineId }: EjectStartConfig): Promise<AudioStartResult> =>
     this.enqueue(async () => {
       await this.performStop('replaced')
       this.update({
@@ -403,29 +557,44 @@ class AudioController {
         durationSeconds,
         frequencyHz: 165,
         ejectPhase: 'water',
+        ejectRoutineId: routineId,
         stereoMode: null,
       })
 
       try {
         await this.preparePlayback(EJECT_SYSTEM_VOLUME)
-        const { context, oscillator, gain } = await this.createEjectGraph()
+        const { context, oscillator, harmonicOscillator, gain, harmonicGain } =
+          await this.createEjectGraph(routineId)
         const startTime = context.currentTime + EJECT_SCHEDULE_LEAD_SECONDS
-        this.scheduleEjectSession(context, oscillator, gain, startTime, durationSeconds)
+        this.scheduleEjectSession(
+          context,
+          oscillator,
+          harmonicOscillator,
+          gain,
+          harmonicGain,
+          startTime,
+          durationSeconds,
+          routineId
+        )
         oscillator.start(startTime)
+        harmonicOscillator.start(startTime)
 
-        this.startedAtMs = Date.now()
+        const startedAtMs = Date.now()
+        this.startedAtMs = startedAtMs
         this.update({ status: 'running' })
         trackEvent(AnalyticsAppEvents.AUDIO_TOOL_STARTED, {
           tool: 'eject',
-          mode: 'multi_stage_cleaning_cycle',
+          mode: routineId,
           duration_s: durationSeconds,
         })
         this.startTicker(durationSeconds)
         this.completionTimer = setTimeout(() => {
           void this.stop('completed')
         }, durationSeconds * 1_000)
+        return { started: true, startedAtMs }
       } catch (error) {
         await this.fail(error)
+        return { started: false, startedAtMs: null }
       }
     })
 
@@ -440,10 +609,15 @@ class AudioController {
         elapsedSeconds: 0,
         durationSeconds: null,
         frequencyHz,
+        ejectRoutineId: null,
         stereoMode: null,
       })
 
       try {
+        await this.refreshOutputRoute()
+        if (this.snapshot.outputRouteKind === 'external') {
+          throw new Error('Speaker test requires the device speaker')
+        }
         await this.preparePlayback()
         await this.createPlaybackGraph(frequencyHz, TOOL_GAIN, 0, waveform)
         this.startedAtMs = Date.now()
@@ -485,6 +659,7 @@ class AudioController {
         elapsedSeconds: 0,
         durationSeconds: null,
         frequencyHz: 700,
+        ejectRoutineId: null,
         stereoPan: pan,
         stereoMode: 'manual',
       })
@@ -523,6 +698,7 @@ class AudioController {
         elapsedSeconds: 0,
         durationSeconds: AUTO_STEREO_DURATION_SECONDS,
         frequencyHz: 700,
+        ejectRoutineId: null,
         stereoPan: -1,
         stereoMode: 'auto',
       })
@@ -561,8 +737,12 @@ class AudioController {
         errorMessage: null,
         elapsedSeconds: 0,
         durationSeconds: null,
+        ejectRoutineId: null,
         meter: createEmptyMeterStats(),
       })
+      this.lastMeterTimelineSampleIndex = -1
+      this.meterStartedAtMs = null
+      this.meterTimeline = []
 
       try {
         this.ensureSystemListeners()
@@ -601,6 +781,8 @@ class AudioController {
             channelCount: 1,
           },
           ({ buffer }) => {
+            if (this.snapshot.activeTool !== 'meter' || this.snapshot.status !== 'running') return
+
             const samples = buffer.getChannelData(0)
             const estimatedDb = dbfsToEstimatedDb(rmsToDbfs(calculateRms(samples)))
             const previous = this.snapshot.meter
@@ -614,6 +796,19 @@ class AudioController {
             const maximumDb =
               previous.sampleCount === 0 ? currentDb : Math.max(previous.maximumDb, currentDb)
             const averageDb = (previous.averageDb * previous.sampleCount + currentDb) / sampleCount
+            if (this.meterStartedAtMs !== null) {
+              const elapsedMs = Math.max(Date.now() - this.meterStartedAtMs, 0)
+              const sampleIndex = Math.floor(elapsedMs / METER_TIMELINE_INTERVAL_MS)
+              if (sampleIndex > this.lastMeterTimelineSampleIndex) {
+                this.lastMeterTimelineSampleIndex = sampleIndex
+                const elapsedSeconds = (sampleIndex * METER_TIMELINE_INTERVAL_MS) / 1_000
+                this.meterTimeline = appendMeterTimelinePoint(
+                  this.meterTimeline,
+                  elapsedSeconds,
+                  currentDb
+                )
+              }
+            }
 
             this.update({
               meter: {
@@ -633,9 +828,9 @@ class AudioController {
 
         this.recorder = recorder
         this.startedAtMs = Date.now()
+        this.meterStartedAtMs = this.startedAtMs
         this.update({ status: 'running' })
         trackEvent(AnalyticsAppEvents.AUDIO_TOOL_STARTED, { tool: 'meter', mode: 'fast' })
-        this.startTicker()
         return { permission, started: true }
       } catch (error) {
         await this.fail(error)
@@ -644,24 +839,37 @@ class AudioController {
     })
 
   resetMeterStats = () => {
+    this.lastMeterTimelineSampleIndex = -1
+    this.meterTimeline = []
     this.update({ meter: createEmptyMeterStats() })
   }
 
-  stop = (reason: AudioStopReason = 'manual'): Promise<void> =>
-    this.enqueue(() => this.performStop(reason))
+  stop = (reason: AudioStopReason = 'manual'): Promise<void> => {
+    const hasActiveSession = Boolean(
+      this.snapshot.activeTool || this.context || this.recorder || this.oscillator
+    )
+    if (hasActiveSession && this.snapshot.status !== 'stopping') {
+      this.update({ status: 'stopping' })
+    }
+    return this.enqueue(() => this.performStop(reason))
+  }
 
   private startTicker = (durationSeconds?: number, updateAutoPan = false) => {
     if (this.ticker) clearInterval(this.ticker)
     this.ticker = setInterval(() => {
       if (this.startedAtMs === null) return
-      const elapsedSeconds = (Date.now() - this.startedAtMs) / 1_000
+      const elapsedSeconds = Math.max((Date.now() - this.startedAtMs) / 1_000, 0)
       const boundedElapsed = durationSeconds
         ? Math.min(elapsedSeconds, durationSeconds)
         : elapsedSeconds
       const patch: Partial<AudioSnapshot> = { elapsedSeconds: boundedElapsed }
 
       if (this.snapshot.activeTool === 'eject') {
-        patch.ejectPhase = getEjectPhase(boundedElapsed)
+        patch.ejectPhase = getEjectPhase(
+          boundedElapsed,
+          this.snapshot.ejectRoutineId ?? 'balanced',
+          this.snapshot.durationSeconds ?? undefined
+        )
       }
 
       if (updateAutoPan && durationSeconds) {
@@ -688,33 +896,68 @@ class AudioController {
 
   private performStop = async (reason: AudioStopReason) => {
     const hadActiveSession = Boolean(
-      this.snapshot.activeTool || this.context || this.recorder || this.oscillator
+      this.snapshot.activeTool ||
+      this.context ||
+      this.recorder ||
+      this.oscillator ||
+      this.ejectHarmonicOscillator
     )
     if (!hadActiveSession) return
 
     const endedTool = this.snapshot.activeTool
-    const elapsedSeconds = this.snapshot.elapsedSeconds
+    const stoppedAtMs = Date.now()
+    const measuredElapsedSeconds =
+      this.startedAtMs === null
+        ? this.snapshot.elapsedSeconds
+        : Math.max((stoppedAtMs - this.startedAtMs) / 1_000, 0)
+    const elapsedSeconds = this.snapshot.durationSeconds
+      ? Math.min(
+          Math.max(measuredElapsedSeconds, this.snapshot.elapsedSeconds),
+          this.snapshot.durationSeconds
+        )
+      : Math.max(measuredElapsedSeconds, this.snapshot.elapsedSeconds)
+    const endedAtMs =
+      this.startedAtMs === null
+        ? stoppedAtMs
+        : Math.max(stoppedAtMs, this.startedAtMs + elapsedSeconds * 1_000)
+    const meterStats = this.snapshot.meter
+    const meterTimeline = this.meterTimeline
+    const meterStartedAtMs = this.meterStartedAtMs
+    const sessionStartedAtMs = this.startedAtMs
+    const configuredDurationSeconds = this.snapshot.durationSeconds
+    const ejectRoutineId = this.snapshot.ejectRoutineId
 
-    this.update({ status: 'stopping' })
+    if (this.snapshot.status !== 'stopping') {
+      this.update({ status: 'stopping' })
+    }
     this.clearTimers()
 
     const context = this.context
     const oscillator = this.oscillator
+    const harmonicOscillator = this.ejectHarmonicOscillator
     const gain = this.gain
+    const harmonicGain = this.ejectHarmonicGain
     const panner = this.panner
     const recorder = this.recorder
 
     this.context = null
     this.oscillator = null
+    this.ejectHarmonicOscillator = null
     this.gain = null
+    this.ejectHarmonicGain = null
     this.panner = null
     this.recorder = null
+    this.meterStartedAtMs = null
+    this.lastMeterTimelineSampleIndex = -1
+    this.meterTimeline = []
 
     if (context && gain && context.state === 'running') {
       try {
         const now = context.currentTime
         gain.gain.cancelAndHoldAtTime(now)
         gain.gain.linearRampToValueAtTime(0, now + GAIN_RAMP_SECONDS)
+        harmonicGain?.gain.cancelAndHoldAtTime(now)
+        harmonicGain?.gain.linearRampToValueAtTime(0, now + GAIN_RAMP_SECONDS)
         await wait(GAIN_RAMP_SECONDS * 1_000)
       } catch {
         // Continue cleanup if a platform rejects automation during interruption.
@@ -726,14 +969,21 @@ class AudioController {
     } catch {
       // Already-stopped sources are safe to ignore during cleanup.
     }
+    try {
+      harmonicOscillator?.stop()
+    } catch {
+      // Already-stopped sources are safe to ignore during cleanup.
+    }
     oscillator?.disconnect()
+    harmonicOscillator?.disconnect()
     gain?.disconnect()
+    harmonicGain?.disconnect()
     panner?.disconnect()
 
     if (recorder) {
-      recorder.clearOnAudioReady()
       recorder.clearOnError()
       if (recorder.isRecording()) await recorder.stop()
+      recorder.clearOnAudioReady()
     }
     if (context && context.state !== 'closed') await context.close()
 
@@ -750,8 +1000,45 @@ class AudioController {
       lastTool: endedTool,
       stopReason: reason,
       ejectPhase: null,
+      ejectRoutineId: null,
       stereoMode: null,
     })
+
+    if (
+      endedTool === 'eject' &&
+      sessionStartedAtMs !== null &&
+      configuredDurationSeconds !== null &&
+      ejectRoutineId !== null
+    ) {
+      addCleaningActivity({
+        id: Crypto.randomUUID(),
+        startedAtMs: sessionStartedAtMs,
+        endedAtMs,
+        configuredDurationSeconds,
+        actualDurationSeconds: elapsedSeconds,
+        routineId: ejectRoutineId,
+        stopReason: reason,
+      })
+    }
+
+    if (
+      endedTool === 'meter' &&
+      meterStartedAtMs !== null &&
+      elapsedSeconds >= MIN_DB_SESSION_DURATION_SECONDS &&
+      meterStats.sampleCount > 0
+    ) {
+      addDbActivity({
+        id: Crypto.randomUUID(),
+        startedAtMs: meterStartedAtMs,
+        endedAtMs,
+        durationSeconds: elapsedSeconds,
+        minimumDb: Math.round(meterStats.minimumDb),
+        averageDb: Math.round(meterStats.averageDb),
+        maximumDb: Math.round(meterStats.maximumDb),
+        stopReason: reason,
+        timeline: [...meterTimeline],
+      })
+    }
 
     if (endedTool) {
       trackEvent(AnalyticsAppEvents.AUDIO_TOOL_ENDED, {

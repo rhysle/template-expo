@@ -1,1 +1,1 @@
-curat,telefon,stereo,test,frecvență,hertz,audio,sunet,zgomot,praf,umezeală,ton,decibel
+curat,telefon,stereo,test,frecvență,audio,sunet,zgomot,praf,umezeală,decibel,înfundat,umed,repară

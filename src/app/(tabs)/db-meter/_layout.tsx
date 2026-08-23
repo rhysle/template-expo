@@ -5,6 +5,7 @@ import { View } from 'react-native'
 
 import { DbMeterHelpSheet } from '@/components/audio'
 import { Pressable, TabStack } from '@/components/base'
+import { HistoryHeaderButton } from '@/components/HistoryHeaderButton'
 import { SettingsHeaderButton } from '@/components/SettingsHeaderButton'
 import { usePreventInterstitialAd } from '@/services/ads'
 import { useAudioController } from '@/services/audio'
@@ -30,6 +31,7 @@ export default function DbMeterTabLayout() {
         title={t('tabs.dbMeter')}
         headerRight={() => (
           <View style={styles.headerActions}>
+            <HistoryHeaderButton initialKind="db" />
             <Pressable
               accessibilityLabel={t('audioTools.meter.help.title')}
               accessibilityRole="button"

@@ -18,6 +18,22 @@ export type OutputRouteKind = 'device' | 'external' | 'unknown'
 export type StereoMode = 'manual' | 'auto'
 export type MeterBand = 'veryQuiet' | 'normal' | 'loud' | 'danger'
 export type EjectPhase = 'water' | 'debris' | 'finish'
+export type EjectRoutineId = 'balanced' | 'turbo'
+
+export interface EjectStartConfig {
+  durationSeconds: number
+  routineId: EjectRoutineId
+}
+
+export interface AudioStartResult {
+  started: boolean
+  startedAtMs: number | null
+}
+
+export interface MeterTimelinePoint {
+  second: number
+  estimatedDb: number
+}
 
 export interface MeterStats {
   currentDb: number
@@ -38,6 +54,7 @@ export interface AudioSnapshot {
   durationSeconds: number | null
   frequencyHz: number
   ejectPhase: EjectPhase | null
+  ejectRoutineId: EjectRoutineId | null
   stereoPan: number
   stereoMode: StereoMode | null
   meter: MeterStats

@@ -50,7 +50,7 @@
     "otaUpdateId": "Oppdatering: {{updateId}}",
     "upgradeBanner": {
       "title": "Oppgrader til Premium",
-      "subtitle": "Lås opp Water Eject, avanserte lydkontroller og en annonsefri opplevelse"
+      "subtitle": "Lås opp lengre Turbo-rensing, avanserte lydkontroller og bruk uten annonser"
     },
     "audio": {
       "section": "Lyd og måler",
@@ -60,6 +60,15 @@
       "hapticsSubtitle": "Bruk taktil tilbakemelding i lydverktøy",
       "safety": "Lydsikkerhet og personvern",
       "safetySubtitle": "Avspilling, mikrofon og målingsveiledning"
+    },
+    "activity": {
+      "section": "Aktivitetsdata",
+      "saved": "Lagret aktivitet",
+      "clear": "Tøm aktivitetsloggen",
+      "clearSubtitle": "Fjern lokalt lagrede rengjørings- og lydøkter",
+      "clearConfirmTitle": "Vil du fjerne all aktivitet?",
+      "clearConfirmBody": "Dette fjerner lagrede rengjørings- og lydøkter permanent fra denne enheten. Din neste gratis rengjøringstid endres ikke.",
+      "cleared": "Aktivitetsloggen er tømt"
     }
   },
   "audioTools": {
@@ -68,21 +77,31 @@
       "error": "Lyden kunne ikke starte. Sjekk gjeldende utgang og prøv igjen."
     },
     "eject": {
-      "subtitle": "En kraftig 3-trinns lydsyklus måler oppfanget vann, løst støv og rusk.",
-      "safe": "Klar til å rengjøre",
-      "completed": "Rengjøringssyklus fullført",
-      "remaining": "{{time}} gjenstår",
       "start": "Begynn å rengjøre",
       "stop": "Stopp rengjøringen",
-      "idleHint": "Plasser enhetens høyttalerside ned før du starter.",
-      "runningHint": "Hold enheten i ro og vekk fra ørene.",
-      "completedHint": "Test høyttaleren og gjenta syklusen hvis lyden fortsatt er dempet.",
       "externalTitle": "Koble fra ekstern lyd",
       "externalBody": "Høyttalerrensing fungerer gjennom enhetens høyttaler, ikke hodetelefoner eller Bluetooth-utganger.",
-      "phase": {
-        "water": "Vannutkastingspuls",
-        "debris": "Risting av støv og rusk",
-        "finish": "Fullfører sveip"
+      "turbo": {
+        "title": "Turbo-modus",
+        "guide": {
+          "title": "Turbo-modus",
+          "description": "En sterkere rengjøringssyklus for gjenstridig vann og rusk.",
+          "frequency": "Bruker fem distinkte doble frekvensstadier som fortsetter å utvikle seg gjennom hele syklusen.",
+          "duration": "Turbo kan kort overskride systemvolumgrensen. Bruk den kun for korte rengjøringssykluser.",
+          "cta": "Aktiver Turbo"
+        }
+      },
+      "help": {
+        "title": "Hvordan bruke",
+        "disconnect": "Koble fra hodetelefoner og Bluetooth-enheter slik at renselyden spilles gjennom denne enheten.",
+        "position": "Plasser enheten med høyttalersiden ned på en tørr overflate og hold høyttaleråpningene klare.",
+        "start": "Skru opp enhetsvolumet, trykk på Start rengjøring, og hold enheten i ro til syklusen er ferdig.",
+        "hearingTitle": "Beskytt hørselen din",
+        "hearingWarning": "Ikke bruk hodetelefoner mens du tester Eject. De høye høyttalerrensetonene kan forårsake hørselsskade."
+      },
+      "routine": {
+        "standard": "Standard",
+        "turbo": "Turbo"
       }
     },
     "tone": {
@@ -98,7 +117,6 @@
       },
       "play": "Spill av tone",
       "stop": "Stopptone",
-      "volumeHint": "Hold volumet lavt og høyttaleren unna ørene.",
       "band": {
         "veryLow": "Veldig lav",
         "low": "Lav",
@@ -110,7 +128,7 @@
     },
     "stereo": {
       "auto": "Automatisk alternering",
-      "autoHint": "Sykle til venstre, høyre og begge deler",
+      "autoHint": "Veksle mellom venstre, høyre og begge kanaler",
       "tapToChange": "Trykk på høyttalere for å bytte kanal",
       "start": "Start testen",
       "helpTitle": "Slik bruker du Stereo Test",
@@ -131,11 +149,11 @@
       "start": "Begynn å måle",
       "stop": "Slutt å måle",
       "permissionTitle": "Mikrofontilgang er av",
-      "permissionBody": "Mikrofontilgang brukes bare mens dB-måleren kjører for å beregne lydnivåer i nærheten. Lyd behandles på enheten din og blir aldri lagret eller lastet opp.",
+      "permissionBody": "Mikrofontilgang brukes bare mens dB-måleren kjører, for å anslå lydnivået i nærheten. Lydprøver behandles i minnet og blir aldri lagret eller lastet opp. Avrundede estimater fra økten lagres bare på denne enheten og kan slettes i Innstillinger.",
       "minimum": "Minimum",
       "average": "Gjennomsnitt",
       "maximum": "Maksimum",
-      "unlockStats": "Lås opp detaljert dB-øktstatistikk",
+      "timeline": "Tidslinje for estimert lydnivå",
       "status": {
         "veryQuiet": "Veldig stillegående",
         "normal": "Normal",
@@ -157,11 +175,11 @@
         "everydayLevels": "Hverdagslydnivåer",
         "examplesApproximate": "Eksempler er omtrentlige og varierer med avstand.",
         "currentEstimate": "Gjeldende anslag",
-        "exposureTitle": "Eksponeringstiden er viktig",
-        "exposureDescription": "NIOSH yrkesveiledning; hver +3 dB halverer den anbefalte tiden.",
-        "useItWell": "Bruk den godt",
+        "exposureTitle": "Tiden du utsettes for støy, er viktig",
+        "exposureDescription": "Ifølge NIOSHs retningslinjer for støy på arbeidsplassen halverer hver økning på 3 dB den anbefalte eksponeringstiden.",
+        "useItWell": "Måletips",
         "tipMicrophoneTitle": "Hold mikrofonen utildekket",
-        "tipMicrophoneBody": "Unngå å dekke den til med hånden eller etuiet.",
+        "tipMicrophoneBody": "Unngå å dekke mikrofonen med hånden eller telefondekselet.",
         "tipPositionTitle": "Mål hvor du lytter",
         "tipPositionBody": "Flytt enheten til stedet du vil vurdere.",
         "tipProtectTitle": "Hvis det føles for høyt, beskytt ørene",
@@ -188,7 +206,7 @@
       "estimateTitle": "Anslått lydnivå",
       "estimateBody": "Telefonmikrofoner rapporterer digitalt signalnivå i stedet for laboratorie-SPL. Appen bruker et estimat som varierer fra enhet til enhet.",
       "privacyTitle": "Mikrofonvern",
-      "privacyBody": "Mikrofonen går bare mens dB-måleren er aktiv. Prøver behandles i minnet og blir aldri lagret eller lastet opp.",
+      "privacyBody": "Mikrofonen kjører bare mens dB-måleren er aktiv. Prøver behandles i minnet og blir aldri lagret eller lastet opp. Avrundede estimater fra en økt kan lagres lokalt i aktivitetsloggen og slettes i Innstillinger.",
       "limitationsTitle": "Viktige begrensninger",
       "limitationsBody": "Denne appen kan ikke garantere fjerning av vann eller støv. Ikke stikk gjenstander inn i høyttaleren, og ikke bruk disse verktøyene som erstatning for profesjonell reparasjon, kalibrert utstyr, medisinsk rådgivning eller veiledning for hørselsvern."
     }
@@ -197,12 +215,30 @@
     "title": "Lås opp ditt komplette lydverktøysett",
     "subtitle": "Rengjør høyttaleren din, få tilgang til avanserte kontroller og fjern hver annonse.",
     "ctaFreeTrial": "Prøv gratis",
+    "trialDisclaimer": "Avslutt når som helst. Du betaler ingenting nå",
+    "subscriptionDisclaimer": "Avslutt når som helst.",
+    "lifetimeDisclaimer": "Betal én gang. Ingen løpende kostnader.",
     "restore": "Gjenopprett kjøp",
     "terms": "Vilkår for bruk",
     "privacy": "Retningslinjer for personvern",
     "then": "deretter",
     "trial": "{{count}}-{{unit}} gratis prøveperiode",
-    "save": "Lagre {{percent}} %",
+    "save": "Spar {{percent}} %",
+    "availability": {
+      "loading": "Sjekker kjøpsalternativer…",
+      "temporary_error": {
+        "title": "Kunne ikke laste inn kjøpsalternativene",
+        "subtitle": "Kontroller tilkoblingen og prøv igjen."
+      },
+      "configuration_error": {
+        "title": "Kjøpsalternativene er ikke tilgjengelige",
+        "subtitle": "Butikken kunne ikke laste inn produktene til denne appen. Prøv igjen om litt."
+      },
+      "purchase_not_allowed": {
+        "title": "Kjøp støttes ikke på denne enheten",
+        "subtitle": "Denne enheten eller butikkontoen kan ikke foreta kjøp i appen."
+      }
+    },
     "trialUnit": {
       "day": "dag",
       "week": "uke",
@@ -216,27 +252,52 @@
       "year": "per år",
       "lifetime": "Engangskjøp"
     },
-    "features": {
-      "waterEject": {
-        "title": "Fullfør vannutkast",
-        "description": "Kjør guidede 30, 60 og 90 sekunders høyttalerrensesykluser."
-      },
-      "waveforms": {
-        "title": "Avanserte tonebølgeformer",
-        "description": "Bruk firkant-, trekant- og sagtanntoner over hele frekvensområdet."
-      },
-      "stereoAuto": {
-        "title": "Automatisk stereotesting",
-        "description": "Bytt mellom venstre, høyre og begge kanaler håndfri."
-      },
-      "dbStats": {
-        "title": "Detaljert dB-statistikk",
-        "description": "Se minimum, gjennomsnitt og maksimum anslag for hver økt."
-      },
-      "adFree": {
-        "title": "Null annonseavbrudd",
-        "description": "Bruk alle lydverktøyene uten bannere eller fullskjermsannonser."
+    "comparison": {
+      "features": "Funksjoner",
+      "free": "Gratis",
+      "pro": "Pro",
+      "included": "Inkludert",
+      "excluded": "Ikke inkludert",
+      "unlimited": "Ubegrenset",
+      "rows": {
+        "cleaningDuration": {
+          "title": "Rengjøringsvarighet",
+          "free": "30 sekunder",
+          "pro": "30/60/90 sekunder"
+        },
+        "turbo": {
+          "title": "Turbo-modus"
+        },
+        "waveforms": {
+          "title": "Bølgeform",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "Stereotest",
+          "free": "Manuell",
+          "pro": "Automatisk"
+        },
+        "soundInsights": {
+          "title": "Analyse av lydnivå",
+          "free": "Grunnleggende",
+          "pro": "Avansert"
+        },
+        "activityHistory": {
+          "title": "Aktivitetshistorikk"
+        },
+        "adExperience": {
+          "title": "Annonser",
+          "free": "Annonser",
+          "pro": "Uten annonser"
+        }
       }
+    },
+    "context": {
+      "historyTitle": "Lås opp din lagrede aktivitet",
+      "historySubtitle": "Det er allerede lagret {{cleaning}} høyttalerrensinger og {{db}} lydmålinger på denne enheten.",
+      "cleaningSubtitle": "Rens enhetens høyttaler når som helst med lengre sykluser og Turbos flertrinns rensebølge.",
+      "dbSubtitle": "Lås opp hele analysen for denne økten og gå tilbake til lagrede lydrapporter."
     },
     "feedback": {
       "subscribeSuccess": "Velkommen! Premium-tilgangen din er aktiv.",
@@ -251,6 +312,87 @@
       "month": "Månedlig",
       "year": "Årlig",
       "lifetime": "Levetid"
+    }
+  },
+  "activity": {
+    "history": "Aktivitetshistorikk",
+    "cleaning": "Rengjøring",
+    "soundSessions": "Lydøkter",
+    "savedCount": "{{cleaning}} rengjøringsaktiviteter · {{db}} lydøkter lagret",
+    "emptyTitle": "Ingen lagret aktivitet ennå",
+    "emptyBody": "Fullførte rense- og lydøkter vil vises her.",
+    "select": "Velge",
+    "selectAll": "Velg alle",
+    "deselectAll": "Fjern merket for Alle",
+    "selectedCount": "{{count}} valgt",
+    "delete": "Slett",
+    "deleteSelected": "Slett ({{count}})",
+    "deleteConfirmTitleSingle": "Vil du slette denne aktiviteten?",
+    "deleteConfirmTitleMultiple": "Vil du slette {{count}} aktiviteter?",
+    "deleteConfirmBodySingle": "Dette fjerner den valgte aktiviteten permanent fra denne enheten.",
+    "deleteConfirmBodyMultiple": "Dette fjerner de {{count}} valgte aktivitetene permanent fra denne enheten.",
+    "deletedSingle": "Aktiviteten er slettet",
+    "deletedMultiple": "{{count}} aktiviteter slettet",
+    "dbSession": "økt på lydnivå",
+    "duration": "{{seconds}} sekunder",
+    "cleaningDetail": "Renholdsaktivitet",
+    "dbDetail": "Lydøkt",
+    "mode": "Rengjøringsmodus",
+    "durationLabel": "Varighet",
+    "result": "Resultat",
+    "report": {
+      "title": "Analyse av lydnivå",
+      "subtitle": "En personlig titt på denne økten",
+      "premium": "Premium",
+      "sessionSummary": "Gjennomsnittlig {{average}} dB · Topp {{maximum}} dB · {{seconds}} sek",
+      "environmentRating": "Miljøvurdering",
+      "suitableFor": "Egnet for",
+      "recommendation": "Anbefaling",
+      "unlockTitle": "Se hva dette lydnivået betyr",
+      "unlockBody": "Lås opp hele miljøvurderingen, passende aktiviteter og lytteanbefaling.",
+      "unlockAction": "Lås opp hele rapporten",
+      "disclaimer": "Telefonmikrofonanslag varierer etter enhet og plassering. Denne rapporten er generell veiledning, ikke en kalibrert måling eller medisinsk råd.",
+      "profile": {
+        "veryQuiet": {
+          "label": "Veldig stille",
+          "range": "Under 30 dB",
+          "overview": "Denne økten foreslår et veldig rolig miljø med lite konkurrerende bakgrunnslyd.",
+          "suitable": "Stille hvile, lesing, fokusert skriving, meditasjon og andre aktiviteter som drar nytte av minimal distraksjon.",
+          "recommendation": "Hold mikrofonen utildekket og mål hvor du vanligvis sitter eller sover. Svært lave estimater kan også bety at telefonmikrofonen er blokkert."
+        },
+        "normal": {
+          "label": "Normal",
+          "range": "30–69 dB",
+          "overview": "Denne økten ligger i et vanlig hverdagsområde, likt et stille hjem, kontor eller vanlig samtale avhengig av avstand.",
+          "suitable": "Samtale, skrivebordsarbeid, tilfeldig lytting, studier og de fleste daglige innendørsaktiviteter.",
+          "recommendation": "Hvis du trenger dypere fokus, reduser stemmer i nærheten eller flytt lenger fra lydkilden og sammenlign en annen økt."
+        },
+        "loud": {
+          "label": "Høyt",
+          "range": "70–99 dB",
+          "overview": "Denne økten foreslår et høyt miljø der lyd kan bli slitsomt eller ubehagelig over tid.",
+          "suitable": "Korte kontroller av travle gater, apparater, arrangementer eller musikkavspilling der du ønsker å forstå skiftende nivåer.",
+          "recommendation": "Senk kildevolumet, øk avstanden, ta rolige pauser og vurder hørselsvern når eksponeringen fortsetter."
+        },
+        "danger": {
+          "label": "Potensielt farlig",
+          "range": "100 dB eller høyere",
+          "overview": "Denne økten foreslår et veldig intenst lydmiljø som fortjener umiddelbar oppmerksomhet.",
+          "suitable": "Kun korte sikkerhetskontroller. Unngå å bruke dette miljøet til lytting, arbeid, hvile eller langvarig aktivitet.",
+          "recommendation": "Beveg deg bort fra kilden, senk volumet når det er mulig, og bruk passende hørselsvern. Ikke stol på et telefonestimat for å fastslå sikker eksponering."
+        }
+      }
+    },
+    "stopReason": {
+      "completed": "Fullført",
+      "manual": "Stoppet manuelt",
+      "blur": "Stoppet etter å ha forlatt skjermen",
+      "background": "Stoppet i bakgrunnen",
+      "interruption": "Avbrutt",
+      "route-change": "Audio-rute endret",
+      "replaced": "Erstattet av et annet verktøy",
+      "error": "Stoppet av en feil",
+      "incomplete": "Ufullstendig"
     }
   },
   "otaUpdate": {

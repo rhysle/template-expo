@@ -1,3 +1,4 @@
+import { LockKeyIcon } from 'phosphor-react-native'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { type StyleProp, View, type ViewStyle } from 'react-native'
@@ -15,7 +16,7 @@ import {
   type EjectDurationSeconds,
   useAudioPreferencesState,
 } from '@/stores/features/audioPreferences'
-import { createThemedStyles, useTheme, useThemedStyles } from '@/theme'
+import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
 
 const DURATION_OPTIONS = [30, 60, 90] as const satisfies readonly EjectDurationSeconds[]
 const EJECT_DURATION_PAYWALL_SOURCE = 'eject_duration' satisfies PaywallSource
@@ -39,6 +40,7 @@ interface DurationOptionProps {
   hapticsEnabled: boolean
   index: number
   indicatorY: SharedValue<number>
+  locked: boolean
   onSelect: (duration: EjectDurationSeconds) => void
   optionStride: number
   selected: boolean
@@ -50,11 +52,13 @@ const DurationOption = ({
   hapticsEnabled,
   index,
   indicatorY,
+  locked,
   onSelect,
   optionStride,
   selected,
 }: DurationOptionProps) => {
   const { t } = useTranslation()
+  const theme = useTheme()
   const styles = useThemedStyles(createStyles)
   const targetY = index * optionStride
 
@@ -78,6 +82,7 @@ const DurationOption = ({
   return (
     <Pressable
       accessibilityLabel={t('settings.audio.durationValue', { count: duration })}
+      accessibilityHint={locked ? t('premium.lockedHint') : undefined}
       accessibilityRole="radio"
       accessibilityState={{ disabled, selected }}
       disabled={disabled}
@@ -103,6 +108,14 @@ const DurationOption = ({
           {duration}s
         </Text>
       </Animated.View>
+      {locked ? (
+        <LockKeyIcon
+          size={iconSizes.xs}
+          color={selected ? theme.colors.text.inverse : theme.colors.text.muted}
+          weight="fill"
+          style={styles.lockIcon}
+        />
+      ) : null}
     </Pressable>
   )
 }
@@ -114,10 +127,17 @@ export const EjectDurationPill = ({ disabled = false, style }: EjectDurationPill
   const reducedMotion = useReducedMotion()
   const { ejectDurationSeconds, hapticsEnabled, setEjectDurationSeconds } =
     useAudioPreferencesState()
-  const { requirePremium } = usePremiumGate()
-  const selectedIndex = Math.max(DURATION_OPTIONS.indexOf(ejectDurationSeconds), 0)
+  const { premiumState, requirePremium } = usePremiumGate()
+  const selectedDuration = premiumState === 'free' ? 30 : ejectDurationSeconds
+  const selectedIndex = Math.max(DURATION_OPTIONS.indexOf(selectedDuration), 0)
   const optionStride = OPTION_SIZE + theme.spacing.xs
   const indicatorY = useSharedValue(selectedIndex * optionStride)
+
+  useEffect(() => {
+    if (premiumState === 'free' && ejectDurationSeconds !== 30) {
+      setEjectDurationSeconds(30)
+    }
+  }, [ejectDurationSeconds, premiumState, setEjectDurationSeconds])
 
   useEffect(() => {
     const targetY = selectedIndex * optionStride
@@ -146,9 +166,10 @@ export const EjectDurationPill = ({ disabled = false, style }: EjectDurationPill
           hapticsEnabled={hapticsEnabled}
           index={index}
           indicatorY={indicatorY}
+          locked={duration !== 30 && premiumState !== 'premium'}
           onSelect={handleSelect}
           optionStride={optionStride}
-          selected={ejectDurationSeconds === duration}
+          selected={selectedDuration === duration}
         />
       ))}
     </View>
@@ -185,6 +206,11 @@ const createStyles = createThemedStyles((t) => ({
     inset: 0,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  lockIcon: {
+    position: 'absolute',
+    top: (OPTION_SIZE - iconSizes.xs) / 2,
+    right: -t.spacing.xs,
   },
   optionSelectedDisabled: {
     opacity: 1,

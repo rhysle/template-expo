@@ -5,6 +5,7 @@ import * as WebBrowser from 'expo-web-browser'
 import {
   ArrowSquareOutIcon,
   BugIcon,
+  ClockCounterClockwiseIcon,
   CopyIcon,
   CrownIcon,
   EnvelopeIcon,
@@ -13,22 +14,30 @@ import {
   ShareNetworkIcon,
   ShieldCheckIcon,
   StarIcon,
+  TrashIcon,
   VibrateIcon,
 } from 'phosphor-react-native'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, View } from 'react-native'
 
 import {
   ActionListItem,
   Card,
+  NativeAlertDialog,
   Pressable,
   PromoBanner,
   Text,
   ToggleListItem,
 } from '@/components/base'
 import { AppConfig } from '@/configs'
+import { clearActivityHistory, useActivityHistory } from '@/services/activity'
 import { AdsConsent, isAnyAdFormatEnabled } from '@/services/ads'
-import { AnalyticsGeneralEvents, trackEvent } from '@/services/firebase/analytics'
+import {
+  AnalyticsAppEvents,
+  AnalyticsGeneralEvents,
+  trackEvent,
+} from '@/services/firebase/analytics'
 import { getCurrentOtaUpdateId } from '@/services/otaUpdate'
 import { type PaywallSource, usePremiumGate } from '@/services/revenueCat'
 import { recordError } from '@/services/sentry'
@@ -56,6 +65,8 @@ export default function SettingsScreen() {
   const { userId } = useUserIdentityState()
   const { privacyOptionsRequired } = useAdsState()
   const { showSnackbar } = useSnackbarState()
+  const { counts } = useActivityHistory()
+  const [clearHistoryVisible, setClearHistoryVisible] = useState(false)
   const showPrivacyConsentItem =
     isAnyAdFormatEnabled() && premiumState === 'free' && privacyOptionsRequired
   const currentOtaUpdateId = getCurrentOtaUpdateId()
@@ -127,6 +138,35 @@ export default function SettingsScreen() {
             icon={ShieldCheckIcon}
             title={t('settings.audio.safety')}
             subtitle={t('settings.audio.safetySubtitle')}
+          />
+        </Card>
+      </View>
+
+      <View style={styles.section}>
+        <Text variant="subtitle" weight="semibold" tone="accent" style={styles.sectionTitle}>
+          {t('settings.activity.section')}
+        </Text>
+        <Card padding="none">
+          <ActionListItem
+            onPress={() => {
+              if (premiumState === 'premium') router.push('/activity-history')
+              else if (premiumState === 'free') {
+                trackEvent(AnalyticsAppEvents.HISTORY_LOCKED_VIEWED, { source: 'settings' })
+                openPaywall('history')
+              }
+            }}
+            icon={ClockCounterClockwiseIcon}
+            title={t('settings.activity.saved')}
+            subtitle={t('activity.savedCount', {
+              cleaning: counts.cleaning,
+              db: counts.db,
+            })}
+          />
+          <ActionListItem
+            onPress={() => setClearHistoryVisible(true)}
+            icon={TrashIcon}
+            title={t('settings.activity.clear')}
+            subtitle={t('settings.activity.clearSubtitle')}
           />
         </Card>
       </View>
@@ -224,6 +264,26 @@ export default function SettingsScreen() {
           </Card>
         </View>
       )}
+      <NativeAlertDialog
+        visible={clearHistoryVisible}
+        title={t('settings.activity.clearConfirmTitle')}
+        message={t('settings.activity.clearConfirmBody')}
+        confirmAction={{
+          label: t('settings.activity.clear'),
+          role: 'destructive',
+          onPress: () => {
+            clearActivityHistory()
+            setClearHistoryVisible(false)
+            showSnackbar({ title: t('settings.activity.cleared'), variant: 'success' })
+          },
+        }}
+        dismissAction={{
+          label: t('common.cancel'),
+          role: 'cancel',
+          onPress: () => setClearHistoryVisible(false),
+        }}
+        onDismiss={() => setClearHistoryVisible(false)}
+      />
     </ScrollView>
   )
 }

@@ -25,9 +25,9 @@
   },
   "tabs": {
     "eject": "Đẩy nước",
-    "toneGenerator": "Bộ tạo âm",
-    "stereoTest": "Kiểm tra âm thanh nổi",
-    "dbMeter": "Máy đo dB"
+    "toneGenerator": "Tạo âm",
+    "stereoTest": "Kiểm tra Stereo",
+    "dbMeter": "Đo dB"
   },
   "settings": {
     "title": "Cài đặt",
@@ -50,16 +50,25 @@
     "otaUpdateId": "Cập nhật: {{updateId}}",
     "upgradeBanner": {
       "title": "Nâng cấp lên Premium",
-      "subtitle": "Mở khóa Water Eject, điều khiển âm thanh nâng cao và trải nghiệm không có quảng cáo"
+      "subtitle": "Mở khóa chế độ làm sạch Turbo lâu hơn, điều khiển âm thanh nâng cao và trải nghiệm không quảng cáo"
     },
     "audio": {
       "section": "Âm thanh & Máy đo",
       "ejectDuration": "Thời gian vệ sinh",
       "durationValue": "{{count}} giây",
-      "haptics": "Kiểm soát xúc giác",
-      "hapticsSubtitle": "Sử dụng phản hồi xúc giác trong công cụ âm thanh",
+      "haptics": "Rung phản hồi",
+      "hapticsSubtitle": "Bật rung phản hồi trong các công cụ âm thanh",
       "safety": "An toàn và quyền riêng tư về âm thanh",
       "safetySubtitle": "Phát lại, micrô và hướng dẫn đo lường"
+    },
+    "activity": {
+      "section": "Dữ liệu hoạt động",
+      "saved": "Hoạt động đã lưu",
+      "clear": "Xóa lịch sử hoạt động",
+      "clearSubtitle": "Xóa các phiên làm sạch và âm thanh đã lưu cục bộ",
+      "clearConfirmTitle": "Xóa tất cả hoạt động?",
+      "clearConfirmBody": "Thao tác này sẽ xóa vĩnh viễn các phiên làm sạch và âm thanh đã lưu khỏi thiết bị này. Thời gian làm sạch miễn phí tiếp theo của bạn sẽ không thay đổi.",
+      "cleared": "Đã xóa lịch sử hoạt động"
     }
   },
   "audioTools": {
@@ -68,61 +77,70 @@
       "error": "Âm thanh không thể bắt đầu. Kiểm tra đầu ra hiện tại và thử lại."
     },
     "eject": {
-      "subtitle": "Chu kỳ âm thanh 3 giai đoạn mạnh mẽ nhắm vào nước bị mắc kẹt, bụi bẩn và mảnh vụn.",
-      "safe": "Sẵn sàng dọn dẹp",
-      "completed": "Chu trình làm sạch đã hoàn tất",
-      "remaining": "{{time}} còn lại",
-      "start": "Bắt đầu dọn dẹp",
-      "stop": "Dừng dọn dẹp",
-      "idleHint": "Đặt loa của thiết bị úp xuống trước khi bắt đầu.",
-      "runningHint": "Giữ cố định thiết bị và cách xa tai bạn.",
-      "completedHint": "Kiểm tra loa của bạn và lặp lại chu trình nếu âm thanh vẫn bị bóp nghẹt.",
+      "start": "Bắt đầu làm sạch",
+      "stop": "Dừng làm sạch",
       "externalTitle": "Ngắt kết nối âm thanh bên ngoài",
       "externalBody": "Quá trình làm sạch loa diễn ra thông qua loa của thiết bị chứ không phải tai nghe hoặc đầu ra Bluetooth.",
-      "phase": {
-        "water": "Xung đẩy nước",
-        "debris": "Bụi và mảnh vụn lắc lư",
-        "finish": "Quét xong"
+      "turbo": {
+        "title": "Chế độ Turbo",
+        "guide": {
+          "title": "Chế độ Turbo",
+          "description": "Chu trình làm sạch mạnh mẽ hơn dành cho nước và mảnh vụn cứng đầu.",
+          "frequency": "Sử dụng năm giai đoạn tần số kép riêng biệt, liên tục thay đổi trong suốt chu kỳ.",
+          "duration": "Turbo có thể vượt quá giới hạn âm lượng hệ thống trong thời gian ngắn. Chỉ sử dụng nó cho chu kỳ làm sạch ngắn.",
+          "cta": "Bật Turbo"
+        }
+      },
+      "help": {
+        "title": "Cách sử dụng",
+        "disconnect": "Ngắt kết nối tai nghe và thiết bị Bluetooth để âm thanh làm sạch phát qua thiết bị này.",
+        "position": "Đặt mặt loa của thiết bị úp xuống trên bề mặt khô ráo và giữ cho các lỗ loa thông thoáng.",
+        "start": "Tăng âm lượng của thiết bị, nhấn Bắt đầu làm sạch và giữ yên thiết bị cho đến khi chu trình kết thúc.",
+        "hearingTitle": "Bảo vệ thính giác của bạn",
+        "hearingWarning": "Không đeo tai nghe khi kiểm tra Eject. Âm thanh làm sạch loa lớn có thể gây tổn thương thính giác."
+      },
+      "routine": {
+        "standard": "Tiêu chuẩn",
+        "turbo": "Turbo"
       }
     },
     "tone": {
       "currentFrequency": "Tần số hiện tại",
       "frequencyValue": "{{frequency}} Hz",
-      "waveformLabel": "{{waveform}} dạng sóng ở {{frequency}} hertz",
+      "waveformLabel": "{{waveform}} ở tần số {{frequency}} hertz",
       "waveform": {
         "label": "Dạng sóng",
-        "sine": "Sin",
-        "square": "Hình vuông",
-        "triangle": "Tam giác",
-        "sawtooth": "Răng cưa"
+        "sine": "Sóng sin",
+        "square": "Sóng vuông",
+        "triangle": "Sóng tam giác",
+        "sawtooth": "Sóng răng cưa"
       },
-      "play": "Phát giai điệu",
-      "stop": "Dừng âm",
-      "volumeHint": "Để âm lượng ở mức thấp và loa cách xa tai bạn.",
+      "play": "Phát âm thử",
+      "stop": "Dừng âm thử",
       "band": {
         "veryLow": "Rất thấp",
         "low": "Thấp",
-        "midLow": "Trung bình thấp",
-        "mid": "Giữa",
+        "midLow": "Trung trầm",
+        "mid": "Trung",
         "high": "Cao",
         "veryHigh": "Rất cao"
       }
     },
     "stereo": {
-      "auto": "Tự động thay thế",
-      "autoHint": "Xoay trái, phải và cả hai",
+      "auto": "Tự động luân phiên",
+      "autoHint": "Luân phiên kênh trái, phải và cả hai",
       "tapToChange": "Nhấn vào loa để thay đổi kênh",
       "start": "Bắt đầu kiểm tra",
-      "helpTitle": "Cách sử dụng Kiểm tra âm thanh nổi",
+      "helpTitle": "Cách sử dụng Kiểm tra Stereo",
       "helpTap": "Nhấn vào loa bên trái hoặc bên phải để kiểm tra kênh đó ngay lập tức.",
       "helpBoth": "Bật cả hai loa để phát âm thử qua cả hai kênh.",
-      "helpAuto": "Sử dụng Tự động thay thế để chuyển đổi giữa các kênh trái, phải và cả hai kênh.",
-      "helpStop": "Sử dụng tính năng Kiểm tra dừng bất cứ khi nào bạn muốn kết thúc quá trình phát lại.",
-      "left": "Còn lại",
-      "right": "Đúng",
-      "positionLeft": "Đang phát kênh bên trái",
+      "helpAuto": "Dùng chế độ Tự động luân phiên để lần lượt kiểm tra kênh trái, kênh phải và cả hai kênh.",
+      "helpStop": "Nhấn Dừng kiểm tra bất cứ lúc nào bạn muốn kết thúc phát âm.",
+      "left": "Trái",
+      "right": "Phải",
+      "positionLeft": "Đang phát kênh trái",
       "positionCenter": "Cả hai kênh đang phát",
-      "positionRight": "Đang phát đúng kênh",
+      "positionRight": "Đang phát kênh phải",
       "idlePosition": "Nhấn vào loa để bắt đầu",
       "stop": "Dừng kiểm tra"
     },
@@ -131,11 +149,11 @@
       "start": "Bắt đầu đo",
       "stop": "Dừng đo",
       "permissionTitle": "Quyền truy cập micrô bị tắt",
-      "permissionBody": "Quyền truy cập micrô chỉ được sử dụng khi Máy đo dB đang chạy để ước tính mức âm thanh ở gần. Âm thanh được xử lý trên thiết bị của bạn và không bao giờ được lưu hoặc tải lên.",
+      "permissionBody": "Quyền truy cập micrô chỉ được sử dụng khi máy đo dB đang chạy để ước tính mức âm thanh xung quanh. Mẫu âm thanh được xử lý trong bộ nhớ và không bao giờ được lưu hoặc tải lên. Các ước tính đã làm tròn của mỗi phiên chỉ được lưu trên thiết bị này và có thể xóa trong Cài đặt.",
       "minimum": "Tối thiểu",
       "average": "Trung bình",
       "maximum": "Tối đa",
-      "unlockStats": "Mở khóa số liệu thống kê phiên dB chi tiết",
+      "timeline": "Dòng thời gian mức âm thanh ước tính",
       "status": {
         "veryQuiet": "Rất yên tĩnh",
         "normal": "Bình thường",
@@ -157,17 +175,17 @@
         "everydayLevels": "Mức âm thanh hàng ngày",
         "examplesApproximate": "Các ví dụ mang tính tương đối và thay đổi theo khoảng cách.",
         "currentEstimate": "Ước tính hiện tại",
-        "exposureTitle": "Thời gian phơi sáng đóng vai trò quan trọng",
-        "exposureDescription": "NIOSH hướng dẫn nghề nghiệp; mỗi +3 dB giảm một nửa thời gian khuyến nghị.",
-        "useItWell": "Hãy sử dụng nó thật tốt",
+        "exposureTitle": "Thời gian tiếp xúc với tiếng ồn rất quan trọng",
+        "exposureDescription": "Theo hướng dẫn của NIOSH về tiếng ồn tại nơi làm việc, cứ tăng 3 dB thì thời gian tiếp xúc khuyến nghị giảm một nửa.",
+        "useItWell": "Mẹo đo chính xác",
         "tipMicrophoneTitle": "Không che micrô",
-        "tipMicrophoneBody": "Tránh dùng tay hoặc hộp đựng che điện thoại.",
+        "tipMicrophoneBody": "Tránh che micrô bằng tay hoặc ốp lưng điện thoại.",
         "tipPositionTitle": "Đo nơi bạn nghe",
         "tipPositionBody": "Di chuyển thiết bị đến vị trí bạn muốn đánh giá.",
         "tipProtectTitle": "Nếu bạn cảm thấy quá ồn, hãy bảo vệ đôi tai của bạn",
         "tipProtectBody": "Tránh xa nguồn phát hoặc sử dụng thiết bị bảo vệ thính giác.",
         "reference": {
-          "concertSpeaker": "Diễn giả buổi hòa nhạc",
+          "concertSpeaker": "Loa tại buổi hòa nhạc",
           "sirenNightclub": "Còi báo động hoặc hộp đêm",
           "lawnMower": "Máy cắt cỏ",
           "busyStreet": "Phố đông đúc",
@@ -184,11 +202,11 @@
       "playbackTitle": "Phát lại an toàn",
       "playbackBody": "Bắt đầu ở mức âm lượng thấp, tăng dần âm lượng, để loa cách xa tai bạn và dừng lại nếu cảm thấy khó chịu.",
       "routingTitle": "Định tuyến âm thanh",
-      "routingBody": "Âm thanh vệ sinh loa phải sử dụng loa của thiết bị. Việc tách âm thanh nổi phụ thuộc vào loa hoặc tai nghe được kết nối.",
+      "routingBody": "Âm thanh vệ sinh loa phải sử dụng loa của thiết bị. Việc tách Stereo phụ thuộc vào loa hoặc tai nghe được kết nối.",
       "estimateTitle": "Mức âm thanh ước tính",
       "estimateBody": "Micrô của điện thoại báo cáo mức tín hiệu kỹ thuật số thay vì SPL trong phòng thí nghiệm. Ứng dụng áp dụng ước tính khác nhau tùy theo thiết bị.",
       "privacyTitle": "Quyền riêng tư của micrô",
-      "privacyBody": "Micrô chỉ chạy khi Đồng hồ đo dB đang hoạt động. Các mẫu được xử lý trong bộ nhớ và không bao giờ được lưu hoặc tải lên.",
+      "privacyBody": "Micrô chỉ hoạt động khi máy đo dB đang bật. Các mẫu được xử lý trong bộ nhớ và không bao giờ được lưu hoặc tải lên. Các ước tính đã làm tròn của một phiên có thể được lưu cục bộ trong lịch sử hoạt động và có thể xóa trong Cài đặt.",
       "limitationsTitle": "Hạn chế quan trọng",
       "limitationsBody": "Ứng dụng này không thể đảm bảo loại bỏ nước hoặc bụi. Không nhét đồ vật vào loa và không sử dụng các công cụ này để thay thế cho việc sửa chữa chuyên nghiệp, thiết bị hiệu chuẩn, tư vấn y tế hoặc hướng dẫn bảo vệ thính giác."
     }
@@ -197,12 +215,30 @@
     "title": "Mở khóa Bộ công cụ âm thanh hoàn chỉnh của bạn",
     "subtitle": "Làm sạch loa của bạn, truy cập các điều khiển nâng cao và xóa mọi quảng cáo.",
     "ctaFreeTrial": "Dùng thử miễn phí",
+    "trialDisclaimer": "Hủy bất cứ lúc nào. Chưa cần thanh toán ngay",
+    "subscriptionDisclaimer": "Hủy bất cứ lúc nào.",
+    "lifetimeDisclaimer": "Thanh toán một lần. Không có phí định kỳ.",
     "restore": "Khôi phục giao dịch mua",
     "terms": "Điều khoản dịch vụ",
     "privacy": "Chính sách bảo mật",
     "then": "rồi",
     "trial": "{{count}}-{{unit}} dùng thử miễn phí",
-    "save": "Lưu {{percent}}%",
+    "save": "Tiết kiệm {{percent}}%",
+    "availability": {
+      "loading": "Đang kiểm tra các gói Premium…",
+      "temporary_error": {
+        "title": "Không thể tải các gói Premium",
+        "subtitle": "Kiểm tra kết nối rồi thử lại."
+      },
+      "configuration_error": {
+        "title": "Các gói Premium không khả dụng",
+        "subtitle": "Cửa hàng không thể tải gói Premium. Vui lòng thử lại sau giây lát."
+      },
+      "purchase_not_allowed": {
+        "title": "Thiết bị này không hỗ trợ mua hàng",
+        "subtitle": "Thiết bị hoặc tài khoản cửa hàng này không thể mua hàng trong ứng dụng."
+      }
+    },
     "trialUnit": {
       "day": "ngày",
       "week": "tuần",
@@ -216,27 +252,52 @@
       "year": "mỗi năm",
       "lifetime": "Mua một lần"
     },
-    "features": {
-      "waterEject": {
-        "title": "Đẩy nước hoàn toàn",
-        "description": "Chạy các chu trình làm sạch loa 30, 60 và 90 giây theo hướng dẫn."
-      },
-      "waveforms": {
-        "title": "Dạng sóng âm nâng cao",
-        "description": "Sử dụng âm hình vuông, hình tam giác và răng cưa trên toàn bộ dải tần."
-      },
-      "stereoAuto": {
-        "title": "Kiểm tra âm thanh nổi tự động",
-        "description": "Chuyển đổi giữa kênh trái, phải và cả hai kênh rảnh tay."
-      },
-      "dbStats": {
-        "title": "Thống kê dB chi tiết",
-        "description": "Xem ước tính tối thiểu, trung bình và tối đa cho mỗi phiên."
-      },
-      "adFree": {
-        "title": "Không bị gián đoạn quảng cáo",
-        "description": "Sử dụng mọi công cụ âm thanh mà không cần biểu ngữ hoặc quảng cáo toàn màn hình."
+    "comparison": {
+      "features": "Tính năng",
+      "free": "Miễn phí",
+      "pro": "Pro",
+      "included": "Có",
+      "excluded": "Không có",
+      "unlimited": "Không giới hạn",
+      "rows": {
+        "cleaningDuration": {
+          "title": "Thời gian vệ sinh",
+          "free": "30 giây",
+          "pro": "30/60/90 giây"
+        },
+        "turbo": {
+          "title": "Chế độ Turbo"
+        },
+        "waveforms": {
+          "title": "Dạng sóng",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "Kiểm tra Stereo",
+          "free": "Thủ công",
+          "pro": "Tự động"
+        },
+        "soundInsights": {
+          "title": "Phân tích mức âm thanh",
+          "free": "Cơ bản",
+          "pro": "Nâng cao"
+        },
+        "activityHistory": {
+          "title": "Lịch sử hoạt động"
+        },
+        "adExperience": {
+          "title": "Quảng cáo",
+          "free": "Quảng cáo",
+          "pro": "Không quảng cáo"
+        }
       }
+    },
+    "context": {
+      "historyTitle": "Mở khóa hoạt động đã lưu của bạn",
+      "historySubtitle": "{{cleaning}} hoạt động làm sạch và {{db}} phiên âm thanh đã được lưu trên thiết bị này.",
+      "cleaningSubtitle": "Làm sạch loa bất cứ lúc nào với chu kỳ dài hơn và sóng làm sạch Turbo nhiều giai đoạn.",
+      "dbSubtitle": "Mở khóa phân tích đầy đủ cho phiên này và xem lại các báo cáo âm thanh đã lưu."
     },
     "feedback": {
       "subscribeSuccess": "Chào mừng bạn! Quyền truy cập cao cấp của bạn đang hoạt động.",
@@ -253,6 +314,87 @@
       "lifetime": "Trọn đời"
     }
   },
+  "activity": {
+    "history": "Lịch sử hoạt động",
+    "cleaning": "Làm sạch",
+    "soundSessions": "Phiên âm thanh",
+    "savedCount": "{{cleaning}} hoạt động làm sạch · {{db}} phiên âm thanh đã được lưu",
+    "emptyTitle": "Chưa có hoạt động nào được lưu",
+    "emptyBody": "Các phiên làm sạch và âm thanh đã hoàn tất sẽ xuất hiện ở đây.",
+    "select": "Lựa chọn",
+    "selectAll": "Chọn tất cả",
+    "deselectAll": "Bỏ chọn tất cả",
+    "selectedCount": "{{count}} đã chọn",
+    "delete": "Xóa",
+    "deleteSelected": "Xóa ({{count}})",
+    "deleteConfirmTitleSingle": "Xóa hoạt động này?",
+    "deleteConfirmTitleMultiple": "Xóa hoạt động {{count}}?",
+    "deleteConfirmBodySingle": "Thao tác này sẽ xóa vĩnh viễn hoạt động đã chọn khỏi thiết bị này.",
+    "deleteConfirmBodyMultiple": "Thao tác này sẽ xóa vĩnh viễn {{count}} hoạt động đã chọn khỏi thiết bị này.",
+    "deletedSingle": "Đã xóa hoạt động",
+    "deletedMultiple": "{{count}} hoạt động đã bị xóa",
+    "dbSession": "Phiên mức âm thanh",
+    "duration": "{{seconds}} giây",
+    "cleaningDetail": "Hoạt động làm sạch",
+    "dbDetail": "Phiên âm thanh",
+    "mode": "Chế độ làm sạch",
+    "durationLabel": "Thời lượng",
+    "result": "Kết quả",
+    "report": {
+      "title": "Phân tích mức âm thanh",
+      "subtitle": "Phân tích riêng cho phiên này",
+      "premium": "Premium",
+      "sessionSummary": "Trung bình {{average}} dB · Đỉnh {{maximum}} dB · {{seconds}} giây",
+      "environmentRating": "Đánh giá môi trường",
+      "suitableFor": "Thích hợp cho",
+      "recommendation": "Đề xuất",
+      "unlockTitle": "Xem mức âm thanh này có ý nghĩa gì",
+      "unlockBody": "Mở khóa đánh giá môi trường đầy đủ, các hoạt động phù hợp và đề xuất lắng nghe.",
+      "unlockAction": "Mở khóa báo cáo đầy đủ",
+      "disclaimer": "Ước tính micrô của điện thoại khác nhau tùy theo thiết bị và vị trí. Báo cáo này là hướng dẫn chung, không phải là phép đo hiệu chuẩn hoặc lời khuyên y tế.",
+      "profile": {
+        "veryQuiet": {
+          "label": "Rất yên tĩnh",
+          "range": "Dưới 30 dB",
+          "overview": "Phiên này cho thấy môi trường rất yên tĩnh, hầu như không có tạp âm gây xao nhãng.",
+          "suitable": "Nghỉ ngơi yên tĩnh, đọc sách, tập trung viết lách, thiền định và các hoạt động khác giúp giảm thiểu sự phân tâm.",
+          "recommendation": "Giữ micrô không che chắn và đo nơi bạn thường ngồi hoặc ngủ. Ước tính rất thấp cũng có thể có nghĩa là micrô của điện thoại bị cản trở."
+        },
+        "normal": {
+          "label": "Bình thường",
+          "range": "30–69 dB",
+          "overview": "Phiên này nằm trong phạm vi phổ biến hàng ngày, tương tự như một ngôi nhà yên tĩnh, văn phòng hoặc cuộc trò chuyện bình thường tùy thuộc vào khoảng cách.",
+          "suitable": "Trò chuyện, làm việc tại bàn, nghe thông thường, học tập và hầu hết các hoạt động trong nhà hàng ngày.",
+          "recommendation": "Nếu bạn cần tập trung sâu hơn, hãy giảm giọng nói ở gần hoặc di chuyển ra xa nguồn âm thanh và so sánh với phiên khác."
+        },
+        "loud": {
+          "label": "Ồn ào",
+          "range": "70–99 dB",
+          "overview": "Phiên này gợi ý một môi trường ồn ào, nơi âm thanh có thể trở nên mệt mỏi hoặc khó chịu theo thời gian.",
+          "suitable": "Kiểm tra ngắn các đường phố đông đúc, thiết bị, sự kiện hoặc phát nhạc mà bạn muốn hiểu mức độ thay đổi.",
+          "recommendation": "Giảm âm lượng nguồn, tăng khoảng cách, nghỉ ngơi yên tĩnh và cân nhắc bảo vệ thính giác khi tiếp tục tiếp xúc."
+        },
+        "danger": {
+          "label": "Có khả năng gây nguy hiểm",
+          "range": "100 dB hoặc cao hơn",
+          "overview": "Phiên này gợi ý một môi trường âm thanh rất mãnh liệt đáng được chú ý ngay lập tức.",
+          "suitable": "Chỉ kiểm tra an toàn ngắn gọn. Tránh sử dụng môi trường này để nghe, làm việc, nghỉ ngơi hoặc hoạt động kéo dài.",
+          "recommendation": "Di chuyển ra khỏi nguồn, giảm âm lượng khi có thể và sử dụng thiết bị bảo vệ thính giác thích hợp. Đừng dựa vào ước tính trên điện thoại để xác định mức độ phơi nhiễm an toàn."
+        }
+      }
+    },
+    "stopReason": {
+      "completed": "Hoàn thành",
+      "manual": "Đã dừng thủ công",
+      "blur": "Đã dừng sau khi rời khỏi màn hình",
+      "background": "Đã dừng ở chế độ nền",
+      "interruption": "Bị gián đoạn",
+      "route-change": "Đầu ra âm thanh đã thay đổi",
+      "replaced": "Thay thế bằng công cụ khác",
+      "error": "Bị dừng do lỗi",
+      "incomplete": "Chưa hoàn thành"
+    }
+  },
   "otaUpdate": {
     "updateReady": "Có bản cập nhật mới - khởi động lại để áp dụng"
   },
@@ -266,15 +408,15 @@
       "description": "Phát âm thanh làm sạch mạnh mẽ để giúp đẩy nước và bụi mắc kẹt ra khỏi loa."
     },
     "toneGenerator": {
-      "title": "Tạo\nâm sắc phù hợp",
-      "description": "Chọn trong các tần số khác nhau để kiểm tra, điều chỉnh, che tiếng ồn hoặc kiểm tra âm thanh bất kỳ."
+      "title": "Tạo âm tần\nphù hợp",
+      "description": "Chọn nhiều tần số để kiểm tra, tinh chỉnh, che lấp tiếng ồn hoặc thực hiện các phép thử âm thanh khác."
     },
     "dbMeter": {
-      "title": "Biết âm thanh\nthực sự lớn đến đâu",
+      "title": "Biết chính xác\nâm thanh lớn cỡ nào",
       "description": "Dùng Máy đo dB để ước tính mức tiếng ồn xung quanh và đưa ra lựa chọn nghe thông minh hơn."
     },
     "privacy": {
-      "title": "Riêng tư và trên thiết bị",
+      "title": "Riêng tư, xử lý trên thiết bị",
       "description": "Việc xử lý âm thanh diễn ra trên điện thoại của bạn, kèm hướng dẫn rõ ràng về an toàn và micrô."
     }
   }

@@ -1,1 +1,1 @@
-Ta bort vatten, rengör högtalaren och testa toner, stereo och ljudnivå.
+Klar våg tar bort vatten och fixar dämpat ljud; testa toner, stereo och dB.

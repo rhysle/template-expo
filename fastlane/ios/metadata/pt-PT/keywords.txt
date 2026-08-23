@@ -1,1 +1,1 @@
-limpeza,telemóvel,estéreo,teste,frequência,hertz,áudio,som,ruído,poeira,humidade,tom,decibel
+limpeza,telemóvel,estéreo,teste,frequência,áudio,som,ruído,poeira,humidade,decibel,abafado,reparar

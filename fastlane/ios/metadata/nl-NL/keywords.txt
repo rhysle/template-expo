@@ -1,1 +1,1 @@
-schoon,telefoon,stereo,test,frequentie,hertz,audio,geluid,lawaai,stof,vocht,vuil,toon,decibel
+schoon,telefoon,stereo,test,frequentie,audio,geluid,lawaai,stof,vocht,vuil,decibel,dof,dB,reparatie

@@ -50,7 +50,7 @@
     "otaUpdateId": "Ažuriranje: {{updateId}}",
     "upgradeBanner": {
       "title": "Nadogradite na Premium",
-      "subtitle": "Otključajte Water Eject, napredne audio kontrole i iskustvo bez oglasa"
+      "subtitle": "Otključajte dulje Turbo čišćenje, napredne kontrole zvuka i upotrebu bez oglasa"
     },
     "audio": {
       "section": "Audio i mjerač",
@@ -60,6 +60,15 @@
       "hapticsSubtitle": "Koristite taktilnu povratnu informaciju u zvučnim alatima",
       "safety": "Audio Sigurnost i privatnost",
       "safetySubtitle": "Reprodukcija, mikrofon i upute za mjerenje"
+    },
+    "activity": {
+      "section": "Podaci o aktivnostima",
+      "saved": "Spremljena aktivnost",
+      "clear": "Obriši povijest aktivnosti",
+      "clearSubtitle": "Uklonite lokalno spremljene sesije čišćenja i zvuka",
+      "clearConfirmTitle": "Obrisati sve aktivnosti?",
+      "clearConfirmBody": "Time se trajno uklanjaju spremljene sesije čišćenja i zvuka s ovog uređaja. Vaše sljedeće besplatno vrijeme čišćenja neće se promijeniti.",
+      "cleared": "Povijest aktivnosti izbrisana"
     }
   },
   "audioTools": {
@@ -68,21 +77,31 @@
       "error": "Audio se nije mogao pokrenuti. Provjerite trenutni izlaz i pokušajte ponovno."
     },
     "eject": {
-      "subtitle": "Snažni zvučni ciklus u 3 stupnja cilja na zarobljenu vodu, prašinu i krhotine.",
-      "safe": "Spremno za čišćenje",
-      "completed": "Ciklus čišćenja završen",
-      "remaining": "{{time}} preostalo",
       "start": "Započnite čišćenje",
       "stop": "Prekini čišćenje",
-      "idleHint": "Postavite uređaj sa zvučnikom prema dolje prije početka.",
-      "runningHint": "Držite uređaj mirno i dalje od ušiju.",
-      "completedHint": "Testirajte svoj zvučnik i ponovite ciklus ako je zvuk i dalje prigušen.",
       "externalTitle": "Odspojite vanjski zvuk",
       "externalBody": "Čišćenje zvučnika radi preko zvučnika uređaja, a ne slušalica ili Bluetooth izlaza.",
-      "phase": {
-        "water": "Puls izbacivanja vode",
-        "debris": "Potres prašine i krhotina",
-        "finish": "Završno čišćenje"
+      "turbo": {
+        "title": "Turbo način rada",
+        "guide": {
+          "title": "Turbo način rada",
+          "description": "Snažniji ciklus čišćenja za tvrdokornu vodu i ostatke.",
+          "frequency": "Koristi pet različitih dvofrekventnih faza koje se razvijaju kroz cijeli ciklus.",
+          "duration": "Turbo može nakratko premašiti ograničenje glasnoće sustava. Koristite ga samo za kratke cikluse čišćenja.",
+          "cta": "Omogući Turbo"
+        }
+      },
+      "help": {
+        "title": "Kako koristiti",
+        "disconnect": "Odspojite slušalice i Bluetooth uređaje tako da se zvuk čišćenja reproducira putem ovog uređaja.",
+        "position": "Stavite uređaj sa zvučnikom prema dolje na suhu površinu i neka otvori zvučnika budu čisti.",
+        "start": "Pojačajte glasnoću uređaja, dodirnite Započni čišćenje i držite uređaj mirnim dok se ciklus ne završi.",
+        "hearingTitle": "Zaštitite svoj sluh",
+        "hearingWarning": "Ne nosite slušalice dok testirate Eject. Glasni tonovi za čišćenje zvučnika mogu uzrokovati oštećenje sluha."
+      },
+      "routine": {
+        "standard": "Standard",
+        "turbo": "Turbo"
       }
     },
     "tone": {
@@ -98,7 +117,6 @@
       },
       "play": "Pusti ton",
       "stop": "Stop ton",
-      "volumeHint": "Neka glasnoća bude tiha i zvučnik dalje od ušiju.",
       "band": {
         "veryLow": "Vrlo nisko",
         "low": "Nisko",
@@ -109,14 +127,14 @@
       }
     },
     "stereo": {
-      "auto": "Automatski alternativni",
-      "autoHint": "Kružite lijevo, desno i oboje",
+      "auto": "Automatska izmjena",
+      "autoHint": "Izmjenjuj lijevi, desni i oba kanala",
       "tapToChange": "Dodirnite zvučnike za promjenu kanala",
       "start": "Započni test",
       "helpTitle": "Kako koristiti Stereo Test",
       "helpTap": "Dodirnite lijevi ili desni zvučnik da odmah testirate taj kanal.",
       "helpBoth": "Uključite oba zvučnika za reprodukciju ispitnog tona na oba kanala.",
-      "helpAuto": "Koristite Auto alternate za izmjenu između lijevog, desnog i oba kanala.",
+      "helpAuto": "Koristite Automatsku izmjenu za redom testiranje lijevog, desnog i oba kanala.",
       "helpStop": "Koristite Zaustavi test kad god želite prekinuti reprodukciju.",
       "left": "Lijevo",
       "right": "Desno",
@@ -131,11 +149,11 @@
       "start": "Počnite mjeriti",
       "stop": "Prekini mjerenje",
       "permissionTitle": "Pristup mikrofonu je isključen",
-      "permissionBody": "Pristup mikrofonu koristi se samo dok dB mjerač radi za procjenu razine zvuka u blizini. Audio se obrađuje na vašem uređaju i nikada se ne sprema niti prenosi.",
+      "permissionBody": "Pristup mikrofonu koristi se samo dok dB mjerač radi radi procjene razine zvuka u blizini. Zvučni uzorci obrađuju se u memoriji i nikada se ne spremaju niti prenose. Zaokružene procjene sesije spremaju se samo na ovom uređaju i mogu se izbrisati u Postavkama.",
       "minimum": "Minimalno",
       "average": "Prosječno",
       "maximum": "Maksimalno",
-      "unlockStats": "Otključajte detaljnu statistiku dB sesije",
+      "timeline": "Vremenska traka procijenjene razine zvuka",
       "status": {
         "veryQuiet": "Vrlo tiho",
         "normal": "Normalno",
@@ -157,17 +175,17 @@
         "everydayLevels": "Svakodnevne razine zvuka",
         "examplesApproximate": "Primjeri su približni i razlikuju se ovisno o udaljenosti.",
         "currentEstimate": "Trenutna procjena",
-        "exposureTitle": "Vrijeme ekspozicije je važno",
-        "exposureDescription": "NIOSH profesionalno usmjeravanje; svaka +3 dB prepolovljuje preporučeno vrijeme.",
-        "useItWell": "Dobro ga koristite",
+        "exposureTitle": "Vrijeme izloženosti buci je važno",
+        "exposureDescription": "Prema smjernicama NIOSH-a za buku na radnom mjestu, svako povećanje od 3 dB prepolovljuje preporučeno vrijeme izloženosti.",
+        "useItWell": "Savjeti za mjerenje",
         "tipMicrophoneTitle": "Držite mikrofon nepokrivenim",
-        "tipMicrophoneBody": "Izbjegavajte ga prekrivati rukom ili kućištem.",
+        "tipMicrophoneBody": "Nemojte prekrivati mikrofon rukom ili maskom telefona.",
         "tipPositionTitle": "Mjerite gdje slušate",
         "tipPositionBody": "Premjestite uređaj na mjesto koje želite procijeniti.",
         "tipProtectTitle": "Ako vam se čini preglasno, zaštitite uši",
         "tipProtectBody": "Udaljite se od izvora ili koristite zaštitu za sluh.",
         "reference": {
-          "concertSpeaker": "Koncertni govornik",
+          "concertSpeaker": "Koncertni zvučnik",
           "sirenNightclub": "Sirena ili noćni klub",
           "lawnMower": "Kosilica za travu",
           "busyStreet": "Prometna ulica",
@@ -188,7 +206,7 @@
       "estimateTitle": "Procijenjene razine zvuka",
       "estimateBody": "Telefonski mikrofoni prijavljuju razinu digitalnog signala, a ne laboratorijski SPL. Aplikacija primjenjuje procjenu koja se razlikuje ovisno o uređaju.",
       "privacyTitle": "Privatnost mikrofona",
-      "privacyBody": "Mikrofon radi samo dok je dB mjerač aktivan. Uzorci se obrađuju u memoriji i nikada se ne spremaju ili učitavaju.",
+      "privacyBody": "Mikrofon radi samo dok je dB mjerač aktivan. Uzorci se obrađuju u memoriji i nikada se ne spremaju niti prenose. Zaokružene procjene sesije mogu se lokalno spremiti u povijest aktivnosti i izbrisati u Postavkama.",
       "limitationsTitle": "Važna ograničenja",
       "limitationsBody": "Ova aplikacija ne može jamčiti uklanjanje vode ili prašine. Nemojte umetati predmete u zvučnik i nemojte koristiti ove alate kao zamjenu za profesionalni popravak, kalibriranu opremu, liječnički savjet ili upute za zaštitu sluha."
     }
@@ -197,12 +215,30 @@
     "title": "Otključajte kompletan audio alat",
     "subtitle": "Očistite svoj zvučnik, pristupite naprednim kontrolama i uklonite sve oglase.",
     "ctaFreeTrial": "Isprobajte besplatno",
+    "trialDisclaimer": "Otkažite bilo kada. Sada nema naplate",
+    "subscriptionDisclaimer": "Otkažite bilo kada.",
+    "lifetimeDisclaimer": "Platite jednom. Bez ponavljajućih naplata.",
     "restore": "Vrati kupnje",
     "terms": "Uvjeti usluge",
     "privacy": "Pravila o privatnosti",
     "then": "zatim",
     "trial": "{{count}}-{{unit}} besplatno probno razdoblje",
     "save": "Uštedite {{percent}}%",
+    "availability": {
+      "loading": "Provjera opcija kupnje…",
+      "temporary_error": {
+        "title": "Opcije kupnje nije moguće učitati",
+        "subtitle": "Provjerite vezu i pokušajte ponovno."
+      },
+      "configuration_error": {
+        "title": "Opcije kupnje nisu dostupne",
+        "subtitle": "Trgovina nije mogla učitati proizvode ove aplikacije. Pokušajte ponovno uskoro."
+      },
+      "purchase_not_allowed": {
+        "title": "Kupnje nisu podržane na ovom uređaju",
+        "subtitle": "Ovaj uređaj ili račun trgovine ne može obavljati kupnje unutar aplikacije."
+      }
+    },
     "trialUnit": {
       "day": "dan",
       "week": "tjedan",
@@ -216,27 +252,52 @@
       "year": "godišnje",
       "lifetime": "Jednokratna kupnja"
     },
-    "features": {
-      "waterEject": {
-        "title": "Potpuno izbacivanje vode",
-        "description": "Pokrenite vođene cikluse čišćenja zvučnika od 30, 60 i 90 sekundi."
-      },
-      "waveforms": {
-        "title": "Napredni tonski valni oblici",
-        "description": "Koristite kvadratne, trokutaste i pilaste tonove u cijelom frekvencijskom rasponu."
-      },
-      "stereoAuto": {
-        "title": "Automatsko stereo testiranje",
-        "description": "Mijenjajte lijevi, desni i oba kanala bez ruku."
-      },
-      "dbStats": {
-        "title": "Detaljna dB statistika",
-        "description": "Pogledajte minimalne, prosječne i maksimalne procjene za svaku sesiju."
-      },
-      "adFree": {
-        "title": "Nula prekida oglasa",
-        "description": "Koristite sve audio alate bez bannera ili oglasa preko cijelog zaslona."
+    "comparison": {
+      "features": "Značajke",
+      "free": "Besplatno",
+      "pro": "Pro",
+      "included": "Uključeno",
+      "excluded": "Nije uključeno",
+      "unlimited": "Neograničeno",
+      "rows": {
+        "cleaningDuration": {
+          "title": "Trajanje čišćenja",
+          "free": "30 sekundi",
+          "pro": "30/60/90 sekundi"
+        },
+        "turbo": {
+          "title": "Turbo način rada"
+        },
+        "waveforms": {
+          "title": "Valni oblik",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "Stereo test",
+          "free": "Ručno",
+          "pro": "Automatski"
+        },
+        "soundInsights": {
+          "title": "Analiza razine zvuka",
+          "free": "Osnovno",
+          "pro": "Napredno"
+        },
+        "activityHistory": {
+          "title": "Povijest aktivnosti"
+        },
+        "adExperience": {
+          "title": "Oglasi",
+          "free": "Oglasi",
+          "pro": "Bez oglasa"
+        }
       }
+    },
+    "context": {
+      "historyTitle": "Otključajte svoju spremljenu aktivnost",
+      "historySubtitle": "Na ovom je uređaju već spremljeno {{cleaning}} čišćenja zvučnika i {{db}} mjerenja zvuka.",
+      "cleaningSubtitle": "Očistite zvučnik uređaja bilo kada uz dulje cikluse i višefazni Turbo val čišćenja.",
+      "dbSubtitle": "Otključajte potpunu analizu za ovu sesiju i ponovno pregledajte spremljena izvješća o zvuku."
     },
     "feedback": {
       "subscribeSuccess": "Dobro došli! Vaš premium pristup je aktivan.",
@@ -251,6 +312,87 @@
       "month": "Mjesečno",
       "year": "godišnje",
       "lifetime": "Životni vijek"
+    }
+  },
+  "activity": {
+    "history": "Povijest aktivnosti",
+    "cleaning": "Čišćenje",
+    "soundSessions": "Zvučne sesije",
+    "savedCount": "{{cleaning}} aktivnosti čišćenja · {{db}} zvučnih sesija spremljeno",
+    "emptyTitle": "Još nema spremljenih aktivnosti",
+    "emptyBody": "Ovdje će se pojaviti dovršene sesije čišćenja i zvuka.",
+    "select": "Odaberite",
+    "selectAll": "Odaberite sve",
+    "deselectAll": "Poništi odabir svih",
+    "selectedCount": "{{count}} odabrano",
+    "delete": "Izbrisati",
+    "deleteSelected": "Izbriši ({{count}})",
+    "deleteConfirmTitleSingle": "Izbrisati ovu aktivnost?",
+    "deleteConfirmTitleMultiple": "Izbrisati aktivnosti {{count}}?",
+    "deleteConfirmBodySingle": "Time se trajno uklanja odabrana aktivnost s ovog uređaja.",
+    "deleteConfirmBodyMultiple": "Time se trajno uklanjaju {{count}} odabrane aktivnosti s ovog uređaja.",
+    "deletedSingle": "Aktivnost izbrisana",
+    "deletedMultiple": "{{count}} aktivnosti izbrisano",
+    "dbSession": "Sesija na razini zvuka",
+    "duration": "{{seconds}} sekundi",
+    "cleaningDetail": "Djelatnost čišćenja",
+    "dbDetail": "Zvučna sesija",
+    "mode": "Način čišćenja",
+    "durationLabel": "Trajanje",
+    "result": "Proizlaziti",
+    "report": {
+      "title": "Analiza razine zvuka",
+      "subtitle": "Personalizirani pogled na ovu sesiju",
+      "premium": "Premium",
+      "sessionSummary": "Prosječno {{average}} dB · Vrhunac {{maximum}} dB · {{seconds}} s",
+      "environmentRating": "Ocjena okoliša",
+      "suitableFor": "Prikladno za",
+      "recommendation": "Preporuka",
+      "unlockTitle": "Pogledajte što znači ova razina zvuka",
+      "unlockBody": "Otključajte punu ocjenu okruženja, prikladne aktivnosti i preporuku za slušanje.",
+      "unlockAction": "Otključaj cijelo izvješće",
+      "disclaimer": "Procjene telefonskog mikrofona razlikuju se ovisno o uređaju i položaju. Ovo izvješće je opća smjernica, a ne kalibrirano mjerenje ili medicinski savjet.",
+      "profile": {
+        "veryQuiet": {
+          "label": "Vrlo tiho",
+          "range": "Ispod 30 dB",
+          "overview": "Ova sesija sugerira vrlo mirno okruženje s malo konkurentskog pozadinskog zvuka.",
+          "suitable": "Miran odmor, čitanje, usredotočeno pisanje, meditacija i druge aktivnosti kojima koristi minimalna distrakcija.",
+          "recommendation": "Držite mikrofon nepokriven i mjerite gdje inače sjedite ili spavate. Vrlo niske procjene također mogu značiti da je mikrofon telefona začepljen."
+        },
+        "normal": {
+          "label": "Normalno",
+          "range": "30–69 dB",
+          "overview": "Ova sesija odvija se u uobičajenom svakodnevnom rasponu, slično mirnom domu, uredu ili normalnom razgovoru, ovisno o udaljenosti.",
+          "suitable": "Razgovor, rad za stolom, ležerno slušanje, učenje i većina dnevnih aktivnosti u zatvorenom prostoru.",
+          "recommendation": "Ako trebate dublji fokus, smanjite glasove u blizini ili se udaljite od izvora zvuka i usporedite drugu sesiju."
+        },
+        "loud": {
+          "label": "Glasno",
+          "range": "70–99 dB",
+          "overview": "Ova sesija predlaže glasno okruženje u kojem bi zvuk s vremenom mogao postati zamoran ili neugodan.",
+          "suitable": "Kratke provjere prometnih ulica, uređaja, događaja ili reprodukcije glazbe gdje želite razumjeti promjene razina.",
+          "recommendation": "Smanjite glasnoću izvora, povećajte udaljenost, napravite tihe stanke i razmislite o zaštiti sluha kada se izlaganje nastavi."
+        },
+        "danger": {
+          "label": "Potencijalno opasno",
+          "range": "100 dB ili više",
+          "overview": "Ova sesija sugerira vrlo intenzivno zvučno okruženje koje zaslužuje trenutnu pozornost.",
+          "suitable": "Samo kratke sigurnosne provjere. Izbjegavajte korištenje ovog okruženja za slušanje, rad, odmor ili produženu aktivnost.",
+          "recommendation": "Udaljite se od izvora, smanjite glasnoću kada je to moguće i koristite odgovarajuću zaštitu za sluh. Ne oslanjajte se na telefonsku procjenu za određivanje sigurne izloženosti."
+        }
+      }
+    },
+    "stopReason": {
+      "completed": "Završeno",
+      "manual": "Zaustavljeno ručno",
+      "blur": "Zaustavljeno nakon napuštanja zaslona",
+      "background": "Zaustavljen u pozadini",
+      "interruption": "Prekinut",
+      "route-change": "Audio ruta je promijenjena",
+      "replaced": "Zamijenjen drugim alatom",
+      "error": "Zaustavljen zbog pogreške",
+      "incomplete": "Nepotpun"
     }
   },
   "otaUpdate": {

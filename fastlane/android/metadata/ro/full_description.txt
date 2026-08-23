@@ -1,7 +1,9 @@
+Undă clară elimină apa și repară sunetul înfundat; test tonuri, stereo și dB.
+
 Difuzorul se aude înfundat după ce s-a udat? Curățare Difuzor ajută la eliminarea apei prinse, prafului și reziduurilor cu un sunet de curățare ghidat în trei etape. Apoi poți verifica imediat rezultatul.
 
 CURĂȚĂ ȘI TESTEAZĂ DIFUZORUL
-• Rulează cicluri de eliminare a apei de 30, 60 sau 90 de secunde
+• Rulează gratuit cicluri nelimitate de 30 s; Premium adaugă 60/90 s și modul Turbo
 • Generează tonuri precise între 20 și 20.000 Hz
 • Testează canalul stereo stâng, drept sau ambele
 • Estimează zgomotul din jur cu un dB-metru în timp real
@@ -10,7 +12,7 @@ CURĂȚĂ ȘI TESTEAZĂ DIFUZORUL
 PATRU INSTRUMENTE AUDIO, UN SINGUR KIT PRIVAT
 Curățarea difuzorului, generatorul de tonuri, testul stereo și sonometrul rulează pe dispozitiv. Mostrele microfonului sunt procesate în memorie și nu sunt salvate sau încărcate.
 
-Gratuit: tonuri sinusoidale, test stereo manual și estimare dB în timp real. Premium oferă toate ciclurile, forme de undă suplimentare, test automat, statistici detaliate și utilizare fără reclame.
+Gratuit: cicluri nelimitate de 30 s, tonuri sinusoidale, test stereo manual, dB în timp real și valorile minimă, medie și maximă. Premium oferă cicluri de 60/90 s, modul Turbo, forme de undă suplimentare, test automat, rapoarte ale sesiunilor de sunet, istoric privat al activității și utilizare fără reclame.
 
 Așază difuzorul în jos, începe cu volum redus, rulează un ciclu și testează sunetul. Repetă dacă încă se aude înfundat.
 

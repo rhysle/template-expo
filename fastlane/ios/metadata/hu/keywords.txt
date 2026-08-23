@@ -1,1 +1,1 @@
-tisztít,telefon,sztereó,teszt,frekvencia,hertz,audió,hang,zaj,por,nedvesség,tón,decibel
+tisztít,telefon,sztereó,teszt,frekvencia,audió,hang,zaj,por,nedvesség,tón,decibel,tompa,hiba,javítás

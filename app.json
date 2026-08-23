@@ -2,7 +2,7 @@
   "expo": {
     "name": "Speaker Cleaner",
     "slug": "speaker-cleaner",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/icons/ios-icon.png",
     "scheme": "com.rhysle.speakercleaner",
@@ -22,7 +22,10 @@
     },
     "android": {
       "allowBackup": false,
-      "icon": "./assets/icons/android-icon.png",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icons/android-icon-adaptive.png",
+        "backgroundColor": "#F7FBFF"
+      },
       "predictiveBackGestureEnabled": false,
       "package": "com.rhysle.speakercleaner",
       "googleServicesFile": "./google-services.json",

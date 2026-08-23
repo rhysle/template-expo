@@ -8,7 +8,6 @@ import { InlineNotice, NativeToggle, Text } from '@/components/base'
 import { useRequestInterstitialAd } from '@/services/ads'
 import { audioController, useAudioController, useAudioToolLifecycle } from '@/services/audio'
 import { type PaywallSource, usePremiumGate } from '@/services/revenueCat'
-import { useAppReview } from '@/services/storeReview'
 import { useAudioPreferencesState } from '@/stores/features/audioPreferences'
 import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
 
@@ -40,7 +39,6 @@ export default function StereoTestScreen() {
   const { height } = useWindowDimensions()
   const snapshot = useAudioController()
   const requestInterstitialAd = useRequestInterstitialAd()
-  const { requestReview } = useAppReview()
   const { premiumState, requirePremium } = usePremiumGate()
   const { hapticsEnabled } = useAudioPreferencesState()
   const [selection, setSelection] = useState<ChannelSelection>({ left: false, right: false })
@@ -93,10 +91,7 @@ export default function StereoTestScreen() {
     setSelection({ left: false, right: false })
     setAutoStep(0)
     await audioController.stop('manual')
-    if (wasRunning) {
-      const didRequestReview = await requestReview()
-      if (!didRequestReview) await requestInterstitialAd()
-    }
+    if (wasRunning) await requestInterstitialAd()
   }
 
   const playChannels = (nextSelection: ChannelSelection) => {
@@ -232,8 +227,8 @@ export default function StereoTestScreen() {
           <Text
             variant="subtitle"
             weight="semibold"
-            tone={isActive ? 'error' : 'accent'}
-            align="center">
+            align="center"
+            style={{ color: isActive ? colors.status.error : colors.primary.main }}>
             {isActive ? t('audioTools.stereo.stop') : t('audioTools.stereo.start')}
           </Text>
         </View>
@@ -270,13 +265,12 @@ const createStyles = createThemedStyles((t) => ({
     gap: t.spacing.md,
   },
   autoRow: {
-    minHeight: 68,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     gap: t.spacing.md,
     paddingHorizontal: t.spacing.lg,
-    paddingVertical: t.spacing.sm,
+    paddingVertical: t.spacing.md,
     borderCurve: 'continuous',
     borderRadius: t.borderRadius.xl,
     backgroundColor: t.colors.background.subtle,

@@ -1,7 +1,7 @@
 ¿El altavoz suena apagado después de mojarse? Limpiar Altavoz ayuda a expulsar agua atrapada, polvo suelto y residuos mediante un sonido de limpieza guiado en tres fases. Después puedes comprobar el resultado.
 
 LIMPIA Y PRUEBA TU ALTAVOZ
-• Ejecuta ciclos para quitar agua de 30, 60 o 90 segundos
+• Ejecuta gratis ciclos ilimitados de 30 segundos; Premium añade 60/90 segundos y modo Turbo
 • Genera tonos precisos de 20 a 20.000 Hz
 • Prueba los canales estéreo izquierdo, derecho y ambos
 • Estima el ruido ambiental con un medidor dB en directo
@@ -10,7 +10,7 @@ LIMPIA Y PRUEBA TU ALTAVOZ
 CUATRO HERRAMIENTAS DE AUDIO, UN KIT PRIVADO
 La limpieza del altavoz, el generador de tonos, la prueba estéreo y el sonómetro funcionan en el dispositivo. Las muestras del micrófono se procesan en memoria y nunca se guardan ni se suben.
 
-Gratis: tonos sinusoidales, prueba estéreo manual y estimación dB en directo. Premium desbloquea todos los ciclos, más formas de onda, prueba automática, estadísticas detalladas y uso sin anuncios.
+Gratis: ciclos ilimitados de 30 segundos, tonos sinusoidales, prueba estéreo manual, dB en directo y valores mínimo, promedio y máximo. Premium desbloquea ciclos de 60/90 segundos, modo Turbo, más formas de onda, prueba automática, informes de sonido, historial privado de actividad y uso sin anuncios.
 
 Coloca el dispositivo con el altavoz hacia abajo, empieza con volumen bajo, ejecuta un ciclo y prueba el sonido. Repite si sigue apagado.
 

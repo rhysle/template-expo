@@ -1,1 +1,1 @@
-czyść,telefon,stereo,test,częstotliwość,herc,audio,dźwięk,hałas,kurz,wilgoć,ton,decybel
+czyść,telefon,stereo,test,częstotliwość,audio,dźwięk,hałas,kurz,wilgoć,decybel,stłumiony,dB,naprawa

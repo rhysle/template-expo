@@ -1,1 +1,1 @@
-
+altavoz,celular,estéreo,prueba,frecuencia,ruido,polvo,humedad,tono,decibel,opaco,sacar,sonido,repara

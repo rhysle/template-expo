@@ -1,1 +1,1 @@
-čisti,telefon,stereo,test,frekvencija,herc,audio,zvuk,buka,prašina,vlaga,ton,decibel
+čisti,telefon,stereo,test,frekvencija,audio,zvuk,buka,prašina,vlaga,decibel,prigušen,mokro,popravak

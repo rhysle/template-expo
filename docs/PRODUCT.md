@@ -5,7 +5,7 @@
 | Product name   | Water Eject – Speaker Cleaner  |
 | Status         | In Development                 |
 | Owner          | TBD                            |
-| Last updated   | 2026-07-20                     |
+| Last updated   | 2026-08-23                     |
 | Target release | V1 after product configuration |
 
 ## Product Summary
@@ -57,7 +57,8 @@ meter.
 - Provide foreground-only Eject, Tone Generator, Stereo Test, and dB Meter tools.
 - Make audio state, output guidance, interruptions, and recovery visible.
 - Process microphone samples only in memory and clearly qualify estimated readings.
-- Persist non-sensitive tool preferences and the last tone frequency.
+- Persist non-sensitive tool preferences plus bounded, device-only cleaning and derived dB
+  activity records.
 
 ### Non-goals
 
@@ -69,9 +70,7 @@ meter.
 ### Possible later work
 
 - Product onboarding and education based on completed usability testing.
-- Additional premium history, calibration, presets, and automation after V1 usage validation.
-- Cleaning history, additional waveforms, device-specific calibration profiles, and hearing-dose
-  tracking after privacy and accuracy review.
+- Device-specific calibration profiles and hearing-dose tracking after privacy and accuracy review.
 
 ## Core Experience
 
@@ -111,8 +110,12 @@ access only when the user presses Start and explains that samples stay on-device
 | PR-004 | The user can start an estimated sound meter after granting microphone permission. | Must     | Meter shows current/min/average/max, four named ranges, and a persistent accuracy disclaimer.                  |
 | PR-005 | Only one audio tool can own the native session at a time.                         | Must     | Starting a tool stops the previous tool; blur, background, interruption, and route loss release all resources. |
 | PR-006 | Microphone samples stay on the device and are not retained.                       | Must     | Recorder file output is disabled; no samples or exact readings are logged or uploaded.                         |
-| PR-007 | Audio preferences persist between launches.                                       | Should   | Cleaning duration, haptics, meter response, calibration offset, and last tone frequency restore.               |
+| PR-007 | Audio preferences persist between launches.                                       | Should   | Cleaning duration/focus, haptics, waveform, and last tone frequency restore.                                   |
 | PR-008 | Status remains understandable without color or animation.                         | Must     | Every state has text/icon feedback and honors reduced-motion and assistive-technology behavior.                |
+| PR-009 | Users can run unlimited Balanced 30-second cleaning cycles for free.              | Must     | Premium access is required only for longer durations and Turbo cleaning.                                       |
+| PR-010 | Premium users can run longer cycles and focused cleaning routines.                | Must     | Water and debris routines use distinct timing and audio profiles while retaining immediate stop controls.      |
+| PR-011 | Cleaning and qualifying dB sessions are collected locally regardless of access.   | Must     | Free users see counts only; Premium reveals existing details; each category retains its newest 100 records.    |
+| PR-012 | Premium dB history includes timelines and rolling-average detail.                 | Must     | Store one rounded point per second for at most 60 minutes; show charts only in saved history details.          |
 
 ## States and Edge Cases
 
@@ -131,30 +134,34 @@ access only when the user presses Start and explains that samples stay on-device
 
 - **Business model:** Freemium with monthly, annual, and lifetime purchases sharing the `premium`
   RevenueCat entitlement.
-- **Free experience:** Unlimited sine-wave Tone Generator, manual Stereo Test, and live dB Meter
-  with safety bands and guidance. Eject remains visible as a preview but cannot run.
-- **Premium value:** Complete 30/60/90-second Water Eject cycles, advanced tone waveforms,
-  automatic stereo alternation, dB session statistics, and no ads.
+- **Free experience:** Unlimited Balanced 30-second Water Eject cycles, unlimited sine-wave Tone
+  Generator, manual Stereo Test, and live dB Meter with safety bands and guidance.
+- **Premium value:** Longer 60/90-second cleaning, Turbo mode, advanced tone
+  waveforms, automatic stereo alternation, advanced dB sessions, saved activity details, and no ads.
+- **Activity history:** Cleaning and derived dB session records are stored locally for every user.
+  Free users see saved category counts; Premium reveals details and records created before upgrade.
 - **Paywall timing:** Locked controls and Settings open contextual paywalls. A dismissible automatic
   paywall is eligible every seven days but waits until audio and blocking UI are idle.
 - **Ads:** Free users may see one anchored banner on idle free-tool tabs and rare interstitials
-  after qualifying explicit Stop actions. No rewarded ads ship in V1.
-- **Interstitial policy:** The first three qualifying completions are ad-free; later impressions
-  require three completions between ads, a 24-hour cooldown, and a one-per-foreground cap.
+  after qualifying tool completions or explicit Stop actions. No rewarded ads ship in V1.
+- **Interstitial policy:** The first two qualifying completions are ad-free; later impressions
+  require two completions between ads, a 24-hour cooldown, and a one-per-foreground cap. A native
+  review request takes precedence over an interstitial on the same Eject completion.
 - **Restore and cancellation:** All active subscription and lifetime products restore the same
   Premium access.
 
 ## Data, Privacy, and Permissions
 
-| Data or permission  | Purpose                                                            | Storage or recipient              | Retention/deletion                                                |
-| ------------------- | ------------------------------------------------------------------ | --------------------------------- | ----------------------------------------------------------------- |
-| Microphone          | Calculate an estimated nearby sound level while dB Meter is active | Processed in memory on the device | Raw buffers are discarded immediately and never written to a file |
-| Audio preferences   | Restore tool choices                                               | Zustand/MMKV on device            | Removed with app data/uninstall                                   |
-| Anonymous analytics | Understand tool starts/completions and permission outcomes         | Firebase Analytics                | Governed by the configured analytics policy                       |
-| Error diagnostics   | Diagnose unexpected audio failures without audio content           | Sentry                            | Governed by the configured diagnostics policy                     |
+| Data or permission  | Purpose                                                            | Storage or recipient                                                                 | Retention/deletion                                                                                     |
+| ------------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
+| Microphone          | Calculate an estimated nearby sound level while dB Meter is active | Raw samples are processed in memory; rounded derived estimates may be stored locally | Raw buffers are discarded immediately and never written to a file; activity can be cleared in Settings |
+| Activity history    | Preserve cleaning sessions and derived dB summaries                | Versioned MMKV storage on this device only                                           | Newest 100 cleaning and 100 dB records; user can clear all records in Settings                         |
+| Audio preferences   | Restore tool choices                                               | Zustand/MMKV on device                                                               | Removed with app data/uninstall                                                                        |
+| Anonymous analytics | Understand tool starts/completions and permission outcomes         | Firebase Analytics                                                                   | Governed by the configured analytics policy                                                            |
+| Error diagnostics   | Diagnose unexpected audio failures without audio content           | Sentry                                                                               | Governed by the configured diagnostics policy                                                          |
 
-- Exact microphone samples, exact dB readings, and exact custom frequencies are excluded from
-  analytics and diagnostics.
+- Microphone samples, saved activity counts, exact dB readings, and exact custom frequencies are
+  excluded from analytics and diagnostics. Saved timelines contain rounded derived estimates only.
 - The app does not claim that estimated dB is calibrated SPL. Users may apply a ±20 dB offset by
   comparing against a trusted reference meter.
 - The existing Android backup policy remains disabled until the product-level policy is reviewed.
@@ -166,6 +173,7 @@ access only when the user presses Start and explains that samples stay on-device
 | `audio_tool_started`           | A native audio tool reaches running state | tool, mode, configured duration when applicable | Which tools reach a usable state?           |
 | `audio_tool_ended`             | A running tool releases its session       | tool, stop reason, coarse duration bucket       | Do users complete flows or get interrupted? |
 | `microphone_permission_result` | dB Meter evaluates permission on Start    | granted/denied                                  | Is permission blocking meter use?           |
+| `history_locked_viewed`        | A free user opens the locked archive      | entry point only                                | Does accumulated activity create intent?    |
 
 - **Primary funnel:** Tool screen viewed → tool started → tool ended/completed.
 - **Retention signal:** Another tool start in a later app session.
@@ -231,7 +239,8 @@ The feature implementation is ready for product QA when:
 
 ## Change Log
 
-| Date       | Change                                                                                         | Reason                                                                                          |
-| ---------- | ---------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| 2026-07-27 | Defined Premium gates, contextual and weekly paywalls, and completion-based ad placement       | Monetize advanced controls while preserving useful free audio tools and uninterrupted playback  |
-| 2026-07-20 | Defined Water Eject – Speaker Cleaner V1 feature behavior, privacy, analytics, and limitations | Replace the reusable product template with an implementation reference for the four audio tools |
+| Date       | Change                                                                                         | Reason                                                                                                |
+| ---------- | ---------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| 2026-08-23 | Added recurring free cleaning, focused routines, advanced dB, and locked history               | Let users experience the core result while accumulated device-only activity strengthens Premium value |
+| 2026-07-27 | Defined Premium gates, contextual and weekly paywalls, and completion-based ad placement       | Monetize advanced controls while preserving useful free audio tools and uninterrupted playback        |
+| 2026-07-20 | Defined Water Eject – Speaker Cleaner V1 feature behavior, privacy, analytics, and limitations | Replace the reusable product template with an implementation reference for the four audio tools       |

@@ -210,12 +210,10 @@ export const Slider = ({
     const travel = Math.max(sliderWidth.value - safeThumbSize, 0)
     const scaleInset = ((thumbScale.value - 1) * safeThumbSize) / 2
     const scaledTravel = Math.max(travel - scaleInset * 2, 0)
-    const directionalProgress = isRTL ? 1 - progress.value : progress.value
+    const translation = scaleInset + progress.value * scaledTravel
+    // React Native swaps the left anchor to right in RTL, while translateX stays physical.
     return {
-      transform: [
-        { translateX: scaleInset + directionalProgress * scaledTravel },
-        { scale: thumbScale.value },
-      ],
+      transform: [{ translateX: isRTL ? -translation : translation }, { scale: thumbScale.value }],
     }
   })
 
@@ -274,7 +272,6 @@ export const Slider = ({
             <Animated.View
               style={[
                 styles.activeTrack,
-                isRTL ? { right: 0 } : { left: 0 },
                 {
                   height: safeTrackHeight,
                   borderRadius: safeTrackHeight / 2,
@@ -321,6 +318,7 @@ const createStyles = createThemedStyles((t) => ({
     position: 'absolute',
     top: 0,
     bottom: 0,
+    left: 0,
   },
   thumb: {
     position: 'absolute',

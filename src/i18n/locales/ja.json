@@ -50,7 +50,7 @@
     "otaUpdateId": "更新: {{updateId}}",
     "upgradeBanner": {
       "title": "プレミアムにアップグレード",
-      "subtitle": "ウォーター エジェクト、高度なオーディオ コントロール、広告なしのエクスペリエンスのロックを解除します"
+      "subtitle": "より長いTurboクリーニング、高度なオーディオ操作、広告なしの利用をアンロック"
     },
     "audio": {
       "section": "オーディオとメーター",
@@ -60,6 +60,15 @@
       "hapticsSubtitle": "サウンド ツールで触覚フィードバックを使用する",
       "safety": "オーディオの安全性とプライバシー",
       "safetySubtitle": "再生、マイク、測定ガイダンス"
+    },
+    "activity": {
+      "section": "活動データ",
+      "saved": "保存されたアクティビティ",
+      "clear": "アクティビティ履歴をクリアする",
+      "clearSubtitle": "ローカルに保存されたクリーニングおよびサウンド セッションを削除します",
+      "clearConfirmTitle": "すべてのアクティビティをクリアしますか?",
+      "clearConfirmBody": "これにより、保存されたクリーニング セッションとサウンド セッションがこのデバイスから完全に削除されます。次回の無料清掃時間は変わりません。",
+      "cleared": "アクティビティ履歴が消去されました"
     }
   },
   "audioTools": {
@@ -68,58 +77,67 @@
       "error": "オーディオを開始できませんでした。現在の出力を確認して、再試行してください。"
     },
     "eject": {
-      "subtitle": "強力な 3 段階のサウンド サイクルが、閉じ込められた水、浮遊塵、破片をターゲットにします。",
-      "safe": "掃除の準備完了",
-      "completed": "クリーニング サイクルが完了しました",
-      "remaining": "{{time}} 残り",
       "start": "掃除を開始",
       "stop": "掃除をやめる",
-      "idleHint": "開始する前に、デバイスのスピーカー面を下にして置きます。",
-      "runningHint": "デバイスを耳から離して動かさないでください。",
-      "completedHint": "スピーカーをテストし、音がまだこもっている場合は、このサイクルを繰り返します。",
       "externalTitle": "外部オーディオの接続を切断する",
       "externalBody": "スピーカーのクリーニングは、ヘッドフォンや Bluetooth 出力ではなく、デバイスのスピーカーを通じて行われます。",
-      "phase": {
-        "water": "水噴射パルス",
-        "debris": "塵や破片が揺れる",
-        "finish": "仕上げスイープ"
+      "turbo": {
+        "title": "ターボモード",
+        "guide": {
+          "title": "ターボモード",
+          "description": "頑固な水やゴミに対する強力な洗浄サイクル。",
+          "frequency": "フルサイクルを通じて進化し続ける 5 つの異なるデュアル周波数ステージを使用します。",
+          "duration": "ターボがシステムの音量制限を一時的に超える場合があります。短い洗浄サイクルにのみ使用してください。",
+          "cta": "ターボを有効にする"
+        }
+      },
+      "help": {
+        "title": "使用方法",
+        "disconnect": "ヘッドフォンと Bluetooth デバイスを取り外し、このデバイスから掃除音が再生されるようにします。",
+        "position": "デバイスのスピーカー側を下にして乾いた面に置き、スピーカーの開口部を空けておきます。",
+        "start": "デバイスの音量を上げ、「クリーニングの開始」をタップし、サイクルが終了するまでデバイスを動かさないようにします。",
+        "hearingTitle": "聴覚を保護する",
+        "hearingWarning": "Eject のテスト中はヘッドフォンを着用しないでください。スピーカーのクリーニング音が大音量で聞こえると、聴覚障害を引き起こす可能性があります。"
+      },
+      "routine": {
+        "standard": "標準",
+        "turbo": "Turbo"
       }
     },
     "tone": {
-      "currentFrequency": "現在の頻度",
+      "currentFrequency": "現在の周波数",
       "frequencyValue": "{{frequency}} Hz",
-      "waveformLabel": "{{waveform}} 波形、{{frequency}} ヘルツ",
+      "waveformLabel": "{{frequency}} ヘルツの{{waveform}}",
       "waveform": {
         "label": "波形",
         "sine": "正弦波",
-        "square": "正方形",
-        "triangle": "三角形",
-        "sawtooth": "ノコギリ歯"
+        "square": "矩形波",
+        "triangle": "三角波",
+        "sawtooth": "のこぎり波"
       },
-      "play": "トーンを再生する",
+      "play": "テスト音を再生",
       "stop": "停止音",
-      "volumeHint": "音量を低くし、スピーカーを耳から離してください。",
       "band": {
         "veryLow": "非常に低い",
         "low": "低い",
-        "midLow": "低中速",
-        "mid": "中旬",
+        "midLow": "中低域",
+        "mid": "中域",
         "high": "高",
         "veryHigh": "非常に高い"
       }
     },
     "stereo": {
-      "auto": "自動代替",
-      "autoHint": "左、右、両方に循環します",
+      "auto": "自動切り替え",
+      "autoHint": "左、右、両方のチャンネルを順番に切り替えます",
       "tapToChange": "スピーカーをタップしてチャンネルを変更します",
       "start": "テストを開始",
       "helpTitle": "ステレオ テストの使用方法",
       "helpTap": "左または右のスピーカーをタップして、そのチャンネルをすぐにテストします。",
       "helpBoth": "両方のスピーカーをオンにして、両方のチャンネルからテスト トーンを再生します。",
-      "helpAuto": "自動交互を使用して、左、右、および両方のチャンネルを循環します。",
+      "helpAuto": "自動切り替えを使うと、左、右、両方のチャンネルを順番にテストできます。",
       "helpStop": "再生を終了したい場合は、必ず「テストの停止」を使用してください。",
       "left": "左",
-      "right": "そうです",
+      "right": "右",
       "positionLeft": "左チャンネルが再生中",
       "positionCenter": "両方のチャンネルが再生中",
       "positionRight": "右チャンネルが再生中",
@@ -131,11 +149,11 @@
       "start": "測定を開始",
       "stop": "測定を停止",
       "permissionTitle": "マイクへのアクセスがオフになっています",
-      "permissionBody": "マイクへのアクセスは、近くの騒音レベルを推定するために dB メーターが動作しているときにのみ使用されます。音声はデバイス上で処理され、保存またはアップロードされることはありません。",
+      "permissionBody": "マイクは、周囲の騒音レベルを推定するためにdBメーターの測定中のみ使用されます。音声サンプルはメモリ内で処理され、保存またはアップロードされることはありません。各セッションの丸められた推定値はこのデバイスにのみ保存され、設定から消去できます。",
       "minimum": "最小値",
       "average": "平均",
       "maximum": "最大",
-      "unlockStats": "詳細な dB セッション統計のロックを解除します",
+      "timeline": "推定騒音レベルのタイムライン",
       "status": {
         "veryQuiet": "とても静かです",
         "normal": "通常",
@@ -157,17 +175,17 @@
         "everydayLevels": "日常の騒音レベル",
         "examplesApproximate": "例はおおよそのものであり、距離によって異なります。",
         "currentEstimate": "現在の推定値",
-        "exposureTitle": "露光時間は重要です",
-        "exposureDescription": "NIOSH の職業指導。 +3 dB ごとに推奨時間が半分になります。",
-        "useItWell": "上手に活用しましょう",
+        "exposureTitle": "騒音にさらされる時間が重要です",
+        "exposureDescription": "NIOSHの職場騒音ガイドラインでは、3 dB上がるごとに推奨される曝露時間が半分になります。",
+        "useItWell": "測定のヒント",
         "tipMicrophoneTitle": "マイクは覆わないでください",
-        "tipMicrophoneBody": "手やケースで覆わないでください。",
+        "tipMicrophoneBody": "マイクを手やスマートフォンのケースで覆わないでください。",
         "tipPositionTitle": "どこで聴いているかを測定します",
         "tipPositionBody": "評価したい場所にデバイスを移動します。",
         "tipProtectTitle": "音が大きすぎると感じる場合は、耳を保護してください",
         "tipProtectBody": "発生源から離れるか、聴覚保護具を使用してください。",
         "reference": {
-          "concertSpeaker": "コンサート スピーカー",
+          "concertSpeaker": "コンサート用スピーカー",
           "sirenNightclub": "サイレンまたはナイトクラブ",
           "lawnMower": "芝刈り機",
           "busyStreet": "賑やかな通り",
@@ -188,7 +206,7 @@
       "estimateTitle": "推定騒音レベル",
       "estimateBody": "電話のマイクは実験室の SPL ではなくデジタル信号レベルを報告します。アプリはデバイスごとに異なる推定値を適用します。",
       "privacyTitle": "マイクのプライバシー",
-      "privacyBody": "マイクは、dB メーターがアクティブな間のみ動作します。サンプルはメモリ内で処理され、保存またはアップロードされることはありません。",
+      "privacyBody": "マイクはdBメーターの測定中のみ動作します。サンプルはメモリ内で処理され、保存またはアップロードされることはありません。セッションの丸められた推定値はアクティビティ履歴用に端末内へ保存される場合があり、設定から消去できます。",
       "limitationsTitle": "重要な制限事項",
       "limitationsBody": "このアプリは水や埃の除去を保証するものではありません。スピーカーに物を挿入したり、これらのツールを専門家による修理、校正された機器、医学的アドバイス、または聴覚保護指導の代わりとして使用したりしないでください。"
     }
@@ -197,12 +215,30 @@
     "title": "完全なオーディオ ツールキットのロックを解除します",
     "subtitle": "スピーカーを掃除し、高度なコントロールにアクセスし、すべての広告を削除します。",
     "ctaFreeTrial": "無料でお試しください",
+    "trialDisclaimer": "いつでもキャンセルできます。今すぐのお支払いはありません",
+    "subscriptionDisclaimer": "いつでもキャンセルできます。",
+    "lifetimeDisclaimer": "お支払いは一度だけ。継続課金はありません。",
     "restore": "購入を復元する",
     "terms": "利用規約",
     "privacy": "プライバシー ポリシー",
     "then": "、その後",
     "trial": "{{count}}-{{unit}} 無料トライアル",
     "save": "{{percent}}% 節約",
+    "availability": {
+      "loading": "購入オプションを確認しています…",
+      "temporary_error": {
+        "title": "購入オプションを読み込めませんでした",
+        "subtitle": "接続を確認して、もう一度お試しください。"
+      },
+      "configuration_error": {
+        "title": "購入オプションを利用できません",
+        "subtitle": "ストアでこのアプリの商品を読み込めませんでした。しばらくしてからもう一度お試しください。"
+      },
+      "purchase_not_allowed": {
+        "title": "このデバイスでは購入できません",
+        "subtitle": "このデバイスまたはストアアカウントではアプリ内購入を利用できません。"
+      }
+    },
     "trialUnit": {
       "day": "日",
       "week": "週",
@@ -216,27 +252,52 @@
       "year": "/年",
       "lifetime": "1 回限りの購入"
     },
-    "features": {
-      "waterEject": {
-        "title": "完全な水の排出",
-        "description": "ガイド付きの 30、60、90 秒のスピーカー クリーニング サイクルを実行します。"
-      },
-      "waveforms": {
-        "title": "高度なトーン波形",
-        "description": "全周波数範囲にわたって方形波、三角波、ノコギリ波トーンを使用します。"
-      },
-      "stereoAuto": {
-        "title": "自動ステレオテスト",
-        "description": "左チャンネル、右チャンネル、および両方のチャンネルをハンズフリーで切り替えます。"
-      },
-      "dbStats": {
-        "title": "詳細な dB 統計",
-        "description": "すべてのセッションの最小、平均、最大の推定値を確認します。"
-      },
-      "adFree": {
-        "title": "広告中断ゼロ",
-        "description": "バナーや全画面広告を表示せずに、すべてのオーディオ ツールを使用します。"
+    "comparison": {
+      "features": "機能",
+      "free": "無料",
+      "pro": "Pro",
+      "included": "利用可能",
+      "excluded": "利用不可",
+      "unlimited": "無制限",
+      "rows": {
+        "cleaningDuration": {
+          "title": "クリーニング期間",
+          "free": "30 秒",
+          "pro": "30/60/90 秒"
+        },
+        "turbo": {
+          "title": "ターボモード"
+        },
+        "waveforms": {
+          "title": "波形",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "ステレオテスト",
+          "free": "手動",
+          "pro": "自動"
+        },
+        "soundInsights": {
+          "title": "騒音レベル分析",
+          "free": "基本",
+          "pro": "詳細"
+        },
+        "activityHistory": {
+          "title": "活動履歴"
+        },
+        "adExperience": {
+          "title": "広告あり",
+          "free": "広告あり",
+          "pro": "広告なし"
+        }
       }
+    },
+    "context": {
+      "historyTitle": "保存したアクティビティのロックを解除する",
+      "historySubtitle": "このデバイスには、{{cleaning}} 件のスピーカークリーニングと {{db}} 件の音量測定が保存されています。",
+      "cleaningSubtitle": "より長いサイクルと多段階のTurboクリーニング音波で、いつでもデバイスのスピーカーをクリーニングできます。",
+      "dbSubtitle": "このセッションの完全な分析をロック解除し、保存されたサウンド レポートを再確認します。"
     },
     "feedback": {
       "subscribeSuccess": "ようこそ!プレミアム アクセスは有効です。",
@@ -251,6 +312,87 @@
       "month": "毎月",
       "year": "毎年",
       "lifetime": "生涯"
+    }
+  },
+  "activity": {
+    "history": "活動履歴",
+    "cleaning": "クリーニング",
+    "soundSessions": "サウンドセッション",
+    "savedCount": "{{cleaning}} 清掃活動 · {{db}} サウンド セッションが保存されました",
+    "emptyTitle": "保存されたアクティビティはまだありません",
+    "emptyBody": "完了したクリーニングとサウンドセッションがここに表示されます。",
+    "select": "選択",
+    "selectAll": "すべて選択",
+    "deselectAll": "すべての選択を解除",
+    "selectedCount": "{{count}} が選択されました",
+    "delete": "消去",
+    "deleteSelected": "削除 ({{count}})",
+    "deleteConfirmTitleSingle": "このアクティビティを削除しますか?",
+    "deleteConfirmTitleMultiple": "{{count}} アクティビティを削除しますか?",
+    "deleteConfirmBodySingle": "これにより、選択したアクティビティがこのデバイスから完全に削除されます。",
+    "deleteConfirmBodyMultiple": "これにより、選択した {{count}} アクティビティがこのデバイスから完全に削除されます。",
+    "deletedSingle": "アクティビティが削除されました",
+    "deletedMultiple": "{{count}} アクティビティが削除されました",
+    "dbSession": "サウンドレベルセッション",
+    "duration": "{{seconds}} 秒",
+    "cleaningDetail": "清掃活動",
+    "dbDetail": "サウンドセッション",
+    "mode": "クリーニングモード",
+    "durationLabel": "間隔",
+    "result": "結果",
+    "report": {
+      "title": "騒音レベル分析",
+      "subtitle": "このセッションの個人的な見方",
+      "premium": "Premium",
+      "sessionSummary": "平均 {{average}} dB · ピーク {{maximum}} dB · {{seconds}} 秒",
+      "environmentRating": "環境評価",
+      "suitableFor": "に適しています",
+      "recommendation": "おすすめ",
+      "unlockTitle": "この音量レベルが何を意味するのかを確認してください",
+      "unlockBody": "完全な環境評価、適切なアクティビティ、およびリスニングの推奨事項のロックを解除します。",
+      "unlockAction": "完全なレポートのロックを解除する",
+      "disclaimer": "電話マイクの推定値はデバイスや設置場所によって異なります。このレポートは一般的なガイダンスであり、校正された測定値や医学的アドバイスではありません。",
+      "profile": {
+        "veryQuiet": {
+          "label": "とても静か",
+          "range": "30dB未満",
+          "overview": "このセッションは、競合する背景音がほとんどない、非常に穏やかな環境を示唆しています。",
+          "suitable": "静かな休息、読書、集中した執筆、瞑想、その他、気を散らすものを最小限に抑えることができる活動。",
+          "recommendation": "マイクを覆わない状態にして、普段座っている場所や寝ている場所を測定します。推定値が非常に低い場合は、電話のマイクが妨げられている可能性もあります。"
+        },
+        "normal": {
+          "label": "通常",
+          "range": "30～69dB",
+          "overview": "このセッションは、距離に応じて、静かな家、オフィス、または通常の会話に似た、一般的な日常の範囲内にあります。",
+          "suitable": "会話、デスクワーク、カジュアルなリスニング、勉強、そしてほとんどの日常の室内活動。",
+          "recommendation": "より深く焦点を合わせる必要がある場合は、近くの音声を減らすか、音源から遠ざけて別のセッションを比較してください。"
+        },
+        "loud": {
+          "label": "うるさい",
+          "range": "70～99dB",
+          "overview": "このセッションは、時間の経過とともに音が疲れたり不快になったりする可能性のある大音量の環境を示唆しています。",
+          "suitable": "レベルの変化を把握したい、混雑した通り、電化製品、イベント、または音楽再生を簡単にチェックします。",
+          "recommendation": "音源の音量を下げ、距離を置き、静かに休憩し、暴露が続く場合は聴覚保護を考慮してください。"
+        },
+        "danger": {
+          "label": "潜在的に危険",
+          "range": "100dB以上",
+          "overview": "このセッションは、すぐに注目に値する非常に激しいサウンド環境を示唆しています。",
+          "suitable": "簡単な安全チェックのみ。この環境をリスニング、仕事、休憩、または長時間の活動に使用することは避けてください。",
+          "recommendation": "音源から離れ、可能な場合は音量を下げ、適切な聴覚保護具を使用してください。安全な暴露を判断するために、電話による見積もりに依存しないでください。"
+        }
+      }
+    },
+    "stopReason": {
+      "completed": "完了",
+      "manual": "手動で停止しました",
+      "blur": "画面を離れて停止しました",
+      "background": "バックグラウンドで停止しました",
+      "interruption": "中断されました",
+      "route-change": "音声ルートが変更されました",
+      "replaced": "別のツールに置き換えられる",
+      "error": "エラーで止まってしまった",
+      "incomplete": "不完全"
     }
   },
   "otaUpdate": {

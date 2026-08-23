@@ -50,7 +50,7 @@
     "otaUpdateId": "Aggiornamento: {{updateId}}",
     "upgradeBanner": {
       "title": "Passa a Premium",
-      "subtitle": "Sblocca l'espulsione dell'acqua, controlli audio avanzati e un'esperienza senza pubblicità"
+      "subtitle": "Sblocca cicli di pulizia Turbo più lunghi, controlli audio avanzati e un’esperienza senza pubblicità"
     },
     "audio": {
       "section": "Audio e misuratore",
@@ -60,6 +60,15 @@
       "hapticsSubtitle": "Utilizza il feedback tattile negli strumenti audio",
       "safety": "Sicurezza audio e privacy",
       "safetySubtitle": "Guida alla riproduzione, al microfono e alla misurazione"
+    },
+    "activity": {
+      "section": "Dati attività",
+      "saved": "Attività salvata",
+      "clear": "Cancella cronologia attività",
+      "clearSubtitle": "Rimuovi le sessioni di pulizia e audio salvate localmente",
+      "clearConfirmTitle": "Cancellare tutte le attività?",
+      "clearConfirmBody": "Questa operazione rimuoverà definitivamente le sessioni di pulizia e audio salvate da questo dispositivo. Il tuo prossimo orario di pulizia gratuito non cambierà.",
+      "cleared": "Cronologia attività cancellata"
     }
   },
   "audioTools": {
@@ -68,21 +77,31 @@
       "error": "Impossibile avviare l'audio. Controllare l'uscita corrente e riprovare."
     },
     "eject": {
-      "subtitle": "Un potente ciclo sonoro a 3 fasi prende di mira l'acqua intrappolata, la polvere e i detriti.",
-      "safe": "Pronto per pulire",
-      "completed": "Ciclo di pulizia completato",
-      "remaining": "{{time}} rimanente",
       "start": "Inizia a pulire",
       "stop": "Interrompi pulizia",
-      "idleHint": "Posiziona il dispositivo con l'altoparlante rivolto verso il basso prima di iniziare.",
-      "runningHint": "Tieni il dispositivo fermo e lontano dalle orecchie.",
-      "completedHint": "Metti alla prova l'altoparlante e ripeti il ciclo se il suono è ancora ovattato.",
       "externalTitle": "Disconnetti l'audio esterno",
       "externalBody": "La pulizia degli altoparlanti funziona tramite l'altoparlante del dispositivo, non tramite le cuffie o le uscite Bluetooth.",
-      "phase": {
-        "water": "Impulso di espulsione dell'acqua",
-        "debris": "Scuoti polvere e detriti",
-        "finish": "Spazzata finale"
+      "turbo": {
+        "title": "Modalità Turbo",
+        "guide": {
+          "title": "Modalità Turbo",
+          "description": "Un ciclo di pulizia più potente per acqua e detriti ostinati.",
+          "frequency": "Utilizza cinque distinti stadi a doppia frequenza che continuano ad evolversi durante l'intero ciclo.",
+          "duration": "Turbo potrebbe superare brevemente il limite del volume del sistema. Utilizzatelo solo per cicli di pulizia brevi.",
+          "cta": "Abilita Turbo"
+        }
+      },
+      "help": {
+        "title": "Come usare",
+        "disconnect": "Scollega le cuffie e i dispositivi Bluetooth in modo che il suono della pulizia venga riprodotto tramite questo dispositivo.",
+        "position": "Posiziona il dispositivo con l'altoparlante rivolto verso il basso su una superficie asciutta e mantieni libere le aperture dell'altoparlante.",
+        "start": "Alza il volume del dispositivo, tocca Avvia pulizia e mantieni il dispositivo fermo fino al termine del ciclo.",
+        "hearingTitle": "Proteggi il tuo udito",
+        "hearingWarning": "Non indossare le cuffie durante il test di Eject. I toni forti di pulizia degli altoparlanti potrebbero causare danni all'udito."
+      },
+      "routine": {
+        "standard": "Standard",
+        "turbo": "Turbo"
       }
     },
     "tone": {
@@ -98,7 +117,6 @@
       },
       "play": "Riproduci tono",
       "stop": "Segnale di stop",
-      "volumeHint": "Tieni il volume basso e l'altoparlante lontano dalle orecchie.",
       "band": {
         "veryLow": "Molto basso",
         "low": "Basso",
@@ -109,8 +127,8 @@
       }
     },
     "stereo": {
-      "auto": "Alternativa automatica",
-      "autoHint": "Vai a sinistra, a destra ed entrambe",
+      "auto": "Alternanza automatica",
+      "autoHint": "Alterna tra il canale sinistro, il destro ed entrambi",
       "tapToChange": "Tocca gli altoparlanti per cambiare canale",
       "start": "Inizia il test",
       "helpTitle": "Come utilizzare il test stereo",
@@ -118,8 +136,8 @@
       "helpBoth": "Accendi entrambi gli altoparlanti per riprodurre il tono di prova su entrambi i canali.",
       "helpAuto": "Utilizza l'alternanza automatica per alternare tra i canali sinistro, destro ed entrambi.",
       "helpStop": "Utilizza Interrompi test ogni volta che desideri terminare la riproduzione.",
-      "left": "A sinistra",
-      "right": "Giusto",
+      "left": "Sinistra",
+      "right": "Destra",
       "positionLeft": "Canale sinistro in riproduzione",
       "positionCenter": "Entrambi i canali in riproduzione",
       "positionRight": "Canale destro in riproduzione",
@@ -131,11 +149,11 @@
       "start": "Inizia a misurare",
       "stop": "Smetti di misurare",
       "permissionTitle": "L'accesso al microfono è disattivato",
-      "permissionBody": "L'accesso al microfono viene utilizzato solo mentre il dB Meter è in funzione per stimare i livelli sonori nelle vicinanze. L'audio viene elaborato sul tuo dispositivo e non viene mai salvato o caricato.",
+      "permissionBody": "L’accesso al microfono viene usato solo mentre il fonometro dB è in funzione per stimare i livelli sonori circostanti. I campioni audio vengono elaborati in memoria e non vengono mai salvati né caricati. Le stime arrotondate di ogni sessione vengono memorizzate solo su questo dispositivo e possono essere eliminate nelle Impostazioni.",
       "minimum": "Minimo",
       "average": "Media",
       "maximum": "Massimo",
-      "unlockStats": "Sblocca statistiche dettagliate della sessione dB",
+      "timeline": "Cronologia del livello sonoro stimato",
       "status": {
         "veryQuiet": "Molto tranquillo",
         "normal": "Normale",
@@ -157,17 +175,17 @@
         "everydayLevels": "Livelli sonori quotidiani",
         "examplesApproximate": "Gli esempi sono approssimativi e variano con la distanza.",
         "currentEstimate": "Stima attuale",
-        "exposureTitle": "Il tempo di esposizione è importante",
-        "exposureDescription": "NIOSH orientamento professionale; ogni +3 dB dimezza il tempo consigliato.",
-        "useItWell": "Usalo bene",
+        "exposureTitle": "La durata dell’esposizione al rumore è importante",
+        "exposureDescription": "Secondo le linee guida NIOSH sul rumore sul lavoro, ogni aumento di 3 dB dimezza il tempo di esposizione consigliato.",
+        "useItWell": "Consigli per la misurazione",
         "tipMicrophoneTitle": "Mantieni il microfono scoperto",
-        "tipMicrophoneBody": "Evita di coprirlo con la mano o con la custodia.",
+        "tipMicrophoneBody": "Evita di coprire il microfono con la mano o la custodia del telefono.",
         "tipPositionTitle": "Misura dove ascolti",
         "tipPositionBody": "Sposta il dispositivo nella posizione che desideri valutare.",
         "tipProtectTitle": "Se sembra troppo rumoroso, proteggi le orecchie",
         "tipProtectBody": "Allontanarsi dalla fonte o utilizzare protezioni per l'udito.",
         "reference": {
-          "concertSpeaker": "Relatore del concerto",
+          "concertSpeaker": "Altoparlante da concerto",
           "sirenNightclub": "Sirena o discoteca",
           "lawnMower": "Tosaerba",
           "busyStreet": "Strada trafficata",
@@ -188,7 +206,7 @@
       "estimateTitle": "Livelli sonori stimati",
       "estimateBody": "I microfoni del telefono segnalano il livello del segnale digitale anziché l'SPL del laboratorio. L'app applica una stima che varia in base al dispositivo.",
       "privacyTitle": "Privacy del microfono",
-      "privacyBody": "Il microfono funziona solo mentre il misuratore dB è attivo. I campioni vengono elaborati in memoria e non vengono mai salvati o caricati.",
+      "privacyBody": "Il microfono funziona solo mentre il fonometro dB è attivo. I campioni vengono elaborati in memoria e non vengono mai salvati né caricati. Le stime arrotondate di una sessione possono essere memorizzate localmente nella cronologia attività ed eliminate nelle Impostazioni.",
       "limitationsTitle": "Limitazioni importanti",
       "limitationsBody": "Questa app non può garantire la rimozione di acqua o polvere. Non inserire oggetti nell'altoparlante e non utilizzare questi strumenti in sostituzione di riparazioni professionali, apparecchiature calibrate, consulenza medica o indicazioni sulla protezione dell'udito."
     }
@@ -197,12 +215,30 @@
     "title": "Sblocca il tuo kit di strumenti audio completo",
     "subtitle": "Pulisci l'altoparlante, accedi ai controlli avanzati e rimuovi tutti gli annunci.",
     "ctaFreeTrial": "Prova gratuita",
+    "trialDisclaimer": "Annulla quando vuoi. Nessun addebito ora",
+    "subscriptionDisclaimer": "Annulla quando vuoi.",
+    "lifetimeDisclaimer": "Paga una sola volta. Nessun addebito ricorrente.",
     "restore": "Ripristina acquisti",
     "terms": "Termini di servizio",
     "privacy": "Informativa sulla privacy",
     "then": "poi",
     "trial": "{{count}}-{{unit}} prova gratuita",
     "save": "Risparmia {{percent}}%",
+    "availability": {
+      "loading": "Verifica delle opzioni di acquisto…",
+      "temporary_error": {
+        "title": "Impossibile caricare le opzioni di acquisto",
+        "subtitle": "Controlla la connessione e riprova."
+      },
+      "configuration_error": {
+        "title": "Le opzioni di acquisto non sono disponibili",
+        "subtitle": "Lo store non ha potuto caricare i prodotti dell’app. Riprova tra poco."
+      },
+      "purchase_not_allowed": {
+        "title": "Gli acquisti non sono supportati su questo dispositivo",
+        "subtitle": "Questo dispositivo o account dello store non può effettuare acquisti in-app."
+      }
+    },
     "trialUnit": {
       "day": "giorno",
       "week": "settimana",
@@ -216,27 +252,52 @@
       "year": "all'anno",
       "lifetime": "Acquisto una tantum"
     },
-    "features": {
-      "waterEject": {
-        "title": "Completa l'espulsione dell'acqua",
-        "description": "Esegui cicli guidati di pulizia degli altoparlanti da 30, 60 e 90 secondi."
-      },
-      "waveforms": {
-        "title": "Forme d'onda dei toni avanzate",
-        "description": "Utilizza toni quadrati, triangolari e a dente di sega su tutta la gamma di frequenze."
-      },
-      "stereoAuto": {
-        "title": "Test stereo automatico",
-        "description": "Passa tra sinistro, destro ed entrambi i canali in vivavoce."
-      },
-      "dbStats": {
-        "title": "Statistiche dB dettagliate",
-        "description": "Visualizza le stime minime, medie e massime per ogni sessione."
-      },
-      "adFree": {
-        "title": "Zero interruzioni pubblicitarie",
-        "description": "Utilizza tutti gli strumenti audio senza banner o annunci a schermo intero."
+    "comparison": {
+      "features": "Funzioni",
+      "free": "Gratis",
+      "pro": "Pro",
+      "included": "Incluso",
+      "excluded": "Non incluso",
+      "unlimited": "Illimitato",
+      "rows": {
+        "cleaningDuration": {
+          "title": "Durata della pulizia",
+          "free": "30 secondi",
+          "pro": "30/60/90 secondi"
+        },
+        "turbo": {
+          "title": "Modalità Turbo"
+        },
+        "waveforms": {
+          "title": "Forma d'onda",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "Test stereo",
+          "free": "Manuale",
+          "pro": "Automatico"
+        },
+        "soundInsights": {
+          "title": "Analisi del livello sonoro",
+          "free": "Base",
+          "pro": "Avanzato"
+        },
+        "activityHistory": {
+          "title": "Cronologia delle attività"
+        },
+        "adExperience": {
+          "title": "Pubblicità",
+          "free": "Pubblicità",
+          "pro": "Senza pubblicità"
+        }
       }
+    },
+    "context": {
+      "historyTitle": "Sblocca la tua attività salvata",
+      "historySubtitle": "Su questo dispositivo sono già salvate {{cleaning}} pulizie dell’altoparlante e {{db}} misurazioni del suono.",
+      "cleaningSubtitle": "Pulisci l’altoparlante quando vuoi con cicli più lunghi e l’onda di pulizia Turbo a più fasi.",
+      "dbSubtitle": "Sblocca l'analisi completa per questa sessione e rivisita i report audio salvati."
     },
     "feedback": {
       "subscribeSuccess": "Benvenuto! Il tuo accesso premium è attivo.",
@@ -251,6 +312,87 @@
       "month": "Mensile",
       "year": "Annuale",
       "lifetime": "A vita"
+    }
+  },
+  "activity": {
+    "history": "Cronologia delle attività",
+    "cleaning": "Pulizia",
+    "soundSessions": "Sessioni sonore",
+    "savedCount": "{{cleaning}} attività di pulizia · {{db}} sessioni audio salvate",
+    "emptyTitle": "Nessuna attività salvata ancora",
+    "emptyBody": "Le sessioni di pulizia e audio completate verranno visualizzate qui.",
+    "select": "Selezionare",
+    "selectAll": "Seleziona tutto",
+    "deselectAll": "Deseleziona tutto",
+    "selectedCount": "{{count}} selezionato",
+    "delete": "Eliminare",
+    "deleteSelected": "Elimina ({{count}})",
+    "deleteConfirmTitleSingle": "Eliminare questa attività?",
+    "deleteConfirmTitleMultiple": "Vuoi eliminare le attività {{count}}?",
+    "deleteConfirmBodySingle": "L'attività selezionata verrà rimossa permanentemente da questo dispositivo.",
+    "deleteConfirmBodyMultiple": "Questa operazione rimuoverà definitivamente le {{count}} attività selezionate da questo dispositivo.",
+    "deletedSingle": "Attività eliminata",
+    "deletedMultiple": "{{count}} attività eliminate",
+    "dbSession": "Sessione di livello sonoro",
+    "duration": "{{seconds}} secondi",
+    "cleaningDetail": "Attività di pulizia",
+    "dbDetail": "Sessione sonora",
+    "mode": "Modalità di pulizia",
+    "durationLabel": "Durata",
+    "result": "Risultato",
+    "report": {
+      "title": "Analisi del livello sonoro",
+      "subtitle": "Uno sguardo personalizzato a questa sessione",
+      "premium": "Premium",
+      "sessionSummary": "Medio {{average}} dB · Picco {{maximum}} dB · {{seconds}} sec",
+      "environmentRating": "Valutazione dell'ambiente",
+      "suitableFor": "Adatto per",
+      "recommendation": "Raccomandazione",
+      "unlockTitle": "Scopri cosa significa questo livello sonoro",
+      "unlockBody": "Sblocca la valutazione ambientale completa, le attività adatte e i consigli per l'ascolto.",
+      "unlockAction": "Sblocca il rapporto completo",
+      "disclaimer": "Le stime relative al microfono del telefono variano in base al dispositivo e al posizionamento. Questo rapporto costituisce una guida generale, non una misurazione calibrata o un consiglio medico.",
+      "profile": {
+        "veryQuiet": {
+          "label": "Molto tranquillo",
+          "range": "Sotto i 30dB",
+          "overview": "Questa sessione suggerisce un ambiente molto calmo con pochi suoni di sottofondo concorrenti.",
+          "suitable": "Riposo tranquillo, lettura, scrittura concentrata, meditazione e altre attività che beneficiano di una distrazione minima.",
+          "recommendation": "Tieni il microfono scoperto e misura il punto in cui ti siedi o dormi normalmente. Stime molto basse possono anche significare che il microfono del telefono è ostruito."
+        },
+        "normal": {
+          "label": "Normale",
+          "range": "30–69 dB",
+          "overview": "Questa sessione rientra in un intervallo comune di tutti i giorni, simile a una casa tranquilla, a un ufficio o a una normale conversazione a seconda della distanza.",
+          "suitable": "Conversazione, lavoro alla scrivania, ascolto casuale, studio e la maggior parte delle attività quotidiane al chiuso.",
+          "recommendation": "Se hai bisogno di una concentrazione più profonda, riduci le voci vicine o allontanati dalla sorgente sonora e confronta un'altra sessione."
+        },
+        "loud": {
+          "label": "Forte",
+          "range": "70–99 dB",
+          "overview": "Questa sessione suggerisce un ambiente rumoroso in cui il suono può diventare stancante o fastidioso nel tempo.",
+          "suitable": "Brevi controlli su strade trafficate, elettrodomestici, eventi o riproduzione musicale in cui desideri comprendere i cambiamenti di livello.",
+          "recommendation": "Abbassa il volume della sorgente, aumenta la distanza, fai delle pause tranquille e considera la protezione dell'udito quando l'esposizione continua."
+        },
+        "danger": {
+          "label": "Potenzialmente pericoloso",
+          "range": "100 dB o superiore",
+          "overview": "Questa sessione suggerisce un ambiente sonoro molto intenso che merita attenzione immediata.",
+          "suitable": "Solo brevi controlli di sicurezza. Evitare di utilizzare questo ambiente per ascoltare, lavorare, riposare o svolgere attività prolungate.",
+          "recommendation": "Allontanarsi dalla sorgente, abbassare il volume quando possibile e utilizzare protezioni acustiche adeguate. Non fare affidamento su una stima telefonica per determinare l'esposizione sicura."
+        }
+      }
+    },
+    "stopReason": {
+      "completed": "Completato",
+      "manual": "Arrestato manualmente",
+      "blur": "Arrestato dopo aver lasciato lo schermo",
+      "background": "Fermo in sottofondo",
+      "interruption": "Interrotto",
+      "route-change": "Il percorso audio è cambiato",
+      "replaced": "Sostituito da un altro strumento",
+      "error": "Interrotto da un errore",
+      "incomplete": "Incompleto"
     }
   },
   "otaUpdate": {
