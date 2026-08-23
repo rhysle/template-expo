@@ -128,8 +128,7 @@ function RootLayout() {
     }
   }, [fontsLoaded, fontError])
 
-  // If AppConfig.ads.enabled is false, removes this call and run npm run setup:ads to exclude the ads package from autolinking
-  // and prevent Metro from bundling it at all.
+  // setup:ads selects a no-native implementation for this shared hook when ads are disabled.
   useAdsInit()
 
   if (!fontsLoaded && !fontError) {

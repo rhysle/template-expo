@@ -7,15 +7,15 @@ import { initMobileAds, isAnyAdFormatEnabled } from './adsService'
 /**
  * Initializes the Google Mobile Ads SDK once ATT + UMP consent have resolved.
  *
- * Call this hook once inside the root layout component when ads are enabled:
+ * Call this hook once inside the root layout component:
  *
  *   import { useAdsInit } from '@/services/ads'
  *   // Inside RootLayout:
  *   useAdsInit()
  *
  * The hook waits for UMP to resolve and explicitly allow ad requests before calling
- * initialize(). If ads are disabled, the hook is a no-op.
- * When not using ads in a project, omit this call so Metro never bundles the package.
+ * initialize(). When ads are disabled, setup:ads selects a no-native implementation through the
+ * shared facade, so consumers keep the same call without bundling the SDK.
  */
 export const useAdsInit = () => {
   const { adsInitialized, canRequestAds, consentGathered, setAdsInitialized, setAdsInitError } =

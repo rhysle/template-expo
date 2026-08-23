@@ -8,6 +8,7 @@
  *                       plugins (app.json)
  *   - enabled: false → adds both packages to autolinking exclude (package.json), removes
  *                       both native plugins (app.json)
+ *   - both states rewrite src/services/ads/index.ts to export the matching implementation
  *
  * Usage:
  *   npm run setup:ads
@@ -24,6 +25,9 @@ import { AppConfig } from '../src/configs'
 const ROOT = path.resolve(__dirname, '..')
 const ADS_PACKAGE = 'react-native-google-mobile-ads'
 const ATT_PACKAGE = 'expo-tracking-transparency'
+
+const getAdsFacadeSource = (enabled: boolean): string =>
+  `export * from './${enabled ? 'enabled' : 'disabled'}'\n`
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -128,8 +132,7 @@ function updateAttPlugin(appJson: AppJson, enabled: boolean): void {
     const pluginEntry = [
       ATT_PACKAGE,
       {
-        userTrackingPermission:
-          'This identifier will be used to deliver personalized ads to you.',
+        userTrackingPermission: 'This identifier will be used to deliver personalized ads to you.',
       },
     ]
 
@@ -161,6 +164,7 @@ function main() {
 
   const packageJsonPath = path.join(ROOT, 'package.json')
   const appJsonPath = path.join(ROOT, 'app.json')
+  const adsFacadePath = path.join(ROOT, 'src/services/ads/index.ts')
 
   const packageJson: PackageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'))
   const appJson: AppJson = JSON.parse(fs.readFileSync(appJsonPath, 'utf-8'))
@@ -171,6 +175,7 @@ function main() {
 
   fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2) + '\n')
   fs.writeFileSync(appJsonPath, JSON.stringify(appJson, null, 2) + '\n')
+  fs.writeFileSync(adsFacadePath, getAdsFacadeSource(enabled))
 
   console.log('\nFiles updated.')
 
@@ -178,14 +183,14 @@ function main() {
     console.log('\nAds enabled. Next steps:')
     console.log('  1. Fill in ad unit IDs in AppConfig.ads.ios / AppConfig.ads.android')
     console.log('  2. Fill in App IDs in AppConfig.ads.ios.appId / AppConfig.ads.android.appId')
-    console.log('  3. Add useAdsInit() call in src/app/_layout.tsx inside RootLayout')
-    console.log('  4. Add useConsentInit() call in src/app/(tabs)/_layout.tsx inside TabLayout')
-    console.log('  5. Run: npx expo prebuild --clean')
+    console.log('  3. Keep the shared ads hooks and provider mounted')
+    console.log('  4. Run: npx expo prebuild --clean')
   } else {
     console.log('\nAds disabled. Next steps:')
-    console.log('  1. Remove useAdsInit() call from src/app/_layout.tsx (if present)')
-    console.log('  2. Remove useConsentInit() call from src/app/(tabs)/_layout.tsx (if present)')
-    console.log('  3. Run: npx expo prebuild --clean')
+    console.log(
+      '  1. Keep the shared ads hooks and provider mounted; setup selected the no-op facade'
+    )
+    console.log('  2. Run: npx expo prebuild --clean')
   }
 
   console.log('')

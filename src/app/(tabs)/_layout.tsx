@@ -15,7 +15,7 @@ const TabNavigator = Platform.OS === 'ios' ? NativeTabNavigator : CustomTabNavig
 export default function TabLayout() {
   const { t } = useTranslation()
 
-  // If AppConfig.ads.enabled is false, remove this call and run npm run setup:ads
+  // setup:ads selects a no-native implementation for this shared hook when ads are disabled.
   useConsentInit()
   useAutoPaywall()
 

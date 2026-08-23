@@ -26,8 +26,7 @@ const isOfflineConsentFailure = async (error: unknown): Promise<boolean> => {
   }
 }
 
-// If AppConfig.ads.enabled is false, remove the call to this hook in
-// src/app/(tabs)/_layout.tsx and run npm run setup:ads.
+// setup:ads exports this implementation through the shared facade only when ads are enabled.
 export const useConsentInit = () => {
   const { setCanRequestAds, setConsentGathered, setPrivacyOptionsRequired } = useAdsState()
   const { premiumState } = useSubscriptionState()
