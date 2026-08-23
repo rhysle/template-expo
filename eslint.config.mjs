@@ -35,7 +35,7 @@ export default defineConfig([
     },
   },
   {
-    files: ['scripts/setup-expo.ts', 'scripts/setup-expo-core.ts', 'scripts/setup-expo.test.ts'],
+    files: ['scripts/setup-expo.ts', 'scripts/setup-expo-core.ts'],
     languageOptions: {
       parserOptions: {
         project: './scripts/setup-expo.tsconfig.json',
@@ -43,11 +43,7 @@ export default defineConfig([
     },
   },
   {
-    files: [
-      'scripts/setup-sentry.ts',
-      'scripts/setup-sentry-core.ts',
-      'scripts/setup-sentry.test.ts',
-    ],
+    files: ['scripts/setup-sentry.ts', 'scripts/setup-sentry-core.ts'],
     languageOptions: {
       parserOptions: {
         project: './scripts/setup-sentry.tsconfig.json',

@@ -345,11 +345,7 @@ npm run check:type        # TypeScript, no emit
 npm run check:i18n        # English source-locale audit
 npm run check:i18n:release # All-locale release audit
 npm run check:i18n:release:fix # Remove obsolete locale keys, then audit
-npm run test:i18n         # Test i18n audit tooling
 npm run check             # Lint + type check
-npm run test:setup-expo   # Type-check and test Expo setup tooling
-npm run test:setup-sentry # Type-check and test Sentry setup tooling
-npm run test:monetization # Type-check and test monetization tooling
 npm run format            # Format and apply safe lint fixes
 
 npm run prebuild:clean    # Regenerate native projects from Expo config
@@ -567,4 +563,4 @@ screenshots, and release tasks.
 
 ## Verification
 
-At a minimum, run `npm run check` after code changes and `npm run check:i18n` after changing English product copy. The standard check intentionally covers only linting and the app TypeScript check. Run `npm run test:setup-expo` after changing the Expo setup tooling, `npm run test:setup-sentry` after changing the Sentry setup tooling, and `npm run test:monetization` after changing `scripts/monetization/` or `src/configs/monetization.ts`; each domain command includes its TypeScript check. For native dependency or configuration changes, also run `npm run prebuild:clean` and test the affected platform.
+At a minimum, run `npm run check` after code changes and `npm run check:i18n` after changing English product copy. For native dependency or configuration changes, also run `npm run prebuild:clean` and verify the affected platform.

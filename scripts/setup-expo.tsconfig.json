@@ -9,6 +9,6 @@
     "skipLibCheck": true,
     "noEmit": true
   },
-  "include": ["./setup-expo.ts", "./setup-expo-core.ts", "./setup-expo.test.ts"],
+  "include": ["./setup-expo.ts", "./setup-expo-core.ts"],
   "exclude": []
 }

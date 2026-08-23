@@ -32,10 +32,6 @@ npm run lint
 npm run check:type
 npm run check:i18n
 npm run check
-npm run test:setup-expo
-npm run test:setup-firebase
-npm run test:setup-sentry
-npm run test:monetization
 npm run format
 
 npm run prebuild
@@ -59,7 +55,7 @@ npm run monetization:prices:verify
 npm run monetization:ppp:refresh -- --year 2025
 ```
 
-Use `npm run check` before handing off code. It intentionally runs only linting and the app TypeScript check. Run `npm run test:setup-expo` after changing the Expo setup tooling, `npm run test:setup-sentry` after changing the Sentry setup tooling, and `npm run test:monetization` after changing `scripts/monetization/` or `src/configs/monetization.ts`; each domain command includes its TypeScript check. Run a clean prebuild and test the affected native platform after changing native dependencies, `app.json`, a config plugin, or ads/font setup.
+Use `npm run check` before handing off code. It intentionally runs only linting and the app TypeScript check. Run a clean prebuild and verify the affected native platform after changing native dependencies, `app.json`, a config plugin, or ads/font setup.
 
 ## Before Building Product Features
 
@@ -241,6 +237,5 @@ Every iOS Fastlane metadata upload reads `fastlane/ios/app_store_config.json`, s
 1. Run the narrowest relevant checks, and `npm run check` for normal code changes.
 2. Test affected behavior on iOS and Android when feasible; web verification is not required.
 3. Run `npm run check:i18n` after changing English product copy.
-4. Run the focused tooling command after changing setup or monetization scripts: `npm run test:setup-expo`, `npm run test:setup-firebase`, `npm run test:setup-sentry`, or `npm run test:monetization`.
-5. Regenerate and test native projects after native configuration changes.
-6. Update this file and `README.md` when a reusable architectural convention changes.
+4. Regenerate and verify native projects after native configuration changes.
+5. Update this file and `README.md` when a reusable architectural convention changes.

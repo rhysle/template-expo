@@ -9,6 +9,6 @@
     "skipLibCheck": true,
     "noEmit": true
   },
-  "include": ["./setup-sentry.ts", "./setup-sentry-core.ts", "./setup-sentry.test.ts"],
+  "include": ["./setup-sentry.ts", "./setup-sentry-core.ts"],
   "exclude": []
 }
