@@ -72,12 +72,17 @@ export const isBillingUnavailableError = (error: unknown): boolean => {
   )
 }
 
-export const purchasePackage = async (
-  pkg: PurchasesPackage
-): Promise<{ success: boolean; customerInfo: CustomerInfo | null }> => {
+type PurchasePackageResult =
+  | { outcome: 'success'; customerInfo: CustomerInfo }
+  | { outcome: 'cancelled'; customerInfo: null }
+  | { outcome: 'entitlement_missing'; customerInfo: CustomerInfo }
+
+export const purchasePackage = async (pkg: PurchasesPackage): Promise<PurchasePackageResult> => {
   try {
     const { customerInfo } = await Purchases.purchasePackage(pkg)
-    return { success: checkEntitlement(customerInfo), customerInfo }
+    return checkEntitlement(customerInfo)
+      ? { outcome: 'success', customerInfo }
+      : { outcome: 'entitlement_missing', customerInfo }
   } catch (error: unknown) {
     if (
       error !== null &&
@@ -85,7 +90,7 @@ export const purchasePackage = async (
       'userCancelled' in error &&
       (error as { userCancelled: boolean }).userCancelled
     ) {
-      return { success: false, customerInfo: null }
+      return { outcome: 'cancelled', customerInfo: null }
     }
     throw error
   }

@@ -12,6 +12,7 @@ export const AnalyticsGeneralEvents = {
   PAYWALL_VIEWED: 'paywall_viewed',
   PAYWALL_SUBSCRIBE: 'paywall_subscribe',
   PAYWALL_SUBSCRIBE_SUCCESS: 'paywall_subscribe_success',
+  PAYWALL_SUBSCRIBE_CANCELLED: 'paywall_subscribe_cancelled',
   PAYWALL_SUBSCRIBE_ERROR: 'paywall_subscribe_error',
   PAYWALL_RESTORE: 'paywall_restore',
   PAYWALL_RESTORE_SUCCESS: 'paywall_restore_success',

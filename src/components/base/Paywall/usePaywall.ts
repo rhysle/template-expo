@@ -4,6 +4,7 @@ import type { PurchasesPackage } from 'react-native-purchases'
 import { AnalyticsGeneralEvents, trackEvent } from '@/services/firebase/analytics'
 import {
   fetchOfferings,
+  getRevenueCatErrorDetails,
   isBillingUnavailableError,
   type PaywallSource,
   purchasePackage,
@@ -57,37 +58,57 @@ export const usePaywall = ({
   const handleSubscribe = async () => {
     if (!selectedPackage) return
 
-    trackEvent(AnalyticsGeneralEvents.PAYWALL_SUBSCRIBE, {
+    const purchaseDetails = {
       package_id: selectedPackage.identifier,
       package_type: selectedPackage.packageType,
       source,
-    })
+    }
+
+    trackEvent(AnalyticsGeneralEvents.PAYWALL_SUBSCRIBE, purchaseDetails)
     setPurchasing(true)
     try {
       const result = await purchasePackage(selectedPackage)
-      if (result.success) {
-        trackEvent(AnalyticsGeneralEvents.PAYWALL_SUBSCRIBE_SUCCESS, {
-          package_id: selectedPackage.identifier,
-          package_type: selectedPackage.packageType,
-          source,
-        })
+      if (result.outcome === 'success') {
+        trackEvent(AnalyticsGeneralEvents.PAYWALL_SUBSCRIBE_SUCCESS, purchaseDetails)
         onSubscribeSuccess?.()
         onComplete()
-      } else if (result.customerInfo) {
-        // Purchase completed but entitlement not found
+      } else if (result.outcome === 'cancelled') {
+        trackEvent(AnalyticsGeneralEvents.PAYWALL_SUBSCRIBE_CANCELLED, purchaseDetails)
+      } else {
+        const error = new Error('Entitlement not found after purchase')
+        const errorDetails = {
+          ...purchaseDetails,
+          error_code: 'entitlement_missing',
+          active_entitlement_ids:
+            Object.keys(result.customerInfo.entitlements.active).join(',') || 'none',
+        }
+
         trackEvent(AnalyticsGeneralEvents.PAYWALL_SUBSCRIBE_ERROR, {
-          package_id: selectedPackage.identifier,
-          package_type: selectedPackage.packageType,
-          source,
+          ...purchaseDetails,
+          error_code: errorDetails.error_code,
         })
-        onSubscribeError?.(new Error('Entitlement not found after purchase'))
+        recordError(error, 'usePaywall.handleSubscribe', errorDetails)
+        onSubscribeError?.(error)
       }
-      // customerInfo is null when user cancelled - stay silent
     } catch (error: unknown) {
+      const revenueCatDetails = getRevenueCatErrorDetails(error)
+      const readableErrorCode = revenueCatDetails?.readableErrorCode
+      const nativeErrorCode = revenueCatDetails?.code
+      const errorCode =
+        typeof readableErrorCode === 'string'
+          ? readableErrorCode
+          : typeof nativeErrorCode === 'string'
+            ? nativeErrorCode
+            : 'unknown'
+
       trackEvent(AnalyticsGeneralEvents.PAYWALL_SUBSCRIBE_ERROR, {
-        package_id: selectedPackage.identifier,
-        package_type: selectedPackage.packageType,
-        source,
+        ...purchaseDetails,
+        error_code: errorCode,
+      })
+      recordError(error, 'usePaywall.handleSubscribe', {
+        ...purchaseDetails,
+        error_code: errorCode,
+        ...revenueCatDetails,
       })
       onSubscribeError?.(error)
     } finally {
