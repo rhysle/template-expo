@@ -113,6 +113,13 @@ archives. Production EAS builds resolve the `GOOGLE_SERVICE_INFO_PLIST` and
 the sample events in `src/services/firebase/analytics/analyticsAppEvents.ts`; keep generic lifecycle
 events in `analyticsGeneralEvents.ts`.
 
+The local `prebuild:*`, `ios*`, and `android*` npm scripts explicitly use the development variant.
+The run scripts reapply the matching platform Prebuild before compiling because Expo otherwise
+reuses an existing native directory without rerunning config plugins. EAS Build does not use these
+local scripts: `.easignore` excludes `ios/` and `android/`, so cloud and `--local` EAS builds receive
+no generated native tree and regenerate it from the production profile and production Firebase file
+variables. Keep both native-directory exclusions in `.easignore`.
+
 ### 3. Configure RevenueCat
 
 1. Create the RevenueCat project and add its App Store and/or Google Play app records. Configure each app's store credentials so RevenueCat can validate purchases and read its catalog.
@@ -336,7 +343,7 @@ Create the App Store Connect and Google Play app records using the same identifi
 
 ### 10. Regenerate and verify
 
-Native configuration changes—including `app.json`, Firebase files, fonts, ads, or config plugins—require regeneration because `ios/` and `android/` are generated directories:
+Native configuration changes—including `app.json`, Firebase files, fonts, ads, or config plugins—require regeneration because `ios/` and `android/` are generated directories. The local commands below always select the development variant, and `ios`/`android` reapply the platform Prebuild before compiling so stale native service files cannot be reused:
 
 ```bash
 npm run prebuild:clean
@@ -355,8 +362,8 @@ Before a production build, confirm the app uses the new EAS project, Firebase co
 
 ```bash
 npm start                 # Expo development server
-npm run ios               # iOS simulator
-npm run android           # Android emulator
+npm run ios               # Development prebuild + iOS simulator
+npm run android           # Development prebuild + Android emulator
 npm run web               # Web development server
 
 npm run lint              # ESLint
@@ -367,7 +374,7 @@ npm run check:i18n:release:fix # Remove obsolete locale keys, then audit
 npm run check             # Lint + type check
 npm run format            # Format and apply safe lint fixes
 
-npm run prebuild:clean    # Regenerate native projects from Expo config
+npm run prebuild:clean    # Regenerate development native projects from Expo config
 npm run doctor            # Expo environment diagnostics
 npm run align-deps        # Align installed packages with the Expo SDK
 

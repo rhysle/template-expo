@@ -55,7 +55,8 @@ yarn-error.*
 
 app-example
 
-# Native folders
+# Native folders are always excluded so EAS Build regenerates them from the
+# production profile instead of uploading a locally generated development tree.
 /android/
 /ios/
 
