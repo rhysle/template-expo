@@ -3,8 +3,7 @@ import * as Crypto from 'expo-crypto'
 import { recordError } from '@/services/sentry'
 import { getStoredUserId, removeStoredUserId, setStoredUserId } from '@/storage'
 
-// Per-variant key prevents IDs leaking between development and production
-// analytics and RevenueCat customers under a shared bundle ID.
+// Keep the storage key variant-specific in addition to the native app sandbox boundary.
 const appVariant = __DEV__ ? 'development' : 'production'
 
 /**

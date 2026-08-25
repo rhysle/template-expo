@@ -77,9 +77,9 @@ use a service account. It reads the native identifiers and EAS UUID from `app.js
 confirmation, and idempotently creates or reuses the standalone product-specific Google
 Cloud/Firebase project, iOS app, Android app, and Analytics link. It also requires the shared
 `rhysle-template-expo` development Firebase project to exist and be accessible, then creates or
-reuses matching native app registrations there with the same bundle identifier and package name.
-The shared project itself, its Analytics link, and its other project-level settings are not created
-or modified by this workflow.
+reuses native app registrations there with `.dev` appended to the production bundle identifier and
+package name. The shared project itself, its Analytics link, and its other project-level settings
+are not created or modified by this workflow.
 
 The command explicitly verifies that Gemini in Firebase is disabled for the production project,
 downloads and validates both environments, and atomically replaces these four Git-ignored files:
@@ -91,14 +91,16 @@ GoogleService-Info.dev.plist
 google-services.dev.json
 ```
 
-Local development resolves the `.dev` files. Production builds resolve the production EAS file
-variables, with the unsuffixed root files retained as a local production-build fallback. Only the
-unsuffixed production pair is uploaded to the linked EAS project as production-only **Sensitive**
-file variables; the `.dev` pair is excluded from EAS archives. Existing production Analytics
-properties are never relinked, and cloud resources are not automatically deleted after a partial
-failure; rerun the same command to reconcile them. Time-based Google API quota responses are retried
-automatically with bounded exponential backoff. The shared project supports at most 30 registered
-Firebase Apps, so each two-platform product consumes two of its app slots.
+Local development appends `.dev` to the iOS bundle identifier, Android package, and URL scheme, and
+resolves the matching `.dev` Firebase files. Production keeps the canonical values from `app.json`
+and resolves the production EAS file variables, with the unsuffixed root files retained as a local
+production-build fallback. Only the unsuffixed production pair is uploaded to the linked EAS
+project as production-only **Sensitive** file variables; development builds are local-only and the
+`.dev` pair is excluded from EAS archives. Existing production Analytics properties are never
+relinked, and cloud resources are not automatically deleted after a partial failure; rerun the same
+command to reconcile them. Time-based Google API quota responses are retried automatically with
+bounded exponential backoff. The shared project supports at most 30 registered Firebase Apps, so
+each two-platform product consumes two of its app slots.
 
 Firebase recommends marking the live project as a **Production** environment. This marker currently
 changes only the Firebase console presentation: it adds a visible production warning and does not
@@ -113,11 +115,12 @@ archives. Production EAS builds resolve the `GOOGLE_SERVICE_INFO_PLIST` and
 the sample events in `src/services/firebase/analytics/analyticsAppEvents.ts`; keep generic lifecycle
 events in `analyticsGeneralEvents.ts`.
 
-The local `prebuild:*`, `ios*`, and `android*` npm scripts explicitly use the development variant.
-The run scripts reapply the matching platform Prebuild before compiling because Expo otherwise
-reuses an existing native directory without rerunning config plugins. EAS Build does not use these
-local scripts: `.easignore` excludes `ios/` and `android/`, so cloud and `--local` EAS builds receive
-no generated native tree and regenerate it from the production profile and production Firebase file
+The local `prebuild:*` npm scripts explicitly use the development variant. Run the matching Prebuild
+script before `ios*` or `android*`; those run scripts compile the existing generated native project
+and do not reapply Expo config plugins themselves. Use a clean Prebuild after changing a native
+identifier, native dependency, or native configuration. EAS Build does not use these local scripts:
+`.easignore` excludes `ios/` and `android/`, so cloud and `--local` production builds receive no
+generated native tree and regenerate it from the production profile and production Firebase file
 variables. Keep both native-directory exclusions in `.easignore`.
 
 ### 3. Configure RevenueCat
@@ -317,7 +320,7 @@ The tab layout owns one `InterstitialAdProvider`. Product completion points requ
 
 - **Fonts:** Change `FONT_NAME` in `src/configs/fonts.ts`, run `npm run setup:font`, then run a clean prebuild so the selected font is embedded in release builds.
 - **Localization:** During product development, update only `src/i18n/locales/en.json`; missing non-English values fall back to English. Do not copy English text into other locale files. Before store submission, translate the complete current English resource for every locale the product will ship, or remove unsupported locales, then run `npm run check:i18n:release`. Run `npm run setup:i18n` after adding or removing a locale, and `npm run check:i18n` after changing English copy.
-- **OTA updates:** Keep `AppConfig.otaUpdate.enabled` only when the new EAS project and update channels are ready. OTA builds and updates must share the same EAS project and runtime-version policy. This template supports only `development` and `production`: build profiles provide the configuration-time `APP_VARIANT`, while production updates require a project-scoped plaintext `APP_VARIANT=production` variable in the EAS production environment. Runtime code derives the variant directly from `__DEV__` and must not read `process.env.APP_VARIANT` for behavior.
+- **OTA updates:** Keep `AppConfig.otaUpdate.enabled` only when the new EAS project and update channels are ready. OTA builds and updates must share the same EAS project and runtime-version policy. This template supports only `development` and `production`: local Prebuild scripts select development, the production EAS build profile selects production, and production updates require a project-scoped plaintext `APP_VARIANT=production` variable in the EAS production environment. Runtime code derives the variant directly from `__DEV__` and must not read `process.env.APP_VARIANT` for behavior.
 
 ### 7. Configure app-facing settings
 
@@ -362,8 +365,10 @@ Before a production build, confirm the app uses the new EAS project, Firebase co
 
 ```bash
 npm start                 # Expo development server
-npm run ios               # Development prebuild + iOS simulator
-npm run android           # Development prebuild + Android emulator
+npm run prebuild:ios      # Apply development config to the generated iOS project
+npm run ios               # Compile and run the generated iOS project
+npm run prebuild:android  # Apply development config to the generated Android project
+npm run android           # Compile and run the generated Android project
 npm run web               # Web development server
 
 npm run lint              # ESLint

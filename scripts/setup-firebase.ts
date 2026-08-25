@@ -1,8 +1,8 @@
 #!/usr/bin/env npx tsx
 /**
- * Creates or reuses product-specific production Firebase resources, registers the
- * same native apps in the shared development Firebase project, downloads all four
- * native configs, and uploads production-only Sensitive file variables to EAS.
+ * Creates or reuses product-specific production Firebase resources, registers
+ * .dev-suffixed native apps in the shared development Firebase project, downloads
+ * all four native configs, and uploads production-only Sensitive file variables to EAS.
  *
  * Prerequisite: run npm run setup:expo, authenticate personal Google ADC, and
  * configure the Analytics account documented in README.md.
@@ -18,6 +18,7 @@ import { createInterface } from 'node:readline/promises'
 
 import { GoogleAuth } from 'google-auth-library'
 
+import { getVariantDisplayName, getVariantIdentifier } from './app-variant'
 import type { GoogleApiRequester, JsonObject } from './setup-firebase-core'
 import {
   assertGoogleApplicationCredentialsUnset,
@@ -194,14 +195,23 @@ const describeError = (error: unknown): string => {
 }
 
 const main = async (): Promise<void> => {
-  const identity = getFirebaseAppIdentity(readJson(APP_JSON_PATH))
+  const productionIdentity = getFirebaseAppIdentity(readJson(APP_JSON_PATH))
+  const developmentIdentity = {
+    ...productionIdentity,
+    androidPackage: getVariantIdentifier(productionIdentity.androidPackage, 'development'),
+    displayName: getVariantDisplayName(productionIdentity.displayName, 'development'),
+    iosBundleIdentifier: getVariantIdentifier(
+      productionIdentity.iosBundleIdentifier,
+      'development'
+    ),
+  }
   assertGoogleApplicationCredentialsUnset(process.env.GOOGLE_APPLICATION_CREDENTIALS)
   const analyticsAccountId = validateAnalyticsAccountId(
     requireEnvironment('FIREBASE_ANALYTICS_ACCOUNT_ID')
   )
   const projectId = deriveFirebaseProjectId(
-    identity.projectSlug,
-    identity.easProjectId,
+    productionIdentity.projectSlug,
+    productionIdentity.easProjectId,
     process.env.FIREBASE_PROJECT_ID
   )
   console.log('\nChecking Google and Expo authentication...')
@@ -210,15 +220,17 @@ const main = async (): Promise<void> => {
   runEas(['project:info'])
 
   console.log('\nFirebase setup summary:')
-  console.log(`  App:                ${identity.displayName}`)
+  console.log(`  App:                ${productionIdentity.displayName}`)
   console.log(`  Production project: ${projectId}`)
   console.log(`  Development project: ${DEVELOPMENT_FIREBASE_PROJECT_ID}`)
   console.log('  Google destination: No organization')
   console.log('  Google auth:        personal Application Default Credentials')
   console.log(`  Analytics account:  ${analyticsAccountId}`)
-  console.log(`  iOS bundle ID:      ${identity.iosBundleIdentifier}`)
-  console.log(`  Android package:    ${identity.androidPackage}`)
-  console.log(`  EAS project ID:     ${identity.easProjectId}`)
+  console.log(`  Production iOS:     ${productionIdentity.iosBundleIdentifier}`)
+  console.log(`  Development iOS:    ${developmentIdentity.iosBundleIdentifier}`)
+  console.log(`  Production Android: ${productionIdentity.androidPackage}`)
+  console.log(`  Development Android: ${developmentIdentity.androidPackage}`)
+  console.log(`  EAS project ID:     ${productionIdentity.easProjectId}`)
   console.log('  Gemini in Firebase: disabled')
   console.log('  Firebase Prod tag:  manual console step')
   console.log('  EAS file variables: production / Sensitive')
@@ -243,7 +255,7 @@ const main = async (): Promise<void> => {
   mutationsMayExist = true
   console.log('\nConfiguring the Google Cloud project...')
   const cloud = await api.ensureCloudProject({
-    displayName: identity.displayName,
+    displayName: productionIdentity.displayName,
     projectId,
   })
   console.log(`  Project: ${projectId} (${cloud.created ? 'created' : 'reused'})`)
@@ -253,15 +265,15 @@ const main = async (): Promise<void> => {
   console.log(`  Firebase: ${firebase.created ? 'added' : 'reused'}`)
 
   const productionAndroid = await api.ensureAndroidApp({
-    displayName: identity.displayName,
-    packageName: identity.androidPackage,
+    displayName: productionIdentity.displayName,
+    packageName: productionIdentity.androidPackage,
     projectId,
   })
   console.log(`  Android app: ${productionAndroid.created ? 'created' : 'reused'}`)
 
   const productionIos = await api.ensureIosApp({
-    bundleId: identity.iosBundleIdentifier,
-    displayName: identity.displayName,
+    bundleId: productionIdentity.iosBundleIdentifier,
+    displayName: productionIdentity.displayName,
     projectId,
   })
   console.log(`  iOS app: ${productionIos.created ? 'created' : 'reused'}`)
@@ -284,15 +296,15 @@ const main = async (): Promise<void> => {
 
   console.log('\nConfiguring shared development Firebase apps...')
   const developmentAndroid = await api.ensureAndroidApp({
-    displayName: identity.displayName,
-    packageName: identity.androidPackage,
+    displayName: developmentIdentity.displayName,
+    packageName: developmentIdentity.androidPackage,
     projectId: DEVELOPMENT_FIREBASE_PROJECT_ID,
   })
   console.log(`  Android app: ${developmentAndroid.created ? 'created' : 'reused'}`)
 
   const developmentIos = await api.ensureIosApp({
-    bundleId: identity.iosBundleIdentifier,
-    displayName: identity.displayName,
+    bundleId: developmentIdentity.iosBundleIdentifier,
+    displayName: developmentIdentity.displayName,
     projectId: DEVELOPMENT_FIREBASE_PROJECT_ID,
   })
   console.log(`  iOS app: ${developmentIos.created ? 'created' : 'reused'}`)
@@ -305,22 +317,22 @@ const main = async (): Promise<void> => {
 
   validateAndroidConfig(productionAndroidConfig, {
     appId: productionAndroid.app.appId!,
-    packageName: identity.androidPackage,
+    packageName: productionIdentity.androidPackage,
     projectId,
   })
   validateIosConfig(productionIosConfig, {
     appId: productionIos.app.appId!,
-    bundleId: identity.iosBundleIdentifier,
+    bundleId: productionIdentity.iosBundleIdentifier,
     projectId,
   })
   validateAndroidConfig(developmentAndroidConfig, {
     appId: developmentAndroid.app.appId!,
-    packageName: identity.androidPackage,
+    packageName: developmentIdentity.androidPackage,
     projectId: DEVELOPMENT_FIREBASE_PROJECT_ID,
   })
   validateIosConfig(developmentIosConfig, {
     appId: developmentIos.app.appId!,
-    bundleId: identity.iosBundleIdentifier,
+    bundleId: developmentIdentity.iosBundleIdentifier,
     projectId: DEVELOPMENT_FIREBASE_PROJECT_ID,
   })
 
