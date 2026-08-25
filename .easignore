@@ -8,8 +8,9 @@
 #   - GoogleService-Info.plist     (Firebase iOS config required by prebuild)
 #
 # Background: the Firebase EAS file variables are intentionally scoped to the
-# production environment with Sensitive visibility. Keeping the root files in
-# the archive preserves local, development, and preview build fallback behavior.
+# production environment with Sensitive visibility. Keeping the production root
+# files in the archive preserves the local production-build fallback. Shared
+# development Firebase files are explicitly excluded from EAS archives.
 #
 # IMPORTANT: keep this file in sync with .gitignore. If you add a new exclusion
 # to .gitignore, mirror it here too — otherwise the file will leak into EAS
@@ -67,6 +68,8 @@ app-example
 firebase-debug.log
 # NOTE: /GoogleService-Info.plist and /google-services.json intentionally NOT
 # excluded here — they need to ship to EAS builds. They remain gitignored.
+/GoogleService-Info.dev.plist
+/google-services.dev.json
 
 # Claude
 .claude/

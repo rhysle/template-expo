@@ -23,6 +23,7 @@ export const AppConfig = {
     intervalDays: 7,
   },
   revenueCat: {
+    testStoreApiKey: 'test_gnTMNDOnGFGsGAETdCbmbZggLTD',
     iosApiKey: 'test_gnTMNDOnGFGsGAETdCbmbZggLTD',
     androidApiKey: 'test_gnTMNDOnGFGsGAETdCbmbZggLTD',
     entitlementId: 'premium',

@@ -1,7 +1,8 @@
 #!/usr/bin/env npx tsx
 /**
- * Creates or reuses Firebase resources for the Expo app, downloads native configs,
- * and uploads production-only Sensitive file variables to EAS.
+ * Creates or reuses product-specific production Firebase resources, registers the
+ * same native apps in the shared development Firebase project, downloads all four
+ * native configs, and uploads production-only Sensitive file variables to EAS.
  *
  * Prerequisite: run npm run setup:expo, authenticate personal Google ADC, and
  * configure the Analytics account documented in README.md.
@@ -36,8 +37,11 @@ import {
 
 const ROOT = path.resolve(__dirname, '..')
 const APP_JSON_PATH = path.join(ROOT, 'app.json')
-const ANDROID_CONFIG_PATH = path.join(ROOT, 'google-services.json')
-const IOS_CONFIG_PATH = path.join(ROOT, 'GoogleService-Info.plist')
+const DEVELOPMENT_FIREBASE_PROJECT_ID = 'rhysle-template-expo'
+const DEVELOPMENT_ANDROID_CONFIG_PATH = path.join(ROOT, 'google-services.dev.json')
+const DEVELOPMENT_IOS_CONFIG_PATH = path.join(ROOT, 'GoogleService-Info.dev.plist')
+const PRODUCTION_ANDROID_CONFIG_PATH = path.join(ROOT, 'google-services.json')
+const PRODUCTION_IOS_CONFIG_PATH = path.join(ROOT, 'GoogleService-Info.plist')
 const GOOGLE_SCOPE = 'https://www.googleapis.com/auth/cloud-platform'
 let mutationsMayExist = false
 
@@ -154,8 +158,8 @@ const validateResolvedExpoConfigs = (): void => {
   validateExpoConfig({
     ...baseEnvironment,
     APP_VARIANT: 'production',
-    GOOGLE_SERVICES_JSON: ANDROID_CONFIG_PATH,
-    GOOGLE_SERVICE_INFO_PLIST: IOS_CONFIG_PATH,
+    GOOGLE_SERVICES_JSON: PRODUCTION_ANDROID_CONFIG_PATH,
+    GOOGLE_SERVICE_INFO_PLIST: PRODUCTION_IOS_CONFIG_PATH,
   })
 }
 
@@ -207,7 +211,8 @@ const main = async (): Promise<void> => {
 
   console.log('\nFirebase setup summary:')
   console.log(`  App:                ${identity.displayName}`)
-  console.log(`  Firebase project:   ${projectId}`)
+  console.log(`  Production project: ${projectId}`)
+  console.log(`  Development project: ${DEVELOPMENT_FIREBASE_PROJECT_ID}`)
   console.log('  Google destination: No organization')
   console.log('  Google auth:        personal Application Default Credentials')
   console.log(`  Analytics account:  ${analyticsAccountId}`)
@@ -223,7 +228,6 @@ const main = async (): Promise<void> => {
     return
   }
 
-  mutationsMayExist = true
   const api = new FirebaseProvisioningApi(request, {
     onRateLimitRetry: ({ attempt, delayMs, maxRetries }) => {
       console.log(
@@ -232,6 +236,11 @@ const main = async (): Promise<void> => {
     },
   })
 
+  console.log('\nVerifying shared development Firebase access...')
+  await api.requireFirebaseProject(DEVELOPMENT_FIREBASE_PROJECT_ID)
+  console.log(`  Project: ${DEVELOPMENT_FIREBASE_PROJECT_ID} (verified)`)
+
+  mutationsMayExist = true
   console.log('\nConfiguring the Google Cloud project...')
   const cloud = await api.ensureCloudProject({
     displayName: identity.displayName,
@@ -243,19 +252,19 @@ const main = async (): Promise<void> => {
   const firebase = await api.ensureFirebaseProject(projectId)
   console.log(`  Firebase: ${firebase.created ? 'added' : 'reused'}`)
 
-  const android = await api.ensureAndroidApp({
+  const productionAndroid = await api.ensureAndroidApp({
     displayName: identity.displayName,
     packageName: identity.androidPackage,
     projectId,
   })
-  console.log(`  Android app: ${android.created ? 'created' : 'reused'}`)
+  console.log(`  Android app: ${productionAndroid.created ? 'created' : 'reused'}`)
 
-  const ios = await api.ensureIosApp({
+  const productionIos = await api.ensureIosApp({
     bundleId: identity.iosBundleIdentifier,
     displayName: identity.displayName,
     projectId,
   })
-  console.log(`  iOS app: ${ios.created ? 'created' : 'reused'}`)
+  console.log(`  iOS app: ${productionIos.created ? 'created' : 'reused'}`)
 
   const analytics = await api.ensureAnalytics(projectId, analyticsAccountId)
   const linkedAccount = analytics.details.analyticsProperty?.analyticsAccountId
@@ -273,34 +282,72 @@ const main = async (): Promise<void> => {
   const gemini = await api.ensureGeminiDisabled(projectNumber)
   console.log(`  Gemini in Firebase: ${gemini.changed ? 'disabled' : 'already disabled'}`)
 
+  console.log('\nConfiguring shared development Firebase apps...')
+  const developmentAndroid = await api.ensureAndroidApp({
+    displayName: identity.displayName,
+    packageName: identity.androidPackage,
+    projectId: DEVELOPMENT_FIREBASE_PROJECT_ID,
+  })
+  console.log(`  Android app: ${developmentAndroid.created ? 'created' : 'reused'}`)
+
+  const developmentIos = await api.ensureIosApp({
+    bundleId: identity.iosBundleIdentifier,
+    displayName: identity.displayName,
+    projectId: DEVELOPMENT_FIREBASE_PROJECT_ID,
+  })
+  console.log(`  iOS app: ${developmentIos.created ? 'created' : 'reused'}`)
+
   console.log('\nDownloading native Firebase configuration...')
-  const androidName = android.app.name!
-  const androidAppId = android.app.appId!
-  const iosName = ios.app.name!
-  const iosAppId = ios.app.appId!
-  const androidConfig = await api.downloadAndroidConfig(androidName)
-  const iosConfig = await api.downloadIosConfig(iosName)
-  validateAndroidConfig(androidConfig, {
-    appId: androidAppId,
+  const productionAndroidConfig = await api.downloadAndroidConfig(productionAndroid.app.name!)
+  const productionIosConfig = await api.downloadIosConfig(productionIos.app.name!)
+  const developmentAndroidConfig = await api.downloadAndroidConfig(developmentAndroid.app.name!)
+  const developmentIosConfig = await api.downloadIosConfig(developmentIos.app.name!)
+
+  validateAndroidConfig(productionAndroidConfig, {
+    appId: productionAndroid.app.appId!,
     packageName: identity.androidPackage,
     projectId,
   })
-  validateIosConfig(iosConfig, {
-    appId: iosAppId,
+  validateIosConfig(productionIosConfig, {
+    appId: productionIos.app.appId!,
     bundleId: identity.iosBundleIdentifier,
     projectId,
+  })
+  validateAndroidConfig(developmentAndroidConfig, {
+    appId: developmentAndroid.app.appId!,
+    packageName: identity.androidPackage,
+    projectId: DEVELOPMENT_FIREBASE_PROJECT_ID,
+  })
+  validateIosConfig(developmentIosConfig, {
+    appId: developmentIos.app.appId!,
+    bundleId: identity.iosBundleIdentifier,
+    projectId: DEVELOPMENT_FIREBASE_PROJECT_ID,
   })
 
   try {
     replaceFirebaseConfigFiles(
       {
-        androidContents: androidConfig,
-        androidPath: ANDROID_CONFIG_PATH,
-        iosContents: iosConfig,
-        iosPath: IOS_CONFIG_PATH,
+        files: [
+          {
+            contents: productionAndroidConfig,
+            path: PRODUCTION_ANDROID_CONFIG_PATH,
+          },
+          {
+            contents: productionIosConfig,
+            path: PRODUCTION_IOS_CONFIG_PATH,
+          },
+          {
+            contents: developmentAndroidConfig,
+            path: DEVELOPMENT_ANDROID_CONFIG_PATH,
+          },
+          {
+            contents: developmentIosConfig,
+            path: DEVELOPMENT_IOS_CONFIG_PATH,
+          },
+        ],
       },
       () => {
-        console.log('  Validating local and production Expo configuration...')
+        console.log('  Validating development and production Expo configuration...')
         validateResolvedExpoConfigs()
       }
     )
@@ -312,12 +359,13 @@ const main = async (): Promise<void> => {
   }
 
   console.log('\nUploading Firebase files to EAS...')
-  setEasFileVariable('GOOGLE_SERVICES_JSON', ANDROID_CONFIG_PATH)
+  setEasFileVariable('GOOGLE_SERVICES_JSON', PRODUCTION_ANDROID_CONFIG_PATH)
   console.log('  GOOGLE_SERVICES_JSON: production / Sensitive / File')
-  setEasFileVariable('GOOGLE_SERVICE_INFO_PLIST', IOS_CONFIG_PATH)
+  setEasFileVariable('GOOGLE_SERVICE_INFO_PLIST', PRODUCTION_IOS_CONFIG_PATH)
   console.log('  GOOGLE_SERVICE_INFO_PLIST: production / Sensitive / File')
 
-  console.log(`\n✅ Firebase configured: ${projectId}`)
+  console.log(`\n✅ Production Firebase configured: ${projectId}`)
+  console.log(`✅ Development Firebase configured: ${DEVELOPMENT_FIREBASE_PROJECT_ID}`)
   console.log(
     `Verify the Firebase Production environment tag manually: ${buildFirebaseProjectSettingsUrl(projectId)}`
   )

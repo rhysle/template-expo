@@ -51,7 +51,9 @@ app-example
 # Firebase
 firebase-debug.log
 /GoogleService-Info.plist
+/GoogleService-Info.dev.plist
 /google-services.json
+/google-services.dev.json
 
 # Claude
 .claude/

@@ -8,15 +8,38 @@ import Purchases, {
 
 import { AppConfig } from '@/configs'
 
+const resolveRevenueCatApiKey = (): string => {
+  if (__DEV__) {
+    const testStoreApiKey = AppConfig.revenueCat.testStoreApiKey.trim()
+    if (!testStoreApiKey) {
+      throw new Error('AppConfig.revenueCat.testStoreApiKey is required for development builds.')
+    }
+    if (!testStoreApiKey.startsWith('test_')) {
+      throw new Error('Development builds must use a RevenueCat Test Store API key.')
+    }
+    return testStoreApiKey
+  }
+
+  const isIos = Platform.OS === 'ios'
+  const apiKey = isIos
+    ? AppConfig.revenueCat.iosApiKey.trim()
+    : AppConfig.revenueCat.androidApiKey.trim()
+  const expectedPrefix = isIos ? 'appl_' : 'goog_'
+
+  if (!apiKey.startsWith(expectedPrefix)) {
+    throw new Error(
+      `Production ${Platform.OS} builds must use a RevenueCat ${expectedPrefix} API key.`
+    )
+  }
+  return apiKey
+}
+
 export const initRevenueCat = (appUserID?: string): void => {
   if (__DEV__) {
     void Purchases.setLogLevel(LOG_LEVEL.DEBUG)
   }
 
-  const apiKey =
-    Platform.OS === 'ios' ? AppConfig.revenueCat.iosApiKey : AppConfig.revenueCat.androidApiKey
-
-  Purchases.configure({ apiKey, appUserID })
+  Purchases.configure({ apiKey: resolveRevenueCatApiKey(), appUserID })
 }
 
 export const fetchOfferings = async () => {

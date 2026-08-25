@@ -332,23 +332,27 @@ const restoreFile = (target: string, snapshot: FileSnapshot): void => {
 
 export const replaceFirebaseConfigFiles = (
   input: {
-    androidContents: string
-    androidPath: string
-    iosContents: string
-    iosPath: string
+    files: ReadonlyArray<{
+      contents: string | Buffer
+      path: string
+    }>
   },
   validate: () => void
 ): void => {
-  const androidSnapshot = snapshotFile(input.androidPath)
-  const iosSnapshot = snapshotFile(input.iosPath)
+  const snapshots = input.files.map(({ path: target }) => ({
+    snapshot: snapshotFile(target),
+    target,
+  }))
 
   try {
-    writeFileAtomically(input.androidPath, input.androidContents)
-    writeFileAtomically(input.iosPath, input.iosContents)
+    for (const file of input.files) {
+      writeFileAtomically(file.path, file.contents)
+    }
     validate()
   } catch (error) {
-    restoreFile(input.androidPath, androidSnapshot)
-    restoreFile(input.iosPath, iosSnapshot)
+    for (const { snapshot, target } of snapshots.reverse()) {
+      restoreFile(target, snapshot)
+    }
     throw error
   }
 }
@@ -660,6 +664,19 @@ export class FirebaseProvisioningApi {
       throw new Error(`Firebase project ${projectId} is ${project.state}, not ACTIVE.`)
     }
     return { created, project }
+  }
+
+  async requireFirebaseProject(projectId: string): Promise<FirebaseProject> {
+    const project = await this.getFirebaseProject(projectId)
+    if (!project) {
+      throw new Error(
+        `Shared development Firebase project ${projectId} does not exist or is not accessible.`
+      )
+    }
+    if (project.state && project.state !== 'ACTIVE') {
+      throw new Error(`Firebase project ${projectId} is ${project.state}, not ACTIVE.`)
+    }
+    return project
   }
 
   private async listAndroidApps(projectId: string): Promise<AndroidApp[]> {

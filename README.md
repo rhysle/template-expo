@@ -74,13 +74,31 @@ npm run setup:firebase
 
 The command verifies personal ADC and rejects `GOOGLE_APPLICATION_CREDENTIALS` so it cannot silently
 use a service account. It reads the native identifiers and EAS UUID from `app.json`, asks for
-confirmation, and idempotently creates or reuses the standalone Google Cloud/Firebase project, iOS
-app, Android app, and Analytics link. It explicitly verifies that Gemini in Firebase is disabled,
-validates and atomically replaces the root `GoogleService-Info.plist` and `google-services.json`, and
-uploads both to the linked EAS project as production-only **Sensitive** file variables. Existing
-Analytics properties are never relinked, and cloud resources are not automatically deleted after a
-partial failure; rerun the same command to reconcile them. Time-based Google API quota responses are
-retried automatically with bounded exponential backoff.
+confirmation, and idempotently creates or reuses the standalone product-specific Google
+Cloud/Firebase project, iOS app, Android app, and Analytics link. It also requires the shared
+`rhysle-template-expo` development Firebase project to exist and be accessible, then creates or
+reuses matching native app registrations there with the same bundle identifier and package name.
+The shared project itself, its Analytics link, and its other project-level settings are not created
+or modified by this workflow.
+
+The command explicitly verifies that Gemini in Firebase is disabled for the production project,
+downloads and validates both environments, and atomically replaces these four Git-ignored files:
+
+```text
+GoogleService-Info.plist
+google-services.json
+GoogleService-Info.dev.plist
+google-services.dev.json
+```
+
+Local development resolves the `.dev` files. Production builds resolve the production EAS file
+variables, with the unsuffixed root files retained as a local production-build fallback. Only the
+unsuffixed production pair is uploaded to the linked EAS project as production-only **Sensitive**
+file variables; the `.dev` pair is excluded from EAS archives. Existing production Analytics
+properties are never relinked, and cloud resources are not automatically deleted after a partial
+failure; rerun the same command to reconcile them. Time-based Google API quota responses are retried
+automatically with bounded exponential backoff. The shared project supports at most 30 registered
+Firebase Apps, so each two-platform product consumes two of its app slots.
 
 Firebase recommends marking the live project as a **Production** environment. This marker currently
 changes only the Firebase console presentation: it adds a visible production warning and does not
@@ -88,8 +106,9 @@ change project behavior or features. Firebase does not expose the marker through
 Management REST API or CLI, so the setup command prints a direct Project settings link for the one
 remaining manual step: under **Your project > Environment**, select **Production**.
 
-The root Firebase files remain Git-ignored and are intentionally included by `.easignore` as the
-local/development fallback. Production EAS builds resolve the `GOOGLE_SERVICE_INFO_PLIST` and
+All four root Firebase files remain Git-ignored. The unsuffixed production pair is intentionally
+included by `.easignore` as a local production fallback, while the `.dev` pair is excluded from EAS
+archives. Production EAS builds resolve the `GOOGLE_SERVICE_INFO_PLIST` and
 `GOOGLE_SERVICES_JSON` file variables instead. Run a clean prebuild after provisioning, then replace
 the sample events in `src/services/firebase/analytics/analyticsAppEvents.ts`; keep generic lifecycle
 events in `analyticsGeneralEvents.ts`.
@@ -98,8 +117,8 @@ events in `analyticsGeneralEvents.ts`.
 
 1. Create the RevenueCat project and add its App Store and/or Google Play app records. Configure each app's store credentials so RevenueCat can validate purchases and read its catalog.
 2. Use the product-provisioning workflow below to create the store products, `premium` entitlement, default offering, and package associations.
-3. For development and testing, you can use RevenueCat's Test Store API key in `AppConfig.revenueCat.iosApiKey` and `androidApiKey` in `src/configs/AppConfig.ts`.
-4. Before submitting a release to the App Store or Google Play, replace the Test Store key with the correct platform-specific production API key for each field. Never submit an app configured with a Test Store key.
+3. Set the single RevenueCat Test Store key in `AppConfig.revenueCat.testStoreApiKey` in `src/configs/AppConfig.ts`. Local development uses this key on both iOS and Android; the empty template placeholder fails closed until it is replaced.
+4. Set the platform-specific production keys in `AppConfig.revenueCat.iosApiKey` and `androidApiKey`. Release bundles select these keys automatically and reject a Test Store key, so development never needs to overwrite production configuration.
 5. Keep `AppConfig.revenueCat.entitlementId` aligned with `revenueCat.entitlementLookupKey` in `src/configs/monetization.ts`, then replace `src/components/paywall/usePaywallFeatures.ts` and confirm the paywall and automatic-presentation behavior fit the product.
 
 Paywall source IDs are intentionally defined beside the route or component that opens the paywall. When replacing a sample feature, replace or remove its local source ID in the same file; do not add a product-wide source registry under `src/configs/`. Route paywall navigation through `usePremiumGate` or `buildPaywallPath` so analytics attribution is retained.

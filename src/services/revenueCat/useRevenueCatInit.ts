@@ -34,7 +34,17 @@ export const useRevenueCatInit = (): void => {
   useEffect(() => {
     if (!userId) return
 
-    initRevenueCat(userId)
+    try {
+      initRevenueCat(userId)
+    } catch (error) {
+      setPremiumStatus('unknown', null)
+      setAnalyticsUserProperties({ premium_state: 'unknown' })
+      if (__DEV__) {
+        console.warn('[RevenueCat] Failed to configure the SDK:', error)
+      }
+      recordError(error, 'useRevenueCatInit.configure', getRevenueCatErrorDetails(error))
+      return
+    }
 
     const refreshSubscriptionStatus = async () => {
       try {
