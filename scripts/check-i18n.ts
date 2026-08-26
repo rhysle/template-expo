@@ -27,6 +27,7 @@ const BASE_LOCALE = 'en'
 
 // Keys accessed indirectly, or intentionally provided for future product use.
 const IGNORED_UNUSED_KEY_PREFIXES = ['common.', 'currencies.']
+const PLURAL_KEY_SUFFIX = /_(zero|one|two|few|many|other)$/
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -212,6 +213,13 @@ function collectUsedKeys(): Set<string> {
   return used
 }
 
+function isUsedKey(key: string, usedKeys: Set<string>): boolean {
+  if (usedKeys.has(key)) return true
+
+  const pluralBaseKey = key.replace(PLURAL_KEY_SUFFIX, '')
+  return pluralBaseKey !== key && usedKeys.has(pluralBaseKey)
+}
+
 // ---------------------------------------------------------------------------
 // Release locale checks
 // ---------------------------------------------------------------------------
@@ -367,7 +375,8 @@ function main() {
 
   const usedKeys = collectUsedKeys()
   const unusedKeys = baseKeys.filter(
-    (k) => !usedKeys.has(k) && !IGNORED_UNUSED_KEY_PREFIXES.some((prefix) => k.startsWith(prefix))
+    (k) =>
+      !isUsedKey(k, usedKeys) && !IGNORED_UNUSED_KEY_PREFIXES.some((prefix) => k.startsWith(prefix))
   )
   const emptyObjectKeys = flatEmptyObjects(baseJson)
   const emptyValueKeys = flatEmptyValues(baseJson)
