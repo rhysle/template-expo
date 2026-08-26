@@ -8,7 +8,7 @@ Current stack: Expo SDK 57, React Native 0.86, React 19 with React Compiler, Exp
 
 ## Platform Scope
 
-This template targets iOS and Android only. Build, implement, review, and test product features for both mobile platforms; web compatibility, web-specific implementations, web fallbacks, and web testing are out of scope. Do not block mobile work on web-only failures or use `--platform all` for EAS Update because that also exports web. Use the mobile-only `eas-update`, `eas-update:ios`, and `eas-update:android` scripts instead.
+This template targets iOS and Android only. Build, implement, and review product features for both mobile platforms; web compatibility, web-specific implementations, web fallbacks, and web testing are out of scope. Do not block mobile work on web-only failures or use `--platform all` for EAS Update because that also exports web. Use the mobile-only `eas-update`, `eas-update:ios`, and `eas-update:android` scripts instead.
 
 ## Documentation Lookup
 
@@ -56,6 +56,10 @@ npm run monetization:ppp:refresh -- --year 2025
 ```
 
 Use `npm run check` before handing off code. It intentionally runs only linting and the app TypeScript check. Run a clean prebuild and verify the affected native platform after changing native dependencies, `app.json`, a config plugin, or ads/font setup.
+
+## Automated Testing
+
+Do not add, retain, or run automated test files or test suites. Files matching `*.test.*`, `*.spec.*`, and files under `__tests__/` do not belong in this repository. Automated tests are not required for implementation or handoff; use the existing lint, TypeScript, i18n, configuration, build, and native verification commands when applicable.
 
 ## Before Building Product Features
 
@@ -239,7 +243,6 @@ Every iOS Fastlane metadata upload reads `fastlane/ios/app_store_config.json`, s
 ## Handoff Checklist
 
 1. Run the narrowest relevant checks, and `npm run check` for normal code changes.
-2. Test affected behavior on iOS and Android when feasible; web verification is not required.
-3. Run `npm run check:i18n` after changing English product copy.
-4. Regenerate and verify native projects after native configuration changes.
-5. Update this file and `README.md` when a reusable architectural convention changes.
+2. Run `npm run check:i18n` after changing English product copy.
+3. Regenerate and verify native projects after native configuration changes.
+4. Update this file and `README.md` when a reusable architectural convention changes.

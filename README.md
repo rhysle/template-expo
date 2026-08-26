@@ -350,14 +350,16 @@ Native configuration changes—including `app.json`, Firebase files, fonts, ads,
 
 ```bash
 npm run prebuild:clean
-npm run ios        # test iOS changes
-npm run android    # test Android changes
+npm run ios        # verify iOS changes
+npm run android    # verify Android changes
 npm run check
 npm run check:i18n # after changing English product copy
 npm run check:i18n:release # after completing release translations
 npm run check:i18n:release:fix # remove obsolete locale keys, then audit
 npm run release:verify-config
 ```
+
+This repository does not maintain automated test files or suites. Do not add `*.test.*`, `*.spec.*`, or `__tests__/`; use the lint, TypeScript, i18n, configuration, build, and native verification commands above when applicable.
 
 Before a production build, confirm the app uses the new EAS project, Firebase configuration, Sentry project, store identifiers, support/legal URLs, and any enabled RevenueCat or AdMob credentials.
 
