@@ -272,6 +272,10 @@ offers. Paid introductory, promotional, and unrecognized Google offers are never
 1. Keep the fixed-scope Sentry Organization Token as `SENTRY_AUTH_TOKEN` in the gitignored
    `.env.local` file and in the existing account- or project-level EAS environment configuration.
    Its `org:ci` scope is used only for build/update source-map uploads.
+   Do not use or permission-test this token for issue/event investigation. Use the connected Sentry
+   MCP first; if it is unavailable, provide a separate read-only `SENTRY_READ_AUTH_TOKEN` from a
+   secure machine-level environment and map it to `SENTRY_AUTH_TOKEN` only for the individual query
+   process. Never store the read token in `.env.local` or EAS.
 2. In Sentry Organization Settings, open **Developer Settings > Custom Integrations**, create an
    **Internal Integration**, and grant **Organization: Read**, **Team: Admin**, and **Project: Read
    & Write**. Team Admin allows project creation while the organization disables member project
