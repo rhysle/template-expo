@@ -74,7 +74,7 @@ export const InlineNotice = ({
         ) : null}
 
         {isSimpleContent ? (
-          <Text variant="body" tone="secondary" selectable>
+          <Text variant="body" tone="secondary">
             {children}
           </Text>
         ) : (
