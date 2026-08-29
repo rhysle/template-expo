@@ -535,7 +535,7 @@ Locale resources live in `src/i18n/locales/`, are loaded dynamically, and are ty
 
 ### Supported Languages
 
-The app ships with 33 UI locales. In production, the active language follows the app or device
+The app ships with 37 UI locales. In production, the active language follows the app or device
 locale reported by the operating system; there is no in-app language picker. Unmatched locales and
 missing translations fall back to English.
 
@@ -543,37 +543,41 @@ missing translations fall back to English.
 | --- | --------- | --------------------- | ----------------- | --------- |
 | 1   | `ar`      | Arabic                | Arabic            | RTL       |
 | 2   | `bn`      | Bangla                | Bengali           | LTR       |
-| 3   | `cs`      | Czech                 | Latin             | LTR       |
-| 4   | `da`      | Danish                | Latin             | LTR       |
-| 5   | `de`      | German                | Latin             | LTR       |
-| 6   | `el`      | Greek                 | Greek             | LTR       |
-| 7   | `en`      | English               | Latin             | LTR       |
-| 8   | `es`      | Spanish               | Latin             | LTR       |
-| 9   | `fi`      | Finnish               | Latin             | LTR       |
-| 10  | `fr`      | French                | Latin             | LTR       |
-| 11  | `he`      | Hebrew                | Hebrew            | RTL       |
-| 12  | `hi`      | Hindi                 | Devanagari        | LTR       |
-| 13  | `hr`      | Croatian              | Latin             | LTR       |
-| 14  | `hu`      | Hungarian             | Latin             | LTR       |
-| 15  | `id`      | Indonesian            | Latin             | LTR       |
-| 16  | `it`      | Italian               | Latin             | LTR       |
-| 17  | `ja`      | Japanese              | Japanese          | LTR       |
-| 18  | `ko`      | Korean                | Hangul            | LTR       |
-| 19  | `ms`      | Malay                 | Latin             | LTR       |
-| 20  | `nl`      | Dutch                 | Latin             | LTR       |
-| 21  | `nb`      | Norwegian Bokmål      | Latin             | LTR       |
-| 22  | `pl`      | Polish                | Latin             | LTR       |
-| 23  | `pt-BR`   | Portuguese (Brazil)   | Latin             | LTR       |
-| 24  | `pt`      | Portuguese (Portugal) | Latin             | LTR       |
-| 25  | `ro`      | Romanian              | Latin             | LTR       |
-| 26  | `ru`      | Russian               | Cyrillic          | LTR       |
-| 27  | `sv`      | Swedish               | Latin             | LTR       |
-| 28  | `th`      | Thai                  | Thai              | LTR       |
-| 29  | `tr`      | Turkish               | Latin             | LTR       |
-| 30  | `uk`      | Ukrainian             | Cyrillic          | LTR       |
-| 31  | `vi`      | Vietnamese            | Latin             | LTR       |
-| 32  | `zh-Hans` | Chinese (Simplified)  | Han (Simplified)  | LTR       |
-| 33  | `zh-Hant` | Chinese (Traditional) | Han (Traditional) | LTR       |
+| 3   | `ca`      | Catalan               | Latin             | LTR       |
+| 4   | `cs`      | Czech                 | Latin             | LTR       |
+| 5   | `da`      | Danish                | Latin             | LTR       |
+| 6   | `de`      | German                | Latin             | LTR       |
+| 7   | `el`      | Greek                 | Greek             | LTR       |
+| 8   | `en`      | English               | Latin             | LTR       |
+| 9   | `es`      | Spanish (Spain)       | Latin             | LTR       |
+| 10  | `es-MX`   | Spanish (Mexico)      | Latin             | LTR       |
+| 11  | `fi`      | Finnish               | Latin             | LTR       |
+| 12  | `fr`      | French (France)       | Latin             | LTR       |
+| 13  | `fr-CA`   | French (Canada)       | Latin             | LTR       |
+| 14  | `he`      | Hebrew                | Hebrew            | RTL       |
+| 15  | `hi`      | Hindi                 | Devanagari        | LTR       |
+| 16  | `hr`      | Croatian              | Latin             | LTR       |
+| 17  | `hu`      | Hungarian             | Latin             | LTR       |
+| 18  | `id`      | Indonesian            | Latin             | LTR       |
+| 19  | `it`      | Italian               | Latin             | LTR       |
+| 20  | `ja`      | Japanese              | Japanese          | LTR       |
+| 21  | `ko`      | Korean                | Hangul            | LTR       |
+| 22  | `ms`      | Malay                 | Latin             | LTR       |
+| 23  | `nl`      | Dutch                 | Latin             | LTR       |
+| 24  | `nb`      | Norwegian Bokmål      | Latin             | LTR       |
+| 25  | `pl`      | Polish                | Latin             | LTR       |
+| 26  | `pt-BR`   | Portuguese (Brazil)   | Latin             | LTR       |
+| 27  | `pt`      | Portuguese (Portugal) | Latin             | LTR       |
+| 28  | `ro`      | Romanian              | Latin             | LTR       |
+| 29  | `ru`      | Russian               | Cyrillic          | LTR       |
+| 30  | `sk`      | Slovak                | Latin             | LTR       |
+| 31  | `sv`      | Swedish               | Latin             | LTR       |
+| 32  | `th`      | Thai                  | Thai              | LTR       |
+| 33  | `tr`      | Turkish               | Latin             | LTR       |
+| 34  | `uk`      | Ukrainian             | Cyrillic          | LTR       |
+| 35  | `vi`      | Vietnamese            | Latin             | LTR       |
+| 36  | `zh-Hans` | Chinese (Simplified)  | Han (Simplified)  | LTR       |
+| 37  | `zh-Hant` | Chinese (Traditional) | Han (Traditional) | LTR       |
 
 ```tsx
 const { t } = useTranslation()

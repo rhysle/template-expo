@@ -1,5 +1,24 @@
 import type { Locale } from 'date-fns'
-import { de, enUS, es, fr, hi, id, it, ja, ko, ptBR, ru, tr, vi, zhCN, zhTW } from 'date-fns/locale'
+import {
+  ca,
+  de,
+  enUS,
+  es,
+  fr,
+  frCA,
+  hi,
+  id,
+  it,
+  ja,
+  ko,
+  ptBR,
+  ru,
+  sk,
+  tr,
+  vi,
+  zhCN,
+  zhTW,
+} from 'date-fns/locale'
 
 const dateFnsLocales: Record<string, Locale> = {
   en: enUS,
@@ -10,7 +29,11 @@ const dateFnsLocales: Record<string, Locale> = {
   'zh-Hant': zhTW,
   de,
   fr,
+  'fr-CA': frCA,
   es,
+  'es-MX': es,
+  ca,
+  sk,
   'pt-BR': ptBR,
   hi,
   it,

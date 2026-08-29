@@ -48,6 +48,7 @@ const systemFontFamilyMap: Record<FontWeight, undefined> = {
 const LATIN_LANGUAGES = new Set([
   'en',
   'vi',
+  'ca',
   'fr',
   'de',
   'es',
