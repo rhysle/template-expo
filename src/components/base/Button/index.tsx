@@ -52,7 +52,7 @@ export const Button = ({
   style,
   children,
   animationType = 'opacity',
-  loadingAnimation = 'bouncing-dots',
+  loadingAnimation = 'spin-arc',
   onPressIn: userPressIn,
   onPressOut: userPressOut,
   ...props
