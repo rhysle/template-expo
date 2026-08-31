@@ -183,6 +183,7 @@ const createStyles = createThemedStyles((t) => ({
     overflow: 'hidden',
     // Fills the gap between the scaled inner content and the clip boundary on press
     backgroundColor: t.colors.primary.main,
+    borderCurve: 'continuous',
   },
   inner: {
     flexDirection: 'row',

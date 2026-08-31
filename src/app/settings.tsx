@@ -6,7 +6,7 @@ import {
   ArrowSquareOutIcon,
   BugIcon,
   CopyIcon,
-  DiamondsFourIcon,
+  CrownIcon,
   EnvelopeIcon,
   FileTextIcon,
   LockIcon,
@@ -92,7 +92,7 @@ export default function SettingsScreen() {
 
       {premiumState === 'free' && (
         <PromoBanner
-          icon={<DiamondsFourIcon size={iconSizes.lg} color={theme.colors.text.inverse} />}
+          icon={<CrownIcon size={iconSizes.lg} color={theme.colors.text.inverse} />}
           title={t('settings.upgradeBanner.title')}
           subtitle={t('settings.upgradeBanner.subtitle')}
           onPress={() => openPaywall(SETTINGS_PAYWALL_SOURCE)}
