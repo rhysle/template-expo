@@ -1,11 +1,14 @@
 export type { PaywallSource } from './premiumAccess'
 export { buildPaywallPath, hasPaywallPrecedence, shouldTriggerAutoPaywall } from './premiumAccess'
+export type { OfferingsFailureKind } from './revenueCatService'
 export {
   addCustomerInfoListener,
+  canMakePayments,
   checkEntitlement,
   fetchOfferings,
   getActiveEntitlementId,
   getCustomerInfo,
+  getOfferingsFailureKind,
   getRevenueCatErrorDetails,
   initRevenueCat,
   isBillingUnavailableError,

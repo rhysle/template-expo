@@ -47,6 +47,8 @@ export const fetchOfferings = async () => {
   return offerings.current?.availablePackages ?? []
 }
 
+export const canMakePayments = (): Promise<boolean> => Purchases.canMakePayments()
+
 const getPurchasesErrorProperty = (error: unknown, property: string): unknown => {
   if (error === null || typeof error !== 'object') return undefined
   return (error as Record<string, unknown>)[property]
@@ -93,6 +95,44 @@ export const isBillingUnavailableError = (error: unknown): boolean => {
   return [message, underlyingErrorMessage].some(
     (value) => typeof value === 'string' && /\bBILLING_UNAVAILABLE\b/i.test(value)
   )
+}
+
+export type OfferingsFailureKind =
+  'configuration' | 'purchase_not_allowed' | 'temporary' | 'unexpected'
+
+export const getOfferingsFailureKind = (error: unknown): OfferingsFailureKind => {
+  const code = getPurchasesErrorProperty(error, 'code')
+
+  if (
+    code === PURCHASES_ERROR_CODE.PURCHASE_NOT_ALLOWED_ERROR ||
+    code === PURCHASES_ERROR_CODE.UNSUPPORTED_ERROR ||
+    isBillingUnavailableError(error)
+  ) {
+    return 'purchase_not_allowed'
+  }
+
+  if (
+    code === PURCHASES_ERROR_CODE.NETWORK_ERROR ||
+    code === PURCHASES_ERROR_CODE.OFFLINE_CONNECTION_ERROR ||
+    code === PURCHASES_ERROR_CODE.STORE_PROBLEM_ERROR ||
+    code === PURCHASES_ERROR_CODE.UNKNOWN_BACKEND_ERROR ||
+    code === PURCHASES_ERROR_CODE.UNEXPECTED_BACKEND_RESPONSE_ERROR ||
+    code === PURCHASES_ERROR_CODE.PRODUCT_REQUEST_TIMED_OUT_ERROR ||
+    code === PURCHASES_ERROR_CODE.API_ENDPOINT_BLOCKED
+  ) {
+    return 'temporary'
+  }
+
+  if (
+    code === PURCHASES_ERROR_CODE.CONFIGURATION_ERROR ||
+    code === PURCHASES_ERROR_CODE.PRODUCT_NOT_AVAILABLE_FOR_PURCHASE_ERROR ||
+    code === PURCHASES_ERROR_CODE.INVALID_CREDENTIALS_ERROR ||
+    code === PURCHASES_ERROR_CODE.INVALID_APPLE_SUBSCRIPTION_KEY_ERROR
+  ) {
+    return 'configuration'
+  }
+
+  return 'unexpected'
 }
 
 type PurchasePackageResult =

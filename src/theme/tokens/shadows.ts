@@ -8,6 +8,7 @@ const shadowDefinitions = {
   md: { offsetY: 8, blurRadius: 16, opacity: 0.1, elevation: 4 },
   lg: { offsetY: 12, blurRadius: 24, opacity: 0.12, elevation: 6 },
   xl: { offsetY: 20, blurRadius: 40, opacity: 0.16, elevation: 10 },
+  glow: { offsetY: 0, blurRadius: 12, opacity: 0.16, elevation: 4 },
 } as const
 
 type ShadowDefinition = (typeof shadowDefinitions)[keyof typeof shadowDefinitions]
@@ -40,6 +41,7 @@ export function createShadows(color: string) {
     md: createShadowStyle(color, shadowDefinitions.md),
     lg: createShadowStyle(color, shadowDefinitions.lg),
     xl: createShadowStyle(color, shadowDefinitions.xl),
+    glow: createShadowStyle(color, shadowDefinitions.glow),
   }
 }
 

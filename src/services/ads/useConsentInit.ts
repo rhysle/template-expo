@@ -1,9 +1,14 @@
-import { requestTrackingPermissionsAsync } from 'expo-tracking-transparency'
-import { useEffect } from 'react'
-import { Platform } from 'react-native'
+import {
+  getTrackingPermissionsAsync,
+  PermissionStatus,
+  requestTrackingPermissionsAsync,
+} from 'expo-tracking-transparency'
+import { useEffect, useRef } from 'react'
+import { AppState, InteractionManager, Platform } from 'react-native'
 
 import { recordError } from '@/services/sentry'
 import { useAdsState } from '@/stores/features/ads'
+import { usePaywallState } from '@/stores/features/paywall'
 import { useSubscriptionState } from '@/stores/features/subscription'
 import { assertOnline } from '@/utils/network'
 import { OfflineError } from '@/utils/OfflineError'
@@ -26,10 +31,32 @@ const isOfflineConsentFailure = async (error: unknown): Promise<boolean> => {
   }
 }
 
+type ConsentFailureStage =
+  'gather_consent' | 'read_consent_choices' | 'read_consent_info' | 'request_tracking_permission'
+
+interface ConsentFailure {
+  error: unknown
+  stage: ConsentFailureStage
+}
+
+const getConsentErrorDetails = (
+  error: unknown,
+  stage: ConsentFailureStage
+): Record<string, unknown> => {
+  const details: Record<string, unknown> = { stage }
+  if (error !== null && typeof error === 'object' && 'code' in error) {
+    const code = (error as { code?: unknown }).code
+    if (typeof code === 'string' || typeof code === 'number') details.code = code
+  }
+  return details
+}
+
 // setup:ads exports this implementation through the shared facade only when ads are enabled.
 export const useConsentInit = () => {
   const { setCanRequestAds, setConsentGathered, setPrivacyOptionsRequired } = useAdsState()
   const { premiumState } = useSubscriptionState()
+  const { isPaywallShowing } = usePaywallState()
+  const consentCompleted = useRef(false)
 
   useEffect(() => {
     // Premium and unresolved users see no ads, so skip consent until access is confirmed free.
@@ -39,10 +66,15 @@ export const useConsentInit = () => {
       return
     }
 
+    if (consentCompleted.current || isPaywallShowing) return
+
     let cancelled = false
+    let started = false
+    let presentationTask: ReturnType<typeof InteractionManager.runAfterInteractions> | undefined
 
     const gather = async () => {
-      let consentError: unknown
+      const failures: ConsentFailure[] = []
+      let gatheredSuccessfully = false
 
       try {
         // Avoid invoking UMP while offline. Native iOS network errors are localized, so
@@ -52,25 +84,52 @@ export const useConsentInit = () => {
         await AdsConsent.gatherConsent(
           __DEV__ ? { debugGeography: AdsConsentDebugGeography.EEA } : undefined
         )
+        gatheredSuccessfully = true
       } catch (error) {
-        consentError = error
+        failures.push({ error, stage: 'gather_consent' })
       }
 
+      let info: Awaited<ReturnType<typeof AdsConsent.getConsentInfo>> | undefined
       try {
         // UMP may retain a valid choice from an earlier session even when the current
         // information update fails. Its canRequestAds result is the source of truth.
-        const info = await AdsConsent.getConsentInfo()
+        info = await AdsConsent.getConsentInfo()
+      } catch (error) {
+        failures.push({ error, stage: 'read_consent_info' })
+      }
 
-        if (Platform.OS === 'ios' && info.canRequestAds) {
+      if (Platform.OS === 'ios' && info?.canRequestAds && gatheredSuccessfully) {
+        let mayRequestTracking = false
+
+        try {
           const gdprApplies = await AdsConsent.getGdprApplies()
-          const mayRequestTracking =
+          mayRequestTracking =
             !gdprApplies || (await AdsConsent.getPurposeConsents()).startsWith('1')
-
-          if (mayRequestTracking) {
-            await requestTrackingPermissionsAsync()
-          }
+        } catch (error) {
+          failures.push({ error, stage: 'read_consent_choices' })
         }
 
+        if (mayRequestTracking) {
+          try {
+            const trackingPermission = await getTrackingPermissionsAsync()
+            if (trackingPermission.status === PermissionStatus.UNDETERMINED) {
+              // UMP's completion can coincide with its dismissal animation. Queue ATT behind all
+              // active UI interactions so UIKit never receives overlapping presentation requests.
+              await new Promise<void>((resolve) => {
+                presentationTask = InteractionManager.runAfterInteractions(resolve)
+              })
+
+              if (!cancelled && !isPaywallShowing && AppState.currentState === 'active') {
+                await requestTrackingPermissionsAsync()
+              }
+            }
+          } catch (error) {
+            failures.push({ error, stage: 'request_tracking_permission' })
+          }
+        }
+      }
+
+      if (info) {
         if (!cancelled) {
           setCanRequestAds(info.canRequestAds)
           setPrivacyOptionsRequired(
@@ -78,21 +137,53 @@ export const useConsentInit = () => {
               AdsConsentPrivacyOptionsRequirementStatus.REQUIRED
           )
         }
-      } catch (error) {
-        consentError ??= error
-        if (!cancelled) setCanRequestAds(false)
+      } else if (!cancelled) {
+        setCanRequestAds(false)
       }
 
-      if (consentError && !(await isOfflineConsentFailure(consentError))) {
-        recordError(consentError, 'useConsentInit')
+      for (const failure of failures) {
+        if (!(await isOfflineConsentFailure(failure.error))) {
+          recordError(
+            failure.error,
+            `useConsentInit.${failure.stage}`,
+            getConsentErrorDetails(failure.error, failure.stage)
+          )
+        }
       }
 
-      if (!cancelled) setConsentGathered(true)
+      if (!cancelled) {
+        consentCompleted.current = true
+        setConsentGathered(true)
+      }
     }
 
-    void gather()
+    const scheduleGather = () => {
+      if (cancelled || started || AppState.currentState !== 'active') return
+
+      presentationTask?.cancel()
+      presentationTask = InteractionManager.runAfterInteractions(() => {
+        if (cancelled || isPaywallShowing) return
+        started = true
+        void gather()
+      })
+    }
+
+    const appStateSubscription = AppState.addEventListener('change', (nextState) => {
+      if (nextState === 'active') scheduleGather()
+    })
+
+    scheduleGather()
+
     return () => {
       cancelled = true
+      presentationTask?.cancel()
+      appStateSubscription.remove()
     }
-  }, [premiumState, setCanRequestAds, setConsentGathered, setPrivacyOptionsRequired])
+  }, [
+    isPaywallShowing,
+    premiumState,
+    setCanRequestAds,
+    setConsentGathered,
+    setPrivacyOptionsRequired,
+  ])
 }

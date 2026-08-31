@@ -19,6 +19,7 @@ import { AdEventType, getAdUnitId, InterstitialAd, isInterstitialAdsEnabled } fr
 import { getInterstitialEligibility } from './interstitialPolicy'
 import { useCanShowAds } from './useCanShowAds'
 
+/** Resolves immediately when no ad is shown, or after a presented ad closes or fails. */
 type RequestInterstitialAd = () => Promise<void>
 
 const InterstitialAdContext = createContext<RequestInterstitialAd | null>(null)
@@ -50,6 +51,7 @@ export const InterstitialAdProvider = ({
   // value in a ref so the captured function does not reject the request using a stale prop.
   const canPresentRef = useRef(canPresent)
   const isLoadedRef = useRef(false)
+  const presentationPromiseRef = useRef<Promise<void> | null>(null)
   const config = AppConfig.ads.interstitial
   const interstitialAdsEnabled = isInterstitialAdsEnabled()
   const isActive = canShowAds && interstitialAdsEnabled
@@ -108,6 +110,12 @@ export const InterstitialAdProvider = ({
   }, [resetInterstitialForegroundCap])
 
   const requestInterstitialAd: RequestInterstitialAd = async () => {
+    const activePresentation = presentationPromiseRef.current
+    if (activePresentation) {
+      await activePresentation
+      return
+    }
+
     if (!interstitialAdsEnabled || premiumState !== 'free') return
 
     recordInterstitialQualifyingCompletion()
@@ -137,11 +145,47 @@ export const InterstitialAdProvider = ({
     const ad = adRef.current
     if (!ad) return
 
+    // The SDK keeps a full-screen ad marked as loaded until it closes. Clear our readiness
+    // immediately and share one promise so a rapid second request cannot show it again or
+    // resolve an earlier caller from the second presentation error.
+    isLoadedRef.current = false
+    const presentationPromise = new Promise<void>((resolve) => {
+      let settled = false
+      let recordedAsShown = false
+      let unsubscribeOpened: () => void = () => undefined
+      let unsubscribeClosed: () => void = () => undefined
+      let unsubscribeError: () => void = () => undefined
+
+      const settle = () => {
+        if (settled) return
+        settled = true
+        unsubscribeOpened()
+        unsubscribeClosed()
+        unsubscribeError()
+        resolve()
+      }
+
+      unsubscribeOpened = ad.addAdEventListener(AdEventType.OPENED, () => {
+        if (recordedAsShown) return
+        recordedAsShown = true
+        recordInterstitialShown()
+      })
+      unsubscribeClosed = ad.addAdEventListener(AdEventType.CLOSED, settle)
+      unsubscribeError = ad.addAdEventListener(AdEventType.ERROR, settle)
+
+      void ad.show().catch((error) => {
+        recordError(error, 'InterstitialAdProvider.show')
+        settle()
+      })
+    })
+    presentationPromiseRef.current = presentationPromise
+
     try {
-      await ad.show()
-      recordInterstitialShown()
-    } catch (error) {
-      recordError(error, 'InterstitialAdProvider.show')
+      await presentationPromise
+    } finally {
+      if (presentationPromiseRef.current === presentationPromise) {
+        presentationPromiseRef.current = null
+      }
     }
   }
 

@@ -7,6 +7,7 @@ export const AdEventType = {
   CLOSED: 'closed',
   ERROR: 'error',
   LOADED: 'loaded',
+  OPENED: 'opened',
 } as const
 
 export const AdsConsentDebugGeography = {
