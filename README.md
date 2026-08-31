@@ -129,9 +129,9 @@ variables. Keep both native-directory exclusions in `.easignore`.
 2. Use the product-provisioning workflow below to create the store products, `premium` entitlement, default offering, and package associations.
 3. Set the single RevenueCat Test Store key in `AppConfig.revenueCat.testStoreApiKey` in `src/configs/AppConfig.ts`. Local development uses this key on both iOS and Android; the empty template placeholder fails closed until it is replaced.
 4. Set the platform-specific production keys in `AppConfig.revenueCat.iosApiKey` and `androidApiKey`. Release bundles select these keys automatically and reject a Test Store key, so development never needs to overwrite production configuration.
-5. Keep `AppConfig.revenueCat.entitlementId` aligned with `revenueCat.entitlementLookupKey` in `src/configs/monetization.ts`, then replace `src/components/paywall/usePaywallFeatures.ts` and confirm the paywall and automatic-presentation behavior fit the product.
+5. Keep `AppConfig.revenueCat.entitlementId` aligned with `revenueCat.entitlementLookupKey` in `src/configs/monetization.ts`, then replace the product-specific comparison rows and Free/Pro values in `src/components/paywall/usePaywallFeatures.ts` and confirm the paywall and automatic-presentation behavior fit the product.
 
-Paywall source IDs are intentionally defined beside the route or component that opens the paywall. When replacing a sample feature, replace or remove its local source ID in the same file; do not add a product-wide source registry under `src/configs/`. Route paywall navigation through `usePremiumGate` or `buildPaywallPath` so analytics attribution is retained.
+Paywall source IDs are intentionally defined beside the route or component that opens the paywall. When replacing a sample feature, replace or remove its local source ID in the same file; do not add a product-wide source registry under `src/configs/`. Route paywall navigation through `usePremiumGate` or `buildPaywallPath` so analytics attribution is retained. Every source renders the same complete comparison table; product-level context changes are limited to the paywall title and subtitle.
 
 Subscription access is runtime-only and resolves to `loading`, `free`, `premium`, or `unknown`. Premium actions run only for `premium`; paywalls and ads are eligible only for confirmed `free` users. Keep `loading` and `unknown` fail-closed when adapting gates or monetization flows.
 
@@ -469,6 +469,8 @@ The template enables RTL support through Expo configuration. `useIsRTL()` is ava
 `src/components/base/` is the reusable layer. Notable building blocks include `Button`, `Text`, `Card`, `ListItem` variants, `Toggle`, `SegmentedControl`, `BottomSheet`, `SearchInput`, `FadeScrollView`, `Snackbar`, `CollapsingHeader`, `NativeTabNavigator`, `CustomTabNavigator`, `TabStack`, `TabScreen`, `FloatingTabBar`, `Onboarding`, `Paywall`, and loading indicators.
 
 Expo UI wrappers live in `src/components/base/NativeUI/` and use PascalCase `Native*` names such as `NativeToggle`, `NativeBottomSheet`, and `NativeAlertDialog`. They preserve the custom base components for side-by-side comparison, expose platform-neutral props, inherit the app theme and RTL direction where supported, and target iOS and Android only.
+
+`NativeBottomSheet` keeps raw snap points internal. Use its behavior-based `content`, `large`, or `resizable` preset. It composes Expo UI's direct SwiftUI primitives on iOS and Material 3 Compose primitives on Android. Content sheets use native fit-to-content sizing and the system-centered fitted presentation on iPad, large sheets fill the available height, and resizable sheets use the native iOS medium/large detents with Android's equivalent partial/expanded states. Scrollable iOS sheets use the native SwiftUI `ScrollView` around naturally measured React Native content.
 
 Keep reusable behavior here. Put product-specific composition in `src/components/` or route files.
 
