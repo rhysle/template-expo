@@ -49,8 +49,8 @@ def resolve_project_path(path)
 end
 
 # Resolve and validate the product-specific iOS submission values before any
-# App Store Connect request. A missing attachment must stop the lane because
-# deliver removes the existing review attachment when no file is provided.
+# App Store Connect request. The review attachment is optional: omitting the
+# deliver option preserves the existing attachment in App Store Connect.
 def ios_submission_values
   app_store_config_path = File.join(PROJECT_ROOT, "fastlane/ios/app_store_config.json")
   unless File.file?(app_store_config_path)
@@ -76,11 +76,14 @@ def ios_submission_values
 
   review_attachment_value = ENV["IOS_APP_REVIEW_ATTACHMENT_PATH"].to_s.strip
   if review_attachment_value.empty?
-    UI.user_error!("IOS_APP_REVIEW_ATTACHMENT_PATH is required in .env.fastlane.local")
-  end
-  review_attachment_path = resolve_project_path(review_attachment_value)
-  unless File.file?(review_attachment_path)
-    UI.user_error!("App Review attachment not found at: #{review_attachment_path}")
+    UI.important("IOS_APP_REVIEW_ATTACHMENT_PATH is not configured; skipping App Review attachment upload.")
+    review_attachment_path = nil
+  else
+    review_attachment_path = resolve_project_path(review_attachment_value)
+    unless File.file?(review_attachment_path)
+      UI.important("App Review attachment not found at: #{review_attachment_path}; skipping its upload.")
+      review_attachment_path = nil
+    end
   end
 
   {
@@ -238,10 +241,14 @@ platform :ios do
       submit_for_review: false,
       automatic_release: false,
       precheck_include_in_app_purchases: false,
-      app_review_attachment_file: submission_values.fetch(:review_attachment_path),
       app_rating_config_path: File.join(PROJECT_ROOT, "fastlane/ios/metadata/app_rating_config.json"),
       **SHARED_IOS_URLS,
     }
+
+    review_attachment_path = submission_values.fetch(:review_attachment_path)
+    if review_attachment_path
+      deliver_options[:app_review_attachment_file] = review_attachment_path
+    end
 
     if globals_only
       deliver_options[:skip_screenshots] = true
