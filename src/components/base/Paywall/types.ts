@@ -2,10 +2,18 @@ import type { Icon } from 'phosphor-react-native'
 
 import type { PaywallSource } from '@/services/revenueCat'
 
-export interface PaywallFeatureItem {
+export type PaywallComparisonValue =
+  | { type: 'text'; text: string }
+  | { type: 'included' }
+  | { type: 'excluded' }
+  | { type: 'unlimited' }
+
+export interface PaywallComparisonItem {
+  id: string
   icon: Icon
   title: string
-  description?: string
+  free: PaywallComparisonValue
+  pro: PaywallComparisonValue
 }
 
 export interface PaywallCallbacks {
@@ -19,7 +27,7 @@ export interface PaywallCallbacks {
 export interface PaywallScreenProps extends PaywallCallbacks {
   title: string
   subtitle: string
-  features: PaywallFeatureItem[]
+  comparisonItems: PaywallComparisonItem[]
   source: PaywallSource
   onComplete: () => void
   onDismiss: () => void

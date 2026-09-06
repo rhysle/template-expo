@@ -2,7 +2,10 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useTranslation } from 'react-i18next'
 
 import { PaywallScreen } from '@/components/base/Paywall'
-import { usePaywallFeatures } from '@/components/paywall/usePaywallFeatures'
+import {
+  useContextualPaywallContent,
+  usePaywallComparison,
+} from '@/components/paywall/usePaywallFeatures'
 import { useSnackbarState } from '@/stores/features/snackbar'
 import { haptics } from '@/utils/haptics'
 
@@ -11,8 +14,9 @@ export default function AutoPaywallScreen() {
   const router = useRouter()
   const { source: sourceParam } = useLocalSearchParams<{ source?: string }>()
   const { showSnackbar } = useSnackbarState()
-  const features = usePaywallFeatures()
   const source = sourceParam ?? 'direct'
+  const comparisonItems = usePaywallComparison()
+  const { title, subtitle } = useContextualPaywallContent(source)
 
   const handleDone = () => {
     router.back()
@@ -20,9 +24,9 @@ export default function AutoPaywallScreen() {
 
   return (
     <PaywallScreen
-      title={t('paywall.title')}
-      subtitle={t('paywall.subtitle')}
-      features={features}
+      title={title}
+      subtitle={subtitle}
+      comparisonItems={comparisonItems}
       source={source}
       onComplete={handleDone}
       onDismiss={handleDone}

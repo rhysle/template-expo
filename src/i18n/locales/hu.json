@@ -1,9 +1,5 @@
 {
   "common": {
-    "openSettings": "Beállítások megnyitása",
-    "reset": "Visszaállítás",
-    "start": "Indítás",
-    "stop": "Leállítás",
     "back": "Vissza",
     "cancel": "Mégse",
     "close": "Bezárás",
@@ -13,10 +9,18 @@
     "getStarted": "Kezdjük el",
     "next": "Következő",
     "ok": "OK",
+    "openSettings": "Beállítások megnyitása",
+    "reset": "Visszaállítás",
     "retry": "Újrapróbálás",
     "restart": "Újraindítás",
     "save": "Mentés",
-    "skip": "Kihagyás"
+    "skip": "Kihagyás",
+    "start": "Indítás",
+    "stop": "Leállítás"
+  },
+  "premium": {
+    "accessChecking": "Premium-hozzáférés ellenőrzése…",
+    "accessUnknown": "Csatlakozz az internethez a Premium-hozzáférés ellenőrzéséhez."
   },
   "tabs": {
     "eject": "Kilökés",
@@ -26,8 +30,7 @@
   },
   "settings": {
     "title": "Beállítások",
-    "subtitle": "Valutaváltójának testreszabása",
-    "preferences": "Beállítások",
+    "subtitle": "Hangolja be hangszóróit és hangmérőjét",
     "support": "Támogatás",
     "contactSupport": "Kapcsolatfelvétel a támogatással",
     "contactSupportSubtitle": "Segítségre készen állunk",
@@ -45,20 +48,38 @@
     "version": "{{version}} verzió",
     "otaUpdateId": "Frissítés: {{updateId}}",
     "upgradeBanner": {
-      "title": "Frissítsen Prémiumra",
-      "subtitle": "Gyakori árfolyamfrissítések, nincs reklám és teljes grafikonhozzáférés"
+      "title": "Frissítés Premiumra",
+      "subtitle": "Oldja fel a hosszabb Turbo tisztítást, a fejlett hangvezérlést és a hirdetésmentes használatot"
     }
   },
   "paywall": {
-    "title": "Prémium feloldása",
-    "subtitle": "Hozza ki a legtöbbet a Currency Converterből",
-    "ctaFreeTrial": "Próbálja ki ingyen",
+    "title": "Oldja fel a teljes audioeszközkészletet",
+    "subtitle": "Tisztítsa meg a hangszórót, érje el a speciális vezérlőket, és távolítson el minden hirdetést.",
+    "ctaFreeTrial": "Próbáld ki ingyen",
+    "trialDisclaimer": "Bármikor lemondható. Most nem kell fizetnie",
+    "subscriptionDisclaimer": "Bármikor lemondható.",
+    "lifetimeDisclaimer": "Fizessen egyszer. Nincsenek ismétlődő díjak.",
     "restore": "Vásárlások visszaállítása",
-    "terms": "Felhasználási feltételek",
+    "terms": "Általános Szerződési Feltételek",
     "privacy": "Adatvédelmi irányelvek",
     "then": "majd",
     "trial": "{{count}}-{{unit}} ingyenes próbaverzió",
-    "save": "{{percent}}% megtakarítás",
+    "save": "Spóroljon {{percent}}%-ot",
+    "availability": {
+      "loading": "Vásárlási lehetőségek ellenőrzése…",
+      "temporary_error": {
+        "title": "Nem sikerült betölteni a vásárlási lehetőségeket",
+        "subtitle": "Ellenőrizze a kapcsolatot, majd próbálja újra."
+      },
+      "configuration_error": {
+        "title": "A vásárlási lehetőségek nem érhetők el",
+        "subtitle": "Az áruház nem tudta betölteni az alkalmazás termékeit. Próbálja újra rövidesen."
+      },
+      "purchase_not_allowed": {
+        "title": "A vásárlás nem támogatott ezen az eszközön",
+        "subtitle": "Ezen az eszközön vagy ezzel az áruházi fiókkal nem lehet alkalmazáson belüli vásárlást végezni."
+      }
+    },
     "trialUnit": {
       "day": "nap",
       "week": "hét",
@@ -72,37 +93,63 @@
       "year": "évente",
       "lifetime": "Egyszeri vásárlás"
     },
-    "features": {
-      "liveRates": {
-        "title": "Mindig friss árfolyamok",
-        "description": "Az árfolyamok közel valós időben frissülnek, késedelem nélkül."
-      },
-      "unlimited": {
-        "title": "Minden 150+ valuta, korlát nélkül",
-        "description": "Adjon hozzá minden szükséges valutát, korlátozás nélkül."
-      },
-      "charts": {
-        "title": "Teljes árfolyamtörténet",
-        "description": "Interaktív grafikonok a legjobb átváltási idő megtalálásához."
-      },
-      "adFree": {
-        "title": "Nulla megszakítás",
-        "description": "Nincs reklám. Csak tiszta, koncentrált átváltás."
+    "comparison": {
+      "features": "Funkciók",
+      "free": "Ingyenes",
+      "pro": "Pro",
+      "included": "Tartalmazza",
+      "excluded": "Nem tartalmazza",
+      "unlimited": "Korlátlan",
+      "rows": {
+        "cleaningDuration": {
+          "title": "A tisztítás időtartama",
+          "free": "30 másodperc",
+          "pro": "30/60/90 másodperc"
+        },
+        "turbo": {
+          "title": "Turbó mód"
+        },
+        "waveforms": {
+          "title": "Hullámforma",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "Sztereóteszt",
+          "free": "Kézi",
+          "pro": "Automatikus"
+        },
+        "soundInsights": {
+          "title": "Hangszintelemzés",
+          "free": "Alap",
+          "pro": "Haladó"
+        },
+        "activityHistory": {
+          "title": "Tevékenységtörténet"
+        },
+        "adExperience": {
+          "title": "Hirdetések",
+          "free": "Hirdetések",
+          "pro": "Hirdetésmentes"
+        }
       }
     },
+    "context": {
+      "dbSubtitle": "Oldja fel a munkamenet teljes elemzését, és tekintse meg újra a mentett hangjelentéseket."
+    },
     "feedback": {
-      "subscribeSuccess": "Üdvözöljük! A prémium hozzáférése aktív.",
-      "subscribeError": "Valami hiba történt. Kérjük, próbálja újra.",
-      "restoreSuccess": "Az előfizetés sikeresen visszaállítva!",
-      "restoreNotFound": "Nem található aktív előfizetés.",
+      "subscribeSuccess": "Üdvözlünk! Prémium hozzáférése aktív.",
+      "subscribeError": "Hiba történt. Kérjük, próbálja újra.",
+      "restoreSuccess": "A prémium hozzáférés sikeresen visszaállítva!",
+      "restoreNotFound": "Nem található aktív prémium vásárlás.",
       "restoreError": "Nem sikerült visszaállítani a vásárlásokat. Kérjük, próbálja újra."
     },
     "packageTitle": {
-      "day": "Napi",
-      "week": "Heti",
+      "day": "Naponta",
+      "week": "Hetente",
       "month": "Havi",
-      "year": "Éves",
-      "lifetime": "Élethosszig"
+      "year": "Évente",
+      "lifetime": "Élettartam"
     }
   },
   "otaUpdate": {
@@ -129,9 +176,5 @@
       "title": "Privát és az eszközén marad",
       "description": "A hangfeldolgozás a telefonján marad, egyértelmű biztonsági és mikrofonhasználati útmutatóval."
     }
-  },
-  "premium": {
-    "accessChecking": "Premium-hozzáférés ellenőrzése…",
-    "accessUnknown": "Csatlakozz az internethez a Premium-hozzáférés ellenőrzéséhez."
   }
 }

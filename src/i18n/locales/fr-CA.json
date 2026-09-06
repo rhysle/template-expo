@@ -9,7 +9,7 @@
     "getStarted": "Commencer",
     "next": "Suivant",
     "ok": "OK",
-    "openSettings": "Ouvrir les réglages",
+    "openSettings": "Ouvrir les paramètres",
     "reset": "Réinitialiser",
     "retry": "Réessayer",
     "restart": "Redémarrer",
@@ -20,7 +20,7 @@
   },
   "premium": {
     "accessChecking": "Vérification de l’accès Premium…",
-    "accessUnknown": "Connectez-vous à Internet pour vérifier l’accès Premium."
+    "accessUnknown": "Connecte-toi à Internet pour vérifier l’accès Premium."
   },
   "tabs": {
     "eject": "Éjecter",
@@ -30,15 +30,15 @@
   },
   "settings": {
     "title": "Paramètres",
-    "subtitle": "Ajustez vos outils d'enceintes et votre sonomètre",
+    "subtitle": "Configure tes outils pour haut-parleur et le sonomètre",
     "support": "Assistance",
-    "contactSupport": "Contacter l'assistance",
-    "contactSupportSubtitle": "Nous sommes là pour vous aider",
-    "contactSupportError": "Impossible d'ouvrir le client de messagerie",
+    "contactSupport": "Communiquer avec le soutien",
+    "contactSupportSubtitle": "Nous sommes là pour t’aider",
+    "contactSupportError": "Impossible d’ouvrir l’application de courriel",
     "rateApp": "Notez-nous",
-    "rateAppSubtitle": "Vous aimez l'application ? Laissez un avis",
+    "rateAppSubtitle": "Tu aimes l’app? Laisse-nous un avis",
     "shareApp": "Partager",
-    "shareAppSubtitle": "Recommandez-nous à vos amis et famille",
+    "shareAppSubtitle": "Parles-en à tes proches",
     "shareMessage": "Découvrez {{appName}} !",
     "shareMessageWithUrl": "Découvrez {{appName}} ! Téléchargez-le ici : {{url}}",
     "userId": "ID utilisateur",
@@ -49,16 +49,16 @@
     "otaUpdateId": "Mise à jour : {{updateId}}",
     "upgradeBanner": {
       "title": "Passer à Premium",
-      "subtitle": "Débloquez des nettoyages Turbo plus longs, des réglages audio avancés et une utilisation sans publicité"
+      "subtitle": "Débloquez des nettoyages Turbo plus longs, des paramètres audio avancés et une utilisation sans publicité"
     }
   },
   "paywall": {
     "title": "Débloquez votre boîte à outils audio complète",
     "subtitle": "Nettoyez votre enceinte, accédez aux commandes avancées et supprimez chaque publicité.",
-    "ctaFreeTrial": "Essayez gratuitement",
-    "trialDisclaimer": "Annulez à tout moment. Aucun paiement maintenant",
-    "subscriptionDisclaimer": "Annulez à tout moment.",
-    "lifetimeDisclaimer": "Payez une seule fois. Aucun frais récurrent.",
+    "ctaFreeTrial": "Essayer gratuitement",
+    "trialDisclaimer": "Annule en tout temps. Aucun paiement maintenant",
+    "subscriptionDisclaimer": "Annule en tout temps.",
+    "lifetimeDisclaimer": "Paie une seule fois. Aucun frais récurrent.",
     "restore": "Restaurer les achats",
     "terms": "Conditions d'utilisation",
     "privacy": "Politique de confidentialité",
@@ -153,7 +153,7 @@
     }
   },
   "otaUpdate": {
-    "updateReady": "Une nouvelle mise à jour est prête - redémarrez pour l'appliquer"
+    "updateReady": "Une nouvelle mise à jour est prête — redémarre pour l’appliquer"
   },
   "errorBoundary": {
     "title": "Une erreur s'est produite",

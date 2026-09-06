@@ -1,9 +1,5 @@
 {
   "common": {
-    "openSettings": "Otwórz ustawienia",
-    "reset": "Resetuj",
-    "start": "Rozpocznij",
-    "stop": "Zatrzymaj",
     "back": "Wstecz",
     "cancel": "Anuluj",
     "close": "Zamknij",
@@ -13,10 +9,18 @@
     "getStarted": "Zaczynamy",
     "next": "Dalej",
     "ok": "OK",
+    "openSettings": "Otwórz ustawienia",
+    "reset": "Resetuj",
     "retry": "Spróbuj ponownie",
     "restart": "Uruchom ponownie",
     "save": "Zapisz",
-    "skip": "Pomiń"
+    "skip": "Pomiń",
+    "start": "Rozpocznij",
+    "stop": "Zatrzymaj"
+  },
+  "premium": {
+    "accessChecking": "Sprawdzanie dostępu Premium…",
+    "accessUnknown": "Połącz się z internetem, aby sprawdzić dostęp Premium."
   },
   "tabs": {
     "eject": "Usuń",
@@ -26,8 +30,7 @@
   },
   "settings": {
     "title": "Ustawienia",
-    "subtitle": "Dostosuj swój przelicznik walut",
-    "preferences": "Preferencje",
+    "subtitle": "Dostrój narzędzia głośnikowe i miernik dźwięku",
     "support": "Wsparcie",
     "contactSupport": "Skontaktuj się z pomocą",
     "contactSupportSubtitle": "Jesteśmy tu, aby pomóc",
@@ -45,20 +48,38 @@
     "version": "Wersja {{version}}",
     "otaUpdateId": "Aktualizacja: {{updateId}}",
     "upgradeBanner": {
-      "title": "Ulepsz do Premium",
-      "subtitle": "Częste aktualizacje kursów, brak reklam i pełny dostęp do wykresów"
+      "title": "Przejdź na wersję Premium",
+      "subtitle": "Odblokuj dłuższe czyszczenie Turbo, zaawansowane sterowanie dźwiękiem i korzystanie bez reklam"
     }
   },
   "paywall": {
-    "title": "Odblokuj Premium",
-    "subtitle": "Uzyskaj maksimum z Currency Converter",
+    "title": "Odblokuj swój kompletny zestaw narzędzi audio",
+    "subtitle": "Wyczyść głośnik, uzyskaj dostęp do zaawansowanych opcji i usuń wszystkie reklamy.",
     "ctaFreeTrial": "Wypróbuj za darmo",
+    "trialDisclaimer": "Anuluj w dowolnym momencie. Teraz nic nie płacisz",
+    "subscriptionDisclaimer": "Anuluj w dowolnym momencie.",
+    "lifetimeDisclaimer": "Zapłać raz. Bez opłat cyklicznych.",
     "restore": "Przywróć zakupy",
-    "terms": "Warunki korzystania",
+    "terms": "Warunki korzystania z usługi",
     "privacy": "Polityka prywatności",
     "then": "następnie",
-    "trial": "Bezpłatny okres próbny {{count}}-{{unit}}",
+    "trial": "{{count}}-{{unit}} bezpłatna wersja próbna",
     "save": "Oszczędź {{percent}}%",
+    "availability": {
+      "loading": "Sprawdzanie opcji zakupu…",
+      "temporary_error": {
+        "title": "Nie udało się wczytać opcji zakupu",
+        "subtitle": "Sprawdź połączenie i spróbuj ponownie."
+      },
+      "configuration_error": {
+        "title": "Opcje zakupu są niedostępne",
+        "subtitle": "Sklep nie mógł wczytać produktów tej aplikacji. Spróbuj ponownie za chwilę."
+      },
+      "purchase_not_allowed": {
+        "title": "Zakupy nie są obsługiwane na tym urządzeniu",
+        "subtitle": "Na tym urządzeniu lub koncie sklepu nie można dokonywać zakupów w aplikacji."
+      }
+    },
     "trialUnit": {
       "day": "dzień",
       "week": "tydzień",
@@ -70,39 +91,65 @@
       "week": "tygodniowo",
       "month": "miesięcznie",
       "year": "rocznie",
-      "lifetime": "Zakup jednorazowy"
+      "lifetime": "Jednorazowy zakup"
     },
-    "features": {
-      "liveRates": {
-        "title": "Zawsze świeże kursy",
-        "description": "Kursy odświeżają się prawie w czasie rzeczywistym, bez opóźnień."
-      },
-      "unlimited": {
-        "title": "Wszystkie 150+ walut, bez limitu",
-        "description": "Dodaj dowolną potrzebną walutę, bez ograniczeń."
-      },
-      "charts": {
-        "title": "Pełna historia kursów",
-        "description": "Interaktywne wykresy do znalezienia najlepszego czasu na wymianę."
-      },
-      "adFree": {
-        "title": "Zero przerw",
-        "description": "Żadnych reklam. Tylko czyste, skoncentrowane przeliczanie."
+    "comparison": {
+      "features": "Funkcje",
+      "free": "Bezpłatnie",
+      "pro": "Pro",
+      "included": "W cenie",
+      "excluded": "Niedostępne",
+      "unlimited": "Bez limitu",
+      "rows": {
+        "cleaningDuration": {
+          "title": "Czas czyszczenia",
+          "free": "30 sekund",
+          "pro": "30/60/90 sekund"
+        },
+        "turbo": {
+          "title": "Tryb Turbo"
+        },
+        "waveforms": {
+          "title": "Przebieg",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "Test stereo",
+          "free": "Ręcznie",
+          "pro": "Automatycznie"
+        },
+        "soundInsights": {
+          "title": "Analiza poziomu dźwięku",
+          "free": "Podstawowe",
+          "pro": "Zaawansowane"
+        },
+        "activityHistory": {
+          "title": "Historia aktywności"
+        },
+        "adExperience": {
+          "title": "Reklamy",
+          "free": "Reklamy",
+          "pro": "Bez reklam"
+        }
       }
     },
+    "context": {
+      "dbSubtitle": "Odblokuj pełną analizę tej sesji i wróć do zapisanych raportów dźwiękowych."
+    },
     "feedback": {
-      "subscribeSuccess": "Witamy! Twój dostęp Premium jest aktywny.",
+      "subscribeSuccess": "Witamy! Twój dostęp premium jest aktywny.",
       "subscribeError": "Coś poszło nie tak. Spróbuj ponownie.",
-      "restoreSuccess": "Subskrypcja przywrócona pomyślnie!",
-      "restoreNotFound": "Nie znaleziono aktywnej subskrypcji.",
-      "restoreError": "Nie udało się przywrócić zakupów. Spróbuj ponownie."
+      "restoreSuccess": "Pomyślnie przywrócono dostęp premium!",
+      "restoreNotFound": "Nie znaleziono aktywnego zakupu Premium.",
+      "restoreError": "Nie można przywrócić zakupów. Spróbuj ponownie."
     },
     "packageTitle": {
-      "day": "Dziennie",
-      "week": "Tygodniowo",
+      "day": "Codziennie",
+      "week": "Co tydzień",
       "month": "Miesięcznie",
       "year": "Rocznie",
-      "lifetime": "Dożywotnio"
+      "lifetime": "Dożywotnia"
     }
   },
   "otaUpdate": {
@@ -129,9 +176,5 @@
       "title": "Prywatnie i na urządzeniu",
       "description": "Przetwarzanie dźwięku pozostaje w telefonie, wraz z jasnymi wskazówkami dotyczącymi bezpieczeństwa i mikrofonu."
     }
-  },
-  "premium": {
-    "accessChecking": "Sprawdzanie dostępu Premium…",
-    "accessUnknown": "Połącz się z internetem, aby sprawdzić dostęp Premium."
   }
 }

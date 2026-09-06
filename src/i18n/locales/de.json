@@ -1,9 +1,5 @@
 {
   "common": {
-    "openSettings": "Einstellungen öffnen",
-    "reset": "Zurücksetzen",
-    "start": "Starten",
-    "stop": "Stoppen",
     "back": "Zurück",
     "cancel": "Abbrechen",
     "close": "Schließen",
@@ -13,10 +9,18 @@
     "getStarted": "Loslegen",
     "next": "Weiter",
     "ok": "OK",
+    "openSettings": "Einstellungen öffnen",
+    "reset": "Zurücksetzen",
     "retry": "Erneut versuchen",
     "restart": "Neu starten",
     "save": "Speichern",
-    "skip": "Überspringen"
+    "skip": "Überspringen",
+    "start": "Starten",
+    "stop": "Stoppen"
+  },
+  "premium": {
+    "accessChecking": "Premium-Zugang wird geprüft…",
+    "accessUnknown": "Stelle eine Internetverbindung her, um den Premium-Zugang zu prüfen."
   },
   "tabs": {
     "eject": "Auswerfen",
@@ -26,8 +30,7 @@
   },
   "settings": {
     "title": "Einstellungen",
-    "subtitle": "Währungsrechner anpassen",
-    "preferences": "Einstellungen",
+    "subtitle": "Stimmen Sie Ihre Lautsprecher-Tools und Ihren Schallpegelmesser ab",
     "support": "Support",
     "contactSupport": "Support kontaktieren",
     "contactSupportSubtitle": "Wir helfen gerne",
@@ -45,20 +48,38 @@
     "version": "Version {{version}}",
     "otaUpdateId": "Update: {{updateId}}",
     "upgradeBanner": {
-      "title": "Auf Premium upgraden",
-      "subtitle": "Häufigere Kursaktualisierungen, keine Werbung & voller Diagrammzugang"
+      "title": "Upgrade auf Premium",
+      "subtitle": "Längere Turbo-Reinigung, erweiterte Audiosteuerung und eine werbefreie Nutzung freischalten"
     }
   },
   "paywall": {
-    "title": "Premium freischalten",
-    "subtitle": "Hol das Beste aus dem Währungsrechner heraus",
+    "title": "Schalten Sie Ihr komplettes Audio-Toolkit frei",
+    "subtitle": "Reinigen Sie Ihren Lautsprecher, greifen Sie auf erweiterte Steuerelemente zu und entfernen Sie jede Werbung.",
     "ctaFreeTrial": "Kostenlos testen",
+    "trialDisclaimer": "Jederzeit kündbar. Jetzt ist keine Zahlung fällig",
+    "subscriptionDisclaimer": "Jederzeit kündbar.",
+    "lifetimeDisclaimer": "Einmal zahlen. Keine wiederkehrenden Kosten.",
     "restore": "Käufe wiederherstellen",
     "terms": "Nutzungsbedingungen",
     "privacy": "Datenschutzrichtlinie",
     "then": "dann",
-    "trial": "{{count}}-{{unit}} kostenlos testen",
-    "save": "{{percent}} % sparen",
+    "trial": "{{count}}-{{unit}} kostenlose Testversion",
+    "save": "Sparen Sie {{percent}} %",
+    "availability": {
+      "loading": "Kaufoptionen werden geprüft…",
+      "temporary_error": {
+        "title": "Kaufoptionen konnten nicht geladen werden",
+        "subtitle": "Überprüfen Sie Ihre Verbindung und versuchen Sie es erneut."
+      },
+      "configuration_error": {
+        "title": "Kaufoptionen sind nicht verfügbar",
+        "subtitle": "Der Store konnte die Produkte dieser App nicht laden. Versuchen Sie es in Kürze erneut."
+      },
+      "purchase_not_allowed": {
+        "title": "Käufe werden auf diesem Gerät nicht unterstützt",
+        "subtitle": "Mit diesem Gerät oder Store-Konto sind keine In-App-Käufe möglich."
+      }
+    },
     "trialUnit": {
       "day": "Tag",
       "week": "Woche",
@@ -72,37 +93,63 @@
       "year": "pro Jahr",
       "lifetime": "Einmaliger Kauf"
     },
-    "features": {
-      "liveRates": {
-        "title": "Immer aktuelle Kurse",
-        "description": "Kurse werden nahezu in Echtzeit aktualisiert, ohne Verzögerung."
-      },
-      "unlimited": {
-        "title": "Alle 150+ Währungen, unbegrenzt",
-        "description": "Füge jede benötigte Währung hinzu, ohne Einschränkungen."
-      },
-      "charts": {
-        "title": "Vollständige Kurshistorie",
-        "description": "Interaktive Diagramme für den besten Umtauschzeitpunkt."
-      },
-      "adFree": {
-        "title": "Keine Unterbrechungen",
-        "description": "Keine Werbung. Nur sauberes, fokussiertes Umrechnen."
+    "comparison": {
+      "features": "Funktionen",
+      "free": "Kostenlos",
+      "pro": "Pro",
+      "included": "Enthalten",
+      "excluded": "Nicht enthalten",
+      "unlimited": "Unbegrenzt",
+      "rows": {
+        "cleaningDuration": {
+          "title": "Reinigungsdauer",
+          "free": "30 Sekunden",
+          "pro": "30/60/90 Sekunden"
+        },
+        "turbo": {
+          "title": "Turbo-Modus"
+        },
+        "waveforms": {
+          "title": "Wellenform",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "Stereotest",
+          "free": "Manuell",
+          "pro": "Automatisch"
+        },
+        "soundInsights": {
+          "title": "Schallpegelanalyse",
+          "free": "Basis",
+          "pro": "Erweitert"
+        },
+        "activityHistory": {
+          "title": "Aktivitätsverlauf"
+        },
+        "adExperience": {
+          "title": "Werbung",
+          "free": "Werbung",
+          "pro": "Werbefrei"
+        }
       }
+    },
+    "context": {
+      "dbSubtitle": "Schalten Sie die vollständige Analyse für diese Sitzung frei und sehen Sie sich gespeicherte Soundberichte noch einmal an."
     },
     "feedback": {
       "subscribeSuccess": "Willkommen! Ihr Premium-Zugang ist aktiv.",
-      "subscribeError": "Etwas ist schiefgelaufen. Bitte erneut versuchen.",
-      "restoreSuccess": "Abonnement erfolgreich wiederhergestellt!",
-      "restoreNotFound": "Kein aktives Abonnement gefunden.",
-      "restoreError": "Käufe konnten nicht wiederhergestellt werden. Bitte erneut versuchen."
+      "subscribeError": "Etwas ist schief gelaufen. Bitte versuchen Sie es erneut.",
+      "restoreSuccess": "Premium-Zugang erfolgreich wiederhergestellt!",
+      "restoreNotFound": "Kein aktiver Premium-Kauf gefunden.",
+      "restoreError": "Käufe konnten nicht wiederhergestellt werden. Bitte versuchen Sie es erneut."
     },
     "packageTitle": {
       "day": "Täglich",
       "week": "Wöchentlich",
       "month": "Monatlich",
       "year": "Jährlich",
-      "lifetime": "Einmalig"
+      "lifetime": "Lebenszeit"
     }
   },
   "otaUpdate": {
@@ -129,9 +176,5 @@
       "title": "Privat und auf deinem Gerät",
       "description": "Die Audioverarbeitung bleibt auf deinem Telefon – mit klaren Sicherheits- und Mikrofonhinweisen."
     }
-  },
-  "premium": {
-    "accessChecking": "Premium-Zugang wird geprüft…",
-    "accessUnknown": "Stelle eine Internetverbindung her, um den Premium-Zugang zu prüfen."
   }
 }

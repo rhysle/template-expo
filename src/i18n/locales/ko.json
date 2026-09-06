@@ -1,9 +1,5 @@
 {
   "common": {
-    "openSettings": "설정 열기",
-    "reset": "재설정",
-    "start": "시작",
-    "stop": "중지",
     "back": "뒤로",
     "cancel": "취소",
     "close": "닫기",
@@ -13,10 +9,18 @@
     "getStarted": "시작하기",
     "next": "다음",
     "ok": "확인",
+    "openSettings": "설정 열기",
+    "reset": "재설정",
     "retry": "다시 시도",
     "restart": "재시작",
     "save": "저장",
-    "skip": "건너뛰기"
+    "skip": "건너뛰기",
+    "start": "시작",
+    "stop": "중지"
+  },
+  "premium": {
+    "accessChecking": "Premium 이용 권한 확인 중…",
+    "accessUnknown": "Premium 이용 권한을 확인하려면 인터넷에 연결하세요."
   },
   "tabs": {
     "eject": "물 빼기",
@@ -26,8 +30,7 @@
   },
   "settings": {
     "title": "설정",
-    "subtitle": "환율 변환기 맞춤 설정",
-    "preferences": "기본 설정",
+    "subtitle": "스피커 도구 및 소음 측정기 조정",
     "support": "지원",
     "contactSupport": "고객 지원 문의",
     "contactSupportSubtitle": "도움이 필요하시면 언제든지",
@@ -46,63 +49,107 @@
     "otaUpdateId": "업데이트: {{updateId}}",
     "upgradeBanner": {
       "title": "프리미엄으로 업그레이드",
-      "subtitle": "잦은 환율 업데이트, 광고 없음 및 전체 차트 접근"
+      "subtitle": "더 긴 Turbo 청소, 고급 오디오 제어 및 광고 없는 환경을 잠금 해제하세요"
     }
   },
   "paywall": {
-    "title": "프리미엄 잠금 해제",
-    "subtitle": "환율 변환기를 최대한 활용하세요",
-    "ctaFreeTrial": "무료로 시작",
+    "title": "완전한 오디오 도구 키트 잠금 해제",
+    "subtitle": "스피커를 청소하고, 고급 제어 기능에 액세스하고, 모든 광고를 제거하세요.",
+    "ctaFreeTrial": "무료로 사용해 보세요",
+    "trialDisclaimer": "언제든 취소할 수 있습니다. 지금 결제되는 금액은 없습니다",
+    "subscriptionDisclaimer": "언제든 취소할 수 있습니다.",
+    "lifetimeDisclaimer": "한 번만 결제하세요. 정기 결제는 없습니다.",
     "restore": "구매 복원",
     "terms": "서비스 약관",
-    "privacy": "개인정보 처리방침",
-    "then": "이후",
-    "trial": "{{count}}{{unit}} 무료 체험",
+    "privacy": "개인정보 보호정책",
+    "then": "다음",
+    "trial": "{{count}}-{{unit}} 무료 평가판",
     "save": "{{percent}}% 절약",
+    "availability": {
+      "loading": "구매 옵션을 확인하는 중…",
+      "temporary_error": {
+        "title": "구매 옵션을 불러올 수 없습니다",
+        "subtitle": "연결 상태를 확인하고 다시 시도해 주세요."
+      },
+      "configuration_error": {
+        "title": "구매 옵션을 사용할 수 없습니다",
+        "subtitle": "스토어에서 이 앱의 상품을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요."
+      },
+      "purchase_not_allowed": {
+        "title": "이 기기에서는 구매가 지원되지 않습니다",
+        "subtitle": "이 기기 또는 스토어 계정으로는 인앱 구매를 할 수 없습니다."
+      }
+    },
     "trialUnit": {
       "day": "일",
       "week": "주",
-      "month": "개월",
+      "month": "월",
       "year": "년"
     },
     "period": {
       "day": "하루",
-      "week": "주당",
-      "month": "월",
-      "year": "연",
+      "week": "매주",
+      "month": "매월",
+      "year": "연간",
       "lifetime": "일회성 구매"
     },
-    "features": {
-      "liveRates": {
-        "title": "항상 최신 환율",
-        "description": "환율이 거의 실시간으로 업데이트되어 지연 없음."
-      },
-      "unlimited": {
-        "title": "150개 이상 통화, 제한 없음",
-        "description": "필요한 모든 통화 추가, 제한 없음."
-      },
-      "charts": {
-        "title": "전체 환율 기록",
-        "description": "최적의 환전 타이밍을 찾는 인터랙티브 차트."
-      },
-      "adFree": {
-        "title": "방해 없는 사용",
-        "description": "광고 없음. 깔끔하고 집중된 환전 경험."
+    "comparison": {
+      "features": "기능",
+      "free": "무료",
+      "pro": "Pro",
+      "included": "포함",
+      "excluded": "미포함",
+      "unlimited": "무제한",
+      "rows": {
+        "cleaningDuration": {
+          "title": "청소 시간",
+          "free": "30초",
+          "pro": "30/60/90초"
+        },
+        "turbo": {
+          "title": "터보 모드"
+        },
+        "waveforms": {
+          "title": "파형",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "스테레오 테스트",
+          "free": "수동",
+          "pro": "자동"
+        },
+        "soundInsights": {
+          "title": "소음 수준 분석",
+          "free": "기본",
+          "pro": "고급"
+        },
+        "activityHistory": {
+          "title": "활동 내역"
+        },
+        "adExperience": {
+          "title": "광고",
+          "free": "광고",
+          "pro": "광고 없음"
+        }
       }
     },
+    "context": {
+      "dbSubtitle": "이 세션에 대한 전체 분석을 잠금 해제하고 저장된 사운드 보고서를 다시 살펴보세요."
+    },
     "feedback": {
-      "subscribeSuccess": "환영합니다! 프리미엄 이용 권한이 활성화되었습니다.",
+      "subscribeSuccess": "환영합니다! 프리미엄 액세스가 활성화되었습니다.",
       "subscribeError": "문제가 발생했습니다. 다시 시도해 주세요.",
-      "restoreSuccess": "구독이 복원되었습니다!",
-      "restoreNotFound": "활성 구독을 찾을 수 없습니다.",
+      "restoreSuccess": "프리미엄 액세스가 성공적으로 복원되었습니다!",
+      "restoreNotFound": "활성 프리미엄 구매가 없습니다.",
       "restoreError": "구매를 복원할 수 없습니다. 다시 시도해 주세요."
     },
     "packageTitle": {
-      "day": "일일",
-      "week": "주간",
+      "day": "매일",
+      "week": "매주",
       "month": "월간",
-      "year": "연간",
-      "lifetime": "평생"
+      "year": "매년",
+      "lifetime": "수명"
     }
   },
   "otaUpdate": {
@@ -129,9 +176,5 @@
       "title": "비공개, 기기 내에서 처리",
       "description": "오디오 처리는 휴대폰 안에서 이루어지며, 안전 및 마이크 사용 안내를 명확히 제공합니다."
     }
-  },
-  "premium": {
-    "accessChecking": "Premium 이용 권한 확인 중…",
-    "accessUnknown": "Premium 이용 권한을 확인하려면 인터넷에 연결하세요."
   }
 }

@@ -1,9 +1,5 @@
 {
   "common": {
-    "openSettings": "Buka Pengaturan",
-    "reset": "Atur Ulang",
-    "start": "Mulai",
-    "stop": "Berhenti",
     "back": "Kembali",
     "cancel": "Batal",
     "close": "Tutup",
@@ -13,10 +9,18 @@
     "getStarted": "Mulai",
     "next": "Berikutnya",
     "ok": "OK",
+    "openSettings": "Buka Pengaturan",
+    "reset": "Atur Ulang",
     "retry": "Coba lagi",
     "restart": "Mulai Ulang",
     "save": "Simpan",
-    "skip": "Lewati"
+    "skip": "Lewati",
+    "start": "Mulai",
+    "stop": "Berhenti"
+  },
+  "premium": {
+    "accessChecking": "Memeriksa akses Premium…",
+    "accessUnknown": "Sambungkan ke internet untuk memeriksa akses Premium."
   },
   "tabs": {
     "eject": "Keluarkan",
@@ -26,8 +30,7 @@
   },
   "settings": {
     "title": "Pengaturan",
-    "subtitle": "Sesuaikan konverter mata uang Anda",
-    "preferences": "Preferensi",
+    "subtitle": "Sesuaikan alat speaker dan pengukur suara Anda",
     "support": "Dukungan",
     "contactSupport": "Hubungi Dukungan",
     "contactSupportSubtitle": "Kami siap membantu",
@@ -45,20 +48,38 @@
     "version": "Versi {{version}}",
     "otaUpdateId": "Pembaruan: {{updateId}}",
     "upgradeBanner": {
-      "title": "Upgrade ke Premium",
-      "subtitle": "Pembaruan kurs lebih sering, tanpa iklan & akses grafik penuh"
+      "title": "Tingkatkan ke Premium",
+      "subtitle": "Buka pembersihan Turbo yang lebih lama, kontrol audio lanjutan, dan pengalaman tanpa iklan"
     }
   },
   "paywall": {
-    "title": "Buka Kunci Premium",
-    "subtitle": "Manfaatkan Currency Converter sepenuhnya",
+    "title": "Buka Kunci Perangkat Audio Lengkap Anda",
+    "subtitle": "Bersihkan speaker Anda, akses kontrol lanjutan, dan hapus setiap iklan.",
     "ctaFreeTrial": "Coba Gratis",
+    "trialDisclaimer": "Batalkan kapan saja. Tidak ada pembayaran sekarang",
+    "subscriptionDisclaimer": "Batalkan kapan saja.",
+    "lifetimeDisclaimer": "Bayar sekali. Tanpa biaya berulang.",
     "restore": "Pulihkan Pembelian",
-    "terms": "Syarat Layanan",
+    "terms": "Persyaratan Layanan",
     "privacy": "Kebijakan Privasi",
     "then": "lalu",
-    "trial": "Uji coba gratis {{count}} {{unit}}",
+    "trial": "{{count}}-{{unit}} uji coba gratis",
     "save": "Hemat {{percent}}%",
+    "availability": {
+      "loading": "Memeriksa opsi pembelian…",
+      "temporary_error": {
+        "title": "Opsi pembelian tidak dapat dimuat",
+        "subtitle": "Periksa koneksi Anda, lalu coba lagi."
+      },
+      "configuration_error": {
+        "title": "Opsi pembelian tidak tersedia",
+        "subtitle": "Toko tidak dapat memuat produk aplikasi ini. Coba lagi beberapa saat."
+      },
+      "purchase_not_allowed": {
+        "title": "Pembelian tidak didukung di perangkat ini",
+        "subtitle": "Perangkat atau akun toko ini tidak dapat melakukan pembelian dalam aplikasi."
+      }
+    },
     "trialUnit": {
       "day": "hari",
       "week": "minggu",
@@ -70,35 +91,61 @@
       "week": "per minggu",
       "month": "per bulan",
       "year": "per tahun",
-      "lifetime": "Pembelian sekali bayar"
+      "lifetime": "Pembelian satu kali"
     },
-    "features": {
-      "liveRates": {
-        "title": "Kurs Selalu Segar",
-        "description": "Kurs diperbarui hampir real-time, tanpa keterlambatan."
-      },
-      "unlimited": {
-        "title": "Semua 150+ Mata Uang, Tanpa Batas",
-        "description": "Tambahkan semua mata uang yang Anda butuhkan, tanpa batasan."
-      },
-      "charts": {
-        "title": "Riwayat Kurs Lengkap",
-        "description": "Grafik interaktif untuk menemukan waktu terbaik untuk mengkonversi."
-      },
-      "adFree": {
-        "title": "Tanpa Gangguan",
-        "description": "Tanpa iklan. Hanya konversi yang bersih dan terfokus."
+    "comparison": {
+      "features": "Fitur",
+      "free": "Gratis",
+      "pro": "Pro",
+      "included": "Termasuk",
+      "excluded": "Tidak termasuk",
+      "unlimited": "Tanpa batas",
+      "rows": {
+        "cleaningDuration": {
+          "title": "Durasi pembersihan",
+          "free": "30 detik",
+          "pro": "30/60/90 detik"
+        },
+        "turbo": {
+          "title": "Modus Turbo"
+        },
+        "waveforms": {
+          "title": "Bentuk Gelombang",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "Tes Stereo",
+          "free": "Manual",
+          "pro": "Otomatis"
+        },
+        "soundInsights": {
+          "title": "Analisis tingkat suara",
+          "free": "Dasar",
+          "pro": "Lanjutan"
+        },
+        "activityHistory": {
+          "title": "Riwayat Aktivitas"
+        },
+        "adExperience": {
+          "title": "Iklan",
+          "free": "Iklan",
+          "pro": "Tanpa iklan"
+        }
       }
     },
+    "context": {
+      "dbSubtitle": "Buka kunci analisis lengkap untuk sesi ini dan lihat kembali laporan suara yang disimpan."
+    },
     "feedback": {
-      "subscribeSuccess": "Selamat datang! Akses Premium Anda aktif.",
-      "subscribeError": "Terjadi kesalahan. Silakan coba lagi.",
-      "restoreSuccess": "Langganan berhasil dipulihkan!",
-      "restoreNotFound": "Tidak ada langganan aktif yang ditemukan.",
+      "subscribeSuccess": "Selamat datang! Akses premium Anda aktif.",
+      "subscribeError": "Ada yang tidak beres. Silakan coba lagi.",
+      "restoreSuccess": "Akses premium berhasil dipulihkan!",
+      "restoreNotFound": "Tidak ditemukan pembelian Premium aktif.",
       "restoreError": "Tidak dapat memulihkan pembelian. Silakan coba lagi."
     },
     "packageTitle": {
-      "day": "Harian",
+      "day": "Setiap hari",
       "week": "Mingguan",
       "month": "Bulanan",
       "year": "Tahunan",
@@ -129,9 +176,5 @@
       "title": "Pribadi dan di perangkat Anda",
       "description": "Pemrosesan audio tetap di ponsel Anda, dengan panduan keselamatan dan mikrofon yang jelas."
     }
-  },
-  "premium": {
-    "accessChecking": "Memeriksa akses Premium…",
-    "accessUnknown": "Sambungkan ke internet untuk memeriksa akses Premium."
   }
 }

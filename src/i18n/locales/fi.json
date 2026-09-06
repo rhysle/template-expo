@@ -1,9 +1,5 @@
 {
   "common": {
-    "openSettings": "Avaa asetukset",
-    "reset": "Nollaa",
-    "start": "Aloita",
-    "stop": "Pysäytä",
     "back": "Takaisin",
     "cancel": "Peruuta",
     "close": "Sulje",
@@ -13,10 +9,18 @@
     "getStarted": "Aloita",
     "next": "Seuraava",
     "ok": "OK",
+    "openSettings": "Avaa asetukset",
+    "reset": "Nollaa",
     "retry": "Yritä uudelleen",
     "restart": "Käynnistä uudelleen",
     "save": "Tallenna",
-    "skip": "Ohita"
+    "skip": "Ohita",
+    "start": "Aloita",
+    "stop": "Pysäytä"
+  },
+  "premium": {
+    "accessChecking": "Premium-käyttöoikeutta tarkistetaan…",
+    "accessUnknown": "Yhdistä internetiin tarkistaaksesi Premium-käyttöoikeuden."
   },
   "tabs": {
     "eject": "Poista",
@@ -26,8 +30,7 @@
   },
   "settings": {
     "title": "Asetukset",
-    "subtitle": "Mukauta valuuttamuuntimesi",
-    "preferences": "Asetukset",
+    "subtitle": "Viritä kaiutintyökalusi ja äänimittarisi",
     "support": "Tuki",
     "contactSupport": "Ota yhteyttä tukeen",
     "contactSupportSubtitle": "Olemme täällä auttamassa",
@@ -46,19 +49,37 @@
     "otaUpdateId": "Päivitys: {{updateId}}",
     "upgradeBanner": {
       "title": "Päivitä Premiumiin",
-      "subtitle": "Tiheät kurssiupdateet, ei mainoksia ja täydellinen kaavioiden käyttö"
+      "subtitle": "Avaa pidempi Turbo-puhdistus, edistyneet äänisäätimet ja mainokseton käyttökokemus"
     }
   },
   "paywall": {
-    "title": "Avaa Premium",
-    "subtitle": "Hyödynnä Currency Converter täysimääräisesti",
+    "title": "Avaa täydellinen äänityökalupakettisi",
+    "subtitle": "Puhdista kaiutin, käytä lisäsäätimiä ja poista kaikki mainokset.",
     "ctaFreeTrial": "Kokeile ilmaiseksi",
+    "trialDisclaimer": "Peruuta milloin tahansa. Maksua ei veloiteta nyt",
+    "subscriptionDisclaimer": "Peruuta milloin tahansa.",
+    "lifetimeDisclaimer": "Maksa kerran. Ei toistuvia maksuja.",
     "restore": "Palauta ostokset",
     "terms": "Käyttöehdot",
     "privacy": "Tietosuojakäytäntö",
     "then": "sitten",
-    "trial": "{{count}}-{{unit}} ilmainen kokeilujakso",
-    "save": "Säästä {{percent}} %",
+    "trial": "{{count}}-{{unit}} ilmainen kokeilu",
+    "save": "Säästä {{percent}}%",
+    "availability": {
+      "loading": "Tarkistetaan ostovaihtoehtoja…",
+      "temporary_error": {
+        "title": "Ostovaihtoehtoja ei voitu ladata",
+        "subtitle": "Tarkista yhteys ja yritä uudelleen."
+      },
+      "configuration_error": {
+        "title": "Ostovaihtoehdot eivät ole saatavilla",
+        "subtitle": "Kauppa ei voinut ladata tämän sovelluksen tuotteita. Yritä hetken kuluttua uudelleen."
+      },
+      "purchase_not_allowed": {
+        "title": "Ostoja ei tueta tällä laitteella",
+        "subtitle": "Tällä laitteella tai kauppatilillä ei voi tehdä sovelluksen sisäisiä ostoja."
+      }
+    },
     "trialUnit": {
       "day": "päivä",
       "week": "viikko",
@@ -70,31 +91,57 @@
       "week": "viikossa",
       "month": "kuukaudessa",
       "year": "vuodessa",
-      "lifetime": "Kertaosto"
+      "lifetime": "Kertaostos"
     },
-    "features": {
-      "liveRates": {
-        "title": "Aina tuoreet kurssit",
-        "description": "Kurssit päivittyvät lähes reaaliaikaisesti, ilman viivettä."
-      },
-      "unlimited": {
-        "title": "Kaikki 150+ valuuttaa, ei rajoituksia",
-        "description": "Lisää tarvitsemasi valuutat, ilman rajoituksia."
-      },
-      "charts": {
-        "title": "Täydellinen kurssihistoria",
-        "description": "Interaktiiviset kaaviot parhaan muuntoajankohdan löytämiseksi."
-      },
-      "adFree": {
-        "title": "Nolla keskeytyksiä",
-        "description": "Ei mainoksia. Vain puhdas, keskittynyt muuntaminen."
+    "comparison": {
+      "features": "Ominaisuudet",
+      "free": "Ilmainen",
+      "pro": "Pro",
+      "included": "Sisältyy",
+      "excluded": "Ei sisälly",
+      "unlimited": "Rajoittamaton",
+      "rows": {
+        "cleaningDuration": {
+          "title": "Puhdistuksen kesto",
+          "free": "30 sekuntia",
+          "pro": "30/60/90 sekuntia"
+        },
+        "turbo": {
+          "title": "Turbo-tila"
+        },
+        "waveforms": {
+          "title": "Aaltomuoto",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "Stereotesti",
+          "free": "Manuaalinen",
+          "pro": "Automaattinen"
+        },
+        "soundInsights": {
+          "title": "Äänitason analyysi",
+          "free": "Perus",
+          "pro": "Edistynyt"
+        },
+        "activityHistory": {
+          "title": "Toimintahistoria"
+        },
+        "adExperience": {
+          "title": "Mainokset",
+          "free": "Mainokset",
+          "pro": "Ei mainoksia"
+        }
       }
+    },
+    "context": {
+      "dbSubtitle": "Avaa tämän istunnon koko analyysi ja palaa tallennettuihin ääniraportteihin."
     },
     "feedback": {
       "subscribeSuccess": "Tervetuloa! Premium-käyttöoikeutesi on aktiivinen.",
       "subscribeError": "Jotain meni pieleen. Yritä uudelleen.",
-      "restoreSuccess": "Tilaus palautettu onnistuneesti!",
-      "restoreNotFound": "Aktiivista tilausta ei löydetty.",
+      "restoreSuccess": "Premium-käyttöoikeus palautettiin onnistuneesti!",
+      "restoreNotFound": "Aktiivista Premium-ostosta ei löytynyt.",
       "restoreError": "Ostoksia ei voitu palauttaa. Yritä uudelleen."
     },
     "packageTitle": {
@@ -129,9 +176,5 @@
       "title": "Yksityinen ja laitteellasi",
       "description": "Äänenkäsittely pysyy puhelimessasi, ja saat selkeät turvallisuus- ja mikrofoniohjeet."
     }
-  },
-  "premium": {
-    "accessChecking": "Premium-käyttöoikeutta tarkistetaan…",
-    "accessUnknown": "Yhdistä internetiin tarkistaaksesi Premium-käyttöoikeuden."
   }
 }

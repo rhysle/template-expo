@@ -1,0 +1,180 @@
+{
+  "common": {
+    "back": "Enrere",
+    "cancel": "Cancel·la",
+    "close": "Tanca",
+    "confirm": "Confirma",
+    "continue": "Continua",
+    "done": "Fet",
+    "getStarted": "Comença",
+    "next": "Següent",
+    "ok": "D’acord",
+    "openSettings": "Obre la configuració",
+    "reset": "Restableix",
+    "retry": "Torna-ho a provar",
+    "restart": "Reinicia",
+    "save": "Desa",
+    "skip": "Omet",
+    "start": "Inicia",
+    "stop": "Atura"
+  },
+  "premium": {
+    "accessChecking": "S’està comprovant l’accés Premium…",
+    "accessUnknown": "Connecta’t a Internet per comprovar l’accés Premium."
+  },
+  "tabs": {
+    "eject": "Expulsió",
+    "toneGenerator": "Generador de tons",
+    "stereoTest": "Prova estèreo",
+    "dbMeter": "Sonòmetre"
+  },
+  "settings": {
+    "title": "Configuració",
+    "subtitle": "Ajusta les eines de l’altaveu i el sonòmetre",
+    "support": "Assistència",
+    "contactSupport": "Contacta amb assistència",
+    "contactSupportSubtitle": "Som aquí per ajudar-te",
+    "contactSupportError": "No s’ha pogut obrir l’aplicació de correu",
+    "rateApp": "Valora’ns",
+    "rateAppSubtitle": "T’agrada l’aplicació? Deixa’ns una ressenya",
+    "shareApp": "Comparteix",
+    "shareAppSubtitle": "Recomana-la a amics i familiars",
+    "shareMessage": "Descobreix {{appName}}!",
+    "shareMessageWithUrl": "Descobreix {{appName}}! Baixa-la aquí: {{url}}",
+    "userId": "ID d’usuari",
+    "userIdCopied": "S’ha copiat l’ID d’usuari",
+    "legalSection": "Informació legal",
+    "privacyConsent": "Privadesa i consentiment",
+    "version": "Versió {{version}}",
+    "otaUpdateId": "Actualització: {{updateId}}",
+    "upgradeBanner": {
+      "title": "Actualitza a Premium",
+      "subtitle": "Desbloqueja neteges Turbo més llargues, controls d’àudio avançats i una experiència sense anuncis"
+    }
+  },
+  "paywall": {
+    "title": "Desbloqueja totes les eines d’àudio",
+    "subtitle": "Neteja l’altaveu, accedeix als controls avançats i elimina tots els anuncis.",
+    "ctaFreeTrial": "Prova-ho de franc",
+    "trialDisclaimer": "Cancel·la quan vulguis. Ara no has de pagar res",
+    "subscriptionDisclaimer": "Cancel·la quan vulguis.",
+    "lifetimeDisclaimer": "Paga una sola vegada. Sense càrrecs recurrents.",
+    "restore": "Restaura les compres",
+    "terms": "Condicions del servei",
+    "privacy": "Política de privadesa",
+    "then": "després",
+    "trial": "Prova gratuïta de {{count}} {{unit}}",
+    "save": "Estalvia un {{percent}}%",
+    "availability": {
+      "loading": "S'estan comprovant les opcions de compra…",
+      "temporary_error": {
+        "title": "No s'han pogut carregar les opcions de compra",
+        "subtitle": "Comprova la connexió i torna-ho a provar."
+      },
+      "configuration_error": {
+        "title": "Les opcions de compra no estan disponibles",
+        "subtitle": "La botiga no ha pogut carregar els productes d'aquesta aplicació. Torna-ho a provar d'aquí a una estona."
+      },
+      "purchase_not_allowed": {
+        "title": "Aquest dispositiu no admet compres",
+        "subtitle": "Aquest dispositiu o compte de la botiga no pot fer compres des de l'aplicació."
+      }
+    },
+    "trialUnit": {
+      "day": "dia",
+      "week": "setmana",
+      "month": "mes",
+      "year": "any"
+    },
+    "period": {
+      "day": "al dia",
+      "week": "a la setmana",
+      "month": "al mes",
+      "year": "a l’any",
+      "lifetime": "Compra única"
+    },
+    "comparison": {
+      "features": "Funcions",
+      "free": "Gratuït",
+      "pro": "Pro",
+      "included": "Inclòs",
+      "excluded": "No inclòs",
+      "unlimited": "Il·limitat",
+      "rows": {
+        "cleaningDuration": {
+          "title": "Durada de la neteja",
+          "free": "30 s",
+          "pro": "30/60/90 s"
+        },
+        "turbo": {
+          "title": "Mode Turbo"
+        },
+        "waveforms": {
+          "title": "Formes d’ona",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "Prova estèreo",
+          "free": "Manual",
+          "pro": "Automàtica"
+        },
+        "soundInsights": {
+          "title": "Anàlisi del so",
+          "free": "Bàsica",
+          "pro": "Avançada"
+        },
+        "activityHistory": {
+          "title": "Historial d’activitat"
+        },
+        "adExperience": {
+          "title": "Experiència publicitària",
+          "free": "Amb anuncis",
+          "pro": "Sense anuncis"
+        }
+      }
+    },
+    "context": {
+      "dbSubtitle": "Desbloqueja l’anàlisi completa d’aquesta sessió i torna a consultar els informes de so desats."
+    },
+    "feedback": {
+      "subscribeSuccess": "Benvingut! L’accés Premium està actiu.",
+      "subscribeError": "Hi ha hagut un problema. Torna-ho a provar.",
+      "restoreSuccess": "L’accés Premium s’ha restaurat correctament!",
+      "restoreNotFound": "No s’ha trobat cap compra Premium activa.",
+      "restoreError": "No s’han pogut restaurar les compres. Torna-ho a provar."
+    },
+    "packageTitle": {
+      "day": "Diari",
+      "week": "Setmanal",
+      "month": "Mensual",
+      "year": "Anual",
+      "lifetime": "Per sempre"
+    }
+  },
+  "otaUpdate": {
+    "updateReady": "Hi ha una actualització nova preparada — reinicia per aplicar-la"
+  },
+  "errorBoundary": {
+    "title": "Hi ha hagut un problema",
+    "message": "S’ha produït un error inesperat. Torna-ho a provar."
+  },
+  "onboarding": {
+    "waterEject": {
+      "title": "Elimina l’aigua\ni la pols ràpidament",
+      "description": "Reprodueix un so de neteja potent per ajudar a expulsar l’aigua i la pols atrapades a l’altaveu."
+    },
+    "toneGenerator": {
+      "title": "Genera\nel to adequat",
+      "description": "Tria entre diferents freqüències per provar, ajustar, emmascarar soroll o fer qualsevol comprovació de so."
+    },
+    "dbMeter": {
+      "title": "Descobreix com\nde fort sona",
+      "description": "Utilitza el sonòmetre per estimar els nivells de soroll del teu voltant i prendre decisions d’escolta més intel·ligents."
+    },
+    "privacy": {
+      "title": "Privat i al dispositiu",
+      "description": "El processament d’àudio es fa al telèfon, amb indicacions clares sobre seguretat i ús del micròfon."
+    }
+  }
+}

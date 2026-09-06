@@ -1,9 +1,5 @@
 {
   "common": {
-    "openSettings": "Mở Cài đặt",
-    "reset": "Đặt lại",
-    "start": "Bắt đầu",
-    "stop": "Dừng",
     "back": "Quay lại",
     "cancel": "Hủy",
     "close": "Đóng",
@@ -13,21 +9,28 @@
     "getStarted": "Bắt đầu",
     "next": "Tiếp theo",
     "ok": "OK",
+    "openSettings": "Mở Cài đặt",
+    "reset": "Đặt lại",
     "retry": "Thử lại",
     "restart": "Khởi động lại",
     "save": "Lưu",
-    "skip": "Bỏ qua"
+    "skip": "Bỏ qua",
+    "start": "Bắt đầu",
+    "stop": "Dừng"
+  },
+  "premium": {
+    "accessChecking": "Đang kiểm tra quyền truy cập Premium…",
+    "accessUnknown": "Kết nối Internet để kiểm tra quyền truy cập Premium."
   },
   "tabs": {
     "eject": "Đẩy nước",
-    "toneGenerator": "Bộ tạo âm",
-    "stereoTest": "Kiểm tra âm thanh nổi",
-    "dbMeter": "Máy đo dB"
+    "toneGenerator": "Tạo âm",
+    "stereoTest": "Kiểm tra Stereo",
+    "dbMeter": "Đo dB"
   },
   "settings": {
     "title": "Cài đặt",
-    "subtitle": "Tùy chỉnh ứng dụng chuyển đổi tiền tệ",
-    "preferences": "Tùy chọn",
+    "subtitle": "Điều chỉnh công cụ loa và máy đo âm thanh của bạn",
     "support": "Hỗ trợ",
     "contactSupport": "Liên hệ hỗ trợ",
     "contactSupportSubtitle": "Chúng tôi luôn sẵn sàng hỗ trợ bạn",
@@ -46,19 +49,37 @@
     "otaUpdateId": "Cập nhật: {{updateId}}",
     "upgradeBanner": {
       "title": "Nâng cấp lên Premium",
-      "subtitle": "Cập nhật tỷ giá thường xuyên, không quảng cáo & biểu đồ đầy đủ"
+      "subtitle": "Mở khóa chế độ làm sạch Turbo lâu hơn, điều khiển âm thanh nâng cao và trải nghiệm không quảng cáo"
     }
   },
   "paywall": {
-    "title": "Mở khóa Premium",
-    "subtitle": "Tận dụng tối đa Currency Converter",
+    "title": "Mở khóa Bộ công cụ âm thanh hoàn chỉnh của bạn",
+    "subtitle": "Làm sạch loa của bạn, truy cập các điều khiển nâng cao và xóa mọi quảng cáo.",
     "ctaFreeTrial": "Dùng thử miễn phí",
-    "restore": "Khôi phục giao dịch",
+    "trialDisclaimer": "Hủy bất cứ lúc nào. Chưa cần thanh toán ngay",
+    "subscriptionDisclaimer": "Hủy bất cứ lúc nào.",
+    "lifetimeDisclaimer": "Thanh toán một lần. Không có phí định kỳ.",
+    "restore": "Khôi phục giao dịch mua",
     "terms": "Điều khoản dịch vụ",
     "privacy": "Chính sách bảo mật",
-    "then": "sau đó",
-    "trial": "Dùng thử {{count}} {{unit}} miễn phí",
+    "then": "rồi",
+    "trial": "{{count}}-{{unit}} dùng thử miễn phí",
     "save": "Tiết kiệm {{percent}}%",
+    "availability": {
+      "loading": "Đang kiểm tra các gói Premium…",
+      "temporary_error": {
+        "title": "Không thể tải các gói Premium",
+        "subtitle": "Kiểm tra kết nối rồi thử lại."
+      },
+      "configuration_error": {
+        "title": "Các gói Premium không khả dụng",
+        "subtitle": "Cửa hàng không thể tải gói Premium. Vui lòng thử lại sau giây lát."
+      },
+      "purchase_not_allowed": {
+        "title": "Thiết bị này không hỗ trợ mua hàng",
+        "subtitle": "Thiết bị hoặc tài khoản cửa hàng này không thể mua hàng trong ứng dụng."
+      }
+    },
     "trialUnit": {
       "day": "ngày",
       "week": "tuần",
@@ -72,30 +93,56 @@
       "year": "mỗi năm",
       "lifetime": "Mua một lần"
     },
-    "features": {
-      "liveRates": {
-        "title": "Tỷ giá luôn mới nhất",
-        "description": "Tỷ giá cập nhật gần như thời gian thực, không bị trễ."
-      },
-      "unlimited": {
-        "title": "Hơn 150 loại tiền tệ, không giới hạn",
-        "description": "Thêm tất cả loại tiền tệ bạn cần, không có giới hạn."
-      },
-      "charts": {
-        "title": "Toàn bộ lịch sử tỷ giá",
-        "description": "Biểu đồ tương tác để tìm thời điểm tốt nhất để chuyển đổi."
-      },
-      "adFree": {
-        "title": "Không gián đoạn",
-        "description": "Không quảng cáo. Trải nghiệm tập trung, gọn gàng."
+    "comparison": {
+      "features": "Tính năng",
+      "free": "Miễn phí",
+      "pro": "Pro",
+      "included": "Có",
+      "excluded": "Không có",
+      "unlimited": "Không giới hạn",
+      "rows": {
+        "cleaningDuration": {
+          "title": "Thời gian vệ sinh",
+          "free": "30 giây",
+          "pro": "30/60/90 giây"
+        },
+        "turbo": {
+          "title": "Chế độ Turbo"
+        },
+        "waveforms": {
+          "title": "Dạng sóng",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "Kiểm tra Stereo",
+          "free": "Thủ công",
+          "pro": "Tự động"
+        },
+        "soundInsights": {
+          "title": "Phân tích mức âm thanh",
+          "free": "Cơ bản",
+          "pro": "Nâng cao"
+        },
+        "activityHistory": {
+          "title": "Lịch sử hoạt động"
+        },
+        "adExperience": {
+          "title": "Quảng cáo",
+          "free": "Quảng cáo",
+          "pro": "Không quảng cáo"
+        }
       }
     },
+    "context": {
+      "dbSubtitle": "Mở khóa phân tích đầy đủ cho phiên này và xem lại các báo cáo âm thanh đã lưu."
+    },
     "feedback": {
-      "subscribeSuccess": "Chào mừng! Quyền truy cập Premium của bạn đã được kích hoạt.",
+      "subscribeSuccess": "Chào mừng bạn! Quyền truy cập cao cấp của bạn đang hoạt động.",
       "subscribeError": "Đã xảy ra lỗi. Vui lòng thử lại.",
-      "restoreSuccess": "Khôi phục gói đăng ký thành công!",
-      "restoreNotFound": "Không tìm thấy gói đăng ký nào.",
-      "restoreError": "Không thể khôi phục giao dịch. Vui lòng thử lại."
+      "restoreSuccess": "Đã khôi phục thành công quyền truy cập cao cấp!",
+      "restoreNotFound": "Không tìm thấy giao dịch mua Premium nào đang hoạt động.",
+      "restoreError": "Không thể khôi phục giao dịch mua hàng. Vui lòng thử lại."
     },
     "packageTitle": {
       "day": "Hàng ngày",
@@ -118,20 +165,16 @@
       "description": "Phát âm thanh làm sạch mạnh mẽ để giúp đẩy nước và bụi mắc kẹt ra khỏi loa."
     },
     "toneGenerator": {
-      "title": "Tạo\nâm sắc phù hợp",
-      "description": "Chọn trong các tần số khác nhau để kiểm tra, điều chỉnh, che tiếng ồn hoặc kiểm tra âm thanh bất kỳ."
+      "title": "Tạo âm tần\nphù hợp",
+      "description": "Chọn nhiều tần số để kiểm tra, tinh chỉnh, che lấp tiếng ồn hoặc thực hiện các phép thử âm thanh khác."
     },
     "dbMeter": {
-      "title": "Biết âm thanh\nthực sự lớn đến đâu",
+      "title": "Biết chính xác\nâm thanh lớn cỡ nào",
       "description": "Dùng Máy đo dB để ước tính mức tiếng ồn xung quanh và đưa ra lựa chọn nghe thông minh hơn."
     },
     "privacy": {
-      "title": "Riêng tư và trên thiết bị",
+      "title": "Riêng tư, xử lý trên thiết bị",
       "description": "Việc xử lý âm thanh diễn ra trên điện thoại của bạn, kèm hướng dẫn rõ ràng về an toàn và micrô."
     }
-  },
-  "premium": {
-    "accessChecking": "Đang kiểm tra quyền truy cập Premium…",
-    "accessUnknown": "Kết nối Internet để kiểm tra quyền truy cập Premium."
   }
 }

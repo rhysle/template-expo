@@ -1,9 +1,5 @@
 {
   "common": {
-    "openSettings": "Otevřít nastavení",
-    "reset": "Obnovit",
-    "start": "Spustit",
-    "stop": "Zastavit",
     "back": "Zpět",
     "cancel": "Zrušit",
     "close": "Zavřít",
@@ -13,10 +9,18 @@
     "getStarted": "Začít",
     "next": "Další",
     "ok": "OK",
+    "openSettings": "Otevřít nastavení",
+    "reset": "Obnovit",
     "retry": "Zkusit znovu",
     "restart": "Restartovat",
     "save": "Uložit",
-    "skip": "Přeskočit"
+    "skip": "Přeskočit",
+    "start": "Spustit",
+    "stop": "Zastavit"
+  },
+  "premium": {
+    "accessChecking": "Ověřování přístupu Premium…",
+    "accessUnknown": "Připojte se k internetu a ověřte přístup Premium."
   },
   "tabs": {
     "eject": "Vytlačit",
@@ -26,8 +30,7 @@
   },
   "settings": {
     "title": "Nastavení",
-    "subtitle": "Přizpůsobte si převodník měn",
-    "preferences": "Předvolby",
+    "subtitle": "Vylaďte si nástroje pro reproduktory a měřič zvuku",
     "support": "Podpora",
     "contactSupport": "Kontaktovat podporu",
     "contactSupportSubtitle": "Jsme tu, abychom pomohli",
@@ -46,19 +49,37 @@
     "otaUpdateId": "Aktualizace: {{updateId}}",
     "upgradeBanner": {
       "title": "Upgradovat na Premium",
-      "subtitle": "Časté aktualizace kurzů, žádné reklamy a plný přístup ke grafům"
+      "subtitle": "Odemkněte delší čištění Turbo, pokročilé ovládání zvuku a používání bez reklam"
     }
   },
   "paywall": {
-    "title": "Odemknout Premium",
-    "subtitle": "Získejte z Currency Converteru maximum",
+    "title": "Odemkněte kompletní sadu zvukových nástrojů",
+    "subtitle": "Vyčistěte reproduktor, získejte přístup k pokročilým ovládacím prvkům a odstraňte všechny reklamy.",
     "ctaFreeTrial": "Vyzkoušet zdarma",
+    "trialDisclaimer": "Kdykoli zrušte. Nyní nic neplatíte",
+    "subscriptionDisclaimer": "Kdykoli zrušte.",
+    "lifetimeDisclaimer": "Zaplaťte jednou. Žádné opakované platby.",
     "restore": "Obnovit nákupy",
-    "terms": "Podmínky služby",
+    "terms": "Smluvní podmínky",
     "privacy": "Zásady ochrany osobních údajů",
     "then": "poté",
-    "trial": "Bezplatná zkušební verze {{count}}-{{unit}}",
-    "save": "Ušetřete {{percent}} %",
+    "trial": "{{count}}-{{unit}} bezplatná zkušební verze",
+    "save": "Ušetřete {{percent}}%",
+    "availability": {
+      "loading": "Kontrolují se možnosti nákupu…",
+      "temporary_error": {
+        "title": "Možnosti nákupu se nepodařilo načíst",
+        "subtitle": "Zkontrolujte připojení a zkuste to znovu."
+      },
+      "configuration_error": {
+        "title": "Možnosti nákupu nejsou k dispozici",
+        "subtitle": "Obchodu se nepodařilo načíst produkty této aplikace. Zkuste to prosím za chvíli znovu."
+      },
+      "purchase_not_allowed": {
+        "title": "Nákupy nejsou na tomto zařízení podporovány",
+        "subtitle": "Toto zařízení nebo účet obchodu nemůže provádět nákupy v aplikaci."
+      }
+    },
     "trialUnit": {
       "day": "den",
       "week": "týden",
@@ -69,40 +90,66 @@
       "day": "za den",
       "week": "za týden",
       "month": "za měsíc",
-      "year": "za rok",
+      "year": "ročně",
       "lifetime": "Jednorázový nákup"
     },
-    "features": {
-      "liveRates": {
-        "title": "Vždy aktuální kurzy",
-        "description": "Kurzy se obnovují téměř v reálném čase, bez zpoždění."
-      },
-      "unlimited": {
-        "title": "Všech 150+ měn, bez omezení",
-        "description": "Přidejte libovolnou měnu, bez omezení."
-      },
-      "charts": {
-        "title": "Kompletní historie kurzů",
-        "description": "Interaktivní grafy pro nalezení nejlepšího času převodu."
-      },
-      "adFree": {
-        "title": "Žádná přerušení",
-        "description": "Bez reklam. Jen čistý, soustředěný převod."
+    "comparison": {
+      "features": "Funkce",
+      "free": "Zdarma",
+      "pro": "Pro",
+      "included": "Zahrnuto",
+      "excluded": "Není zahrnuto",
+      "unlimited": "Neomezeně",
+      "rows": {
+        "cleaningDuration": {
+          "title": "Délka čištění",
+          "free": "30 sekund",
+          "pro": "30/60/90 sekund"
+        },
+        "turbo": {
+          "title": "Turbo režim"
+        },
+        "waveforms": {
+          "title": "Průběh",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "Test sterea",
+          "free": "Ručně",
+          "pro": "Automaticky"
+        },
+        "soundInsights": {
+          "title": "Analýza úrovně zvuku",
+          "free": "Základní",
+          "pro": "Pokročilé"
+        },
+        "activityHistory": {
+          "title": "Historie aktivit"
+        },
+        "adExperience": {
+          "title": "Reklamy",
+          "free": "Reklamy",
+          "pro": "Bez reklam"
+        }
       }
+    },
+    "context": {
+      "dbSubtitle": "Odemkněte úplnou analýzu této relace a znovu si prohlédněte uložené zvukové zprávy."
     },
     "feedback": {
       "subscribeSuccess": "Vítejte! Váš prémiový přístup je aktivní.",
       "subscribeError": "Něco se pokazilo. Zkuste to prosím znovu.",
-      "restoreSuccess": "Předplatné úspěšně obnoveno!",
-      "restoreNotFound": "Nebylo nalezeno žádné aktivní předplatné.",
-      "restoreError": "Nepodařilo se obnovit nákupy. Zkuste to prosím znovu."
+      "restoreSuccess": "Prémiový přístup byl úspěšně obnoven!",
+      "restoreNotFound": "Nebyl nalezen žádný aktivní prémiový nákup.",
+      "restoreError": "Nákupy se nepodařilo obnovit. Zkuste to prosím znovu."
     },
     "packageTitle": {
-      "day": "Denně",
+      "day": "denně",
       "week": "Týdně",
       "month": "Měsíčně",
-      "year": "Ročně",
-      "lifetime": "Doživotně"
+      "year": "ročně",
+      "lifetime": "Životnost"
     }
   },
   "otaUpdate": {
@@ -129,9 +176,5 @@
       "title": "Soukromé a v zařízení",
       "description": "Zpracování zvuku zůstává v telefonu a doplňují ho jasné pokyny k bezpečnosti a mikrofonu."
     }
-  },
-  "premium": {
-    "accessChecking": "Ověřování přístupu Premium…",
-    "accessUnknown": "Připojte se k internetu a ověřte přístup Premium."
   }
 }

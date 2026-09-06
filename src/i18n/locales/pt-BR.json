@@ -1,9 +1,5 @@
 {
   "common": {
-    "openSettings": "Abrir Ajustes",
-    "reset": "Redefinir",
-    "start": "Iniciar",
-    "stop": "Parar",
     "back": "Voltar",
     "cancel": "Cancelar",
     "close": "Fechar",
@@ -13,10 +9,18 @@
     "getStarted": "Começar",
     "next": "Próximo",
     "ok": "OK",
+    "openSettings": "Abrir Ajustes",
+    "reset": "Redefinir",
     "retry": "Tentar novamente",
     "restart": "Reiniciar",
     "save": "Salvar",
-    "skip": "Pular"
+    "skip": "Pular",
+    "start": "Iniciar",
+    "stop": "Parar"
+  },
+  "premium": {
+    "accessChecking": "Verificando o acesso Premium…",
+    "accessUnknown": "Conecte-se à internet para verificar o acesso Premium."
   },
   "tabs": {
     "eject": "Ejetar",
@@ -26,8 +30,7 @@
   },
   "settings": {
     "title": "Configurações",
-    "subtitle": "Personalize seu conversor de moedas",
-    "preferences": "Preferências",
+    "subtitle": "Ajuste suas ferramentas de alto-falante e medidor de som",
     "support": "Suporte",
     "contactSupport": "Contatar suporte",
     "contactSupportSubtitle": "Estamos aqui para ajudar",
@@ -45,20 +48,38 @@
     "version": "Versão {{version}}",
     "otaUpdateId": "Atualização: {{updateId}}",
     "upgradeBanner": {
-      "title": "Upgrade para Premium",
-      "subtitle": "Atualizações frequentes de taxas, sem anúncios e acesso completo a gráficos"
+      "title": "Atualize para Premium",
+      "subtitle": "Desbloqueie ciclos de limpeza Turbo mais longos, controles de áudio avançados e uma experiência sem anúncios"
     }
   },
   "paywall": {
-    "title": "Desbloquear Premium",
-    "subtitle": "Aproveite ao máximo o Conversor de Moedas",
-    "ctaFreeTrial": "Experimentar grátis",
+    "title": "Desbloqueie seu kit de ferramentas de áudio completo",
+    "subtitle": "Limpe seu alto-falante, acesse controles avançados e remova todos os anúncios.",
+    "ctaFreeTrial": "Experimente gratuitamente",
+    "trialDisclaimer": "Cancele quando quiser. Nada será cobrado agora",
+    "subscriptionDisclaimer": "Cancele quando quiser.",
+    "lifetimeDisclaimer": "Pague uma vez. Sem cobranças recorrentes.",
     "restore": "Restaurar compras",
-    "terms": "Termos de serviço",
-    "privacy": "Política de privacidade",
-    "then": "depois",
-    "trial": "{{count}} {{unit}} de teste grátis",
+    "terms": "Termos de Serviço",
+    "privacy": "Política de Privacidade",
+    "then": "então",
+    "trial": "{{count}}-{{unit}} teste gratuito",
     "save": "Economize {{percent}}%",
+    "availability": {
+      "loading": "Verificando opções de compra…",
+      "temporary_error": {
+        "title": "Não foi possível carregar as opções de compra",
+        "subtitle": "Verifique sua conexão e tente novamente."
+      },
+      "configuration_error": {
+        "title": "As opções de compra estão indisponíveis",
+        "subtitle": "A loja não conseguiu carregar os produtos deste app. Tente novamente em instantes."
+      },
+      "purchase_not_allowed": {
+        "title": "Este dispositivo não é compatível com compras",
+        "subtitle": "Este dispositivo ou conta da loja não pode fazer compras no app."
+      }
+    },
     "trialUnit": {
       "day": "dia",
       "week": "semana",
@@ -72,35 +93,61 @@
       "year": "por ano",
       "lifetime": "Compra única"
     },
-    "features": {
-      "liveRates": {
-        "title": "Taxas sempre atualizadas",
-        "description": "Taxas atualizadas em tempo quase real, sem atrasos."
-      },
-      "unlimited": {
-        "title": "Mais de 150 moedas, sem limites",
-        "description": "Adicione todas as moedas que precisar, sem restrições."
-      },
-      "charts": {
-        "title": "Histórico completo de taxas",
-        "description": "Gráficos interativos para encontrar o melhor momento para converter."
-      },
-      "adFree": {
-        "title": "Zero interrupções",
-        "description": "Sem anúncios. Só conversão limpa e focada."
+    "comparison": {
+      "features": "Recursos",
+      "free": "Grátis",
+      "pro": "Pro",
+      "included": "Incluído",
+      "excluded": "Não incluído",
+      "unlimited": "Ilimitado",
+      "rows": {
+        "cleaningDuration": {
+          "title": "Duração da limpeza",
+          "free": "30 segundos",
+          "pro": "30/60/90 segundos"
+        },
+        "turbo": {
+          "title": "Modo Turbo"
+        },
+        "waveforms": {
+          "title": "Forma de onda",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "Teste estéreo",
+          "free": "Manual",
+          "pro": "Automático"
+        },
+        "soundInsights": {
+          "title": "Análise do nível de som",
+          "free": "Básico",
+          "pro": "Avançado"
+        },
+        "activityHistory": {
+          "title": "Histórico de atividades"
+        },
+        "adExperience": {
+          "title": "Anúncios",
+          "free": "Anúncios",
+          "pro": "Sem anúncios"
+        }
       }
     },
+    "context": {
+      "dbSubtitle": "Desbloqueie a análise completa desta sessão e revisite os relatórios de som salvos."
+    },
     "feedback": {
-      "subscribeSuccess": "Boas-vindas! Seu acesso Premium está ativo.",
+      "subscribeSuccess": "Bem vindo! Seu acesso premium está ativo.",
       "subscribeError": "Algo deu errado. Por favor, tente novamente.",
-      "restoreSuccess": "Assinatura restaurada com sucesso!",
-      "restoreNotFound": "Nenhuma assinatura ativa encontrada.",
+      "restoreSuccess": "Acesso Premium restaurado com sucesso!",
+      "restoreNotFound": "Nenhuma compra Premium ativa encontrada.",
       "restoreError": "Não foi possível restaurar as compras. Por favor, tente novamente."
     },
     "packageTitle": {
-      "day": "Diário",
-      "week": "Semanal",
-      "month": "Mensal",
+      "day": "Diariamente",
+      "week": "Semanalmente",
+      "month": "Mensalmente",
       "year": "Anual",
       "lifetime": "Vitalício"
     }
@@ -129,9 +176,5 @@
       "title": "Privado e no seu dispositivo",
       "description": "O processamento de áudio fica no seu telefone, com orientações claras sobre segurança e microfone."
     }
-  },
-  "premium": {
-    "accessChecking": "Verificando o acesso Premium…",
-    "accessUnknown": "Conecte-se à internet para verificar o acesso Premium."
   }
 }

@@ -1,9 +1,5 @@
 {
   "common": {
-    "openSettings": "設定を開く",
-    "reset": "リセット",
-    "start": "開始",
-    "stop": "停止",
     "back": "戻る",
     "cancel": "キャンセル",
     "close": "閉じる",
@@ -13,10 +9,18 @@
     "getStarted": "始める",
     "next": "次へ",
     "ok": "OK",
+    "openSettings": "設定を開く",
+    "reset": "リセット",
     "retry": "再試行",
     "restart": "再起動",
     "save": "保存",
-    "skip": "スキップ"
+    "skip": "スキップ",
+    "start": "開始",
+    "stop": "停止"
+  },
+  "premium": {
+    "accessChecking": "Premium アクセスを確認中…",
+    "accessUnknown": "Premium アクセスを確認するにはインターネットに接続してください。"
   },
   "tabs": {
     "eject": "排水",
@@ -26,8 +30,7 @@
   },
   "settings": {
     "title": "設定",
-    "subtitle": "通貨換算アプリをカスタマイズ",
-    "preferences": "設定",
+    "subtitle": "スピーカー ツールとサウンド メーターを調整します",
     "support": "サポート",
     "contactSupport": "サポートに連絡",
     "contactSupportSubtitle": "お気軽にどうぞ",
@@ -46,63 +49,107 @@
     "otaUpdateId": "更新: {{updateId}}",
     "upgradeBanner": {
       "title": "プレミアムにアップグレード",
-      "subtitle": "頻繁なレート更新、広告なし、フルチャートアクセス"
+      "subtitle": "より長いTurboクリーニング、高度なオーディオ操作、広告なしの利用をアンロック"
     }
   },
   "paywall": {
-    "title": "プレミアムを解除",
-    "subtitle": "通貨換算をフル活用",
-    "ctaFreeTrial": "無料で試す",
-    "restore": "購入を復元",
+    "title": "完全なオーディオ ツールキットのロックを解除します",
+    "subtitle": "スピーカーを掃除し、高度なコントロールにアクセスし、すべての広告を削除します。",
+    "ctaFreeTrial": "無料でお試しください",
+    "trialDisclaimer": "いつでもキャンセルできます。今すぐのお支払いはありません",
+    "subscriptionDisclaimer": "いつでもキャンセルできます。",
+    "lifetimeDisclaimer": "お支払いは一度だけ。継続課金はありません。",
+    "restore": "購入を復元する",
     "terms": "利用規約",
-    "privacy": "プライバシーポリシー",
-    "then": "その後",
-    "trial": "{{count}}{{unit}}無料トライアル",
-    "save": "{{percent}}％お得",
+    "privacy": "プライバシー ポリシー",
+    "then": "、その後",
+    "trial": "{{count}}-{{unit}} 無料トライアル",
+    "save": "{{percent}}% 節約",
+    "availability": {
+      "loading": "購入オプションを確認しています…",
+      "temporary_error": {
+        "title": "購入オプションを読み込めませんでした",
+        "subtitle": "接続を確認して、もう一度お試しください。"
+      },
+      "configuration_error": {
+        "title": "購入オプションを利用できません",
+        "subtitle": "ストアでこのアプリの商品を読み込めませんでした。しばらくしてからもう一度お試しください。"
+      },
+      "purchase_not_allowed": {
+        "title": "このデバイスでは購入できません",
+        "subtitle": "このデバイスまたはストアアカウントではアプリ内購入を利用できません。"
+      }
+    },
     "trialUnit": {
       "day": "日",
       "week": "週",
-      "month": "ヶ月",
+      "month": "月",
       "year": "年"
     },
     "period": {
-      "day": "1日あたり",
-      "week": "1週間あたり",
-      "month": "1ヶ月あたり",
-      "year": "1年あたり",
-      "lifetime": "買い切り"
+      "day": "/日",
+      "week": "/週",
+      "month": "/月",
+      "year": "/年",
+      "lifetime": "1 回限りの購入"
     },
-    "features": {
-      "liveRates": {
-        "title": "常に最新のレート",
-        "description": "レートはリアルタイムに近い形で更新され、遅延なし。"
-      },
-      "unlimited": {
-        "title": "150以上の通貨、制限なし",
-        "description": "必要なすべての通貨を追加、制限なし。"
-      },
-      "charts": {
-        "title": "全レート履歴",
-        "description": "最適な換算タイミングを見つけるためのインタラクティブチャート。"
-      },
-      "adFree": {
-        "title": "中断なし",
-        "description": "広告なし。クリーンで集中した換算体験。"
+    "comparison": {
+      "features": "機能",
+      "free": "無料",
+      "pro": "Pro",
+      "included": "利用可能",
+      "excluded": "利用不可",
+      "unlimited": "無制限",
+      "rows": {
+        "cleaningDuration": {
+          "title": "クリーニング期間",
+          "free": "30 秒",
+          "pro": "30/60/90 秒"
+        },
+        "turbo": {
+          "title": "ターボモード"
+        },
+        "waveforms": {
+          "title": "波形",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "ステレオテスト",
+          "free": "手動",
+          "pro": "自動"
+        },
+        "soundInsights": {
+          "title": "騒音レベル分析",
+          "free": "基本",
+          "pro": "詳細"
+        },
+        "activityHistory": {
+          "title": "活動履歴"
+        },
+        "adExperience": {
+          "title": "広告あり",
+          "free": "広告あり",
+          "pro": "広告なし"
+        }
       }
     },
+    "context": {
+      "dbSubtitle": "このセッションの完全な分析をロック解除し、保存されたサウンド レポートを再確認します。"
+    },
     "feedback": {
-      "subscribeSuccess": "ようこそ！プレミアムアクセスが有効になりました。",
-      "subscribeError": "エラーが発生しました。もう一度お試しください。",
-      "restoreSuccess": "サブスクリプションを復元しました！",
-      "restoreNotFound": "有効なサブスクリプションが見つかりませんでした。",
-      "restoreError": "購入を復元できませんでした。もう一度お試しください。"
+      "subscribeSuccess": "ようこそ!プレミアム アクセスは有効です。",
+      "subscribeError": "問題が発生しました。もう一度試してください。",
+      "restoreSuccess": "プレミアム アクセスが正常に復元されました。",
+      "restoreNotFound": "有効なプレミアム購入が見つかりません。",
+      "restoreError": "購入を復元できませんでした。もう一度試してください。"
     },
     "packageTitle": {
       "day": "毎日",
       "week": "毎週",
       "month": "毎月",
       "year": "毎年",
-      "lifetime": "永久"
+      "lifetime": "生涯"
     }
   },
   "otaUpdate": {
@@ -129,9 +176,5 @@
       "title": "非公開、端末内で完結",
       "description": "音声処理はスマートフォン内にとどまり、安全性とマイクに関する明確な案内を提供します。"
     }
-  },
-  "premium": {
-    "accessChecking": "Premium アクセスを確認中…",
-    "accessUnknown": "Premium アクセスを確認するにはインターネットに接続してください。"
   }
 }

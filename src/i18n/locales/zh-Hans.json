@@ -1,9 +1,5 @@
 {
   "common": {
-    "openSettings": "打开设置",
-    "reset": "重置",
-    "start": "开始",
-    "stop": "停止",
     "back": "返回",
     "cancel": "取消",
     "close": "关闭",
@@ -13,10 +9,18 @@
     "getStarted": "开始使用",
     "next": "下一步",
     "ok": "好的",
+    "openSettings": "打开设置",
+    "reset": "重置",
     "retry": "重试",
     "restart": "重启",
     "save": "保存",
-    "skip": "跳过"
+    "skip": "跳过",
+    "start": "开始",
+    "stop": "停止"
+  },
+  "premium": {
+    "accessChecking": "正在检查 Premium 访问权限…",
+    "accessUnknown": "请连接互联网以检查 Premium 访问权限。"
   },
   "tabs": {
     "eject": "排水",
@@ -26,8 +30,7 @@
   },
   "settings": {
     "title": "设置",
-    "subtitle": "自定义您的货币换算器",
-    "preferences": "偏好设置",
+    "subtitle": "调整扬声器工具和声音计",
     "support": "支持",
     "contactSupport": "联系支持",
     "contactSupportSubtitle": "我们随时为您服务",
@@ -45,24 +48,42 @@
     "version": "版本 {{version}}",
     "otaUpdateId": "更新: {{updateId}}",
     "upgradeBanner": {
-      "title": "升级至高级版",
-      "subtitle": "更频繁的汇率更新、无广告及完整图表"
+      "title": "升级到高级版",
+      "subtitle": "解锁更长的 Turbo 清洁、高级音频控制和无广告体验"
     }
   },
   "paywall": {
-    "title": "解锁高级版",
-    "subtitle": "充分利用货币换算器",
+    "title": "解锁完整的音频工具包",
+    "subtitle": "清洁扬声器，访问高级控件，并删除每个广告。",
     "ctaFreeTrial": "免费试用",
+    "trialDisclaimer": "可随时取消。现在无需付款",
+    "subscriptionDisclaimer": "可随时取消。",
+    "lifetimeDisclaimer": "一次付费。无定期扣费。",
     "restore": "恢复购买",
-    "terms": "服务条款",
-    "privacy": "隐私政策",
-    "then": "之后",
-    "trial": "{{count}}{{unit}}免费试用",
-    "save": "节省 {{percent}}%",
+    "terms": "服務條款",
+    "privacy": "隐私条款",
+    "then": "然后",
+    "trial": "{{count}} - {{unit}}免费试用",
+    "save": "节省{{percent}} %",
+    "availability": {
+      "loading": "正在检查购买选项…",
+      "temporary_error": {
+        "title": "无法加载购买选项",
+        "subtitle": "请检查网络连接，然后重试。"
+      },
+      "configuration_error": {
+        "title": "购买选项不可用",
+        "subtitle": "商店无法加载此 App 的产品。请稍后重试。"
+      },
+      "purchase_not_allowed": {
+        "title": "此设备不支持购买",
+        "subtitle": "此设备或商店帐户无法进行 App 内购买。"
+      }
+    },
     "trialUnit": {
       "day": "天",
-      "week": "周",
-      "month": "个月",
+      "week": "星期",
+      "month": "月",
       "year": "年"
     },
     "period": {
@@ -72,37 +93,63 @@
       "year": "每年",
       "lifetime": "一次性购买"
     },
-    "features": {
-      "liveRates": {
-        "title": "始终最新汇率",
-        "description": "汇率近实时更新，无延迟。"
-      },
-      "unlimited": {
-        "title": "150+种货币，无上限",
-        "description": "添加所需的所有货币，没有限制。"
-      },
-      "charts": {
-        "title": "完整汇率历史",
-        "description": "交互式图表帮您找到最佳换汇时机。"
-      },
-      "adFree": {
-        "title": "零干扰",
-        "description": "无广告。纯净、专注的换算体验。"
+    "comparison": {
+      "features": "功能",
+      "free": "免费",
+      "pro": "Pro",
+      "included": "包含",
+      "excluded": "不包含",
+      "unlimited": "无限制",
+      "rows": {
+        "cleaningDuration": {
+          "title": "清洁持续时间",
+          "free": "30 秒",
+          "pro": "30/60/90 秒"
+        },
+        "turbo": {
+          "title": "涡轮模式"
+        },
+        "waveforms": {
+          "title": "波形",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "立体声测试",
+          "free": "手动",
+          "pro": "自动"
+        },
+        "soundInsights": {
+          "title": "声音级别分析",
+          "free": "基础",
+          "pro": "高级"
+        },
+        "activityHistory": {
+          "title": "活动历史"
+        },
+        "adExperience": {
+          "title": "有广告",
+          "free": "有广告",
+          "pro": "无广告"
+        }
       }
     },
+    "context": {
+      "dbSubtitle": "解锁本次测量的完整分析，并重新查看已保存的声音报告。"
+    },
     "feedback": {
-      "subscribeSuccess": "欢迎！您的高级版使用权限已激活。",
-      "subscribeError": "出现错误，请重试。",
-      "restoreSuccess": "订阅恢复成功！",
-      "restoreNotFound": "未找到有效订阅。",
-      "restoreError": "无法恢复购买，请重试。"
+      "subscribeSuccess": "欢迎！您的高级访问权限已激活。",
+      "subscribeError": "出错了。请重试。",
+      "restoreSuccess": "高级访问权限已成功恢复！",
+      "restoreNotFound": "未找到有效的高级购买。",
+      "restoreError": "无法恢复购买。请重试。"
     },
     "packageTitle": {
-      "day": "每日",
+      "day": "每天",
       "week": "每周",
       "month": "每月",
       "year": "每年",
-      "lifetime": "永久"
+      "lifetime": "終身"
     }
   },
   "otaUpdate": {
@@ -129,9 +176,5 @@
       "title": "私密且仅在设备上处理",
       "description": "音频处理始终在您的手机上进行，并提供清晰的安全和麦克风使用指引。"
     }
-  },
-  "premium": {
-    "accessChecking": "正在检查 Premium 访问权限…",
-    "accessUnknown": "请连接互联网以检查 Premium 访问权限。"
   }
 }

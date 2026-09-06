@@ -5,7 +5,10 @@ import { useTranslation } from 'react-i18next'
 import { OnboardingFlow } from '@/components/base/Onboarding'
 import { PaywallScreen } from '@/components/base/Paywall'
 import { useOnboardingPages } from '@/components/onboarding/onboardingPages'
-import { usePaywallFeatures } from '@/components/paywall/usePaywallFeatures'
+import {
+  useContextualPaywallContent,
+  usePaywallComparison,
+} from '@/components/paywall/usePaywallFeatures'
 import { AnalyticsGeneralEvents, trackEvent } from '@/services/firebase/analytics'
 import type { PaywallSource } from '@/services/revenueCat'
 import { useOnboardingState } from '@/stores/features/onboarding'
@@ -23,7 +26,9 @@ export default function OnboardingScreen() {
   const { showSnackbar } = useSnackbarState()
   const router = useRouter()
   const pages = useOnboardingPages()
-  const features = usePaywallFeatures()
+  const comparisonItems = usePaywallComparison()
+  const { title: paywallTitle, subtitle: paywallSubtitle } =
+    useContextualPaywallContent(ONBOARDING_PAYWALL_SOURCE)
 
   useEffect(() => {
     trackEvent(AnalyticsGeneralEvents.ONBOARDING_STARTED)
@@ -50,9 +55,9 @@ export default function OnboardingScreen() {
   if (showPaywall) {
     return (
       <PaywallScreen
-        title={t('paywall.title')}
-        subtitle={t('paywall.subtitle')}
-        features={features}
+        title={paywallTitle}
+        subtitle={paywallSubtitle}
+        comparisonItems={comparisonItems}
         source={ONBOARDING_PAYWALL_SOURCE}
         onComplete={handlePaywallDone}
         onDismiss={handlePaywallDone}

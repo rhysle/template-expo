@@ -1,9 +1,5 @@
 {
   "common": {
-    "openSettings": "Ayarları Aç",
-    "reset": "Sıfırla",
-    "start": "Başlat",
-    "stop": "Durdur",
     "back": "Geri",
     "cancel": "İptal",
     "close": "Kapat",
@@ -13,10 +9,18 @@
     "getStarted": "Başla",
     "next": "İleri",
     "ok": "Tamam",
+    "openSettings": "Ayarları Aç",
+    "reset": "Sıfırla",
     "retry": "Tekrar dene",
     "restart": "Yeniden Başlat",
     "save": "Kaydet",
-    "skip": "Atla"
+    "skip": "Atla",
+    "start": "Başlat",
+    "stop": "Durdur"
+  },
+  "premium": {
+    "accessChecking": "Premium erişimi kontrol ediliyor…",
+    "accessUnknown": "Premium erişimini kontrol etmek için internete bağlanın."
   },
   "tabs": {
     "eject": "Çıkar",
@@ -26,8 +30,7 @@
   },
   "settings": {
     "title": "Ayarlar",
-    "subtitle": "Döviz çeviricinizi özelleştirin",
-    "preferences": "Tercihler",
+    "subtitle": "Hoparlör araçlarınızı ve ses ölçerinizi ayarlayın",
     "support": "Destek",
     "contactSupport": "Destekle İletişime Geç",
     "contactSupportSubtitle": "Yardım etmek için buradayız",
@@ -45,20 +48,38 @@
     "version": "Sürüm {{version}}",
     "otaUpdateId": "Güncelleme: {{updateId}}",
     "upgradeBanner": {
-      "title": "Premium'a Yükselt",
-      "subtitle": "Sık kur güncellemeleri, reklamsız & tam grafik erişimi"
+      "title": "Premium'a Yükseltin",
+      "subtitle": "Daha uzun Turbo temizliğin, gelişmiş ses kontrollerinin ve reklamsız deneyimin kilidini açın"
     }
   },
   "paywall": {
-    "title": "Premium'u Aç",
-    "subtitle": "Döviz Çeviriciden en iyi şekilde yararlanın",
-    "ctaFreeTrial": "Ücretsiz Dene",
-    "restore": "Satın Almaları Geri Yükle",
-    "terms": "Hizmet Koşulları",
+    "title": "Eksiksiz Ses Araç Setinizin Kilidini Açın",
+    "subtitle": "Hoparlörünüzü temizleyin, gelişmiş kontrollere erişin ve tüm reklamları kaldırın.",
+    "ctaFreeTrial": "Ücretsiz Deneyin",
+    "trialDisclaimer": "İstediğiniz zaman iptal edin. Şimdi ödeme yok",
+    "subscriptionDisclaimer": "İstediğiniz zaman iptal edin.",
+    "lifetimeDisclaimer": "Bir kez ödeyin. Tekrarlayan ücret yok.",
+    "restore": "Satın Alınanları Geri Yükle",
+    "terms": "Hizmet Şartları",
     "privacy": "Gizlilik Politikası",
     "then": "sonra",
-    "trial": "{{count}} {{unit}} ücretsiz deneme",
-    "save": "%{{percent}} tasarruf",
+    "trial": "{{count}}-{{unit}} ücretsiz deneme",
+    "save": "Tasarruf edin {{percent}}%",
+    "availability": {
+      "loading": "Satın alma seçenekleri kontrol ediliyor…",
+      "temporary_error": {
+        "title": "Satın alma seçenekleri yüklenemedi",
+        "subtitle": "Bağlantınızı kontrol edip tekrar deneyin."
+      },
+      "configuration_error": {
+        "title": "Satın alma seçenekleri kullanılamıyor",
+        "subtitle": "Mağaza bu uygulamanın ürünlerini yükleyemedi. Lütfen kısa süre sonra tekrar deneyin."
+      },
+      "purchase_not_allowed": {
+        "title": "Bu cihazda satın alma desteklenmiyor",
+        "subtitle": "Bu cihaz veya mağaza hesabı uygulama içi satın alma işlemi yapamıyor."
+      }
+    },
     "trialUnit": {
       "day": "gün",
       "week": "hafta",
@@ -67,42 +88,68 @@
     },
     "period": {
       "day": "günlük",
-      "week": "haftalık",
+      "week": "haftada",
       "month": "aylık",
       "year": "yıllık",
       "lifetime": "Tek seferlik satın alma"
     },
-    "features": {
-      "liveRates": {
-        "title": "Her Zaman Taze Kurlar",
-        "description": "Kurlar gerçek zamanlıya yakın güncellenir, gecikmesiz."
-      },
-      "unlimited": {
-        "title": "Tüm 150+ Döviz, Sınır Yok",
-        "description": "İhtiyacınız olan her dövizi ekleyin, sınırsız."
-      },
-      "charts": {
-        "title": "Tam Kur Geçmişi",
-        "description": "Dönüştürmek için en iyi zamanı bulmak üzere etkileşimli grafikler."
-      },
-      "adFree": {
-        "title": "Sıfır Kesinti",
-        "description": "Reklam yok. Sadece temiz, odaklanmış dönüştürme."
+    "comparison": {
+      "features": "Özellikler",
+      "free": "Ücretsiz",
+      "pro": "Pro",
+      "included": "Dahil",
+      "excluded": "Dahil değil",
+      "unlimited": "Sınırsız",
+      "rows": {
+        "cleaningDuration": {
+          "title": "Temizleme süresi",
+          "free": "30 saniye",
+          "pro": "30/60/90 saniye"
+        },
+        "turbo": {
+          "title": "Turbo Modu"
+        },
+        "waveforms": {
+          "title": "Dalga Formu",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "Stereo Testi",
+          "free": "Manuel",
+          "pro": "Otomatik"
+        },
+        "soundInsights": {
+          "title": "Ses seviyesi analizi",
+          "free": "Temel",
+          "pro": "Gelişmiş"
+        },
+        "activityHistory": {
+          "title": "Etkinlik Geçmişi"
+        },
+        "adExperience": {
+          "title": "Reklamlar",
+          "free": "Reklamlar",
+          "pro": "Reklamsız"
+        }
       }
     },
+    "context": {
+      "dbSubtitle": "Bu oturumun tam analizinin kilidini açın ve kayıtlı ses raporlarını tekrar ziyaret edin."
+    },
     "feedback": {
-      "subscribeSuccess": "Hoş geldiniz! Premium erişiminiz etkin.",
+      "subscribeSuccess": "Hoş geldiniz! Premium erişiminiz aktif.",
       "subscribeError": "Bir şeyler ters gitti. Lütfen tekrar deneyin.",
-      "restoreSuccess": "Abonelik başarıyla geri yüklendi!",
-      "restoreNotFound": "Aktif abonelik bulunamadı.",
-      "restoreError": "Satın almalar geri yüklenemedi. Lütfen tekrar deneyin."
+      "restoreSuccess": "Premium erişimi başarıyla geri yüklendi!",
+      "restoreNotFound": "Aktif Premium satın alımı bulunamadı.",
+      "restoreError": "Satın alınanlar geri yüklenemedi. Lütfen tekrar deneyin."
     },
     "packageTitle": {
       "day": "Günlük",
       "week": "Haftalık",
       "month": "Aylık",
       "year": "Yıllık",
-      "lifetime": "Ömür Boyu"
+      "lifetime": "Ömür boyu"
     }
   },
   "otaUpdate": {
@@ -129,9 +176,5 @@
       "title": "Özel ve cihazınızda",
       "description": "Ses işleme, açık güvenlik ve mikrofon yönergeleriyle telefonunuzda kalır."
     }
-  },
-  "premium": {
-    "accessChecking": "Premium erişimi kontrol ediliyor…",
-    "accessUnknown": "Premium erişimini kontrol etmek için internete bağlanın."
   }
 }

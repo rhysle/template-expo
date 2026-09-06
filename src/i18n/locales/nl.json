@@ -1,9 +1,5 @@
 {
   "common": {
-    "openSettings": "Instellingen openen",
-    "reset": "Opnieuw instellen",
-    "start": "Starten",
-    "stop": "Stoppen",
     "back": "Terug",
     "cancel": "Annuleren",
     "close": "Sluiten",
@@ -13,10 +9,18 @@
     "getStarted": "Aan de slag",
     "next": "Volgende",
     "ok": "OK",
+    "openSettings": "Instellingen openen",
+    "reset": "Opnieuw instellen",
     "retry": "Opnieuw proberen",
     "restart": "Herstart",
     "save": "Opslaan",
-    "skip": "Overslaan"
+    "skip": "Overslaan",
+    "start": "Starten",
+    "stop": "Stoppen"
+  },
+  "premium": {
+    "accessChecking": "Premium-toegang controleren…",
+    "accessUnknown": "Maak verbinding met internet om Premium-toegang te controleren."
   },
   "tabs": {
     "eject": "Uitwerpen",
@@ -26,8 +30,7 @@
   },
   "settings": {
     "title": "Instellingen",
-    "subtitle": "Uw valutaomrekener aanpassen",
-    "preferences": "Voorkeuren",
+    "subtitle": "Stem je luidsprekerapparatuur en geluidsmeter af",
     "support": "Ondersteuning",
     "contactSupport": "Contact opnemen",
     "contactSupportSubtitle": "We helpen u graag",
@@ -46,19 +49,37 @@
     "otaUpdateId": "Update: {{updateId}}",
     "upgradeBanner": {
       "title": "Upgrade naar Premium",
-      "subtitle": "Frequente koersupdates, geen advertenties en volledige grafiekinzage"
+      "subtitle": "Ontgrendel langere Turbo-reiniging, geavanceerde audiobediening en een ervaring zonder advertenties"
     }
   },
   "paywall": {
-    "title": "Premium ontgrendelen",
-    "subtitle": "Haal het maximale uit Currency Converter",
-    "ctaFreeTrial": "Gratis proberen",
+    "title": "Ontgrendel uw complete audiotoolkit",
+    "subtitle": "Maak uw luidspreker schoon, krijg toegang tot geavanceerde bedieningselementen en verwijder elke advertentie.",
+    "ctaFreeTrial": "Gratis uitproberen",
+    "trialDisclaimer": "Altijd opzegbaar. U betaalt nu niets",
+    "subscriptionDisclaimer": "Altijd opzegbaar.",
+    "lifetimeDisclaimer": "Betaal één keer. Geen terugkerende kosten.",
     "restore": "Aankopen herstellen",
     "terms": "Servicevoorwaarden",
     "privacy": "Privacybeleid",
-    "then": "dan",
-    "trial": "{{count}}-{{unit}} gratis proberen",
+    "then": "en vervolgens",
+    "trial": "{{count}}-{{unit}} gratis proefperiode",
     "save": "Bespaar {{percent}}%",
+    "availability": {
+      "loading": "Aankoopopties controleren…",
+      "temporary_error": {
+        "title": "Kan aankoopopties niet laden",
+        "subtitle": "Controleer je verbinding en probeer het opnieuw."
+      },
+      "configuration_error": {
+        "title": "Aankoopopties zijn niet beschikbaar",
+        "subtitle": "De store kon de producten van deze app niet laden. Probeer het zo opnieuw."
+      },
+      "purchase_not_allowed": {
+        "title": "Aankopen worden niet ondersteund op dit apparaat",
+        "subtitle": "Met dit apparaat of storeaccount kunnen geen in-appaankopen worden gedaan."
+      }
+    },
     "trialUnit": {
       "day": "dag",
       "week": "week",
@@ -72,37 +93,63 @@
       "year": "per jaar",
       "lifetime": "Eenmalige aankoop"
     },
-    "features": {
-      "liveRates": {
-        "title": "Altijd verse koersen",
-        "description": "Koersen worden bijna in realtime vernieuwd, zonder vertraging."
-      },
-      "unlimited": {
-        "title": "Alle 150+ valuta's, geen limiet",
-        "description": "Voeg elke valuta toe die u nodig hebt, zonder beperkingen."
-      },
-      "charts": {
-        "title": "Volledige koershistorie",
-        "description": "Interactieve grafieken om het beste conversiemoment te vinden."
-      },
-      "adFree": {
-        "title": "Nul onderbrekingen",
-        "description": "Geen advertenties. Gewoon clean, gefocust omrekenen."
+    "comparison": {
+      "features": "Functies",
+      "free": "Gratis",
+      "pro": "Pro",
+      "included": "Inbegrepen",
+      "excluded": "Niet inbegrepen",
+      "unlimited": "Onbeperkt",
+      "rows": {
+        "cleaningDuration": {
+          "title": "Reinigingsduur",
+          "free": "30 seconden",
+          "pro": "30/60/90 seconden"
+        },
+        "turbo": {
+          "title": "Turbo-modus"
+        },
+        "waveforms": {
+          "title": "Golfvorm",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "Stereotest",
+          "free": "Handmatig",
+          "pro": "Automatisch"
+        },
+        "soundInsights": {
+          "title": "Geluidsniveauanalyse",
+          "free": "Basis",
+          "pro": "Geavanceerd"
+        },
+        "activityHistory": {
+          "title": "Activiteitsgeschiedenis"
+        },
+        "adExperience": {
+          "title": "Advertenties",
+          "free": "Advertenties",
+          "pro": "Zonder advertenties"
+        }
       }
     },
+    "context": {
+      "dbSubtitle": "Ontgrendel de volledige analyse voor deze sessie en bekijk opgeslagen geluidsrapporten opnieuw."
+    },
     "feedback": {
-      "subscribeSuccess": "Welkom! Uw Premium-toegang is actief.",
-      "subscribeError": "Er ging iets fout. Probeer het opnieuw.",
-      "restoreSuccess": "Abonnement succesvol hersteld!",
-      "restoreNotFound": "Geen actief abonnement gevonden.",
-      "restoreError": "Aankopen konden niet worden hersteld. Probeer het opnieuw."
+      "subscribeSuccess": "Welkom! Uw premium toegang is actief.",
+      "subscribeError": "Er is iets misgegaan. Probeer het opnieuw.",
+      "restoreSuccess": "Premiumtoegang succesvol hersteld!",
+      "restoreNotFound": "Geen actieve Premium-aankoop gevonden.",
+      "restoreError": "Kon aankopen niet herstellen. Probeer het opnieuw."
     },
     "packageTitle": {
       "day": "Dagelijks",
       "week": "Wekelijks",
       "month": "Maandelijks",
       "year": "Jaarlijks",
-      "lifetime": "Levenslang"
+      "lifetime": "Levensduur"
     }
   },
   "otaUpdate": {
@@ -129,9 +176,5 @@
       "title": "Privé en op je apparaat",
       "description": "Audioverwerking blijft op je telefoon, met duidelijke veiligheids- en microfoonrichtlijnen."
     }
-  },
-  "premium": {
-    "accessChecking": "Premium-toegang controleren…",
-    "accessUnknown": "Maak verbinding met internet om Premium-toegang te controleren."
   }
 }

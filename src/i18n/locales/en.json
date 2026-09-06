@@ -30,8 +30,7 @@
   },
   "settings": {
     "title": "Settings",
-    "subtitle": "Customize your currency converter",
-    "preferences": "Preferences",
+    "subtitle": "Tune your speaker tools and sound meter",
     "support": "Support",
     "contactSupport": "Contact Support",
     "contactSupportSubtitle": "We're here to help",
@@ -50,19 +49,37 @@
     "otaUpdateId": "Update: {{updateId}}",
     "upgradeBanner": {
       "title": "Upgrade to Premium",
-      "subtitle": "Frequent rate updates, no ads & full chart access"
+      "subtitle": "Unlock longer Turbo cleaning, advanced audio controls, and an ad-free experience"
     }
   },
   "paywall": {
-    "title": "Unlock Premium",
-    "subtitle": "Get the most out of Currency Converter",
+    "title": "Unlock Your Complete Audio Toolkit",
+    "subtitle": "Clean your speaker, access advanced controls, and remove every ad.",
     "ctaFreeTrial": "Try for Free",
+    "trialDisclaimer": "Cancel anytime. No payment due now",
+    "subscriptionDisclaimer": "Cancel anytime.",
+    "lifetimeDisclaimer": "Pay once. No recurring charges.",
     "restore": "Restore Purchases",
     "terms": "Terms of Service",
     "privacy": "Privacy Policy",
     "then": "then",
     "trial": "{{count}}-{{unit}} free trial",
     "save": "Save {{percent}}%",
+    "availability": {
+      "loading": "Checking purchase options…",
+      "temporary_error": {
+        "title": "Couldn't load purchase options",
+        "subtitle": "Check your connection and try again."
+      },
+      "configuration_error": {
+        "title": "Purchase options are unavailable",
+        "subtitle": "The store couldn't load this app's products. Please try again shortly."
+      },
+      "purchase_not_allowed": {
+        "title": "Purchases aren't supported on this device",
+        "subtitle": "This device or store account can't make in-app purchases."
+      }
+    },
     "trialUnit": {
       "day": "day",
       "week": "week",
@@ -76,23 +93,49 @@
       "year": "per year",
       "lifetime": "One-time purchase"
     },
-    "features": {
-      "liveRates": {
-        "title": "Always-Fresh Rates",
-        "description": "Rates refresh in near real-time, not delayed."
-      },
-      "unlimited": {
-        "title": "All 150+ Currencies, No Cap",
-        "description": "Add every currency you need, no limits."
-      },
-      "charts": {
-        "title": "Full Rate History",
-        "description": "Interactive charts to find the best time to convert."
-      },
-      "adFree": {
-        "title": "Zero Interruptions",
-        "description": "No ads. Just clean, focused converting."
+    "comparison": {
+      "features": "Features",
+      "free": "Free",
+      "pro": "Pro",
+      "included": "Included",
+      "excluded": "Not included",
+      "unlimited": "Unlimited",
+      "rows": {
+        "cleaningDuration": {
+          "title": "Cleaning duration",
+          "free": "30 sec",
+          "pro": "30/60/90 sec"
+        },
+        "turbo": {
+          "title": "Turbo Mode"
+        },
+        "waveforms": {
+          "title": "Tone waveforms",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "Stereo testing",
+          "free": "Manual",
+          "pro": "Auto"
+        },
+        "soundInsights": {
+          "title": "Sound insights",
+          "free": "Basic",
+          "pro": "Advanced"
+        },
+        "activityHistory": {
+          "title": "Activity history"
+        },
+        "adExperience": {
+          "title": "Ad experience",
+          "free": "Ads",
+          "pro": "Ad-free"
+        }
       }
+    },
+    "context": {
+      "dbSubtitle": "Unlock the full analysis for this session and revisit saved sound reports."
     },
     "feedback": {
       "subscribeSuccess": "Welcome! Your premium access is active.",

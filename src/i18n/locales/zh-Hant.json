@@ -1,9 +1,5 @@
 {
   "common": {
-    "openSettings": "開啟設定",
-    "reset": "重設",
-    "start": "開始",
-    "stop": "停止",
     "back": "返回",
     "cancel": "取消",
     "close": "關閉",
@@ -13,10 +9,18 @@
     "getStarted": "開始使用",
     "next": "下一步",
     "ok": "好的",
+    "openSettings": "開啟設定",
+    "reset": "重設",
     "retry": "重試",
     "restart": "重新啟動",
     "save": "儲存",
-    "skip": "跳過"
+    "skip": "跳過",
+    "start": "開始",
+    "stop": "停止"
+  },
+  "premium": {
+    "accessChecking": "正在檢查 Premium 存取權…",
+    "accessUnknown": "請連線至網際網路以檢查 Premium 存取權。"
   },
   "tabs": {
     "eject": "排水",
@@ -26,8 +30,7 @@
   },
   "settings": {
     "title": "設定",
-    "subtitle": "自訂您的貨幣換算器",
-    "preferences": "偏好設定",
+    "subtitle": "調整揚聲器工具和聲音計",
     "support": "支援",
     "contactSupport": "聯絡支援",
     "contactSupportSubtitle": "我們隨時為您服務",
@@ -45,64 +48,108 @@
     "version": "版本 {{version}}",
     "otaUpdateId": "更新: {{updateId}}",
     "upgradeBanner": {
-      "title": "升級至進階版",
-      "subtitle": "更頻繁的匯率更新、無廣告及完整圖表"
+      "title": "升級到高級版",
+      "subtitle": "解鎖更長的 Turbo 清潔、進階音訊控制和無廣告體驗"
     }
   },
   "paywall": {
-    "title": "解鎖進階版",
-    "subtitle": "充分利用貨幣換算器",
+    "title": "解鎖完整的音頻工具包",
+    "subtitle": "清潔揚聲器，訪問高級控件，並刪除每個廣告。",
     "ctaFreeTrial": "免費試用",
+    "trialDisclaimer": "可隨時取消。現在無需付款",
+    "subscriptionDisclaimer": "可隨時取消。",
+    "lifetimeDisclaimer": "一次付費。無定期扣款。",
     "restore": "恢復購買",
     "terms": "服務條款",
-    "privacy": "隱私政策",
-    "then": "之後",
-    "trial": "{{count}}{{unit}}免費試用",
-    "save": "節省 {{percent}}%",
+    "privacy": "隱私條款",
+    "then": "然後",
+    "trial": "{{count}} - {{unit}}免費試用",
+    "save": "節省{{percent}} %",
+    "availability": {
+      "loading": "正在檢查購買選項…",
+      "temporary_error": {
+        "title": "無法載入購買選項",
+        "subtitle": "請檢查網路連線，然後再試一次。"
+      },
+      "configuration_error": {
+        "title": "購買選項無法使用",
+        "subtitle": "商店無法載入此 App 的產品。請稍後再試。"
+      },
+      "purchase_not_allowed": {
+        "title": "此裝置不支援購買",
+        "subtitle": "此裝置或商店帳號無法進行 App 內購買。"
+      }
+    },
     "trialUnit": {
       "day": "天",
-      "week": "週",
-      "month": "個月",
+      "week": "星期",
+      "month": "月",
       "year": "年"
     },
     "period": {
       "day": "每天",
-      "week": "每週",
+      "week": "每周",
       "month": "每月",
       "year": "每年",
       "lifetime": "一次性購買"
     },
-    "features": {
-      "liveRates": {
-        "title": "始終最新匯率",
-        "description": "匯率近即時更新，無延遲。"
-      },
-      "unlimited": {
-        "title": "150+種貨幣，無上限",
-        "description": "新增所需的所有貨幣，沒有限制。"
-      },
-      "charts": {
-        "title": "完整匯率歷史",
-        "description": "互動式圖表幫您找到最佳換匯時機。"
-      },
-      "adFree": {
-        "title": "零干擾",
-        "description": "無廣告。純淨、專注的換算體驗。"
+    "comparison": {
+      "features": "功能",
+      "free": "免費",
+      "pro": "Pro",
+      "included": "包含",
+      "excluded": "不包含",
+      "unlimited": "無限制",
+      "rows": {
+        "cleaningDuration": {
+          "title": "清潔持續時間",
+          "free": "30 秒",
+          "pro": "30/60/90 秒"
+        },
+        "turbo": {
+          "title": "渦輪模式"
+        },
+        "waveforms": {
+          "title": "波形",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "立體聲測試",
+          "free": "手動",
+          "pro": "自動"
+        },
+        "soundInsights": {
+          "title": "聲音級別分析",
+          "free": "基本",
+          "pro": "進階"
+        },
+        "activityHistory": {
+          "title": "活動歷史"
+        },
+        "adExperience": {
+          "title": "有廣告",
+          "free": "有廣告",
+          "pro": "無廣告"
+        }
       }
     },
+    "context": {
+      "dbSubtitle": "解鎖本次測量的完整分析，並重新查看已儲存的聲音報告。"
+    },
     "feedback": {
-      "subscribeSuccess": "歡迎！您的進階版使用權限已啟用。",
-      "subscribeError": "發生錯誤，請重試。",
-      "restoreSuccess": "訂閱恢復成功！",
-      "restoreNotFound": "未找到有效訂閱。",
-      "restoreError": "無法恢復購買，請重試。"
+      "subscribeSuccess": "歡迎！您的高級訪問權限已激活。",
+      "subscribeError": "出錯了。請重試。",
+      "restoreSuccess": "高級訪問權限已成功恢復！",
+      "restoreNotFound": "未找到有效的高級購買。",
+      "restoreError": "無法恢復購買。請重試。"
     },
     "packageTitle": {
-      "day": "每日",
-      "week": "每週",
+      "day": "每天",
+      "week": "每周",
       "month": "每月",
       "year": "每年",
-      "lifetime": "永久"
+      "lifetime": "終身"
     }
   },
   "otaUpdate": {
@@ -129,9 +176,5 @@
       "title": "私密且僅在裝置上處理",
       "description": "音訊處理會留在您的手機上，並提供清楚的安全與麥克風使用指引。"
     }
-  },
-  "premium": {
-    "accessChecking": "正在檢查 Premium 存取權…",
-    "accessUnknown": "請連線至網際網路以檢查 Premium 存取權。"
   }
 }

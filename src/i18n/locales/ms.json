@@ -1,9 +1,5 @@
 {
   "common": {
-    "openSettings": "Buka Tetapan",
-    "reset": "Set Semula",
-    "start": "Mula",
-    "stop": "Berhenti",
     "back": "Kembali",
     "cancel": "Batal",
     "close": "Tutup",
@@ -13,10 +9,18 @@
     "getStarted": "Mulakan",
     "next": "Seterusnya",
     "ok": "OK",
+    "openSettings": "Buka Tetapan",
+    "reset": "Set Semula",
     "retry": "Cuba lagi",
     "restart": "Mulakan Semula",
     "save": "Simpan",
-    "skip": "Langkau"
+    "skip": "Langkau",
+    "start": "Mula",
+    "stop": "Berhenti"
+  },
+  "premium": {
+    "accessChecking": "Menyemak akses Premium…",
+    "accessUnknown": "Sambung ke internet untuk menyemak akses Premium."
   },
   "tabs": {
     "eject": "Keluarkan",
@@ -26,8 +30,7 @@
   },
   "settings": {
     "title": "Tetapan",
-    "subtitle": "Sesuaikan penukar mata wang anda",
-    "preferences": "Keutamaan",
+    "subtitle": "Tala alat pembesar suara dan meter bunyi anda",
     "support": "Sokongan",
     "contactSupport": "Hubungi Sokongan",
     "contactSupportSubtitle": "Kami sedia membantu",
@@ -45,20 +48,38 @@
     "version": "Versi {{version}}",
     "otaUpdateId": "Kemas kini: {{updateId}}",
     "upgradeBanner": {
-      "title": "Naik Taraf ke Premium",
-      "subtitle": "Kemas kini kadar yang kerap, tiada iklan & akses carta penuh"
+      "title": "Naik taraf kepada Premium",
+      "subtitle": "Buka kunci pembersihan Turbo yang lebih lama, kawalan audio lanjutan dan pengalaman tanpa iklan"
     }
   },
   "paywall": {
-    "title": "Buka Kunci Premium",
-    "subtitle": "Dapatkan manfaat maksimum daripada Currency Converter",
-    "ctaFreeTrial": "Cuba Percuma",
+    "title": "Buka Kunci Kit Alat Audio Lengkap Anda",
+    "subtitle": "Bersihkan pembesar suara anda, akses kawalan lanjutan dan alih keluar setiap iklan.",
+    "ctaFreeTrial": "Cuba Secara Percuma",
+    "trialDisclaimer": "Batalkan pada bila-bila masa. Tiada bayaran dikenakan sekarang",
+    "subscriptionDisclaimer": "Batalkan pada bila-bila masa.",
+    "lifetimeDisclaimer": "Bayar sekali sahaja. Tiada caj berulang.",
     "restore": "Pulihkan Pembelian",
     "terms": "Syarat Perkhidmatan",
     "privacy": "Dasar Privasi",
     "then": "kemudian",
-    "trial": "Percubaan percuma {{count}}-{{unit}}",
+    "trial": "{{count}}-{{unit}} percubaan percuma",
     "save": "Jimat {{percent}}%",
+    "availability": {
+      "loading": "Menyemak pilihan pembelian…",
+      "temporary_error": {
+        "title": "Pilihan pembelian tidak dapat dimuatkan",
+        "subtitle": "Semak sambungan anda dan cuba lagi."
+      },
+      "configuration_error": {
+        "title": "Pilihan pembelian tidak tersedia",
+        "subtitle": "Gedung tidak dapat memuatkan produk aplikasi ini. Cuba lagi sebentar lagi."
+      },
+      "purchase_not_allowed": {
+        "title": "Pembelian tidak disokong pada peranti ini",
+        "subtitle": "Peranti atau akaun gedung ini tidak boleh membuat pembelian dalam aplikasi."
+      }
+    },
     "trialUnit": {
       "day": "hari",
       "week": "minggu",
@@ -66,43 +87,69 @@
       "year": "tahun"
     },
     "period": {
-      "day": "sehari",
+      "day": "setiap hari",
       "week": "seminggu",
       "month": "sebulan",
       "year": "setahun",
-      "lifetime": "Pembelian sekali sahaja"
+      "lifetime": "Pembelian sekali"
     },
-    "features": {
-      "liveRates": {
-        "title": "Kadar Sentiasa Segar",
-        "description": "Kadar dimuat semula hampir masa nyata, tanpa kelewatan."
-      },
-      "unlimited": {
-        "title": "Semua 150+ Mata Wang, Tanpa Had",
-        "description": "Tambah sebarang mata wang yang anda perlukan, tanpa had."
-      },
-      "charts": {
-        "title": "Sejarah Kadar Penuh",
-        "description": "Carta interaktif untuk mencari masa terbaik untuk menukar."
-      },
-      "adFree": {
-        "title": "Sifar Gangguan",
-        "description": "Tiada iklan. Sekadar penukaran yang bersih dan fokus."
+    "comparison": {
+      "features": "Ciri",
+      "free": "Percuma",
+      "pro": "Pro",
+      "included": "Disertakan",
+      "excluded": "Tidak disertakan",
+      "unlimited": "Tanpa had",
+      "rows": {
+        "cleaningDuration": {
+          "title": "Tempoh pembersihan",
+          "free": "30 saat",
+          "pro": "30/60/90 saat"
+        },
+        "turbo": {
+          "title": "Mod Turbo"
+        },
+        "waveforms": {
+          "title": "Bentuk gelombang",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "Ujian Stereo",
+          "free": "Manual",
+          "pro": "Automatik"
+        },
+        "soundInsights": {
+          "title": "Analisis tahap bunyi",
+          "free": "Asas",
+          "pro": "Lanjutan"
+        },
+        "activityHistory": {
+          "title": "Sejarah Aktiviti"
+        },
+        "adExperience": {
+          "title": "Iklan",
+          "free": "Iklan",
+          "pro": "Tanpa iklan"
+        }
       }
     },
+    "context": {
+      "dbSubtitle": "Buka kunci analisis penuh untuk sesi ini dan lawati semula laporan bunyi yang disimpan."
+    },
     "feedback": {
-      "subscribeSuccess": "Selamat datang! Akses Premium anda aktif.",
-      "subscribeError": "Ada yang tidak kena. Sila cuba lagi.",
-      "restoreSuccess": "Langganan berjaya dipulihkan!",
-      "restoreNotFound": "Tiada langganan aktif ditemui.",
+      "subscribeSuccess": "Selamat datang! Akses premium anda aktif.",
+      "subscribeError": "Kesilapan telah berlaku. Sila cuba lagi.",
+      "restoreSuccess": "Akses premium berjaya dipulihkan!",
+      "restoreNotFound": "Tiada pembelian Premium aktif ditemui.",
       "restoreError": "Tidak dapat memulihkan pembelian. Sila cuba lagi."
     },
     "packageTitle": {
-      "day": "Harian",
+      "day": "Setiap hari",
       "week": "Mingguan",
       "month": "Bulanan",
       "year": "Tahunan",
-      "lifetime": "Seumur Hidup"
+      "lifetime": "Seumur hidup"
     }
   },
   "otaUpdate": {
@@ -129,9 +176,5 @@
       "title": "Peribadi dan pada peranti anda",
       "description": "Pemprosesan audio kekal pada telefon anda, dengan panduan keselamatan dan mikrofon yang jelas."
     }
-  },
-  "premium": {
-    "accessChecking": "Menyemak akses Premium…",
-    "accessUnknown": "Sambung ke internet untuk menyemak akses Premium."
   }
 }

@@ -1,9 +1,5 @@
 {
   "common": {
-    "openSettings": "Apri impostazioni",
-    "reset": "Reimposta",
-    "start": "Avvia",
-    "stop": "Ferma",
     "back": "Indietro",
     "cancel": "Annulla",
     "close": "Chiudi",
@@ -13,10 +9,18 @@
     "getStarted": "Inizia",
     "next": "Avanti",
     "ok": "OK",
+    "openSettings": "Apri impostazioni",
+    "reset": "Reimposta",
     "retry": "Riprova",
     "restart": "Riavvia",
     "save": "Salva",
-    "skip": "Salta"
+    "skip": "Salta",
+    "start": "Avvia",
+    "stop": "Ferma"
+  },
+  "premium": {
+    "accessChecking": "Verifica dell’accesso Premium…",
+    "accessUnknown": "Connettiti a Internet per verificare l’accesso Premium."
   },
   "tabs": {
     "eject": "Espelli",
@@ -26,8 +30,7 @@
   },
   "settings": {
     "title": "Impostazioni",
-    "subtitle": "Personalizza il tuo convertitore di valute",
-    "preferences": "Preferenze",
+    "subtitle": "Ottimizza gli strumenti dell'altoparlante e il misuratore del suono",
     "support": "Supporto",
     "contactSupport": "Contatta il supporto",
     "contactSupportSubtitle": "Siamo qui per aiutarti",
@@ -46,19 +49,37 @@
     "otaUpdateId": "Aggiornamento: {{updateId}}",
     "upgradeBanner": {
       "title": "Passa a Premium",
-      "subtitle": "Aggiornamenti frequenti dei tassi, niente pubblicità e accesso completo ai grafici"
+      "subtitle": "Sblocca cicli di pulizia Turbo più lunghi, controlli audio avanzati e un’esperienza senza pubblicità"
     }
   },
   "paywall": {
-    "title": "Sblocca Premium",
-    "subtitle": "Sfrutta al massimo il Convertitore di valute",
-    "ctaFreeTrial": "Prova gratis",
+    "title": "Sblocca il tuo kit di strumenti audio completo",
+    "subtitle": "Pulisci l'altoparlante, accedi ai controlli avanzati e rimuovi tutti gli annunci.",
+    "ctaFreeTrial": "Prova gratuita",
+    "trialDisclaimer": "Annulla quando vuoi. Nessun addebito ora",
+    "subscriptionDisclaimer": "Annulla quando vuoi.",
+    "lifetimeDisclaimer": "Paga una sola volta. Nessun addebito ricorrente.",
     "restore": "Ripristina acquisti",
     "terms": "Termini di servizio",
     "privacy": "Informativa sulla privacy",
     "then": "poi",
-    "trial": "{{count}} {{unit}} di prova gratuita",
-    "save": "Risparmia il {{percent}} %",
+    "trial": "{{count}}-{{unit}} prova gratuita",
+    "save": "Risparmia {{percent}}%",
+    "availability": {
+      "loading": "Verifica delle opzioni di acquisto…",
+      "temporary_error": {
+        "title": "Impossibile caricare le opzioni di acquisto",
+        "subtitle": "Controlla la connessione e riprova."
+      },
+      "configuration_error": {
+        "title": "Le opzioni di acquisto non sono disponibili",
+        "subtitle": "Lo store non ha potuto caricare i prodotti dell’app. Riprova tra poco."
+      },
+      "purchase_not_allowed": {
+        "title": "Gli acquisti non sono supportati su questo dispositivo",
+        "subtitle": "Questo dispositivo o account dello store non può effettuare acquisti in-app."
+      }
+    },
     "trialUnit": {
       "day": "giorno",
       "week": "settimana",
@@ -67,38 +88,64 @@
     },
     "period": {
       "day": "al giorno",
-      "week": "alla settimana",
+      "week": "a settimana",
       "month": "al mese",
       "year": "all'anno",
       "lifetime": "Acquisto una tantum"
     },
-    "features": {
-      "liveRates": {
-        "title": "Tassi sempre aggiornati",
-        "description": "I tassi si aggiornano in tempo quasi reale, senza ritardi."
-      },
-      "unlimited": {
-        "title": "Oltre 150 valute, senza limiti",
-        "description": "Aggiungi tutte le valute di cui hai bisogno, senza restrizioni."
-      },
-      "charts": {
-        "title": "Storico completo dei tassi",
-        "description": "Grafici interattivi per trovare il momento migliore per convertire."
-      },
-      "adFree": {
-        "title": "Zero interruzioni",
-        "description": "Nessuna pubblicità. Solo conversione pulita e mirata."
+    "comparison": {
+      "features": "Funzioni",
+      "free": "Gratis",
+      "pro": "Pro",
+      "included": "Incluso",
+      "excluded": "Non incluso",
+      "unlimited": "Illimitato",
+      "rows": {
+        "cleaningDuration": {
+          "title": "Durata della pulizia",
+          "free": "30 secondi",
+          "pro": "30/60/90 secondi"
+        },
+        "turbo": {
+          "title": "Modalità Turbo"
+        },
+        "waveforms": {
+          "title": "Forma d'onda",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "Test stereo",
+          "free": "Manuale",
+          "pro": "Automatico"
+        },
+        "soundInsights": {
+          "title": "Analisi del livello sonoro",
+          "free": "Base",
+          "pro": "Avanzato"
+        },
+        "activityHistory": {
+          "title": "Cronologia delle attività"
+        },
+        "adExperience": {
+          "title": "Pubblicità",
+          "free": "Pubblicità",
+          "pro": "Senza pubblicità"
+        }
       }
     },
+    "context": {
+      "dbSubtitle": "Sblocca l'analisi completa per questa sessione e rivisita i report audio salvati."
+    },
     "feedback": {
-      "subscribeSuccess": "Ti diamo il benvenuto! Il tuo accesso Premium è attivo.",
-      "subscribeError": "Qualcosa è andato storto. Riprova.",
-      "restoreSuccess": "Abbonamento ripristinato con successo!",
-      "restoreNotFound": "Nessun abbonamento attivo trovato.",
-      "restoreError": "Impossibile ripristinare gli acquisti. Riprova."
+      "subscribeSuccess": "Benvenuto! Il tuo accesso premium è attivo.",
+      "subscribeError": "Qualcosa è andato storto. Per favore riprova.",
+      "restoreSuccess": "Accesso Premium ripristinato con successo!",
+      "restoreNotFound": "Nessun acquisto Premium attivo trovato.",
+      "restoreError": "Impossibile ripristinare gli acquisti. Per favore riprova."
     },
     "packageTitle": {
-      "day": "Giornaliero",
+      "day": "Ogni giorno",
       "week": "Settimanale",
       "month": "Mensile",
       "year": "Annuale",
@@ -129,9 +176,5 @@
       "title": "Privato e sul tuo dispositivo",
       "description": "L’elaborazione audio rimane sul telefono, con indicazioni chiare su sicurezza e microfono."
     }
-  },
-  "premium": {
-    "accessChecking": "Verifica dell’accesso Premium…",
-    "accessUnknown": "Connettiti a Internet per verificare l’accesso Premium."
   }
 }

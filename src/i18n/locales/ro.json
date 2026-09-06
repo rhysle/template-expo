@@ -1,9 +1,5 @@
 {
   "common": {
-    "openSettings": "Deschide setările",
-    "reset": "Resetează",
-    "start": "Pornește",
-    "stop": "Oprește",
     "back": "Înapoi",
     "cancel": "Anulează",
     "close": "Închide",
@@ -13,10 +9,18 @@
     "getStarted": "Începe",
     "next": "Înainte",
     "ok": "OK",
+    "openSettings": "Deschide setările",
+    "reset": "Resetează",
     "retry": "Încearcă din nou",
     "restart": "Repornește",
     "save": "Salvează",
-    "skip": "Omite"
+    "skip": "Omite",
+    "start": "Pornește",
+    "stop": "Oprește"
+  },
+  "premium": {
+    "accessChecking": "Se verifică accesul Premium…",
+    "accessUnknown": "Conectează-te la internet pentru a verifica accesul Premium."
   },
   "tabs": {
     "eject": "Elimină",
@@ -26,8 +30,7 @@
   },
   "settings": {
     "title": "Setări",
-    "subtitle": "Personalizează convertorul tău de valute",
-    "preferences": "Preferințe",
+    "subtitle": "Reglați instrumentele difuzoarelor și sunetmetrul",
     "support": "Suport",
     "contactSupport": "Contactează suportul",
     "contactSupportSubtitle": "Suntem aici să ajutăm",
@@ -45,20 +48,38 @@
     "version": "Versiunea {{version}}",
     "otaUpdateId": "Actualizare: {{updateId}}",
     "upgradeBanner": {
-      "title": "Fă upgrade la Premium",
-      "subtitle": "Actualizări frecvente ale cursurilor, fără reclame și acces complet la grafice"
+      "title": "Faceți upgrade la Premium",
+      "subtitle": "Deblochează curățarea Turbo mai lungă, comenzile audio avansate și utilizarea fără reclame"
     }
   },
   "paywall": {
-    "title": "Deblochează Premium",
-    "subtitle": "Profită la maximum de Currency Converter",
-    "ctaFreeTrial": "Încearcă gratuit",
-    "restore": "Restaurează achizițiile",
-    "terms": "Termeni de serviciu",
-    "privacy": "Politică de confidențialitate",
+    "title": "Deblocați setul dvs. complet de instrumente audio",
+    "subtitle": "Curățați-vă difuzorul, accesați comenzi avansate și eliminați fiecare anunț.",
+    "ctaFreeTrial": "Încercați gratuit",
+    "trialDisclaimer": "Anulează oricând. Nu plătești nimic acum",
+    "subscriptionDisclaimer": "Anulează oricând.",
+    "lifetimeDisclaimer": "Plătești o singură dată. Fără taxe recurente.",
+    "restore": "Restabiliți achizițiile",
+    "terms": "Termeni și condiții",
+    "privacy": "Politica de confidențialitate",
     "then": "apoi",
-    "trial": "Perioadă de probă gratuită {{count}}-{{unit}}",
-    "save": "Economisește {{percent}} %",
+    "trial": "{{count}}-{{unit}} încercare gratuită",
+    "save": "Economisiți {{percent}}%",
+    "availability": {
+      "loading": "Se verifică opțiunile de achiziție…",
+      "temporary_error": {
+        "title": "Opțiunile de achiziție nu au putut fi încărcate",
+        "subtitle": "Verificați conexiunea și încercați din nou."
+      },
+      "configuration_error": {
+        "title": "Opțiunile de achiziție nu sunt disponibile",
+        "subtitle": "Magazinul nu a putut încărca produsele acestei aplicații. Încercați din nou în scurt timp."
+      },
+      "purchase_not_allowed": {
+        "title": "Achizițiile nu sunt acceptate pe acest dispozitiv",
+        "subtitle": "Acest dispozitiv sau cont de magazin nu poate efectua achiziții în aplicație."
+      }
+    },
     "trialUnit": {
       "day": "zi",
       "week": "săptămână",
@@ -72,37 +93,63 @@
       "year": "pe an",
       "lifetime": "Achiziție unică"
     },
-    "features": {
-      "liveRates": {
-        "title": "Cursuri întotdeauna proaspete",
-        "description": "Cursurile se actualizează aproape în timp real, fără întârziere."
-      },
-      "unlimited": {
-        "title": "Toate cele 150+ valute, fără limită",
-        "description": "Adaugă orice valută ai nevoie, fără restricții."
-      },
-      "charts": {
-        "title": "Istoricul complet al cursurilor",
-        "description": "Grafice interactive pentru a găsi cel mai bun moment de conversie."
-      },
-      "adFree": {
-        "title": "Zero întreruperi",
-        "description": "Fără reclame. Doar conversie curată și concentrată."
+    "comparison": {
+      "features": "Funcții",
+      "free": "Gratuit",
+      "pro": "Pro",
+      "included": "Inclus",
+      "excluded": "Nu este inclus",
+      "unlimited": "Nelimitat",
+      "rows": {
+        "cleaningDuration": {
+          "title": "Durata curățării",
+          "free": "30 secunde",
+          "pro": "30/60/90 secunde"
+        },
+        "turbo": {
+          "title": "Modul Turbo"
+        },
+        "waveforms": {
+          "title": "Formă de undă",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "Test stereo",
+          "free": "Manual",
+          "pro": "Automat"
+        },
+        "soundInsights": {
+          "title": "Analiza nivelului sonor",
+          "free": "De bază",
+          "pro": "Avansat"
+        },
+        "activityHistory": {
+          "title": "Istoricul activității"
+        },
+        "adExperience": {
+          "title": "Reclame",
+          "free": "Reclame",
+          "pro": "Fără reclame"
+        }
       }
     },
+    "context": {
+      "dbSubtitle": "Deblocați analiza completă pentru această sesiune și revedeți rapoartele audio salvate."
+    },
     "feedback": {
-      "subscribeSuccess": "Bun venit! Accesul tău Premium este activ.",
-      "subscribeError": "Ceva a mers greșit. Te rugăm să încerci din nou.",
-      "restoreSuccess": "Abonament restaurat cu succes!",
-      "restoreNotFound": "Nu s-a găsit niciun abonament activ.",
-      "restoreError": "Nu s-au putut restaura achizițiile. Te rugăm să încerci din nou."
+      "subscribeSuccess": "Bun venit! Accesul dvs. premium este activ.",
+      "subscribeError": "A apărut o eroare. Vă rugăm să încercați din nou.",
+      "restoreSuccess": "Accesul Premium a fost restabilit cu succes!",
+      "restoreNotFound": "Nu a fost găsită nicio achiziție Premium activă.",
+      "restoreError": "Nu s-au putut restabili achizițiile. Vă rugăm să încercați din nou."
     },
     "packageTitle": {
       "day": "Zilnic",
       "week": "Săptămânal",
       "month": "Lunar",
       "year": "Anual",
-      "lifetime": "Pe viață"
+      "lifetime": "Durată de viață"
     }
   },
   "otaUpdate": {
@@ -129,9 +176,5 @@
       "title": "Privat și pe dispozitivul tău",
       "description": "Procesarea audio rămâne pe telefonul tău, cu îndrumări clare despre siguranță și microfon."
     }
-  },
-  "premium": {
-    "accessChecking": "Se verifică accesul Premium…",
-    "accessUnknown": "Conectează-te la internet pentru a verifica accesul Premium."
   }
 }
