@@ -1,3 +1,4 @@
+import type { MenuAction } from '@expo/ui/community/menu'
 import type { ReactNode } from 'react'
 import type { StyleProp, ViewStyle } from 'react-native'
 
@@ -8,6 +9,8 @@ export interface NativeMenuAction {
   label: string
   disabled?: boolean
   destructive?: boolean
+  image?: MenuAction['image']
+  imageColor?: MenuAction['imageColor']
   selected?: boolean
   children?: readonly NativeMenuAction[]
 }

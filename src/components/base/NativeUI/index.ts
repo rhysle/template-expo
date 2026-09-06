@@ -1,6 +1,7 @@
 export * from './NativeAlertDialog/NativeAlertDialog'
 export * from './NativeAlertDialog/NativeAlertDialog.types'
 export * from './NativeBottomSheet'
+export * from './NativeBottomSheet.types'
 export * from './NativeMenu'
 export * from './NativeSegmentedControl'
 export * from './NativeSlider/NativeSlider'
