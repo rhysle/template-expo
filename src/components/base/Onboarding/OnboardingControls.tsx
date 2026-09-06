@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
 
+import { TABLET_CONTENT_MAX_WIDTH } from '@/constants/layout'
 import { createThemedStyles, useThemedStyles } from '@/theme'
 
 import { Button } from '../Button'
@@ -37,5 +38,6 @@ const createStyles = createThemedStyles((t) => ({
   },
   button: {
     width: '70%',
+    maxWidth: TABLET_CONTENT_MAX_WIDTH,
   },
 }))

@@ -10,6 +10,7 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { scheduleOnRN } from 'react-native-worklets'
 
+import { useIsRTL } from '@/services/rtl'
 import { createThemedStyles, useThemedStyles } from '@/theme'
 
 import { OnboardingControls } from './OnboardingControls'
@@ -32,6 +33,8 @@ export const OnboardingFlow = ({
   const styles = useThemedStyles(createStyles)
   const insets = useSafeAreaInsets()
   const { width: screenWidth } = useWindowDimensions()
+  const isRTL = useIsRTL()
+  const horizontalDirection = isRTL ? -1 : 1
 
   const currentIndex = useSharedValue(0)
   const scrollPosition = useSharedValue(0)
@@ -84,16 +87,20 @@ export const OnboardingFlow = ({
     .onUpdate((event) => {
       if (animationType !== 'slide') return
       const basePosition = activeIndexRef.value * screenWidth
-      const rawPosition = basePosition - event.translationX
+      const directionalTranslationX = event.translationX * horizontalDirection
+      const rawPosition = basePosition - directionalTranslationX
       scrollPosition.value = Math.min(Math.max(rawPosition, 0), (pageCount - 1) * screenWidth)
     })
     .onEnd((event) => {
       const swipeThreshold = screenWidth * SWIPE_THRESHOLD_RATIO
+      const directionalTranslationX = event.translationX * horizontalDirection
+      const directionalVelocityX = event.velocityX * horizontalDirection
       const shouldGoNext =
-        (event.translationX < -swipeThreshold || event.velocityX < -500) &&
+        (directionalTranslationX < -swipeThreshold || directionalVelocityX < -500) &&
         activeIndexRef.value < pageCount - 1
       const shouldGoPrev =
-        (event.translationX > swipeThreshold || event.velocityX > 500) && activeIndexRef.value > 0
+        (directionalTranslationX > swipeThreshold || directionalVelocityX > 500) &&
+        activeIndexRef.value > 0
 
       if (shouldGoNext) {
         goToPage(activeIndexRef.value + 1)
@@ -115,6 +122,7 @@ export const OnboardingFlow = ({
               screenWidth={screenWidth}
               animationType={animationType}
               currentIndex={currentIndex}
+              horizontalDirection={horizontalDirection}
               scrollPosition={scrollPosition}>
               {page.content}
             </OnboardingPage>
