@@ -22,7 +22,10 @@
     },
     "android": {
       "allowBackup": false,
-      "icon": "./assets/icons/android-icon.png",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icons/android-icon-adaptive.png",
+        "backgroundColor": "#F7FBFF"
+      },
       "predictiveBackGestureEnabled": false,
       "package": "com.rhysle.expo",
       "googleServicesFile": "./google-services.json",
