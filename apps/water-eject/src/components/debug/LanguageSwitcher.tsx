@@ -1,8 +1,8 @@
+import { Card, ChoiceChip, Text } from '@rhysle/core/components/base'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, View } from 'react-native'
 
-import { Card, ChoiceChip, Text } from '@/components/base'
 import { getDeviceLanguage, supportedLanguageCodes } from '@/i18n'
 import { getDebugLanguageOverride, setDebugLanguageOverride } from '@/storage'
 import { createThemedStyles, useThemedStyles } from '@/theme'

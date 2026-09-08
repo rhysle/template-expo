@@ -1,1 +1,1 @@
-export * from '@rhysle/mobile-foundation/services/otaUpdate/index'
+export * from '@rhysle/core/services/otaUpdate/index'

@@ -1,1 +1,1 @@
-export * from '@rhysle/mobile-foundation/services/userIdentity/userIdentityService'
+export * from '@rhysle/core/services/userIdentity/userIdentityService'

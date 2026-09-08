@@ -1,11 +1,11 @@
-import { useSnackbarState } from '@rhysle/mobile-foundation/stores/features/snackbar'
-import { useThemeState } from '@rhysle/mobile-foundation/stores/features/theme'
+import { Button, Card, Pressable, Text } from '@rhysle/core/components/base'
+import { useSnackbarState } from '@rhysle/core/stores/features/snackbar'
+import { useThemeState } from '@rhysle/core/stores/features/theme'
 import * as Clipboard from 'expo-clipboard'
 import { BugIcon, CaretDownIcon, CaretUpIcon } from 'phosphor-react-native'
 import { useRef, useState } from 'react'
 import { Platform, type TextStyle, View } from 'react-native'
 
-import { Button, Card, Pressable, Text } from '@/components/base'
 import {
   type ColorScheme,
   createThemedStyles,

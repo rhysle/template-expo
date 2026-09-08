@@ -1,7 +1,7 @@
+import { TabScreen, useTabBarContentInset } from '@rhysle/core/components/base'
 import type { PropsWithChildren } from 'react'
 import { type StyleProp, View, type ViewStyle } from 'react-native'
 
-import { TabScreen, useTabBarContentInset } from '@/components/base'
 import { createThemedStyles, useTheme, useThemedStyles } from '@/theme'
 
 interface AudioToolScreenProps extends PropsWithChildren {

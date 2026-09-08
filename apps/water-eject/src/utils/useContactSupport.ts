@@ -1,1 +1,1 @@
-export * from '@rhysle/mobile-foundation/utils/useContactSupport'
+export * from '@rhysle/core/utils/useContactSupport'

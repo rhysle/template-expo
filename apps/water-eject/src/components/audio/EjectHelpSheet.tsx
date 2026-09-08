@@ -1,8 +1,8 @@
+import { Button, InlineNotice, NativeBottomSheet, Text } from '@rhysle/core/components/base'
 import { HeadphonesIcon, SpeakerHighIcon } from 'phosphor-react-native'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
 
-import { Button, InlineNotice, NativeBottomSheet, Text } from '@/components/base'
 import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
 
 interface EjectHelpSheetProps {

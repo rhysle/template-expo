@@ -1,7 +1,16 @@
-import { useAdsState } from '@rhysle/mobile-foundation/stores/features/ads'
-import { useSnackbarState } from '@rhysle/mobile-foundation/stores/features/snackbar'
-import { useSubscriptionState } from '@rhysle/mobile-foundation/stores/features/subscription'
-import { useUserIdentityState } from '@rhysle/mobile-foundation/stores/features/userIdentity'
+import {
+  ActionListItem,
+  Card,
+  NativeAlertDialog,
+  Pressable,
+  PromoBanner,
+  Text,
+  ToggleListItem,
+} from '@rhysle/core/components/base'
+import { useAdsState } from '@rhysle/core/stores/features/ads'
+import { useSnackbarState } from '@rhysle/core/stores/features/snackbar'
+import { useSubscriptionState } from '@rhysle/core/stores/features/subscription'
+import { useUserIdentityState } from '@rhysle/core/stores/features/userIdentity'
 import * as Clipboard from 'expo-clipboard'
 import Constants from 'expo-constants'
 import { useRouter } from 'expo-router'
@@ -25,15 +34,6 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, View } from 'react-native'
 
-import {
-  ActionListItem,
-  Card,
-  NativeAlertDialog,
-  Pressable,
-  PromoBanner,
-  Text,
-  ToggleListItem,
-} from '@/components/base'
 import { AppConfig } from '@/configs'
 import { clearActivityHistory, useActivityHistory } from '@/services/activity'
 import { AdsConsent, isAnyAdFormatEnabled } from '@/services/ads'

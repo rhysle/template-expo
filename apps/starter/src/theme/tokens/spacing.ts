@@ -1,1 +1,1 @@
-export * from '@rhysle/mobile-foundation/theme/tokens/spacing'
+export * from '@rhysle/core/theme/tokens/spacing'

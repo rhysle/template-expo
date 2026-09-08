@@ -1,6 +1,6 @@
-import { useSnackbarState } from '@rhysle/mobile-foundation/stores/features/snackbar'
+import { Button } from '@rhysle/core/components/base'
+import { useSnackbarState } from '@rhysle/core/stores/features/snackbar'
 
-import { Button } from '@/components/base'
 import { TabPlaceholderScreen } from '@/components/TabPlaceholderScreen'
 
 export default function HomeScreen() {

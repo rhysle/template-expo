@@ -1,1 +1,1 @@
-export * from '@rhysle/mobile-foundation/utils/numberFormat'
+export * from '@rhysle/core/utils/numberFormat'

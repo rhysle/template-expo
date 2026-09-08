@@ -1,12 +1,11 @@
-import { useOnboardingState } from '@rhysle/mobile-foundation/stores/features/onboarding'
-import { useSnackbarState } from '@rhysle/mobile-foundation/stores/features/snackbar'
-import { useSubscriptionState } from '@rhysle/mobile-foundation/stores/features/subscription'
+import { OnboardingFlow, PaywallScreen } from '@rhysle/core/components/base'
+import { useOnboardingState } from '@rhysle/core/stores/features/onboarding'
+import { useSnackbarState } from '@rhysle/core/stores/features/snackbar'
+import { useSubscriptionState } from '@rhysle/core/stores/features/subscription'
 import { useRouter } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { OnboardingFlow } from '@/components/base/Onboarding'
-import { PaywallScreen } from '@/components/base/Paywall'
 import { useOnboardingPages } from '@/components/onboarding/onboardingPages'
 import {
   useContextualPaywallContent,

@@ -1,8 +1,12 @@
+import {
+  CustomTabNavigator,
+  NativeTabNavigator,
+  type TabDefinition,
+} from '@rhysle/core/components/base'
 import { DropIcon, GaugeIcon, SpeakerHifiIcon, WaveformIcon } from 'phosphor-react-native'
 import { useTranslation } from 'react-i18next'
 import { Platform } from 'react-native'
 
-import { CustomTabNavigator, NativeTabNavigator, type TabDefinition } from '@/components/base'
 import { InterstitialAdProvider, useConsentInit } from '@/services/ads'
 import { useAutoPaywall } from '@/services/revenueCat'
 

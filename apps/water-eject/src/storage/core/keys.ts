@@ -1,1 +1,1 @@
-export * from '@rhysle/mobile-foundation/storage/core/keys'
+export * from '@rhysle/core/storage/core/keys'

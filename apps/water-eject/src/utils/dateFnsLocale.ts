@@ -1,1 +1,1 @@
-export * from '@rhysle/mobile-foundation/utils/dateFnsLocale'
+export * from '@rhysle/core/utils/dateFnsLocale'

@@ -3,7 +3,7 @@ export type {
   ExcludeKeys,
   SliceConfig,
   SliceMigration,
-} from '@rhysle/mobile-foundation/stores/slices/types'
+} from '@rhysle/core/stores/slices/types'
 export const getUseAppStore = () =>
   // Lazy binding avoids a cycle between feature declarations and store creation.
   // eslint-disable-next-line @typescript-eslint/no-require-imports

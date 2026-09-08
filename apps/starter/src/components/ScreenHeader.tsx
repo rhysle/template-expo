@@ -1,9 +1,8 @@
+import { Text } from '@rhysle/core/components/base'
 import type { ReactNode } from 'react'
 import { View, type ViewProps } from 'react-native'
 
 import { createThemedStyles, useThemedStyles } from '@/theme'
-
-import { Text } from './base'
 
 export interface ScreenHeaderProps extends ViewProps {
   title: string

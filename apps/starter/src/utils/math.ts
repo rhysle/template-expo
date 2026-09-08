@@ -1,1 +1,1 @@
-export * from '@rhysle/mobile-foundation/utils/math'
+export * from '@rhysle/core/utils/math'

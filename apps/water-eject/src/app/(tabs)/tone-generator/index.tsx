@@ -1,3 +1,11 @@
+import {
+  ChoiceChip,
+  InlineNotice,
+  NativeSlider,
+  Slider,
+  StatusBadge,
+  Text,
+} from '@rhysle/core/components/base'
 import { Image } from 'expo-image'
 import { WaveformIcon } from 'phosphor-react-native'
 import { useEffect, useState } from 'react'
@@ -19,14 +27,6 @@ import {
   FrequencyWaveform,
   ToneWaveformPicker,
 } from '@/components/audio'
-import {
-  ChoiceChip,
-  InlineNotice,
-  NativeSlider,
-  Slider,
-  StatusBadge,
-  Text,
-} from '@/components/base'
 import { useRequestInterstitialAd } from '@/services/ads'
 import {
   audioController,

@@ -1,1 +1,1 @@
-export * from '@rhysle/mobile-foundation/theme/tokens/typography'
+export * from '@rhysle/core/theme/tokens/typography'

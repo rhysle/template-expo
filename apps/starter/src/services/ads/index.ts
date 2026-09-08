@@ -1,1 +1,1 @@
-export * from '@rhysle/mobile-foundation/services/ads/disabled'
+export * from '@rhysle/core/services/ads/disabled'

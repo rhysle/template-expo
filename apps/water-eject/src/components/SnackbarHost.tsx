@@ -1,11 +1,11 @@
-import type { SnackbarState } from '@rhysle/mobile-foundation/stores/features/snackbar'
-import { useSnackbarState } from '@rhysle/mobile-foundation/stores/features/snackbar'
+import { Snackbar } from '@rhysle/core/components/base'
+import type { SnackbarState } from '@rhysle/core/stores/features/snackbar'
+import { useSnackbarState } from '@rhysle/core/stores/features/snackbar'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { View } from 'react-native'
 import { cancelAnimation, Easing, useSharedValue, withTiming } from 'react-native-reanimated'
 import { scheduleOnRN } from 'react-native-worklets'
 
-import { Snackbar } from '@/components/base'
 import { useTheme } from '@/theme'
 
 const APPEAR_CONFIG = { duration: 220, easing: Easing.out(Easing.ease) }

@@ -1,3 +1,4 @@
+import { Pressable, Text } from '@rhysle/core/components/base'
 import { LockKeyIcon } from 'phosphor-react-native'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -10,7 +11,6 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated'
 
-import { Pressable, Text } from '@/components/base'
 import { type PaywallSource, usePremiumGate } from '@/services/revenueCat'
 import {
   type EjectDurationSeconds,

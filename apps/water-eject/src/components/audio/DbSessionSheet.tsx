@@ -1,9 +1,13 @@
-import type { PremiumState } from '@rhysle/mobile-foundation/stores/features/subscription'
+import {
+  NativeBottomSheet,
+  type NativeBottomSheetMethods,
+  Text,
+} from '@rhysle/core/components/base'
+import type { PremiumState } from '@rhysle/core/stores/features/subscription'
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Platform, View } from 'react-native'
 
-import { NativeBottomSheet, type NativeBottomSheetMethods, Text } from '@/components/base'
 import type { DbActivityRecord } from '@/services/activity'
 import { createThemedStyles, useThemedStyles } from '@/theme'
 

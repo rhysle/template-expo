@@ -1,8 +1,8 @@
+import { Pressable } from '@rhysle/core/components/base'
 import { useRouter } from 'expo-router'
 import { GearIcon } from 'phosphor-react-native'
 import { useTranslation } from 'react-i18next'
 
-import { Pressable } from '@/components/base'
 import { iconSizes, useTheme } from '@/theme'
 
 export const SettingsHeaderButton = () => {

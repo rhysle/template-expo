@@ -1,1 +1,1 @@
-export * from '@rhysle/mobile-foundation/utils/color'
+export * from '@rhysle/core/utils/color'

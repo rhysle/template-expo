@@ -1,4 +1,5 @@
-import type { PremiumState } from '@rhysle/mobile-foundation/stores/features/subscription'
+import { Button, Card, Text } from '@rhysle/core/components/base'
+import type { PremiumState } from '@rhysle/core/stores/features/subscription'
 import { BlurTargetView, BlurView } from 'expo-blur'
 import { LinearGradient } from 'expo-linear-gradient'
 import {
@@ -12,7 +13,6 @@ import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
 
-import { Button, Card, Text } from '@/components/base'
 import type { DbActivityRecord } from '@/services/activity'
 import { classifyMeterBand, type MeterBand } from '@/services/audio'
 import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'

@@ -1,20 +1,3 @@
-import { useSnackbarState } from '@rhysle/mobile-foundation/stores/features/snackbar'
-import type { Icon } from 'phosphor-react-native'
-import {
-  ArrowRightIcon,
-  CheckCircleIcon,
-  CheckIcon,
-  InfoIcon,
-  MagnifyingGlassIcon,
-  PlayIcon,
-  ShieldCheckIcon,
-  SpeakerHighIcon,
-  WarningCircleIcon,
-  XCircleIcon,
-} from 'phosphor-react-native'
-import { useState } from 'react'
-import { View } from 'react-native'
-
 import {
   BottomSheet,
   BouncingDotsLoader,
@@ -35,14 +18,31 @@ import {
   PulsingRingLoader,
   SearchInput,
   SegmentedControl,
+  type SegmentedOption,
   Slider,
   SpinArcLoader,
   StatusBadge,
   Text,
   TextField,
   Toggle,
-} from '@/components/base'
-import type { SegmentedOption } from '@/components/base/SegmentedControl'
+} from '@rhysle/core/components/base'
+import { useSnackbarState } from '@rhysle/core/stores/features/snackbar'
+import type { Icon } from 'phosphor-react-native'
+import {
+  ArrowRightIcon,
+  CheckCircleIcon,
+  CheckIcon,
+  InfoIcon,
+  MagnifyingGlassIcon,
+  PlayIcon,
+  ShieldCheckIcon,
+  SpeakerHighIcon,
+  WarningCircleIcon,
+  XCircleIcon,
+} from 'phosphor-react-native'
+import { useState } from 'react'
+import { View } from 'react-native'
+
 import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
 
 type PlaygroundTab = 'first' | 'second' | 'third'

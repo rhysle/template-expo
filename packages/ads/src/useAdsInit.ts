@@ -1,5 +1,5 @@
-import { useFoundationRuntime } from '@rhysle/mobile-foundation/runtime'
-import { useAdsState } from '@rhysle/mobile-foundation/stores/features/ads'
+import { useCoreRuntime } from '@rhysle/core/runtime'
+import { useAdsState } from '@rhysle/core/stores/features/ads'
 import { useEffect } from 'react'
 
 import { initMobileAds, isAnyAdFormatEnabled } from './adsService'
@@ -18,7 +18,7 @@ import { initMobileAds, isAnyAdFormatEnabled } from './adsService'
  * shared facade, so consumers keep the same call without bundling the SDK.
  */
 export const useAdsInit = () => {
-  const { config: appConfig } = useFoundationRuntime()
+  const { config: appConfig } = useCoreRuntime()
   const { adsInitialized, canRequestAds, consentGathered, setAdsInitialized, setAdsInitError } =
     useAdsState()
 

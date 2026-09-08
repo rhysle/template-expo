@@ -1,3 +1,4 @@
+import { Pressable } from '@rhysle/core/components/base'
 import type { Icon } from 'phosphor-react-native'
 import {
   LockKeyIcon,
@@ -16,7 +17,6 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated'
 
-import { Pressable } from '@/components/base'
 import type { ToneWaveform } from '@/services/audio'
 import { useIsRTL } from '@/services/rtl'
 import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'

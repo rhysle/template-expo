@@ -1,1 +1,1 @@
-export * from '@rhysle/mobile-foundation/utils/safeParseJSON'
+export * from '@rhysle/core/utils/safeParseJSON'

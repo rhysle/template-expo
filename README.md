@@ -1,17 +1,17 @@
 # Rhysle mobile apps
 
-A pnpm workspace containing independently released Expo iOS/Android apps and one maintained mobile foundation. Apps live in workspace directories; feature branches represent changes rather than permanent app variants.
+A pnpm workspace containing independently released Expo iOS/Android apps and one maintained mobile core. Apps live in workspace directories; feature branches represent changes rather than permanent app variants.
 
 ## Workspace
 
-| Location                     | Owns                                                                                               |
-| ---------------------------- | -------------------------------------------------------------------------------------------------- |
-| `apps/starter`               | Clean reference app and source for the app generator                                               |
-| `apps/water-eject`           | Speaker Cleaner product, assets, translations, configuration, and store metadata                   |
-| `packages/mobile-foundation` | Reusable UI, themes, state/storage/query infrastructure, and native service integrations           |
-| `packages/ads`               | Optional enabled native ads integration                                                            |
-| `packages/tooling`           | Setup/release scripts, config plugin, monetization tooling, PPP dataset, and shared Fastlane lanes |
-| `fastlane/.private`          | Gitignored shared store account keys; never included in builds                                     |
+| Location            | Owns                                                                                               |
+| ------------------- | -------------------------------------------------------------------------------------------------- |
+| `apps/starter`      | Clean reference app and source for the app generator                                               |
+| `apps/water-eject`  | Speaker Cleaner product, assets, translations, configuration, and store metadata                   |
+| `packages/core`     | Reusable UI, themes, state/storage/query infrastructure, and native service integrations           |
+| `packages/ads`      | Optional enabled native ads integration                                                            |
+| `packages/tooling`  | Setup/release scripts, config plugin, monetization tooling, PPP dataset, and shared Fastlane lanes |
+| `fastlane/.private` | Gitignored shared store account keys; never included in builds                                     |
 
 Use Node compatible with Expo SDK 57 and **pnpm 10.33.0**. The root `packageManager` pins pnpm. Install once at the repository root:
 
@@ -53,11 +53,11 @@ Then configure product assets/copy/legal links and run the app's Firebase and Se
 
 ## Share improvements
 
-Import shared modules through `@rhysle/mobile-foundation/...`; `@/` means the current app's source. Existing app-local re-export modules provide compatibility, not copied implementations. Shared packages must not import app source, app aliases, or product assets.
+Import shared base UI through `@rhysle/core/components/base` and other shared modules through their `@rhysle/core/...` entry points. `@/` means the current app's source, while the `@rhysle/core` package identifies core-owned source. Shared packages must not import app source, app aliases, or product assets.
 
-An app creates a foundation runtime with its configuration, fonts, themes, ads adapter, and store. Its root `FoundationProvider` makes that runtime available to shared hooks. Non-React services receive configuration explicitly. The app root layout still controls navigation and initialization ordering; Sentry initializes before rendering.
+An app creates a core runtime with its configuration, fonts, themes, ads adapter, and store. Its root `CoreProvider` makes that runtime available to shared hooks. Non-React services receive configuration explicitly. The app root layout still controls navigation and initialization ordering; Sentry initializes before rendering.
 
-Foundation slice definitions and persistence mechanics are shared. Each app discovers its product slices locally, rejects collisions with foundation slice names, and creates its own store. Product slice hooks retain their app-local typing. Do not change MMKV IDs, key namespaces, slice names, or persistence formats as a side effect of moving files.
+Core slice definitions and persistence mechanics are shared. Each app discovers its product slices locally, rejects collisions with core slice names, and creates its own store. Product slice hooks retain their app-local typing. Do not change MMKV IDs, key namespaces, slice names, or persistence formats as a side effect of moving files.
 
 Routes, product events, theme colors, font choice, locale resources, onboarding artwork/content, paywall comparisons, product state, and requests remain app-owned. The shared paywall receives its icon from the app. English is the development source; release localization remains a separate task. Localization audits include shared UI references.
 

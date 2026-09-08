@@ -1,1 +1,1 @@
-export * from '@rhysle/mobile-foundation/storage/debugLanguageStorage'
+export * from '@rhysle/core/storage/debugLanguageStorage'

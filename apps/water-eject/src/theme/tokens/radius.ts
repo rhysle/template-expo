@@ -1,1 +1,1 @@
-export * from '@rhysle/mobile-foundation/theme/tokens/radius'
+export * from '@rhysle/core/theme/tokens/radius'

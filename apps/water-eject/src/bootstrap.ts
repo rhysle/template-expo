@@ -1,11 +1,11 @@
-import { createFoundationRuntime } from '@rhysle/mobile-foundation/runtime'
+import { createCoreRuntime } from '@rhysle/core/runtime'
 
 import { AppConfig } from './configs/AppConfig'
 import * as fonts from './configs/fonts'
 import * as ads from './services/ads'
 import { useAppStore } from './stores/appStore'
 import { themes } from './theme/themes'
-export const foundationRuntime = createFoundationRuntime({
+export const coreRuntime = createCoreRuntime({
   store: useAppStore,
   config: AppConfig,
   fonts,

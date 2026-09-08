@@ -191,7 +191,7 @@ function collectUsedKeys(): Set<string> {
   try {
     // Use grep to quickly find candidate lines across all ts/tsx files
     grepOutput = execSync(
-      `grep -rn --include="*.ts" --include="*.tsx" -E "(\\bt\\(|i18nKey)" "${SRC_DIR}" "${path.join(getAppContext().repoRoot, 'packages/mobile-foundation/src')}" "${path.join(getAppContext().repoRoot, 'packages/ads/src')}"`,
+      `grep -rn --include="*.ts" --include="*.tsx" -E "(\\bt\\(|i18nKey)" "${SRC_DIR}" "${path.join(getAppContext().repoRoot, 'packages/core/src')}" "${path.join(getAppContext().repoRoot, 'packages/ads/src')}"`,
       { encoding: 'utf-8' }
     )
   } catch {

@@ -1,1 +1,1 @@
-export * from '@rhysle/mobile-foundation/services/revenueCat/premiumAccess'
+export * from '@rhysle/core/services/revenueCat/premiumAccess'

@@ -1,2 +1,2 @@
 export { AnalyticsAppEvents } from './analyticsAppEvents'
-export * from '@rhysle/mobile-foundation/services/firebase/analytics'
+export * from '@rhysle/core/services/firebase/analytics'

@@ -1,9 +1,9 @@
+import { Button, NativeBottomSheet, Pressable, TabStack, Text } from '@rhysle/core/components/base'
 import { QuestionIcon, SpeakerHighIcon } from 'phosphor-react-native'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
 
-import { Button, NativeBottomSheet, Pressable, TabStack, Text } from '@/components/base'
 import { SettingsHeaderButton } from '@/components/SettingsHeaderButton'
 import { usePreventInterstitialAd } from '@/services/ads'
 import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'

@@ -1,9 +1,8 @@
-import { useSnackbarState } from '@rhysle/mobile-foundation/stores/features/snackbar'
-import {
-  type PremiumState,
-  useSubscriptionState,
-} from '@rhysle/mobile-foundation/stores/features/subscription'
-import { useUserIdentityState } from '@rhysle/mobile-foundation/stores/features/userIdentity'
+import type { SegmentedOption } from '@rhysle/core/components/base'
+import { Button, Card, Pressable, SegmentedControl, Text } from '@rhysle/core/components/base'
+import { useSnackbarState } from '@rhysle/core/stores/features/snackbar'
+import { type PremiumState, useSubscriptionState } from '@rhysle/core/stores/features/subscription'
+import { useUserIdentityState } from '@rhysle/core/stores/features/userIdentity'
 import {
   ArrowClockwiseIcon,
   CaretDownIcon,
@@ -14,8 +13,6 @@ import {
 import { useState } from 'react'
 import { Alert, ScrollView, View } from 'react-native'
 
-import { Button, Card, Pressable, SegmentedControl, Text } from '@/components/base'
-import type { SegmentedOption } from '@/components/base/SegmentedControl'
 import { BaseComponentGallery } from '@/components/debug/BaseComponentGallery'
 import { DesignTokenSection } from '@/components/debug/DesignTokenSection'
 import { LanguageSwitcher } from '@/components/debug/LanguageSwitcher'

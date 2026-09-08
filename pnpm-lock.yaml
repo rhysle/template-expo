@@ -86,9 +86,9 @@ importers:
       '@react-native-firebase/app':
         specifier: 24.1.1
         version: 24.1.1(expo@57.0.11)(react-native@0.86.2(@babel/core@7.29.7)(@react-native/metro-config@0.86.2(@babel/core@7.29.7))(@types/react@19.2.18)(react@19.2.3))(react@19.2.3)
-      '@rhysle/mobile-foundation':
+      '@rhysle/core':
         specifier: workspace:*
-        version: link:../../packages/mobile-foundation
+        version: link:../../packages/core
       '@sentry/react-native':
         specifier: 7.11.0
         version: 7.11.0(expo@57.0.11)(react-native@0.86.2(@babel/core@7.29.7)(@react-native/metro-config@0.86.2(@babel/core@7.29.7))(@types/react@19.2.18)(react@19.2.3))(react@19.2.3)
@@ -315,9 +315,9 @@ importers:
       '@rhysle/ads':
         specifier: workspace:*
         version: link:../../packages/ads
-      '@rhysle/mobile-foundation':
+      '@rhysle/core':
         specifier: workspace:*
-        version: link:../../packages/mobile-foundation
+        version: link:../../packages/core
       '@sentry/react-native':
         specifier: 7.11.0
         version: 7.11.0(expo@57.0.11)(react-native@0.86.2(@babel/core@7.29.7)(@react-native/metro-config@0.86.2(@babel/core@7.29.7))(@types/react@19.2.18)(react@19.2.3))(react@19.2.3)
@@ -541,9 +541,9 @@ importers:
 
   packages/ads:
     dependencies:
-      '@rhysle/mobile-foundation':
+      '@rhysle/core':
         specifier: workspace:*
-        version: link:../mobile-foundation
+        version: link:../core
       expo-tracking-transparency:
         specifier: ~57.0.1
         version: 57.0.1(expo@57.0.11)(react-native@0.86.2(@babel/core@7.29.7)(@react-native/metro-config@0.86.2(@babel/core@7.29.7))(@types/react@19.2.18)(react@19.2.3))
@@ -557,7 +557,7 @@ importers:
         specifier: 16.3.4
         version: 16.3.4(expo@57.0.11)(react@19.2.3)
 
-  packages/mobile-foundation:
+  packages/core:
     dependencies:
       '@dev-plugins/react-query':
         specifier: ^0.4.0
@@ -679,9 +679,9 @@ importers:
       '@expo/plist':
         specifier: ^0.8.1
         version: 0.8.1
-      '@rhysle/mobile-foundation':
+      '@rhysle/core':
         specifier: workspace:*
-        version: link:../mobile-foundation
+        version: link:../core
       google-auth-library:
         specifier: ^11.0.0
         version: 11.0.0

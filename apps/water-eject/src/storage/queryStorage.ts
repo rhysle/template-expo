@@ -1,1 +1,1 @@
-export * from '@rhysle/mobile-foundation/storage/queryStorage'
+export * from '@rhysle/core/storage/queryStorage'

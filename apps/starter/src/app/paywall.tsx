@@ -1,8 +1,8 @@
-import { useSnackbarState } from '@rhysle/mobile-foundation/stores/features/snackbar'
+import { PaywallScreen } from '@rhysle/core/components/base'
+import { useSnackbarState } from '@rhysle/core/stores/features/snackbar'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useTranslation } from 'react-i18next'
 
-import { PaywallScreen } from '@/components/base/Paywall'
 import {
   useContextualPaywallContent,
   usePaywallComparison,

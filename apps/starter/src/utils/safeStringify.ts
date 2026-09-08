@@ -1,1 +1,1 @@
-export * from '@rhysle/mobile-foundation/utils/safeStringify'
+export * from '@rhysle/core/utils/safeStringify'

@@ -1,8 +1,8 @@
+import { Button, NativeBottomSheet, Text } from '@rhysle/core/components/base'
 import { LightningIcon } from 'phosphor-react-native'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
 
-import { Button, NativeBottomSheet, Text } from '@/components/base'
 import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
 
 interface EjectTurboGuideSheetProps {

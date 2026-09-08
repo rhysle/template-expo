@@ -1,1 +1,1 @@
-export * from '@rhysle/mobile-foundation/utils/network'
+export * from '@rhysle/core/utils/network'

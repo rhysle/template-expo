@@ -1,1 +1,1 @@
-export * from '@rhysle/mobile-foundation/services/sentry/index'
+export * from '@rhysle/core/services/sentry/index'

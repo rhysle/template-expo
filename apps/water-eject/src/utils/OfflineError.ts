@@ -1,1 +1,1 @@
-export * from '@rhysle/mobile-foundation/utils/OfflineError'
+export * from '@rhysle/core/utils/OfflineError'

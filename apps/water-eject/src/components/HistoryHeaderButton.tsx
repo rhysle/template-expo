@@ -1,9 +1,9 @@
+import { Pressable, Text } from '@rhysle/core/components/base'
 import { useRouter } from 'expo-router'
 import { ClockCounterClockwiseIcon } from 'phosphor-react-native'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
 
-import { Pressable, Text } from '@/components/base'
 import { type ActivityRecordKind, useActivityHistory } from '@/services/activity'
 import { AnalyticsAppEvents, trackEvent } from '@/services/firebase/analytics'
 import { usePremiumGate } from '@/services/revenueCat'

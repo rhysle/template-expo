@@ -1,9 +1,10 @@
+import { execFileSync } from 'node:child_process'
 import fs from 'node:fs'
 import { createRequire } from 'node:module'
 import path from 'node:path'
 import { parseArgs } from 'node:util'
 
-import type { FoundationConfig } from '@rhysle/mobile-foundation/runtime/config'
+import type { CoreConfig } from '@rhysle/core/runtime/config'
 import type { ExpoConfig } from 'expo/config'
 
 const repoRoot = path.resolve(__dirname, '../../..')
@@ -65,7 +66,7 @@ export const resetAppConfiguration = (
   fs.writeFileSync(pkgFile, JSON.stringify(pkg, null, 2) + '\n')
   const configFile = path.join(root, 'src/configs/AppConfig.ts')
   const { AppConfig } = createRequire(path.join(root, 'package.json'))(configFile) as {
-    AppConfig: FoundationConfig
+    AppConfig: CoreConfig
   }
   const config = structuredClone(AppConfig)
   config.iosAppStoreId = ''
@@ -84,9 +85,13 @@ export const resetAppConfiguration = (
     configFile,
     `// App-owned configuration. Run setup commands before release.\nexport const AppConfig = ${JSON.stringify(config, null, 2).replace(/^(\s*)"([A-Za-z_$][\w$]*)":/gm, '$1$2:')} as const\n`
   )
+  execFileSync('pnpm', ['exec', 'prettier', '--write', configFile, '--log-level', 'error'], {
+    cwd: repoRoot,
+    stdio: 'inherit',
+  })
   fs.writeFileSync(
     path.join(root, 'src/services/ads/index.ts'),
-    "export * from '@rhysle/mobile-foundation/services/ads/disabled'\n"
+    "export * from '@rhysle/core/services/ads/disabled'\n"
   )
   const monetizationFile = path.join(root, 'src/configs/monetization.ts')
   fs.writeFileSync(
@@ -149,6 +154,24 @@ const main = (): void => {
   const staging = fs.mkdtempSync(path.join(appsRoot, '.generate-'))
   try {
     const starter = path.join(appsRoot, 'starter')
+    const starterBaseComponents = path.join(starter, 'src/components/base')
+    if (fs.existsSync(starterBaseComponents))
+      throw new Error(
+        'Starter must import shared base components through @rhysle/core/components/base; remove src/components/base'
+      )
+    const starterTsConfig = readJson<{
+      compilerOptions?: { paths?: Record<string, string[]> }
+    }>(path.join(starter, 'tsconfig.json'))
+    const corePathAlias = Object.entries(starterTsConfig.compilerOptions?.paths ?? {}).find(
+      ([, targets]) => targets.some((target) => target.includes('packages/core'))
+    )
+    if (corePathAlias)
+      throw new Error(
+        `Starter must import @rhysle/core through package exports; remove the ${corePathAlias[0]} TypeScript path alias`
+      )
+    const starterPackage = readJson<AppPackage>(path.join(starter, 'package.json'))
+    if (starterPackage.dependencies['@rhysle/core'] !== 'workspace:*')
+      throw new Error('Starter must depend on @rhysle/core with workspace:*')
     for (const entry of [
       'src',
       'assets',

@@ -1,4 +1,11 @@
-import { useSnackbarState } from '@rhysle/mobile-foundation/stores/features/snackbar'
+import {
+  NativeAlertDialog,
+  NativeBottomSheet,
+  Pressable,
+  SegmentedControl,
+  Text,
+} from '@rhysle/core/components/base'
+import { useSnackbarState } from '@rhysle/core/stores/features/snackbar'
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router'
 import { CheckIcon, GaugeIcon, SpeakerHighIcon, TrashIcon } from 'phosphor-react-native'
 import { useEffect, useState } from 'react'
@@ -7,13 +14,6 @@ import { FlatList, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { DbSessionSheet } from '@/components/audio'
-import {
-  NativeAlertDialog,
-  NativeBottomSheet,
-  Pressable,
-  SegmentedControl,
-  Text,
-} from '@/components/base'
 import type {
   ActivityRecordKind,
   ActivityRecordReference,

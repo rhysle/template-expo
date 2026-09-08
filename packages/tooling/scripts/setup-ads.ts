@@ -1,6 +1,6 @@
 import { execFileSync } from 'node:child_process'
 
-import type { FoundationConfig } from '@rhysle/mobile-foundation/runtime/config'
+import type { CoreConfig } from '@rhysle/core/runtime/config'
 /**
  * Ads setup script
  *
@@ -22,14 +22,14 @@ import fs from 'fs'
 import path from 'path'
 
 import { getAppContext, loadAppModule } from './app-context'
-const { AppConfig } = loadAppModule<{ AppConfig: FoundationConfig }>('src/configs/AppConfig.ts')
+const { AppConfig } = loadAppModule<{ AppConfig: CoreConfig }>('src/configs/AppConfig.ts')
 
 const ROOT = getAppContext().appRoot
 const ADS_PACKAGE = 'react-native-google-mobile-ads'
 const ATT_PACKAGE = 'expo-tracking-transparency'
 
 const getAdsFacadeSource = (enabled: boolean): string =>
-  `export * from '${enabled ? '@rhysle/ads/enabled' : '@rhysle/mobile-foundation/services/ads/disabled'}'\n`
+  `export * from '${enabled ? '@rhysle/ads/enabled' : '@rhysle/core/services/ads/disabled'}'\n`
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 

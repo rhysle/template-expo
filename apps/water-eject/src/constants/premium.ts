@@ -1,1 +1,1 @@
-export * from '@rhysle/mobile-foundation/constants/premium'
+export * from '@rhysle/core/constants/premium'

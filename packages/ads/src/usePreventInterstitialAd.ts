@@ -1,4 +1,4 @@
-import { useAdsState } from '@rhysle/mobile-foundation/stores/features/ads'
+import { useAdsState } from '@rhysle/core/stores/features/ads'
 import { useEffect } from 'react'
 
 /**

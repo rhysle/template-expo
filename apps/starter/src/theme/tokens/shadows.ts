@@ -1,1 +1,1 @@
-export * from '@rhysle/mobile-foundation/theme/tokens/shadows'
+export * from '@rhysle/core/theme/tokens/shadows'

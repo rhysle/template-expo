@@ -1,7 +1,7 @@
+import { TabScreen, Text } from '@rhysle/core/components/base'
 import type { PropsWithChildren } from 'react'
 import { View } from 'react-native'
 
-import { TabScreen, Text } from '@/components/base'
 import { createThemedStyles, useThemedStyles } from '@/theme'
 
 export interface TabPlaceholderScreenProps extends PropsWithChildren {

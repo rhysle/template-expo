@@ -1,1 +1,1 @@
-export * from '@rhysle/mobile-foundation/services/fonts/index'
+export * from '@rhysle/core/services/fonts/index'

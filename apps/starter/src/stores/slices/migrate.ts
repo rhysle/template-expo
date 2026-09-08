@@ -1,1 +1,1 @@
-export * from '@rhysle/mobile-foundation/stores/slices/migrate'
+export * from '@rhysle/core/stores/slices/migrate'

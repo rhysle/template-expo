@@ -1,1 +1,1 @@
-export * from '@rhysle/mobile-foundation/utils/haptics'
+export * from '@rhysle/core/utils/haptics'

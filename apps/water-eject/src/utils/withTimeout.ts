@@ -1,1 +1,1 @@
-export * from '@rhysle/mobile-foundation/utils/withTimeout'
+export * from '@rhysle/core/utils/withTimeout'

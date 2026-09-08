@@ -1,9 +1,9 @@
-import { useFoundationRuntime } from '@rhysle/mobile-foundation/runtime'
-import { hasPaywallPrecedence } from '@rhysle/mobile-foundation/services/revenueCat'
-import { recordError } from '@rhysle/mobile-foundation/services/sentry'
-import { useAdsState } from '@rhysle/mobile-foundation/stores/features/ads'
-import { usePaywallState } from '@rhysle/mobile-foundation/stores/features/paywall'
-import { useSubscriptionState } from '@rhysle/mobile-foundation/stores/features/subscription'
+import { useCoreRuntime } from '@rhysle/core/runtime'
+import { hasPaywallPrecedence } from '@rhysle/core/services/revenueCat'
+import { recordError } from '@rhysle/core/services/sentry'
+import { useAdsState } from '@rhysle/core/stores/features/ads'
+import { usePaywallState } from '@rhysle/core/stores/features/paywall'
+import { useSubscriptionState } from '@rhysle/core/stores/features/subscription'
 import {
   createContext,
   type PropsWithChildren,
@@ -31,7 +31,7 @@ export const InterstitialAdProvider = ({
   canPresent = true,
   children,
 }: InterstitialAdProviderProps) => {
-  const { config: appConfig } = useFoundationRuntime()
+  const { config: appConfig } = useCoreRuntime()
   const canShowAds = useCanShowAds()
   const {
     interstitialAdPreventionSources,

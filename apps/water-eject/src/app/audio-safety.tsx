@@ -1,3 +1,4 @@
+import { Card, Text } from '@rhysle/core/components/base'
 import {
   EarIcon,
   GaugeIcon,
@@ -9,7 +10,6 @@ import {
 import { useTranslation } from 'react-i18next'
 import { ScrollView, View } from 'react-native'
 
-import { Card, Text } from '@/components/base'
 import { createThemedStyles, iconSizes, useCommonStyles, useTheme, useThemedStyles } from '@/theme'
 
 export default function AudioSafetyScreen() {

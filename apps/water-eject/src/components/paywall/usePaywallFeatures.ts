@@ -1,3 +1,4 @@
+import type { PaywallComparisonItem, PaywallComparisonValue } from '@rhysle/core/components/base'
 import {
   ClockCounterClockwiseIcon,
   DropIcon,
@@ -9,7 +10,6 @@ import {
 } from 'phosphor-react-native'
 import { useTranslation } from 'react-i18next'
 
-import type { PaywallComparisonItem, PaywallComparisonValue } from '@/components/base/Paywall'
 import { useActivityHistory } from '@/services/activity'
 
 interface PaywallHeaderContent {

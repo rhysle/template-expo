@@ -1,10 +1,10 @@
-import { useFoundationRuntime } from '@rhysle/mobile-foundation/runtime'
-import { recordError } from '@rhysle/mobile-foundation/services/sentry'
-import { useAdsState } from '@rhysle/mobile-foundation/stores/features/ads'
-import { usePaywallState } from '@rhysle/mobile-foundation/stores/features/paywall'
-import { useSubscriptionState } from '@rhysle/mobile-foundation/stores/features/subscription'
-import { assertOnline } from '@rhysle/mobile-foundation/utils/network'
-import { OfflineError } from '@rhysle/mobile-foundation/utils/OfflineError'
+import { useCoreRuntime } from '@rhysle/core/runtime'
+import { recordError } from '@rhysle/core/services/sentry'
+import { useAdsState } from '@rhysle/core/stores/features/ads'
+import { usePaywallState } from '@rhysle/core/stores/features/paywall'
+import { useSubscriptionState } from '@rhysle/core/stores/features/subscription'
+import { assertOnline } from '@rhysle/core/utils/network'
+import { OfflineError } from '@rhysle/core/utils/OfflineError'
 import {
   getTrackingPermissionsAsync,
   PermissionStatus,
@@ -53,7 +53,7 @@ const getConsentErrorDetails = (
 
 // setup:ads exports this implementation through the shared facade only when ads are enabled.
 export const useConsentInit = () => {
-  const { config: appConfig } = useFoundationRuntime()
+  const { config: appConfig } = useCoreRuntime()
   const { setCanRequestAds, setConsentGathered, setPrivacyOptionsRequired } = useAdsState()
   const { premiumState } = useSubscriptionState()
   const { isPaywallShowing } = usePaywallState()

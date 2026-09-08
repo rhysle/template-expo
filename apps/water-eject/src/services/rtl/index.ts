@@ -1,1 +1,1 @@
-export * from '@rhysle/mobile-foundation/services/rtl/index'
+export * from '@rhysle/core/services/rtl/index'

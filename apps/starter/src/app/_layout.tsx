@@ -1,7 +1,8 @@
 import 'react-native-reanimated'
 
-import { FoundationProvider } from '@rhysle/mobile-foundation/runtime'
-import { useOnboardingState } from '@rhysle/mobile-foundation/stores/features/onboarding'
+import { ErrorBoundary, TabBarHeightProvider } from '@rhysle/core/components/base'
+import { CoreProvider } from '@rhysle/core/runtime'
+import { useOnboardingState } from '@rhysle/core/stores/features/onboarding'
 import * as Sentry from '@sentry/react-native'
 import Constants from 'expo-constants'
 import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router'
@@ -12,7 +13,6 @@ import { useTranslation } from 'react-i18next'
 import { Platform } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
-import { ErrorBoundary, TabBarHeightProvider } from '@/components/base'
 import { SnackbarHost } from '@/components/SnackbarHost'
 import { I18nProvider } from '@/i18n'
 import { useAdsInit } from '@/services/ads'
@@ -26,9 +26,9 @@ import { initSentry } from '@/services/sentry'
 import { useUserIdentityInit } from '@/services/userIdentity'
 import { useTheme } from '@/theme'
 
-import { foundationRuntime } from '../bootstrap'
+import { coreRuntime } from '../bootstrap'
 
-initSentry(foundationRuntime.config)
+initSentry(coreRuntime.config)
 setAnalyticsUserProperties({ app_version: Constants.expoConfig?.version ?? 'unknown' })
 void SplashScreen.preventAutoHideAsync()
 SplashScreen.setOptions({ fade: true, duration: 250 })
@@ -154,8 +154,8 @@ function RootLayout() {
 }
 
 const AppRoot = () => (
-  <FoundationProvider runtime={foundationRuntime}>
+  <CoreProvider runtime={coreRuntime}>
     <RootLayout />
-  </FoundationProvider>
+  </CoreProvider>
 )
 export default Sentry.wrap(AppRoot)

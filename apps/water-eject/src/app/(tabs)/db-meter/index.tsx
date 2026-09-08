@@ -1,3 +1,4 @@
+import { InlineNotice, PermissionSheet, StatusBadge, Text } from '@rhysle/core/components/base'
 import { MicrophoneIcon, ShieldCheckIcon, WarningCircleIcon } from 'phosphor-react-native'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -11,7 +12,6 @@ import {
   DbStatsReport,
   MascotHero,
 } from '@/components/audio'
-import { InlineNotice, PermissionSheet, StatusBadge, Text } from '@/components/base'
 import { type DbActivityRecord, getActivitySnapshot } from '@/services/activity'
 import { usePreventInterstitialAd, useRequestInterstitialAd } from '@/services/ads'
 import {

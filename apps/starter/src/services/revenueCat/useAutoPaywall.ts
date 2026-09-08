@@ -1,1 +1,1 @@
-export * from '@rhysle/mobile-foundation/services/revenueCat/useAutoPaywall'
+export * from '@rhysle/core/services/revenueCat/useAutoPaywall'

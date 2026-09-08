@@ -1,1 +1,1 @@
-export * from '@rhysle/mobile-foundation/services/firebase/analytics/analyticsService'
+export * from '@rhysle/core/services/firebase/analytics/analyticsService'

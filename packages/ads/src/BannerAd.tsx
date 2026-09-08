@@ -1,4 +1,4 @@
-import { useFoundationRuntime } from '@rhysle/mobile-foundation/runtime'
+import { useCoreRuntime } from '@rhysle/core/runtime'
 import { useRef } from 'react'
 import type { StyleProp, ViewStyle } from 'react-native'
 import { Platform, StyleSheet, View } from 'react-native'
@@ -32,7 +32,7 @@ export const BannerAd = ({
   onAdFailedToLoad,
   onSizeChange,
 }: BannerAdProps) => {
-  const { config: appConfig } = useFoundationRuntime()
+  const { config: appConfig } = useCoreRuntime()
   const bannerRef = useRef<RNBannerAd>(null)
   const canShowAds = useCanShowAds()
   const canShowBanner = canShowAds && isBannerAdsEnabled(appConfig)

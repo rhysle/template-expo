@@ -8,7 +8,7 @@ Implemented on `feat/monorepo`.
 - Water eject source: `0c4eacb289d98178a346d6adbf3235c20aa5fe1e` from `feat/water-eject`.
 - All 554 tracked water-eject assets, locale resources and store metadata files match that snapshot byte-for-byte. Its canonical identifiers, slug, version, owner, EAS project and update associations are unchanged.
 - Starter has independent identifiers and no water-eject Firebase files, RevenueCat keys, Sentry DSN, store ID or EAS association. Ads and OTA are disabled until configured.
-- Runtime/UI/state/service implementations live in `packages/mobile-foundation`; enabled ads live in `packages/ads`; scripts/plugins/PPP/Fastlane implementations live in `packages/tooling`. Product configuration and composition remain app-owned.
+- Runtime/UI/state/service implementations live in `packages/core`; enabled ads live in `packages/ads`; scripts/plugins/PPP/Fastlane implementations live in `packages/tooling`. Product configuration and composition remain app-owned.
 
 ## Validation completed on 2026-09-08
 

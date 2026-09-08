@@ -1,7 +1,7 @@
+import { Text } from '@rhysle/core/components/base'
 import { useTranslation } from 'react-i18next'
 import { type StyleProp, View, type ViewStyle } from 'react-native'
 
-import { Text } from '@/components/base'
 import { classifyMeterBand } from '@/services/audio'
 import { createThemedStyles, useTheme, useThemedStyles } from '@/theme'
 

@@ -1,1 +1,1 @@
-export * from '@rhysle/mobile-foundation/utils/useShareApp'
+export * from '@rhysle/core/utils/useShareApp'

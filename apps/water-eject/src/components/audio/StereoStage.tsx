@@ -1,3 +1,4 @@
+import { Pressable, Text } from '@rhysle/core/components/base'
 import { useEffect } from 'react'
 import { View } from 'react-native'
 import Animated, {
@@ -13,7 +14,6 @@ import Animated, {
 } from 'react-native-reanimated'
 import Svg, { Circle, Rect } from 'react-native-svg'
 
-import { Pressable, Text } from '@/components/base'
 import { createThemedStyles, useTheme, useThemedStyles } from '@/theme'
 import { withAlpha } from '@/utils/color'
 

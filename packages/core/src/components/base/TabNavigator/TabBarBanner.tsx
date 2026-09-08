@@ -1,0 +1,45 @@
+import { BannerAd, useBannerAdsEnabled, useCanShowAds } from '@rhysle/core/services/ads'
+import { createThemedStyles, useThemedStyles } from '@rhysle/core/theme'
+import { useEffect } from 'react'
+import { StyleSheet, View } from 'react-native'
+
+import { useSetTabBarAccessoryHeight, useTabBarBaseHeight } from '../FloatingTabBar/tabBarHeight'
+
+const ADS_BANNER_HEIGHT = 50
+
+export const TabBarBanner = () => {
+  const canShowAds = useCanShowAds()
+  const tabBarHeight = useTabBarBaseHeight()
+  const setAccessoryHeight = useSetTabBarAccessoryHeight()
+  const styles = useThemedStyles(createStyles)
+
+  const bannerEnabled = useBannerAdsEnabled()
+  const isEligible = canShowAds && bannerEnabled
+
+  const accessoryHeight = isEligible ? ADS_BANNER_HEIGHT + StyleSheet.hairlineWidth * 2 : 0
+
+  useEffect(() => {
+    setAccessoryHeight(accessoryHeight)
+    return () => setAccessoryHeight(0)
+  }, [accessoryHeight, setAccessoryHeight])
+
+  if (!isEligible) return null
+
+  return (
+    <View style={[styles.container, { bottom: tabBarHeight }, { height: accessoryHeight }]}>
+      <BannerAd />
+    </View>
+  )
+}
+
+const createStyles = createThemedStyles((t) => ({
+  container: {
+    position: 'absolute',
+    zIndex: 1,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+  },
+}))

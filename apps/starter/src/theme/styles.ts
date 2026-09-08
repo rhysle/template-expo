@@ -1,1 +1,1 @@
-export * from '@rhysle/mobile-foundation/theme/styles'
+export * from '@rhysle/core/theme/styles'

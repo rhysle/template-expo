@@ -1,4 +1,4 @@
-import type { FoundationSlices } from '@rhysle/mobile-foundation/stores/foundationTypes'
+import type { CoreSlices } from '@rhysle/core/stores/coreTypes'
 declare global {
-  interface AppSlices extends FoundationSlices {}
+  interface AppSlices extends CoreSlices {}
 }
