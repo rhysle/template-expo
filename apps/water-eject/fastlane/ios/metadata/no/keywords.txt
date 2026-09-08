@@ -1,0 +1,1 @@
+ren,telefon,stereo,test,frekvens,audio,lyd,støy,støv,fukt,rusk,tone,desibel,dempet,våt,mobil,fikse

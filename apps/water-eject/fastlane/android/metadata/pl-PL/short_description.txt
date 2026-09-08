@@ -1,0 +1,1 @@
+Czysta fala usuwa wodę i naprawia głuchy dźwięk; test tonów, stereo i dB.

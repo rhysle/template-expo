@@ -1,0 +1,36 @@
+{
+  "appleLocale": "tr",
+  "googleLocale": "tr-TR",
+  "apple": {
+    "subscriptionGroupDisplayName": "Premium",
+    "products": {
+      "weekly": {
+        "displayName": "Premium · Haftalık",
+        "description": "Tüm premium özelliklere tam erişim."
+      },
+      "monthly": {
+        "displayName": "Premium · Aylık",
+        "description": "Tüm premium özelliklere tam erişim."
+      },
+      "yearly": {
+        "displayName": "Premium · Yıllık",
+        "description": "Tüm premium özelliklere tam erişim."
+      },
+      "lifetime": {
+        "displayName": "Premium · Ömür boyu",
+        "description": "Tüm premium özelliklere ömür boyu erişim."
+      }
+    }
+  },
+  "google": {
+    "subscription": {
+      "title": "Premium",
+      "description": "Tüm premium özelliklere tam erişim.",
+      "benefits": ["Tüm premium özelliklere erişim"]
+    },
+    "lifetime": {
+      "title": "Premium · Ömür boyu",
+      "description": "Tüm premium özelliklere ömür boyu erişim."
+    }
+  }
+}

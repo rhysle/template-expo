@@ -21,40 +21,31 @@ export default defineConfig([
     },
   },
   {
+    files: ['**/*.ts', '**/*.tsx'],
     plugins: {
       '@typescript-eslint': tseslint.plugin,
     },
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {
-        project: './tsconfig.json',
+        project: ['apps/*/tsconfig.json', 'packages/*/tsconfig.json'],
+        tsconfigRootDir: import.meta.dirname,
       },
     },
     rules: {
       '@typescript-eslint/no-floating-promises': 'error',
-    },
-  },
-  {
-    files: ['scripts/setup-expo.ts', 'scripts/setup-expo-core.ts'],
-    languageOptions: {
-      parserOptions: {
-        project: './scripts/setup-expo.tsconfig.json',
-      },
-    },
-  },
-  {
-    files: ['scripts/setup-sentry.ts', 'scripts/setup-sentry-core.ts'],
-    languageOptions: {
-      parserOptions: {
-        project: './scripts/setup-sentry.tsconfig.json',
-      },
+      '@typescript-eslint/no-empty-object-type': [
+        'error',
+        { allowInterfaces: 'with-single-extends' },
+      ],
     },
   },
   {
     settings: {
       'import/resolver': {
         typescript: {
-          project: './tsconfig.json',
+          project: ['apps/*/tsconfig.json', 'packages/*/tsconfig.json'],
+          tsconfigRootDir: import.meta.dirname,
         },
       },
     },
@@ -87,6 +78,14 @@ export default defineConfig([
     },
   },
   {
-    ignores: ['dist/*', 'node_modules/*', 'app-example/*'],
+    ignores: [
+      '**/dist/**',
+      '**/node_modules/**',
+      '**/ios/**',
+      '**/android/**',
+      'tmp/**',
+      '**/.expo/**',
+      '**/assets/**',
+    ],
   },
 ])

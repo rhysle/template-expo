@@ -1,0 +1,5 @@
+apps/*/fastlane/**/*.png filter=lfs diff=lfs merge=lfs -text
+apps/*/fastlane/**/*.jpg filter=lfs diff=lfs merge=lfs -text
+apps/*/fastlane/**/*.jpeg filter=lfs diff=lfs merge=lfs -text
+apps/*/fastlane/**/*.webp filter=lfs diff=lfs merge=lfs -text
+apps/*/fastlane/**/*.gif filter=lfs diff=lfs merge=lfs -text

@@ -1,0 +1,4 @@
+Điểm mới trong phiên bản 1.1:
+• Chạy miễn phí không giới hạn chu kỳ làm sạch Tiêu chuẩn 30 giây.
+• Premium nay có Chế độ Turbo, Lịch sử hoạt động riêng tư lưu trên thiết bị và báo cáo âm thanh chi tiết kèm biểu đồ theo thời gian.
+• Tận hưởng giao diện mới và trải nghiệm dễ dùng hơn trên cả bốn công cụ âm thanh.

@@ -1,97 +1,27 @@
-# When present, this file REPLACES .gitignore for EAS build archives.
-# It exists so that EAS build flows can ship three gitignored local fallback
-# files that the build needs but that we do not want in version control:
-#
-#   - .env.local                   (used by Metro/Expo to load SENTRY_AUTH_TOKEN
-#                                   so Sentry source maps upload during builds)
-#   - google-services.json         (Firebase Android config required by prebuild)
-#   - GoogleService-Info.plist     (Firebase iOS config required by prebuild)
-#
-# Background: the Firebase EAS file variables are intentionally scoped to the
-# production environment with Sensitive visibility. Keeping the production root
-# files in the archive preserves the local production-build fallback. Shared
-# development Firebase files are explicitly excluded from EAS archives.
-#
-# IMPORTANT: keep this file in sync with .gitignore. If you add a new exclusion
-# to .gitignore, mirror it here too — otherwise the file will leak into EAS
-# build archives.
-# Never leave the reusable SENTRY_SETUP_AUTH_TOKEN in .env.local when creating a
-# build. It is a local provisioning credential and must not be sent to EAS.
-
-# dependencies
 node_modules/
-
-# Expo
-.expo/
-dist/
-web-build/
-expo-env.d.ts
-
-# Native
-.kotlin/
-*.orig.*
-*.jks
-*.p8
-*.p12
-*.key
-*.mobileprovision
-
-# Metro
-.metro-health-check*
-
-# debug
-npm-debug.*
-yarn-debug.*
-yarn-error.*
-
-# macOS
-.DS_Store
-*.pem
-
-# NOTE: .env.local intentionally NOT excluded here — see header comment.
-
-# typescript
-*.tsbuildinfo
-
-app-example
-
-# Native folders are always excluded so EAS Build regenerates them from the
-# production profile instead of uploading a locally generated development tree.
-/android/
-/ios/
-
-# IDE
-.vscode/
-.idea/
-*.code-workspace
-
-# Firebase
-firebase-debug.log
-# NOTE: /GoogleService-Info.plist and /google-services.json intentionally NOT
-# excluded here — they need to ship to EAS builds. They remain gitignored.
-/GoogleService-Info.dev.plist
-/google-services.dev.json
-
-# Claude
-.claude/
-
-#Codex
+**/node_modules/
+**/.expo/
+**/dist/
+**/ios/
+**/android/
+!apps/*/fastlane/ios/
+!apps/*/fastlane/android/
+**/.env*
+**/fastlane/.private/
+**/fastlane/.tmp/
+**/fastlane/ios/review/
+**/fastlane/ios/metadata/review_information/
+**/GoogleService-Info*.plist
+**/google-services*.json
+**/*.p8
+**/*.p12
+**/*.jks
+**/*.mobileprovision
+.git/
 .codex/
-
-# Misc
-.superpowers/
+.claude/
+.vscode/
 tmp/
-
-# Git worktrees
+.superpowers/
 .worktrees/
-
-# Fastlane
-fastlane/.private/
-fastlane/.tmp/
-fastlane/report.xml
-fastlane/README.md
-fastlane/ios/metadata/review_information/*
-!fastlane/ios/metadata/review_information/notes.txt
-fastlane/ios/review/*
-!fastlane/ios/review/.gitkeep
-.env.fastlane.local
+.DS_Store

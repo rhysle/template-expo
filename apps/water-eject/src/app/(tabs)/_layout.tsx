@@ -1,0 +1,69 @@
+import { DropIcon, GaugeIcon, SpeakerHifiIcon, WaveformIcon } from 'phosphor-react-native'
+import { useTranslation } from 'react-i18next'
+import { Platform } from 'react-native'
+
+import { CustomTabNavigator, NativeTabNavigator, type TabDefinition } from '@/components/base'
+import { InterstitialAdProvider, useConsentInit } from '@/services/ads'
+import { useAudioController } from '@/services/audio'
+import { useAutoPaywall } from '@/services/revenueCat'
+
+export const unstable_settings = {
+  initialRouteName: '(eject)',
+}
+
+const TabNavigator = Platform.OS === 'ios' ? NativeTabNavigator : CustomTabNavigator
+
+export default function TabLayout() {
+  const { t } = useTranslation()
+  const snapshot = useAudioController()
+  const isAudioActive = snapshot.status !== 'idle' && snapshot.status !== 'error'
+
+  // setup:ads selects a no-native implementation for this shared hook when ads are disabled.
+  useConsentInit()
+  useAutoPaywall(isAudioActive)
+
+  const tabs = [
+    {
+      name: '(eject)',
+      label: t('tabs.eject'),
+      icon: DropIcon,
+      nativeIcon: {
+        sf: { default: 'drop', selected: 'drop.fill' },
+        md: 'water_drop',
+      },
+    },
+    {
+      name: 'tone-generator',
+      label: t('tabs.toneGenerator'),
+      icon: WaveformIcon,
+      nativeIcon: {
+        sf: 'waveform',
+        md: 'graphic_eq',
+      },
+    },
+    {
+      name: 'stereo-test',
+      label: t('tabs.stereoTest'),
+      icon: SpeakerHifiIcon,
+      nativeIcon: {
+        sf: { default: 'hifispeaker.2', selected: 'hifispeaker.2.fill' },
+        md: 'speaker',
+      },
+    },
+    {
+      name: 'db-meter',
+      label: t('tabs.dbMeter'),
+      icon: GaugeIcon,
+      nativeIcon: {
+        sf: 'gauge.with.dots.needle.50percent',
+        md: 'speed',
+      },
+    },
+  ] satisfies readonly TabDefinition[]
+
+  return (
+    <InterstitialAdProvider canPresent={!isAudioActive}>
+      <TabNavigator tabs={tabs} />
+    </InterstitialAdProvider>
+  )
+}

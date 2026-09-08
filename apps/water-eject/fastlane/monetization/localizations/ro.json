@@ -1,0 +1,36 @@
+{
+  "appleLocale": "ro",
+  "googleLocale": "ro",
+  "apple": {
+    "subscriptionGroupDisplayName": "Premium",
+    "products": {
+      "weekly": {
+        "displayName": "Premium · Săptămânal",
+        "description": "Acces complet la toate funcțiile premium."
+      },
+      "monthly": {
+        "displayName": "Premium · Lunar",
+        "description": "Acces complet la toate funcțiile premium."
+      },
+      "yearly": {
+        "displayName": "Premium · Anual",
+        "description": "Acces complet la toate funcțiile premium."
+      },
+      "lifetime": {
+        "displayName": "Premium · Pe viață",
+        "description": "Acces pe viață la toate funcțiile premium."
+      }
+    }
+  },
+  "google": {
+    "subscription": {
+      "title": "Premium",
+      "description": "Acces complet la toate funcțiile premium.",
+      "benefits": ["Acces la toate funcțiile premium"]
+    },
+    "lifetime": {
+      "title": "Premium · Pe viață",
+      "description": "Acces pe viață la toate funcțiile premium."
+    }
+  }
+}

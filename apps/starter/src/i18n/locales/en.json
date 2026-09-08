@@ -1,0 +1,181 @@
+{
+  "common": {
+    "back": "Back",
+    "cancel": "Cancel",
+    "close": "Close",
+    "confirm": "Confirm",
+    "continue": "Continue",
+    "done": "Done",
+    "getStarted": "Get Started",
+    "next": "Next",
+    "ok": "OK",
+    "openSettings": "Open Settings",
+    "reset": "Reset",
+    "retry": "Retry",
+    "restart": "Restart",
+    "save": "Save",
+    "skip": "Skip",
+    "start": "Start",
+    "stop": "Stop"
+  },
+  "premium": {
+    "accessChecking": "Checking Premium access…",
+    "accessUnknown": "Connect to the internet to check Premium access."
+  },
+  "tabs": {
+    "eject": "Eject",
+    "toneGenerator": "Tone Generator",
+    "stereoTest": "Stereo Test",
+    "dbMeter": "dB Meter"
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Tune your speaker tools and sound meter",
+    "support": "Support",
+    "contactSupport": "Contact Support",
+    "contactSupportSubtitle": "We're here to help",
+    "contactSupportError": "Could not open email client",
+    "rateApp": "Rate Us",
+    "rateAppSubtitle": "Enjoying the app? Leave us a review",
+    "shareApp": "Share",
+    "shareAppSubtitle": "Spread the word to friends & family",
+    "shareMessage": "Check out {{appName}}!",
+    "shareMessageWithUrl": "Check out {{appName}}! Download it here: {{url}}",
+    "userId": "User ID",
+    "userIdCopied": "User ID copied",
+    "legalSection": "Legal",
+    "privacyConsent": "Privacy & Consent",
+    "version": "Version {{version}}",
+    "otaUpdateId": "Update: {{updateId}}",
+    "upgradeBanner": {
+      "title": "Upgrade to Premium",
+      "subtitle": "Unlock longer Turbo cleaning, advanced audio controls, and an ad-free experience"
+    },
+    "preferences": "Preferences"
+  },
+  "paywall": {
+    "title": "Unlock Your Complete Audio Toolkit",
+    "subtitle": "Clean your speaker, access advanced controls, and remove every ad.",
+    "ctaFreeTrial": "Try for Free",
+    "trialDisclaimer": "Cancel anytime. No payment due now",
+    "subscriptionDisclaimer": "Cancel anytime.",
+    "lifetimeDisclaimer": "Pay once. No recurring charges.",
+    "restore": "Restore Purchases",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "then": "then",
+    "trial": "{{count}}-{{unit}} free trial",
+    "save": "Save {{percent}}%",
+    "availability": {
+      "loading": "Checking purchase options…",
+      "temporary_error": {
+        "title": "Couldn't load purchase options",
+        "subtitle": "Check your connection and try again."
+      },
+      "configuration_error": {
+        "title": "Purchase options are unavailable",
+        "subtitle": "The store couldn't load this app's products. Please try again shortly."
+      },
+      "purchase_not_allowed": {
+        "title": "Purchases aren't supported on this device",
+        "subtitle": "This device or store account can't make in-app purchases."
+      }
+    },
+    "trialUnit": {
+      "day": "day",
+      "week": "week",
+      "month": "month",
+      "year": "year"
+    },
+    "period": {
+      "day": "per day",
+      "week": "per week",
+      "month": "per month",
+      "year": "per year",
+      "lifetime": "One-time purchase"
+    },
+    "comparison": {
+      "features": "Features",
+      "free": "Free",
+      "pro": "Pro",
+      "included": "Included",
+      "excluded": "Not included",
+      "unlimited": "Unlimited",
+      "rows": {
+        "cleaningDuration": {
+          "title": "Cleaning duration",
+          "free": "30 sec",
+          "pro": "30/60/90 sec"
+        },
+        "turbo": {
+          "title": "Turbo Mode"
+        },
+        "waveforms": {
+          "title": "Tone waveforms",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "Stereo testing",
+          "free": "Manual",
+          "pro": "Auto"
+        },
+        "soundInsights": {
+          "title": "Sound insights",
+          "free": "Basic",
+          "pro": "Advanced"
+        },
+        "activityHistory": {
+          "title": "Activity history"
+        },
+        "adExperience": {
+          "title": "Ad experience",
+          "free": "Ads",
+          "pro": "Ad-free"
+        }
+      }
+    },
+    "context": {
+      "dbSubtitle": "Unlock the full analysis for this session and revisit saved sound reports."
+    },
+    "feedback": {
+      "subscribeSuccess": "Welcome! Your premium access is active.",
+      "subscribeError": "Something went wrong. Please try again.",
+      "restoreSuccess": "Premium access restored successfully!",
+      "restoreNotFound": "No active Premium purchase found.",
+      "restoreError": "Could not restore purchases. Please try again."
+    },
+    "packageTitle": {
+      "day": "Daily",
+      "week": "Weekly",
+      "month": "Monthly",
+      "year": "Yearly",
+      "lifetime": "Lifetime"
+    }
+  },
+  "otaUpdate": {
+    "updateReady": "A new update is ready - restart to apply"
+  },
+  "errorBoundary": {
+    "title": "Something went wrong",
+    "message": "An unexpected error occurred. Please try again."
+  },
+  "onboarding": {
+    "waterEject": {
+      "title": "Remove Water\nand Dust Fast",
+      "description": "Play powerful cleaning sound to help push trapped water and dust out of your speaker."
+    },
+    "toneGenerator": {
+      "title": "Generate the\nRight Tone",
+      "description": "Choose from different frequencies for testing, tuning, masking noise, or any sound check."
+    },
+    "dbMeter": {
+      "title": "Know How Loud\nIt Really Is",
+      "description": "Use the dB Meter to estimate noise levels around you and make smarter listening decisions."
+    },
+    "privacy": {
+      "title": "Private and On Device",
+      "description": "Audio processing stays on your phone, with clear safety and microphone guidance."
+    }
+  }
+}

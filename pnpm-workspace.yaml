@@ -1,0 +1,11 @@
+packages:
+  - apps/*
+  - packages/*
+nodeLinker: hoisted
+onlyBuiltDependencies:
+  - esbuild
+  - '@sentry/cli'
+  - unrs-resolver
+ignoredBuiltDependencies:
+  - "@firebase/util"
+  - protobufjs

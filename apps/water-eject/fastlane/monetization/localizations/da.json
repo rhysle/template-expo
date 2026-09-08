@@ -1,0 +1,36 @@
+{
+  "appleLocale": "da",
+  "googleLocale": "da-DK",
+  "apple": {
+    "subscriptionGroupDisplayName": "Premium",
+    "products": {
+      "weekly": {
+        "displayName": "Premium · Ugentligt",
+        "description": "Fuld adgang til alle premiumfunktioner."
+      },
+      "monthly": {
+        "displayName": "Premium · Månedligt",
+        "description": "Fuld adgang til alle premiumfunktioner."
+      },
+      "yearly": {
+        "displayName": "Premium · Årligt",
+        "description": "Fuld adgang til alle premiumfunktioner."
+      },
+      "lifetime": {
+        "displayName": "Premium · Livstid",
+        "description": "Livslang adgang til alle premiumfunktioner."
+      }
+    }
+  },
+  "google": {
+    "subscription": {
+      "title": "Premium",
+      "description": "Fuld adgang til alle premiumfunktioner.",
+      "benefits": ["Fuld adgang til alle premiumfunktioner"]
+    },
+    "lifetime": {
+      "title": "Premium · Livstid",
+      "description": "Livslang adgang til alle premiumfunktioner."
+    }
+  }
+}

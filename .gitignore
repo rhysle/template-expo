@@ -79,3 +79,22 @@ fastlane/ios/metadata/review_information/*
 fastlane/ios/review/*
 !fastlane/ios/review/.gitkeep
 .env.fastlane.local
+
+# Monorepo local app files
+**/node_modules/
+/apps/*/ios/
+/apps/*/android/
+/apps/*/.expo/
+/apps/*/dist/
+**/.env*.local
+**/GoogleService-Info*.plist
+**/google-services*.json
+**/fastlane/.private/
+**/fastlane/.tmp/
+**/fastlane/ios/review/*
+!**/fastlane/ios/review/.gitkeep
+**/fastlane/ios/metadata/review_information/*
+!**/fastlane/ios/metadata/review_information/notes.txt
+
+# Local pnpm store fallback
+.pnpm-store/
