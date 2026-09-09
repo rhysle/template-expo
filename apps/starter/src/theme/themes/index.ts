@@ -1,4 +1,5 @@
-import type { ThemeId } from '../types'
+import type { ThemeId } from '@rhysle/core/theme'
+
 import { defaultTheme } from './default'
 
 export { defaultTheme } from './default'

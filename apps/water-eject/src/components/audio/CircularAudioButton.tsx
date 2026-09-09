@@ -1,4 +1,5 @@
 import { Pressable } from '@rhysle/core/components/base'
+import { withAlpha } from '@rhysle/core/utils/color'
 import { PlayIcon, StopIcon } from 'phosphor-react-native'
 import { useEffect } from 'react'
 import { ActivityIndicator, type StyleProp, View, type ViewStyle } from 'react-native'
@@ -15,7 +16,6 @@ import Animated, {
 } from 'react-native-reanimated'
 
 import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
-import { withAlpha } from '@/utils/color'
 
 interface CircularAudioButtonProps {
   active: boolean

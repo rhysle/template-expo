@@ -1,5 +1,7 @@
 import type { SegmentedOption } from '@rhysle/core/components/base'
 import { Button, Card, Pressable, SegmentedControl, Text } from '@rhysle/core/components/base'
+import { usePremiumGate } from '@rhysle/core/services/revenueCat'
+import { clearUserId as clearUserIdService } from '@rhysle/core/services/userIdentity'
 import { useSnackbarState } from '@rhysle/core/stores/features/snackbar'
 import { type PremiumState, useSubscriptionState } from '@rhysle/core/stores/features/subscription'
 import { useUserIdentityState } from '@rhysle/core/stores/features/userIdentity'
@@ -17,8 +19,6 @@ import { BaseComponentGallery } from '@/components/debug/BaseComponentGallery'
 import { DesignTokenSection } from '@/components/debug/DesignTokenSection'
 import { LanguageSwitcher } from '@/components/debug/LanguageSwitcher'
 import { ScreenHeader } from '@/components/ScreenHeader'
-import { usePremiumGate } from '@/services/revenueCat'
-import { clearUserId as clearUserIdService } from '@/services/userIdentity'
 import { createThemedStyles, iconSizes, useCommonStyles, useTheme, useThemedStyles } from '@/theme'
 import {
   clearAllStorage,

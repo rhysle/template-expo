@@ -1,5 +1,6 @@
 import { Button, Card, Text } from '@rhysle/core/components/base'
 import type { PremiumState } from '@rhysle/core/stores/features/subscription'
+import { withAlpha } from '@rhysle/core/utils/color'
 import { BlurTargetView, BlurView } from 'expo-blur'
 import { LinearGradient } from 'expo-linear-gradient'
 import {
@@ -16,7 +17,6 @@ import { View } from 'react-native'
 import type { DbActivityRecord } from '@/services/activity'
 import { classifyMeterBand, type MeterBand } from '@/services/audio'
 import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
-import { withAlpha } from '@/utils/color'
 
 import { getDbMeterBandColors } from './dbMeterBands'
 

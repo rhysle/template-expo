@@ -3,12 +3,12 @@ import {
   NativeTabNavigator,
   type TabDefinition,
 } from '@rhysle/core/components/base'
+import { useAutoPaywall } from '@rhysle/core/services/revenueCat'
 import { DropIcon, GaugeIcon, SpeakerHifiIcon, WaveformIcon } from 'phosphor-react-native'
 import { useTranslation } from 'react-i18next'
 import { Platform } from 'react-native'
 
 import { InterstitialAdProvider, useConsentInit } from '@/services/ads'
-import { useAutoPaywall } from '@/services/revenueCat'
 
 export const unstable_settings = {
   initialRouteName: '(eject)',

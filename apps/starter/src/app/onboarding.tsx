@@ -1,7 +1,9 @@
 import { OnboardingFlow, PaywallScreen } from '@rhysle/core/components/base'
+import type { PaywallSource } from '@rhysle/core/services/revenueCat'
 import { useOnboardingState } from '@rhysle/core/stores/features/onboarding'
 import { useSnackbarState } from '@rhysle/core/stores/features/snackbar'
 import { useSubscriptionState } from '@rhysle/core/stores/features/subscription'
+import { haptics } from '@rhysle/core/utils/haptics'
 import { useRouter } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -12,8 +14,6 @@ import {
   usePaywallComparison,
 } from '@/components/paywall/usePaywallFeatures'
 import { AnalyticsGeneralEvents, trackEvent } from '@/services/firebase/analytics'
-import type { PaywallSource } from '@/services/revenueCat'
-import { haptics } from '@/utils/haptics'
 
 const ONBOARDING_PAYWALL_SOURCE = 'onboarding' satisfies PaywallSource
 

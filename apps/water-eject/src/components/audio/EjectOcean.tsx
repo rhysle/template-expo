@@ -1,3 +1,4 @@
+import { withAlpha } from '@rhysle/core/utils/color'
 import {
   Canvas,
   LinearGradient as SkiaLinearGradient,
@@ -21,7 +22,6 @@ import {
 } from 'react-native-reanimated'
 
 import { createThemedStyles, useTheme, useThemedStyles } from '@/theme'
-import { withAlpha } from '@/utils/color'
 
 const ACTIVE_PHASE_SPEED = 0.0055
 const TURBO_PHASE_SPEED = 0.012

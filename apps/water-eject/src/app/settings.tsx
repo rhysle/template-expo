@@ -7,10 +7,16 @@ import {
   Text,
   ToggleListItem,
 } from '@rhysle/core/components/base'
+import { getCurrentOtaUpdateId } from '@rhysle/core/services/otaUpdate'
+import { type PaywallSource, usePremiumGate } from '@rhysle/core/services/revenueCat'
+import { recordError } from '@rhysle/core/services/sentry'
+import { openWriteReview } from '@rhysle/core/services/storeReview'
 import { useAdsState } from '@rhysle/core/stores/features/ads'
 import { useSnackbarState } from '@rhysle/core/stores/features/snackbar'
 import { useSubscriptionState } from '@rhysle/core/stores/features/subscription'
 import { useUserIdentityState } from '@rhysle/core/stores/features/userIdentity'
+import { useContactSupport } from '@rhysle/core/utils/useContactSupport'
+import { useShareApp } from '@rhysle/core/utils/useShareApp'
 import * as Clipboard from 'expo-clipboard'
 import Constants from 'expo-constants'
 import { useRouter } from 'expo-router'
@@ -42,14 +48,8 @@ import {
   AnalyticsGeneralEvents,
   trackEvent,
 } from '@/services/firebase/analytics'
-import { getCurrentOtaUpdateId } from '@/services/otaUpdate'
-import { type PaywallSource, usePremiumGate } from '@/services/revenueCat'
-import { recordError } from '@/services/sentry'
-import { openWriteReview } from '@/services/storeReview'
 import { useAudioPreferencesState } from '@/stores/features/audioPreferences'
 import { createThemedStyles, iconSizes, useCommonStyles, useTheme, useThemedStyles } from '@/theme'
-import { useContactSupport } from '@/utils/useContactSupport'
-import { useShareApp } from '@/utils/useShareApp'
 
 const SETTINGS_PAYWALL_SOURCE = 'settings' satisfies PaywallSource
 

@@ -6,6 +6,7 @@ import {
   StatusBadge,
   Text,
 } from '@rhysle/core/components/base'
+import { type PaywallSource, usePremiumGate } from '@rhysle/core/services/revenueCat'
 import { Image } from 'expo-image'
 import { WaveformIcon } from 'phosphor-react-native'
 import { useEffect, useState } from 'react'
@@ -37,7 +38,6 @@ import {
   useAudioController,
   useAudioToolLifecycle,
 } from '@/services/audio'
-import { type PaywallSource, usePremiumGate } from '@/services/revenueCat'
 import { useAudioPreferencesState } from '@/stores/features/audioPreferences'
 import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
 

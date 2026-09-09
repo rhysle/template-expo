@@ -1,10 +1,10 @@
 import { Card, ChoiceChip, Text } from '@rhysle/core/components/base'
+import { getDebugLanguageOverride, setDebugLanguageOverride } from '@rhysle/core/storage'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, View } from 'react-native'
 
 import { getDeviceLanguage, supportedLanguageCodes } from '@/i18n'
-import { getDebugLanguageOverride, setDebugLanguageOverride } from '@/storage'
 import { createThemedStyles, useThemedStyles } from '@/theme'
 
 const LANGUAGE_NAMES: Readonly<Record<string, string>> = {

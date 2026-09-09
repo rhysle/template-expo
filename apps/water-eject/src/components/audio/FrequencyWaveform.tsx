@@ -1,3 +1,4 @@
+import { withAlpha } from '@rhysle/core/utils/color'
 import { Canvas, Group, Path, usePathValue } from '@shopify/react-native-skia'
 import { BlurView } from 'expo-blur'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -14,7 +15,6 @@ import {
 
 import { normalizeFrequency, type ToneWaveform } from '@/services/audio'
 import { createThemedStyles, useTheme, useThemedStyles } from '@/theme'
-import { withAlpha } from '@/utils/color'
 
 import { appendFrequencyWaveformPath } from './frequency-waveform-path'
 

@@ -1,11 +1,11 @@
 import { Text } from '@rhysle/core/components/base'
+import { useIsRTL } from '@rhysle/core/services/rtl'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useEffect } from 'react'
 import { type LayoutChangeEvent, type StyleProp, View, type ViewStyle } from 'react-native'
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 
 import { MAX_ESTIMATED_DB, METER_BAND_THRESHOLDS } from '@/services/audio'
-import { useIsRTL } from '@/services/rtl'
 import { createThemedStyles, useTheme, useThemedStyles } from '@/theme'
 
 import {

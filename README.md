@@ -53,7 +53,7 @@ Then configure product assets/copy/legal links and run the app's Firebase and Se
 
 ## Share improvements
 
-Import shared base UI through `@rhysle/core/components/base` and other shared modules through their `@rhysle/core/...` entry points. `@/` means the current app's source, while the `@rhysle/core` package identifies core-owned source. Shared packages must not import app source, app aliases, or product assets.
+Import shared base UI through `@rhysle/core/components/base` and other shared modules through their `@rhysle/core/...` entry points. `@/` means the current app's source, while the `@rhysle/core` package identifies core-owned source. Do not mirror shared modules with app-local pass-through re-exports. The app-local ads entry point is the exception: setup rewrites it to the enabled package or the core no-op implementation so disabled apps do not depend on ads code. Shared packages must not import app source, app aliases, or product assets.
 
 An app creates a core runtime with its configuration, fonts, themes, ads adapter, and store. Its root `CoreProvider` makes that runtime available to shared hooks. Non-React services receive configuration explicitly. The app root layout still controls navigation and initialization ordering; Sentry initializes before rendering.
 

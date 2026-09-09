@@ -10,7 +10,7 @@ Current stack: Expo SDK 57, React Native 0.86, React 19 with React Compiler, Exp
 
 Apps live in `apps/starter` and `apps/water-eject`; create future apps with `pnpm create:app <slug> --name "Name" --bundle-id com.company.app`. Use pnpm 10.33.0, one root lockfile, and workspace dependencies. Do not reintroduce npm lockfiles. Root `pnpm check` covers all app and shared-package lint/types. Run app commands from the app directory or with `pnpm --filter @rhysle/<app>`.
 
-Unless explicitly stated otherwise below, `src/`, `assets/`, `app.json`, `eas.json`, and `fastlane/` are relative to the selected app. Shared implementations live in `packages/core/src`, optional native ads in `packages/ads/src`, and scripts/plugins/Fastlane lane implementations in `packages/tooling`. Apps import shared base UI through `@rhysle/core/components/base`; `@/` remains reserved for app-owned source. Remaining app-local service re-exports are compatibility modules. Modify shared implementations rather than copying them back into apps.
+Unless explicitly stated otherwise below, `src/`, `assets/`, `app.json`, `eas.json`, and `fastlane/` are relative to the selected app. Shared implementations live in `packages/core/src`, optional native ads in `packages/ads/src`, and scripts/plugins/Fastlane lane implementations in `packages/tooling`. Apps import shared code through the declared `@rhysle/core/...` package entry points; `@/` remains reserved for app-owned source. Do not add app-local pass-through re-exports for shared modules. The app-local ads entry point is the intentional exception because setup switches it between enabled and disabled implementations. Modify shared implementations rather than copying them back into apps.
 
 Apps create their core runtime with configuration, fonts, themes, ads adapter, and store and pass it through `CoreProvider`. Shared hooks consume this provider; non-React services receive configuration explicitly. Shared packages never import app source or `@/` aliases. Each app owns provider ordering and navigation. Core slices use shared types; only app-local product slices augment `AppSlices`. App discovery merges product slices with core definitions and rejects duplicate names. Preserve storage IDs, namespace keys, and persisted formats during refactoring.
 
@@ -169,21 +169,22 @@ Product state is one auto-discovered slice file per feature in the app’s `src/
 
 Do not manually register a slice or add a barrel export. Only non-function values belong in `persistExcludeKeys`; functions are omitted automatically. Add `version` and per-slice migrations only when changing persisted data that has already shipped.
 
-Import feature hooks from their feature module, for example:
+Import app-owned feature hooks from their feature module and shared core feature hooks from `@rhysle/core`, for example:
 
 ```ts
-import { useSubscriptionState } from '@/stores/features/subscription'
+import { useAudioPreferencesState } from '@/stores/features/audioPreferences'
+import { useSubscriptionState } from '@rhysle/core/stores/features/subscription'
 ```
 
 ### Storage
 
-MMKV storage is split by domain under `src/storage/`. Keys follow `namespace.name`; use the provided key builders instead of hardcoding complete MMKV keys. Register a new storage namespace so duplicate detection works in development.
+Shared MMKV infrastructure and shared storage domains live in `packages/core/src/storage/` and are imported through `@rhysle/core/storage/...`. App-specific storage domains live under the app’s `src/storage/`; do not add pass-through files for shared storage. Keys follow `namespace.name`; use the core key builders instead of hardcoding complete MMKV keys. Register a new storage namespace so duplicate detection works in development.
 
 ### Queries
 
-`src/services/queries/provider/` is generic TanStack Query infrastructure: connectivity, retry policy, persistence, and development tools. Do not put product requests in that folder.
+`packages/core/src/services/queries/provider/` is generic TanStack Query infrastructure: connectivity, retry policy, persistence, and development tools. Apps import it through `@rhysle/core/services/queries`; do not mirror it under app source.
 
-Create product domains under `src/services/queries/`. Keep each domain in this order:
+Create app-owned product domains under the app’s `src/services/queries/`. Keep each domain in this order:
 
 1. Private request function
 2. Query keys

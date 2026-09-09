@@ -1,4 +1,5 @@
 import { InlineNotice, NativeToggle, Text } from '@rhysle/core/components/base'
+import { type PaywallSource, usePremiumGate } from '@rhysle/core/services/revenueCat'
 import { LockKeyIcon, WaveformIcon } from 'phosphor-react-native'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -7,7 +8,6 @@ import { useWindowDimensions, View } from 'react-native'
 import { AudioToolScreen, CircularAudioButton, StereoStage } from '@/components/audio'
 import { useRequestInterstitialAd } from '@/services/ads'
 import { audioController, useAudioController, useAudioToolLifecycle } from '@/services/audio'
-import { type PaywallSource, usePremiumGate } from '@/services/revenueCat'
 import { useAudioPreferencesState } from '@/stores/features/audioPreferences'
 import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
 

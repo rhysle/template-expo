@@ -1,3 +1,6 @@
+import { storage } from '@rhysle/core/storage/core/engine'
+import { createNamespaceKey, registerStorageNamespace } from '@rhysle/core/storage/core/keys'
+
 import { removeActivityRecordsFromState } from '@/services/activity/activityMutation'
 import {
   emptyPersistedActivityState,
@@ -13,9 +16,6 @@ import type {
   CleaningActivityRecord,
   DbActivityRecord,
 } from '@/services/activity/types'
-
-import { storage } from './core/engine'
-import { createNamespaceKey, registerStorageNamespace } from './core/keys'
 
 const ACTIVITY_NAMESPACE = 'audioActivity'
 registerStorageNamespace(ACTIVITY_NAMESPACE)

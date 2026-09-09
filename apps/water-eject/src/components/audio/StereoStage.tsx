@@ -1,4 +1,5 @@
 import { Pressable, Text } from '@rhysle/core/components/base'
+import { withAlpha } from '@rhysle/core/utils/color'
 import { useEffect } from 'react'
 import { View } from 'react-native'
 import Animated, {
@@ -15,7 +16,6 @@ import Animated, {
 import Svg, { Circle, Rect } from 'react-native-svg'
 
 import { createThemedStyles, useTheme, useThemedStyles } from '@/theme'
-import { withAlpha } from '@/utils/color'
 
 interface StereoStageProps {
   leftActive: boolean

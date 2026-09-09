@@ -5,6 +5,7 @@ import {
   SegmentedControl,
   Text,
 } from '@rhysle/core/components/base'
+import { buildPaywallPath, usePremiumGate } from '@rhysle/core/services/revenueCat'
 import { useSnackbarState } from '@rhysle/core/stores/features/snackbar'
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router'
 import { CheckIcon, GaugeIcon, SpeakerHighIcon, TrashIcon } from 'phosphor-react-native'
@@ -22,7 +23,6 @@ import type {
 } from '@/services/activity'
 import { deleteActivityRecords, useActivityHistory } from '@/services/activity'
 import { AnalyticsAppEvents, trackEvent } from '@/services/firebase/analytics'
-import { buildPaywallPath, usePremiumGate } from '@/services/revenueCat'
 import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
 
 type HistoryKind = ActivityRecordKind

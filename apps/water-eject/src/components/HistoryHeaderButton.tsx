@@ -1,4 +1,5 @@
 import { Pressable, Text } from '@rhysle/core/components/base'
+import { usePremiumGate } from '@rhysle/core/services/revenueCat'
 import { useRouter } from 'expo-router'
 import { ClockCounterClockwiseIcon } from 'phosphor-react-native'
 import { useTranslation } from 'react-i18next'
@@ -6,7 +7,6 @@ import { View } from 'react-native'
 
 import { type ActivityRecordKind, useActivityHistory } from '@/services/activity'
 import { AnalyticsAppEvents, trackEvent } from '@/services/firebase/analytics'
-import { usePremiumGate } from '@/services/revenueCat'
 import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
 
 interface HistoryHeaderButtonProps {

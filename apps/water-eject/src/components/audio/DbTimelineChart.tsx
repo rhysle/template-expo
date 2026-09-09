@@ -1,3 +1,4 @@
+import { useIsRTL } from '@rhysle/core/services/rtl'
 import { useWindowDimensions, View } from 'react-native'
 import Svg, {
   Defs,
@@ -16,7 +17,6 @@ import {
   METER_BAND_THRESHOLDS,
   type MeterTimelinePoint,
 } from '@/services/audio'
-import { useIsRTL } from '@/services/rtl'
 import { createThemedStyles, useTheme, useThemedStyles } from '@/theme'
 
 import { getDbMeterBandColors } from './dbMeterBands'

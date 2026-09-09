@@ -1,9 +1,10 @@
-import { QUERY_STATE_PERSIST_KEY } from '@/services/queries'
-import { storage } from '@/storage/core/engine'
-import { buildQueryKey } from '@/storage/queryStorage'
-import { buildStoreKey } from '@/storage/storeStorage'
+import { QUERY_STATE_PERSIST_KEY } from '@rhysle/core/services/queries'
+import { storage } from '@rhysle/core/storage/core/engine'
+import { buildQueryKey } from '@rhysle/core/storage/queryStorage'
+import { buildStoreKey } from '@rhysle/core/storage/storeStorage'
+import { SLICE_VERSIONS_KEY } from '@rhysle/core/stores/slices/migrate'
+
 import { APP_STATE_PERSIST_NAME, appSliceModules, useAppStore } from '@/stores'
-import { SLICE_VERSIONS_KEY } from '@/stores/slices/migrate'
 
 const ZUSTAND_KEY = buildStoreKey(APP_STATE_PERSIST_NAME)
 const QUERY_KEY = buildQueryKey(QUERY_STATE_PERSIST_KEY)

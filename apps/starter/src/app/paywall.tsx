@@ -1,5 +1,6 @@
 import { PaywallScreen } from '@rhysle/core/components/base'
 import { useSnackbarState } from '@rhysle/core/stores/features/snackbar'
+import { haptics } from '@rhysle/core/utils/haptics'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useTranslation } from 'react-i18next'
 
@@ -7,7 +8,6 @@ import {
   useContextualPaywallContent,
   usePaywallComparison,
 } from '@/components/paywall/usePaywallFeatures'
-import { haptics } from '@/utils/haptics'
 
 export default function AutoPaywallScreen() {
   const { t } = useTranslation()

@@ -1,4 +1,5 @@
 import { InlineNotice, PermissionSheet, StatusBadge, Text } from '@rhysle/core/components/base'
+import { type PaywallSource, usePremiumGate } from '@rhysle/core/services/revenueCat'
 import { MicrophoneIcon, ShieldCheckIcon, WarningCircleIcon } from 'phosphor-react-native'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -20,7 +21,6 @@ import {
   useAudioController,
   useAudioToolLifecycle,
 } from '@/services/audio'
-import { type PaywallSource, usePremiumGate } from '@/services/revenueCat'
 import { useAudioPreferencesState } from '@/stores/features/audioPreferences'
 import { createThemedStyles, useTheme, useThemedStyles } from '@/theme'
 
