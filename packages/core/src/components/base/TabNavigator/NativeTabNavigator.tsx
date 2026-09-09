@@ -1,4 +1,4 @@
-import { useTheme } from '@rhysle/core/theme'
+import { useTheme } from '@shared/core/theme'
 import { NativeTabs } from 'expo-router/unstable-native-tabs'
 import { Platform } from 'react-native'
 

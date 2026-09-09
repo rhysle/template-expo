@@ -1,5 +1,5 @@
-import { BannerAd, useBannerAdsEnabled, useCanShowAds } from '@rhysle/core/services/ads'
-import { createThemedStyles, useThemedStyles } from '@rhysle/core/theme'
+import { BannerAd, useBannerAdsEnabled, useCanShowAds } from '@shared/core/services/ads'
+import { createThemedStyles, useThemedStyles } from '@shared/core/theme'
 import { useEffect } from 'react'
 import { StyleSheet, View } from 'react-native'
 

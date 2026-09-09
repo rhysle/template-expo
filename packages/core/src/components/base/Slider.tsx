@@ -1,5 +1,5 @@
-import { useIsRTL } from '@rhysle/core/services/rtl'
-import { createThemedStyles, useTheme, useThemedStyles } from '@rhysle/core/theme'
+import { useIsRTL } from '@shared/core/services/rtl'
+import { createThemedStyles, useTheme, useThemedStyles } from '@shared/core/theme'
 import { useEffect, useMemo } from 'react'
 import {
   type AccessibilityActionEvent,

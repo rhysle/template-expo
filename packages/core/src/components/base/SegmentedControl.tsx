@@ -1,5 +1,5 @@
-import { useIsRTL } from '@rhysle/core/services/rtl'
-import { createThemedStyles, useTheme, useThemedStyles } from '@rhysle/core/theme'
+import { useIsRTL } from '@shared/core/services/rtl'
+import { createThemedStyles, useTheme, useThemedStyles } from '@shared/core/theme'
 import type { ReactNode } from 'react'
 import { useEffect, useRef, useState } from 'react'
 import { type LayoutChangeEvent, type StyleProp, View, type ViewStyle } from 'react-native'

@@ -1,4 +1,4 @@
-import { Button, NativeBottomSheet, Text } from '@rhysle/core/components/base'
+import { Button, NativeBottomSheet, Text } from '@shared/core/components/base'
 import { LightningIcon } from 'phosphor-react-native'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'

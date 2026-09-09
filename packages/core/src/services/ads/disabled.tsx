@@ -1,4 +1,4 @@
-import { useAdsState } from '@rhysle/core/stores/features/ads'
+import { useAdsState } from '@shared/core/stores/features/ads'
 import { type PropsWithChildren, useEffect } from 'react'
 import type { StyleProp, ViewStyle } from 'react-native'
 

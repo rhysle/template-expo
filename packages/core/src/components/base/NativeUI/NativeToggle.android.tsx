@@ -1,6 +1,6 @@
 import { Row, Switch, Text } from '@expo/ui/jetpack-compose'
 import { testID as testIDModifier, weight } from '@expo/ui/jetpack-compose/modifiers'
-import { useTheme } from '@rhysle/core/theme'
+import { useTheme } from '@shared/core/theme'
 import type { StyleProp, ViewStyle } from 'react-native'
 
 import { NativeUIHost } from './NativeUIHost'

@@ -1,5 +1,5 @@
-import { Text } from '@rhysle/core/components/base'
-import { useIsRTL } from '@rhysle/core/services/rtl'
+import { Text } from '@shared/core/components/base'
+import { useIsRTL } from '@shared/core/services/rtl'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useEffect } from 'react'
 import { type LayoutChangeEvent, type StyleProp, View, type ViewStyle } from 'react-native'

@@ -1,4 +1,4 @@
-import { type ResolvedFontFamilyMap } from '@rhysle/core/runtime/fonts'
+import { type ResolvedFontFamilyMap } from '@shared/core/runtime/fonts'
 
 export const typography = {
   fontFamily: {

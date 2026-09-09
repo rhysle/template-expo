@@ -1,6 +1,6 @@
-import type { SnackbarAction, SnackbarVariant } from '@rhysle/core/stores/features/snackbar'
-import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@rhysle/core/theme'
-import { withAlpha } from '@rhysle/core/utils/color'
+import type { SnackbarAction, SnackbarVariant } from '@shared/core/stores/features/snackbar'
+import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@shared/core/theme'
+import { withAlpha } from '@shared/core/utils/color'
 import { BlurView } from 'expo-blur'
 import type { Icon } from 'phosphor-react-native'
 import {

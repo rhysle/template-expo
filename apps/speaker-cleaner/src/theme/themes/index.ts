@@ -1,4 +1,4 @@
-import type { ThemeId } from '@rhysle/core/theme'
+import type { ThemeId } from '@shared/core/theme'
 
 import { defaultTheme } from './default'
 

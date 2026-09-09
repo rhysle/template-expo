@@ -1,5 +1,5 @@
-import { Pressable } from '@rhysle/core/components/base'
-import { withAlpha } from '@rhysle/core/utils/color'
+import { Pressable } from '@shared/core/components/base'
+import { withAlpha } from '@shared/core/utils/color'
 import { PlayIcon, StopIcon } from 'phosphor-react-native'
 import { useEffect } from 'react'
 import { ActivityIndicator, type StyleProp, View, type ViewStyle } from 'react-native'

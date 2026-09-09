@@ -1,6 +1,6 @@
 import { ModalBottomSheet, type ModalBottomSheetRef, RNHostView } from '@expo/ui/jetpack-compose'
-import { useIsRTL } from '@rhysle/core/services/rtl'
-import { createThemedStyles, useTheme, useThemedStyles } from '@rhysle/core/theme'
+import { useIsRTL } from '@shared/core/services/rtl'
+import { createThemedStyles, useTheme, useThemedStyles } from '@shared/core/theme'
 import { useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react'
 import { ScrollView, useWindowDimensions, View } from 'react-native'
 

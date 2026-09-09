@@ -1,4 +1,4 @@
-import { iconSizes, useTheme } from '@rhysle/core/theme'
+import { iconSizes, useTheme } from '@shared/core/theme'
 import { XCircleIcon } from 'phosphor-react-native'
 import { useEffect, useRef, useState } from 'react'
 import {

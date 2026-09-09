@@ -1,4 +1,4 @@
-import type { CoreConfig } from '@rhysle/core/runtime/config'
+import type { CoreConfig } from '@shared/core/runtime/config'
 import { Platform } from 'react-native'
 import Purchases, {
   type CustomerInfo,

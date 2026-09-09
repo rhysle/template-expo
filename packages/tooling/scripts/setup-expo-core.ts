@@ -93,7 +93,7 @@ export const applyAppIdentity = (
   validateAndroidPackage(identity.androidPackage)
   validateScheme(identity.scheme)
 
-  packageJson.name = `@rhysle/${identity.slug}`
+  packageJson.name = `@apps/${identity.slug}`
 
   const expo = getExpoConfig(appJson)
   expo.name = identity.displayName

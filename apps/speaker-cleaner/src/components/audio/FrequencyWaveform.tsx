@@ -1,4 +1,4 @@
-import { withAlpha } from '@rhysle/core/utils/color'
+import { withAlpha } from '@shared/core/utils/color'
 import { Canvas, Group, Path, usePathValue } from '@shopify/react-native-skia'
 import { BlurView } from 'expo-blur'
 import { LinearGradient } from 'expo-linear-gradient'

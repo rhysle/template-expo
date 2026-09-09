@@ -1,4 +1,4 @@
-import { Button, NativeBottomSheet, Pressable, TabStack, Text } from '@rhysle/core/components/base'
+import { Button, NativeBottomSheet, Pressable, TabStack, Text } from '@shared/core/components/base'
 import { QuestionIcon, SpeakerHighIcon } from 'phosphor-react-native'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'

@@ -1,6 +1,6 @@
-import { usePaywallState } from '@rhysle/core/stores/features/paywall'
-import { useSnackbarState } from '@rhysle/core/stores/features/snackbar'
-import { useSubscriptionState } from '@rhysle/core/stores/features/subscription'
+import { usePaywallState } from '@shared/core/stores/features/paywall'
+import { useSnackbarState } from '@shared/core/stores/features/snackbar'
+import { useSubscriptionState } from '@shared/core/stores/features/subscription'
 import { useRouter } from 'expo-router'
 import { useTranslation } from 'react-i18next'
 

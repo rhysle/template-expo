@@ -1,1 +1,1 @@
-export * from '@rhysle/ads/enabled'
+export * from '@shared/ads/enabled'

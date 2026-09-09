@@ -1,4 +1,4 @@
-import type { PaywallSource } from '@rhysle/core/services/revenueCat'
+import type { PaywallSource } from '@shared/core/services/revenueCat'
 import type { Icon } from 'phosphor-react-native'
 
 export type PaywallComparisonValue =

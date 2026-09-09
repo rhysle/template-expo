@@ -1,5 +1,5 @@
-import type { CoreConfig } from '@rhysle/core/runtime/config'
-import { recordError } from '@rhysle/core/services/sentry'
+import type { CoreConfig } from '@shared/core/runtime/config'
+import { recordError } from '@shared/core/services/sentry'
 import Constants from 'expo-constants'
 import * as StoreReview from 'expo-store-review'
 import { Linking, Platform } from 'react-native'

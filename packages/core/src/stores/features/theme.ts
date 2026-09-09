@@ -1,4 +1,4 @@
-import type { ColorScheme, ThemeId } from '@rhysle/core/theme/types'
+import type { ColorScheme, ThemeId } from '@shared/core/theme/types'
 import { useShallow } from 'zustand/react/shallow'
 
 import { useCoreStore } from '../binding'

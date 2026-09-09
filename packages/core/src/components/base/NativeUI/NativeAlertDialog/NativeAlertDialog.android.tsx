@@ -1,5 +1,5 @@
 import { AlertDialog, Text, TextButton } from '@expo/ui/jetpack-compose'
-import { useTheme } from '@rhysle/core/theme'
+import { useTheme } from '@shared/core/theme'
 
 import { NativeUIHost } from '../NativeUIHost'
 import type { NativeAlertDialogAction, NativeAlertDialogProps } from './NativeAlertDialog.types'

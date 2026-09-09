@@ -1,4 +1,4 @@
-import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@rhysle/core/theme'
+import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@shared/core/theme'
 import { BlurView } from 'expo-blur'
 import type { BottomTabBarProps } from 'expo-router/js-tabs'
 import { useEffect, useRef } from 'react'

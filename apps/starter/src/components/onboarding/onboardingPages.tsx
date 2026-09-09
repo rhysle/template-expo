@@ -1,4 +1,4 @@
-import type { OnboardingPageItem } from '@rhysle/core/components/base'
+import type { OnboardingPageItem } from '@shared/core/components/base'
 import { useTranslation } from 'react-i18next'
 
 import { type OnboardingAnimationConfig, OnboardingScreenContent } from './OnboardingScreenContent'

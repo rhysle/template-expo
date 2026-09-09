@@ -1,5 +1,5 @@
-import { Pressable, Text } from '@rhysle/core/components/base'
-import { usePremiumGate } from '@rhysle/core/services/revenueCat'
+import { Pressable, Text } from '@shared/core/components/base'
+import { usePremiumGate } from '@shared/core/services/revenueCat'
 import { useRouter } from 'expo-router'
 import { ClockCounterClockwiseIcon } from 'phosphor-react-native'
 import { useTranslation } from 'react-i18next'

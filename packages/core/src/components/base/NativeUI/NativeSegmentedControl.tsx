@@ -1,5 +1,5 @@
 import { SegmentedControl as ExpoSegmentedControl } from '@expo/ui/community/segmented-control'
-import { useTheme } from '@rhysle/core/theme'
+import { useTheme } from '@shared/core/theme'
 import type { StyleProp, ViewStyle } from 'react-native'
 
 export interface NativeSegmentedOption<T extends string> {

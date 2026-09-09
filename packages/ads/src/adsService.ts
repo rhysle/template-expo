@@ -1,5 +1,5 @@
-import type { CoreConfig } from '@rhysle/core/runtime/config'
-import { recordError } from '@rhysle/core/services/sentry'
+import type { CoreConfig } from '@shared/core/runtime/config'
+import { recordError } from '@shared/core/services/sentry'
 import { Platform } from 'react-native'
 import MobileAds, {
   AdEventType,

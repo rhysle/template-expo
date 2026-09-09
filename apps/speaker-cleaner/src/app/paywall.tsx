@@ -1,6 +1,6 @@
-import { PaywallScreen } from '@rhysle/core/components/base'
-import { useSnackbarState } from '@rhysle/core/stores/features/snackbar'
-import { haptics } from '@rhysle/core/utils/haptics'
+import { PaywallScreen } from '@shared/core/components/base'
+import { useSnackbarState } from '@shared/core/stores/features/snackbar'
+import { haptics } from '@shared/core/utils/haptics'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useTranslation } from 'react-i18next'
 

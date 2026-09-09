@@ -5,8 +5,8 @@ import {
   Slider,
   StatusBadge,
   Text,
-} from '@rhysle/core/components/base'
-import { type PaywallSource, usePremiumGate } from '@rhysle/core/services/revenueCat'
+} from '@shared/core/components/base'
+import { type PaywallSource, usePremiumGate } from '@shared/core/services/revenueCat'
 import { Image } from 'expo-image'
 import { WaveformIcon } from 'phosphor-react-native'
 import { useEffect, useState } from 'react'

@@ -1,4 +1,4 @@
-import { Pressable, TabStack } from '@rhysle/core/components/base'
+import { Pressable, TabStack } from '@shared/core/components/base'
 import { QuestionIcon } from 'phosphor-react-native'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'

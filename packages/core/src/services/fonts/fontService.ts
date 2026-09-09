@@ -1,5 +1,5 @@
-import { useCoreRuntime } from '@rhysle/core/runtime'
-import type { FontFamilyMap } from '@rhysle/core/runtime/fonts'
+import { useCoreRuntime } from '@shared/core/runtime'
+import type { FontFamilyMap } from '@shared/core/runtime/fonts'
 import { useFonts } from 'expo-font'
 
 function getDevFontMap(runtimeFontFamilyMap: FontFamilyMap): Record<string, string> {

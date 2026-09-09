@@ -1,6 +1,6 @@
-import { useIsRTL } from '@rhysle/core/services/rtl'
-import { createThemedStyles, useTheme, useThemedStyles } from '@rhysle/core/theme'
-import { haptics } from '@rhysle/core/utils/haptics'
+import { useIsRTL } from '@shared/core/services/rtl'
+import { createThemedStyles, useTheme, useThemedStyles } from '@shared/core/theme'
+import { haptics } from '@shared/core/utils/haptics'
 import { useEffect } from 'react'
 import { Pressable, type StyleProp, type ViewStyle } from 'react-native'
 import Animated, {

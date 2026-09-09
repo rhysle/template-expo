@@ -2,8 +2,8 @@ import {
   BouncingDotsLoader,
   PulsingRingLoader,
   SpinArcLoader,
-} from '@rhysle/core/components/base/Loader'
-import { createThemedStyles, useTheme, useThemedStyles } from '@rhysle/core/theme'
+} from '@shared/core/components/base/Loader'
+import { createThemedStyles, useTheme, useThemedStyles } from '@shared/core/theme'
 import type { ReactNode } from 'react'
 import {
   type GestureResponderEvent,

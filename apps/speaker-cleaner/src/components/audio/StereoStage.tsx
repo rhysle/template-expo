@@ -1,5 +1,5 @@
-import { Pressable, Text } from '@rhysle/core/components/base'
-import { withAlpha } from '@rhysle/core/utils/color'
+import { Pressable, Text } from '@shared/core/components/base'
+import { withAlpha } from '@shared/core/utils/color'
 import { useEffect } from 'react'
 import { View } from 'react-native'
 import Animated, {

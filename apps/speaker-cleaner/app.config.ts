@@ -5,7 +5,7 @@ import {
   getVariantDisplayName,
   getVariantIdentifier,
   resolveAppVariant,
-} from '@rhysle/tooling/app-variant'
+} from '@shared/tooling/app-variant'
 
 const DEVELOPMENT_ANDROID_FIREBASE_CONFIG = './google-services.dev.json'
 const DEVELOPMENT_IOS_FIREBASE_CONFIG = './GoogleService-Info.dev.plist'

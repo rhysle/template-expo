@@ -17,7 +17,7 @@ export const getAppContext = (
     !fs.existsSync(path.join(appRoot, 'app.json'))
   ) {
     throw new Error(
-      'Select an app: pnpm --filter @rhysle/<app> <command>, or set RHYSLE_APP_ROOT to its directory'
+      'Select an app: pnpm --filter @apps/<app> <command>, or set RHYSLE_APP_ROOT to its directory'
     )
   }
   return { appRoot, repoRoot }

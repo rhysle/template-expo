@@ -1,5 +1,5 @@
-import type { ResolvedTheme } from '@rhysle/core/theme'
-import { useThemedStyles } from '@rhysle/core/theme'
+import type { ResolvedTheme } from '@shared/core/theme'
+import { useThemedStyles } from '@shared/core/theme'
 import {
   type StyleProp,
   StyleSheet,

@@ -1,4 +1,4 @@
-import { withTimeout } from '@rhysle/core/utils/withTimeout'
+import { withTimeout } from '@shared/core/utils/withTimeout'
 import * as Updates from 'expo-updates'
 
 // expo-updates has no built-in timeout. Without this, a stalled DNS / half-open

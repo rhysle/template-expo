@@ -1,5 +1,5 @@
-import type { ColorScheme } from '@rhysle/core/theme'
-import { withAlpha } from '@rhysle/core/utils/color'
+import type { ColorScheme } from '@shared/core/theme'
+import { withAlpha } from '@shared/core/utils/color'
 
 export type ComponentTone = 'neutral' | 'accent' | 'success' | 'warning' | 'error' | 'info'
 

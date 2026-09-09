@@ -1,6 +1,6 @@
 import { Host } from '@expo/ui'
-import { useIsRTL } from '@rhysle/core/services/rtl'
-import { useTheme } from '@rhysle/core/theme'
+import { useIsRTL } from '@shared/core/services/rtl'
+import { useTheme } from '@shared/core/theme'
 import type { ReactNode } from 'react'
 import type { StyleProp, ViewStyle } from 'react-native'
 

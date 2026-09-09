@@ -1,4 +1,4 @@
-import { createThemedStyles, useTheme, useThemedStyles } from '@rhysle/core/theme'
+import { createThemedStyles, useTheme, useThemedStyles } from '@shared/core/theme'
 import { useLayoutEffect, useRef, useState } from 'react'
 import { Modal, Pressable, StyleSheet, useWindowDimensions, View } from 'react-native'
 import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler'

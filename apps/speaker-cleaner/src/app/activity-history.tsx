@@ -4,9 +4,9 @@ import {
   Pressable,
   SegmentedControl,
   Text,
-} from '@rhysle/core/components/base'
-import { buildPaywallPath, usePremiumGate } from '@rhysle/core/services/revenueCat'
-import { useSnackbarState } from '@rhysle/core/stores/features/snackbar'
+} from '@shared/core/components/base'
+import { buildPaywallPath, usePremiumGate } from '@shared/core/services/revenueCat'
+import { useSnackbarState } from '@shared/core/stores/features/snackbar'
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router'
 import { CheckIcon, GaugeIcon, SpeakerHighIcon, TrashIcon } from 'phosphor-react-native'
 import { useEffect, useState } from 'react'

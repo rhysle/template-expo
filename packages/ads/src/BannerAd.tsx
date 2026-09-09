@@ -1,4 +1,4 @@
-import { useCoreRuntime } from '@rhysle/core/runtime'
+import { useCoreRuntime } from '@shared/core/runtime'
 import { useRef } from 'react'
 import type { StyleProp, ViewStyle } from 'react-native'
 import { Platform, StyleSheet, View } from 'react-native'

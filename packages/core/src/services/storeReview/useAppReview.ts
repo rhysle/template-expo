@@ -1,8 +1,8 @@
-import { useCoreRuntime } from '@rhysle/core/runtime'
-import { trackEvent } from '@rhysle/core/services/firebase/analytics'
-import { AnalyticsGeneralEvents } from '@rhysle/core/services/firebase/analytics/analyticsGeneralEvents'
-import { recordError } from '@rhysle/core/services/sentry'
-import { useAppReviewState } from '@rhysle/core/stores/features/appReview'
+import { useCoreRuntime } from '@shared/core/runtime'
+import { trackEvent } from '@shared/core/services/firebase/analytics'
+import { AnalyticsGeneralEvents } from '@shared/core/services/firebase/analytics/analyticsGeneralEvents'
+import { recordError } from '@shared/core/services/sentry'
+import { useAppReviewState } from '@shared/core/stores/features/appReview'
 
 import { isReviewAvailable, requestStoreReview } from './storeReviewService'
 

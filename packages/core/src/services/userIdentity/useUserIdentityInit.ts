@@ -1,6 +1,6 @@
-import { setAnalyticsUserId } from '@rhysle/core/services/firebase/analytics'
-import { setSentryUser } from '@rhysle/core/services/sentry'
-import { useUserIdentityState } from '@rhysle/core/stores/features/userIdentity'
+import { setAnalyticsUserId } from '@shared/core/services/firebase/analytics'
+import { setSentryUser } from '@shared/core/services/sentry'
+import { useUserIdentityState } from '@shared/core/stores/features/userIdentity'
 import { useEffect } from 'react'
 
 import { getOrCreateUserId } from './userIdentityService'

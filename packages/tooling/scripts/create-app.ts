@@ -4,7 +4,7 @@ import { createRequire } from 'node:module'
 import path from 'node:path'
 import { parseArgs } from 'node:util'
 
-import type { CoreConfig } from '@rhysle/core/runtime/config'
+import type { CoreConfig } from '@shared/core/runtime/config'
 import type { ExpoConfig } from 'expo/config'
 
 const repoRoot = path.resolve(__dirname, '../../..')
@@ -62,9 +62,9 @@ export const resetAppConfiguration = (
   fs.writeFileSync(appFile, JSON.stringify(app, null, 2) + '\n')
   const pkgFile = path.join(root, 'package.json')
   const pkg = readJson<AppPackage>(pkgFile)
-  pkg.name = `@rhysle/${slug}`
+  pkg.name = `@apps/${slug}`
   pkg.version = '1.0.0'
-  delete pkg.dependencies['@rhysle/ads']
+  delete pkg.dependencies['@shared/ads']
   delete pkg.dependencies['react-native-google-mobile-ads']
   delete pkg.dependencies['expo-tracking-transparency']
   pkg.expo.autolinking = {
@@ -99,7 +99,7 @@ export const resetAppConfiguration = (
   })
   fs.writeFileSync(
     path.join(root, 'src/services/ads/index.ts'),
-    "export * from '@rhysle/core/services/ads/disabled'\n"
+    "export * from '@shared/core/services/ads/disabled'\n"
   )
   const monetizationFile = path.join(root, 'src/configs/monetization.ts')
   fs.writeFileSync(
@@ -147,7 +147,7 @@ const main = (): void => {
     const pkg = readJson<AppPackage>(path.join(appsRoot, entry, 'package.json'))
     const schemes = Array.isArray(expo.scheme) ? expo.scheme : [expo.scheme]
     if (
-      pkg.name === `@rhysle/${slug}` ||
+      pkg.name === `@apps/${slug}` ||
       expo.slug === slug ||
       schemes.some(
         (scheme) =>
@@ -167,7 +167,7 @@ const main = (): void => {
     const starterBaseComponents = path.join(starter, 'src/components/base')
     if (fs.existsSync(starterBaseComponents))
       throw new Error(
-        'Starter must import shared base components through @rhysle/core/components/base; remove src/components/base'
+        'Starter must import shared base components through @shared/core/components/base; remove src/components/base'
       )
     const starterTsConfig = readJson<{
       compilerOptions?: { paths?: Record<string, string[]> }
@@ -177,11 +177,11 @@ const main = (): void => {
     )
     if (corePathAlias)
       throw new Error(
-        `Starter must import @rhysle/core through package exports; remove the ${corePathAlias[0]} TypeScript path alias`
+        `Starter must import @shared/core through package exports; remove the ${corePathAlias[0]} TypeScript path alias`
       )
     const starterPackage = readJson<AppPackage>(path.join(starter, 'package.json'))
-    if (starterPackage.dependencies['@rhysle/core'] !== 'workspace:*')
-      throw new Error('Starter must depend on @rhysle/core with workspace:*')
+    if (starterPackage.dependencies['@shared/core'] !== 'workspace:*')
+      throw new Error('Starter must depend on @shared/core with workspace:*')
     for (const entry of [
       'src',
       'assets',
@@ -223,7 +223,7 @@ const main = (): void => {
     throw error
   }
   console.log(
-    `Created apps/${slug}. Next: pnpm install, then pnpm --filter @rhysle/${slug} setup:expo`
+    `Created apps/${slug}. Next: pnpm install, then pnpm --filter @apps/${slug} setup:expo`
   )
 }
 if (require.main === module) main()

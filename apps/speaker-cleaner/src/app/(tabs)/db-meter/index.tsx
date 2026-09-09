@@ -1,5 +1,5 @@
-import { InlineNotice, PermissionSheet, StatusBadge, Text } from '@rhysle/core/components/base'
-import { type PaywallSource, usePremiumGate } from '@rhysle/core/services/revenueCat'
+import { InlineNotice, PermissionSheet, StatusBadge, Text } from '@shared/core/components/base'
+import { type PaywallSource, usePremiumGate } from '@shared/core/services/revenueCat'
 import { MicrophoneIcon, ShieldCheckIcon, WarningCircleIcon } from 'phosphor-react-native'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'

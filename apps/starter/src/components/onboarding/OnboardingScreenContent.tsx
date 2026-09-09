@@ -1,4 +1,4 @@
-import { Text } from '@rhysle/core/components/base'
+import { Text } from '@shared/core/components/base'
 import type { AnimationObject, LottieViewProps } from 'lottie-react-native'
 import LottieView from 'lottie-react-native'
 import { useWindowDimensions, View } from 'react-native'

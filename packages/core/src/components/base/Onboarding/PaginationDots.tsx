@@ -1,4 +1,4 @@
-import { createThemedStyles, useTheme, useThemedStyles } from '@rhysle/core/theme'
+import { createThemedStyles, useTheme, useThemedStyles } from '@shared/core/theme'
 import { View } from 'react-native'
 import Animated, {
   interpolate,

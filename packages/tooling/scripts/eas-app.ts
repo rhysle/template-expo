@@ -65,16 +65,16 @@ try {
       `\n!${appRelative}/.env.local\n!${appRelative}/GoogleService-Info.plist\n!${appRelative}/google-services.json\n`
   )
   // Dynamic Expo config resolves this workspace package before dependencies are installed.
-  fs.mkdirSync(path.join(stage, 'node_modules/@rhysle'), { recursive: true })
+  fs.mkdirSync(path.join(stage, 'node_modules/@shared'), { recursive: true })
   fs.symlinkSync(
     path.join(stage, 'packages/tooling'),
-    path.join(stage, 'node_modules/@rhysle/tooling'),
+    path.join(stage, 'node_modules/@shared/tooling'),
     'dir'
   )
   // Tooling config needs Expo during local archive inspection; use the current install
   // for configuration evaluation only. node_modules never enters the upload archive.
   for (const name of fs.readdirSync(path.join(repoRoot, 'node_modules'))) {
-    if (name === '@rhysle') continue
+    if (name === '@shared') continue
     fs.symlinkSync(
       path.join(repoRoot, 'node_modules', name),
       path.join(stage, 'node_modules', name),

@@ -1,7 +1,7 @@
-import type { CoreConfig } from '@rhysle/core/runtime/config'
-import { OfflineError } from '@rhysle/core/utils/OfflineError'
 import type { Breadcrumb, Event } from '@sentry/react-native'
 import * as Sentry from '@sentry/react-native'
+import type { CoreConfig } from '@shared/core/runtime/config'
+import { OfflineError } from '@shared/core/utils/OfflineError'
 
 // ── Initialisation ────────────────────────────────────────────────────────────
 

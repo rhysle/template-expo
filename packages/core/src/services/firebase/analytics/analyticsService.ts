@@ -1,5 +1,5 @@
 import analytics from '@react-native-firebase/analytics'
-import { recordError } from '@rhysle/core/services/sentry'
+import { recordError } from '@shared/core/services/sentry'
 
 import type { AnalyticsEventName } from './types'
 

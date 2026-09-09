@@ -1,4 +1,4 @@
-import { reloadApp } from '@rhysle/core/services/otaUpdate'
+import { reloadApp } from '@shared/core/services/otaUpdate'
 import { getLocales } from 'expo-localization'
 import { useEffect } from 'react'
 import { AppState, I18nManager, Platform } from 'react-native'

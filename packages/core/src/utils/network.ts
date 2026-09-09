@@ -1,6 +1,6 @@
 import firebase from '@react-native-firebase/app'
-import { OfflineError } from '@rhysle/core/utils/OfflineError'
-import { withTimeout } from '@rhysle/core/utils/withTimeout'
+import { OfflineError } from '@shared/core/utils/OfflineError'
+import { withTimeout } from '@shared/core/utils/withTimeout'
 import Constants from 'expo-constants'
 import * as Network from 'expo-network'
 

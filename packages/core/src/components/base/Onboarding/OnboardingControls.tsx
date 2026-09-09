@@ -1,5 +1,5 @@
-import { TABLET_CONTENT_MAX_WIDTH } from '@rhysle/core/constants/layout'
-import { createThemedStyles, useThemedStyles } from '@rhysle/core/theme'
+import { TABLET_CONTENT_MAX_WIDTH } from '@shared/core/constants/layout'
+import { createThemedStyles, useThemedStyles } from '@shared/core/theme'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
 

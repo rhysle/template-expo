@@ -1,10 +1,10 @@
-import { useCoreRuntime } from '@rhysle/core/runtime'
-import { recordError } from '@rhysle/core/services/sentry'
-import { useAdsState } from '@rhysle/core/stores/features/ads'
-import { usePaywallState } from '@rhysle/core/stores/features/paywall'
-import { useSubscriptionState } from '@rhysle/core/stores/features/subscription'
-import { assertOnline } from '@rhysle/core/utils/network'
-import { OfflineError } from '@rhysle/core/utils/OfflineError'
+import { useCoreRuntime } from '@shared/core/runtime'
+import { recordError } from '@shared/core/services/sentry'
+import { useAdsState } from '@shared/core/stores/features/ads'
+import { usePaywallState } from '@shared/core/stores/features/paywall'
+import { useSubscriptionState } from '@shared/core/stores/features/subscription'
+import { assertOnline } from '@shared/core/utils/network'
+import { OfflineError } from '@shared/core/utils/OfflineError'
 import {
   getTrackingPermissionsAsync,
   PermissionStatus,

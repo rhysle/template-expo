@@ -1,4 +1,4 @@
-import { TabStack } from '@rhysle/core/components/base'
+import { TabStack } from '@shared/core/components/base'
 import { useTranslation } from 'react-i18next'
 
 import { SettingsHeaderButton } from '@/components/SettingsHeaderButton'

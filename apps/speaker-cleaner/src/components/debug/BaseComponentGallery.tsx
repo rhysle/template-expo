@@ -25,8 +25,8 @@ import {
   Text,
   TextField,
   Toggle,
-} from '@rhysle/core/components/base'
-import { useSnackbarState } from '@rhysle/core/stores/features/snackbar'
+} from '@shared/core/components/base'
+import { useSnackbarState } from '@shared/core/stores/features/snackbar'
 import type { Icon } from 'phosphor-react-native'
 import {
   ArrowRightIcon,

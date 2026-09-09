@@ -1,5 +1,5 @@
-import { recordError } from '@rhysle/core/services/sentry'
-import { getStoredUserId, removeStoredUserId, setStoredUserId } from '@rhysle/core/storage'
+import { recordError } from '@shared/core/services/sentry'
+import { getStoredUserId, removeStoredUserId, setStoredUserId } from '@shared/core/storage'
 import * as Crypto from 'expo-crypto'
 
 // Keep the storage key variant-specific in addition to the native app sandbox boundary.

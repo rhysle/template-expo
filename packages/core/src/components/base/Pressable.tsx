@@ -1,6 +1,6 @@
-import type { ResolvedTheme } from '@rhysle/core/theme'
-import { useThemedStyles } from '@rhysle/core/theme'
-import { haptics, type HapticType } from '@rhysle/core/utils/haptics'
+import type { ResolvedTheme } from '@shared/core/theme'
+import { useThemedStyles } from '@shared/core/theme'
+import { haptics, type HapticType } from '@shared/core/utils/haptics'
 import { useRef } from 'react'
 import {
   type GestureResponderEvent,

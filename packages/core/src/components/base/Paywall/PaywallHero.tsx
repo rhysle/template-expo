@@ -1,4 +1,4 @@
-import { createShadows, createThemedStyles, useThemedStyles } from '@rhysle/core/theme'
+import { createShadows, createThemedStyles, useThemedStyles } from '@shared/core/theme'
 import { Image } from 'expo-image'
 import { View } from 'react-native'
 

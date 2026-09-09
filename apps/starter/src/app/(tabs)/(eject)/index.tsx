@@ -1,5 +1,5 @@
-import { Button } from '@rhysle/core/components/base'
-import { useSnackbarState } from '@rhysle/core/stores/features/snackbar'
+import { Button } from '@shared/core/components/base'
+import { useSnackbarState } from '@shared/core/stores/features/snackbar'
 
 import { TabPlaceholderScreen } from '@/components/TabPlaceholderScreen'
 

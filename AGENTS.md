@@ -8,9 +8,9 @@ Current stack: Expo SDK 57, React Native 0.86, React 19 with React Compiler, Exp
 
 ## Workspace ownership and commands
 
-Apps live in `apps/starter` and `apps/speaker-cleaner`; create future apps with `pnpm create:app <slug> --name "Name" --bundle-id com.company.app`. Use pnpm 10.33.0, one root lockfile, and workspace dependencies. Do not reintroduce npm lockfiles. Root `pnpm check` covers all app and shared-package lint/types. Run app commands from the app directory or with `pnpm --filter @rhysle/<app>`.
+Apps live in `apps/starter` and `apps/speaker-cleaner`; create future apps with `pnpm create:app <slug> --name "Name" --bundle-id com.company.app`. Use pnpm 10.33.0, one root lockfile, and workspace dependencies. Do not reintroduce npm lockfiles. Root `pnpm check` covers all app and shared-package lint/types. Run app commands from the app directory or with `pnpm --filter @apps/<app>`.
 
-Unless explicitly stated otherwise below, `src/`, `assets/`, `app.json`, `eas.json`, and `fastlane/` are relative to the selected app. Shared implementations live in `packages/core/src`, optional native ads in `packages/ads/src`, and scripts/plugins/Fastlane lane implementations in `packages/tooling`. Apps import shared code through the declared `@rhysle/core/...` package entry points; `@/` remains reserved for app-owned source. Do not add app-local pass-through re-exports for shared modules. The app-local ads entry point is the intentional exception because setup switches it between enabled and disabled implementations. Modify shared implementations rather than copying them back into apps.
+Unless explicitly stated otherwise below, `src/`, `assets/`, `app.json`, `eas.json`, and `fastlane/` are relative to the selected app. Shared implementations live in `packages/core/src`, optional native ads in `packages/ads/src`, and scripts/plugins/Fastlane lane implementations in `packages/tooling`. Apps import shared code through the declared `@shared/core/...` package entry points; `@/` remains reserved for app-owned source. Do not add app-local pass-through re-exports for shared modules. The app-local ads entry point is the intentional exception because setup switches it between enabled and disabled implementations. Modify shared implementations rather than copying them back into apps.
 
 Apps create their core runtime with configuration, fonts, themes, ads adapter, and store and pass it through `CoreProvider`. Shared hooks consume this provider; non-React services receive configuration explicitly. Shared packages never import app source or `@/` aliases. Each app owns provider ordering and navigation. Core slices use shared types; only app-local product slices augment `AppSlices`. App discovery merges product slices with core definitions and rejects duplicate names. Preserve storage IDs, namespace keys, and persisted formats during refactoring.
 
@@ -129,7 +129,7 @@ Use `react-native-reanimated` v4 for animations, never React Native's legacy `An
 
 ### Reusable versus product UI
 
-`packages/core/src/components/base/` is the reusable template layer, imported by apps through the `@rhysle/core/components/base` package entry point. Do not create app-local `src/components/base/` facades. The shared layer includes fundamental text, button, card, list, input, sheet, feedback, header, navigation, onboarding, paywall, and loader components. Improve or add abstractions there only when they are broadly reusable.
+`packages/core/src/components/base/` is the reusable template layer, imported by apps through the `@shared/core/components/base` package entry point. Do not create app-local `src/components/base/` facades. The shared layer includes fundamental text, button, card, list, input, sheet, feedback, header, navigation, onboarding, paywall, and loader components. Improve or add abstractions there only when they are broadly reusable.
 
 This repository supplies a configured mobile core, including integrations such as RevenueCat, Sentry, and Firebase, plus reusable and app-specific UI. Treat those facilities as starting points—not as a requirement to force every new product design through the existing components. When a design has been agreed, prioritize matching its layout, interaction model, hierarchy, and visual details. Adapt an existing component when that produces a faithful result; otherwise create or revise components as needed. Put generally useful mobile UI patterns in `packages/core/src/components/base/`; put product-specific layouts and components under the selected app's `src/components/` or the relevant route.
 
@@ -169,20 +169,20 @@ Product state is one auto-discovered slice file per feature in the app’s `src/
 
 Do not manually register a slice or add a barrel export. Only non-function values belong in `persistExcludeKeys`; functions are omitted automatically. Add `version` and per-slice migrations only when changing persisted data that has already shipped.
 
-Import app-owned feature hooks from their feature module and shared core feature hooks from `@rhysle/core`, for example:
+Import app-owned feature hooks from their feature module and shared core feature hooks from `@shared/core`, for example:
 
 ```ts
 import { useAudioPreferencesState } from '@/stores/features/audioPreferences'
-import { useSubscriptionState } from '@rhysle/core/stores/features/subscription'
+import { useSubscriptionState } from '@shared/core/stores/features/subscription'
 ```
 
 ### Storage
 
-Shared MMKV infrastructure and shared storage domains live in `packages/core/src/storage/` and are imported through `@rhysle/core/storage/...`. App-specific storage domains live under the app’s `src/storage/`; do not add pass-through files for shared storage. Keys follow `namespace.name`; use the core key builders instead of hardcoding complete MMKV keys. Register a new storage namespace so duplicate detection works in development.
+Shared MMKV infrastructure and shared storage domains live in `packages/core/src/storage/` and are imported through `@shared/core/storage/...`. App-specific storage domains live under the app’s `src/storage/`; do not add pass-through files for shared storage. Keys follow `namespace.name`; use the core key builders instead of hardcoding complete MMKV keys. Register a new storage namespace so duplicate detection works in development.
 
 ### Queries
 
-`packages/core/src/services/queries/provider/` is generic TanStack Query infrastructure: connectivity, retry policy, persistence, and development tools. Apps import it through `@rhysle/core/services/queries`; do not mirror it under app source.
+`packages/core/src/services/queries/provider/` is generic TanStack Query infrastructure: connectivity, retry policy, persistence, and development tools. Apps import it through `@shared/core/services/queries`; do not mirror it under app source.
 
 Create app-owned product domains under the app’s `src/services/queries/`. Keep each domain in this order:
 
@@ -215,7 +215,7 @@ Paywall source IDs are analytics metadata owned by the entry point that presents
 
 Ads are controlled by `AppConfig.ads.enabled`. The native package/plugin configuration is synchronized with `pnpm setup:ads`.
 
-When enabling ads, configure real IDs and AdMob Privacy & messaging forms, run the setup script, keep the ads initialization hooks in the root and tabs layouts, run a clean prebuild, and test consent behavior. Preserve the confirmed-free-user, `canRequestAds`, and SDK-initialization gates before creating any ad object. Development builds use Google test IDs; production-variant QA devices must be registered as test devices. When disabling ads, run the setup script and keep consumers unchanged: it rewrites `src/services/ads/index.ts` to export `@rhysle/core/services/ads/disabled`, whose consent state and presentation APIs fail closed without importing Google Mobile Ads or tracking transparency. Import ad APIs only through `@/services/ads`, never directly from `react-native-google-mobile-ads`.
+When enabling ads, configure real IDs and AdMob Privacy & messaging forms, run the setup script, keep the ads initialization hooks in the root and tabs layouts, run a clean prebuild, and test consent behavior. Preserve the confirmed-free-user, `canRequestAds`, and SDK-initialization gates before creating any ad object. Development builds use Google test IDs; production-variant QA devices must be registered as test devices. When disabling ads, run the setup script and keep consumers unchanged: it rewrites `src/services/ads/index.ts` to export `@shared/core/services/ads/disabled`, whose consent state and presentation APIs fail closed without importing Google Mobile Ads or tracking transparency. Import ad APIs only through `@/services/ads`, never directly from `react-native-google-mobile-ads`.
 
 `InterstitialAdProvider` owns the single interstitial instance and policy for its navigation subtree. Product completion points call `useRequestInterstitialAd()`; the provider records the qualifying completion and decides whether to show based on the initial grace count, completions between ads, cooldown, one-ad-per-foreground cap, paywall precedence, consent/readiness, and the confirmed-free premium state. Use its `canPresent` prop for subtree-wide transient blockers and `usePreventInterstitialAd(source, shouldPrevent)` for overlapping component-level blockers. Do not create ad instances or duplicate policy checks in product routes.
 

@@ -28,10 +28,10 @@ There is one root lockfile. Internal packages use `workspace:*` and the initial 
 Run commands from its directory or select its workspace:
 
 ```sh
-pnpm --filter @rhysle/speaker-cleaner start
-pnpm --filter @rhysle/speaker-cleaner ios
-pnpm --filter @rhysle/speaker-cleaner check:i18n
-pnpm --filter @rhysle/speaker-cleaner release:patch --dry-run
+pnpm --filter @apps/speaker-cleaner start
+pnpm --filter @apps/speaker-cleaner ios
+pnpm --filter @apps/speaker-cleaner check:i18n
+pnpm --filter @apps/speaker-cleaner release:patch --dry-run
 ```
 
 `src/`, `assets/`, `app.json`, `eas.json`, and `fastlane/` in app-specific instructions are relative to the selected app. Native projects are generated inside each app and are not committed. Regenerate only when native configuration or dependencies change. Never edit generated native source.
@@ -53,7 +53,7 @@ Then configure product assets/copy/legal links and run the app's Firebase and Se
 
 ## Share improvements
 
-Import shared base UI through `@rhysle/core/components/base` and other shared modules through their `@rhysle/core/...` entry points. `@/` means the current app's source, while the `@rhysle/core` package identifies core-owned source. Do not mirror shared modules with app-local pass-through re-exports. The app-local ads entry point is the exception: setup rewrites it to the enabled package or the core no-op implementation so disabled apps do not depend on ads code. Shared packages must not import app source, app aliases, or product assets.
+Import shared base UI through `@shared/core/components/base` and other shared modules through their `@shared/core/...` entry points. `@/` means the current app's source, while the `@shared/core` package identifies core-owned source. Do not mirror shared modules with app-local pass-through re-exports. The app-local ads entry point is the exception: setup rewrites it to the enabled package or the core no-op implementation so disabled apps do not depend on ads code. Shared packages must not import app source, app aliases, or product assets.
 
 An app creates a core runtime with its configuration, fonts, themes, ads adapter, and store. Its root `CoreProvider` makes that runtime available to shared hooks. Non-React services receive configuration explicitly. The app root layout still controls navigation and initialization ordering; Sentry initializes before rendering.
 
@@ -93,8 +93,8 @@ Use the app's `eas-build:*` scripts. They prepare a disposable workspace with on
 Staging avoids rewriting the live repository's ignore rules and permits independent builds. It uses EAS's no-VCS mode in the temporary workspace, so EAS may display a no-VCS warning. Source remains in the real Git repository. The archive includes workspace packages and the root lockfile; it excludes all private Fastlane credentials, sibling app secrets, generated native directories, and development Firebase files. EAS still obtains the selected project's configured production file variables.
 
 ```sh
-pnpm --filter @rhysle/speaker-cleaner eas-build:inspect --output /tmp/speaker-cleaner-archive
-pnpm --filter @rhysle/speaker-cleaner eas-build:ios
+pnpm --filter @apps/speaker-cleaner eas-build:inspect --output /tmp/speaker-cleaner-archive
+pnpm --filter @apps/speaker-cleaner eas-build:ios
 ```
 
 Run submit/update commands from the real app directory. Mobile OTA scripts export only iOS/Android and upload that app's Sentry source maps. A shared source change does not automatically publish any app.

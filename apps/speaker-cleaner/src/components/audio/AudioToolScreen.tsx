@@ -1,4 +1,4 @@
-import { TabScreen, useTabBarContentInset } from '@rhysle/core/components/base'
+import { TabScreen, useTabBarContentInset } from '@shared/core/components/base'
 import type { PropsWithChildren } from 'react'
 import { type StyleProp, View, type ViewStyle } from 'react-native'
 

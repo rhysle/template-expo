@@ -1,4 +1,4 @@
-import { TAB_BAR_HEIGHT } from '@rhysle/core/constants/layout'
+import { TAB_BAR_HEIGHT } from '@shared/core/constants/layout'
 import { createContext, type ReactNode, useContext, useEffect, useState } from 'react'
 
 import { getTabBarContentInset, type TabNavigatorMode } from './tabBarContentInset'

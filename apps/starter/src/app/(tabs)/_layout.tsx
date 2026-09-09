@@ -2,8 +2,8 @@ import {
   CustomTabNavigator,
   NativeTabNavigator,
   type TabDefinition,
-} from '@rhysle/core/components/base'
-import { useAutoPaywall } from '@rhysle/core/services/revenueCat'
+} from '@shared/core/components/base'
+import { useAutoPaywall } from '@shared/core/services/revenueCat'
 import { DropIcon, GaugeIcon, SpeakerHifiIcon, WaveformIcon } from 'phosphor-react-native'
 import { useTranslation } from 'react-i18next'
 import { Platform } from 'react-native'

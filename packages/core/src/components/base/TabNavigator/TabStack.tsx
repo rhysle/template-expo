@@ -1,4 +1,4 @@
-import { useTheme } from '@rhysle/core/theme'
+import { useTheme } from '@shared/core/theme'
 import { Stack } from 'expo-router/stack'
 import type { ReactNode } from 'react'
 

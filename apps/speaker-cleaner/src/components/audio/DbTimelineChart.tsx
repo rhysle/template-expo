@@ -1,4 +1,4 @@
-import { useIsRTL } from '@rhysle/core/services/rtl'
+import { useIsRTL } from '@shared/core/services/rtl'
 import { useWindowDimensions, View } from 'react-native'
 import Svg, {
   Defs,

@@ -1,9 +1,9 @@
-import { useCoreRuntime } from '@rhysle/core/runtime'
-import { hasPaywallPrecedence } from '@rhysle/core/services/revenueCat'
-import { recordError } from '@rhysle/core/services/sentry'
-import { useAdsState } from '@rhysle/core/stores/features/ads'
-import { usePaywallState } from '@rhysle/core/stores/features/paywall'
-import { useSubscriptionState } from '@rhysle/core/stores/features/subscription'
+import { useCoreRuntime } from '@shared/core/runtime'
+import { hasPaywallPrecedence } from '@shared/core/services/revenueCat'
+import { recordError } from '@shared/core/services/sentry'
+import { useAdsState } from '@shared/core/stores/features/ads'
+import { usePaywallState } from '@shared/core/stores/features/paywall'
+import { useSubscriptionState } from '@shared/core/stores/features/subscription'
 import {
   createContext,
   type PropsWithChildren,

@@ -14,7 +14,7 @@ import {
   presentationDragIndicator,
   presentationSizing,
 } from '@expo/ui/swift-ui/modifiers'
-import { useTheme } from '@rhysle/core/theme'
+import { useTheme } from '@shared/core/theme'
 import { useImperativeHandle, useRef } from 'react'
 import { useWindowDimensions, View } from 'react-native'
 

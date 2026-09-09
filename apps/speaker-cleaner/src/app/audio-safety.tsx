@@ -1,4 +1,4 @@
-import { Card, Text } from '@rhysle/core/components/base'
+import { Card, Text } from '@shared/core/components/base'
 import {
   EarIcon,
   GaugeIcon,

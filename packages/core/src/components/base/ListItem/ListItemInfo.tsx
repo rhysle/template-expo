@@ -1,4 +1,4 @@
-import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@rhysle/core/theme'
+import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@shared/core/theme'
 import { View } from 'react-native'
 
 import { Text } from '../Text'

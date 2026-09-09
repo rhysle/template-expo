@@ -1,4 +1,4 @@
-import { getDebugLanguageOverride } from '@rhysle/core/storage'
+import { getDebugLanguageOverride } from '@shared/core/storage'
 import { getLocales } from 'expo-localization'
 import type { Resource } from 'i18next'
 import i18n from 'i18next'

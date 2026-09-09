@@ -1,5 +1,5 @@
-import { useIsRTL } from '@rhysle/core/services/rtl'
-import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@rhysle/core/theme'
+import { useIsRTL } from '@shared/core/services/rtl'
+import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@shared/core/theme'
 import { CaretRightIcon, CheckIcon } from 'phosphor-react-native'
 import { useState } from 'react'
 import { View } from 'react-native'

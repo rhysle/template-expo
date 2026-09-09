@@ -86,10 +86,10 @@ importers:
       '@react-native-firebase/app':
         specifier: 24.1.1
         version: 24.1.1(expo@57.0.11)(react-native@0.86.2(@babel/core@7.29.7)(@react-native/metro-config@0.86.2(@babel/core@7.29.7))(@types/react@19.2.18)(react@19.2.3))(react@19.2.3)
-      '@rhysle/ads':
+      '@shared/ads':
         specifier: workspace:*
         version: link:../../packages/ads
-      '@rhysle/core':
+      '@shared/core':
         specifier: workspace:*
         version: link:../../packages/core
       '@sentry/react-native':
@@ -258,7 +258,7 @@ importers:
       '@expo/plist':
         specifier: 0.8.1
         version: 0.8.1
-      '@rhysle/tooling':
+      '@shared/tooling':
         specifier: workspace:*
         version: link:../../packages/tooling
       '@tanstack/eslint-plugin-query':
@@ -327,7 +327,7 @@ importers:
       '@react-native-firebase/app':
         specifier: 24.1.1
         version: 24.1.1(expo@57.0.11)(react-native@0.86.2(@babel/core@7.29.7)(@react-native/metro-config@0.86.2(@babel/core@7.29.7))(@types/react@19.2.18)(react@19.2.3))(react@19.2.3)
-      '@rhysle/core':
+      '@shared/core':
         specifier: workspace:*
         version: link:../../packages/core
       '@sentry/react-native':
@@ -484,7 +484,7 @@ importers:
       '@expo/plist':
         specifier: 0.8.1
         version: 0.8.1
-      '@rhysle/tooling':
+      '@shared/tooling':
         specifier: workspace:*
         version: link:../../packages/tooling
       '@tanstack/eslint-plugin-query':
@@ -541,7 +541,7 @@ importers:
 
   packages/ads:
     dependencies:
-      '@rhysle/core':
+      '@shared/core':
         specifier: workspace:*
         version: link:../core
       expo-tracking-transparency:
@@ -679,7 +679,7 @@ importers:
       '@expo/plist':
         specifier: ^0.8.1
         version: 0.8.1
-      '@rhysle/core':
+      '@shared/core':
         specifier: workspace:*
         version: link:../core
       google-auth-library:

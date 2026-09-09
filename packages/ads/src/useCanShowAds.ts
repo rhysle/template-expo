@@ -1,1 +1,1 @@
-export { useCanShowAds } from '@rhysle/core/services/ads'
+export { useCanShowAds } from '@shared/core/services/ads'

@@ -1,1 +1,1 @@
-export * from '@rhysle/core/services/ads/disabled'
+export * from '@shared/core/services/ads/disabled'

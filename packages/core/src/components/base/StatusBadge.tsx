@@ -1,4 +1,4 @@
-import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@rhysle/core/theme'
+import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@shared/core/theme'
 import type { Icon } from 'phosphor-react-native'
 import { type StyleProp, View, type ViewProps, type ViewStyle } from 'react-native'
 

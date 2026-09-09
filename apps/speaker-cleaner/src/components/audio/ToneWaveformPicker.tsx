@@ -1,5 +1,5 @@
-import { Pressable } from '@rhysle/core/components/base'
-import { useIsRTL } from '@rhysle/core/services/rtl'
+import { Pressable } from '@shared/core/components/base'
+import { useIsRTL } from '@shared/core/services/rtl'
 import type { Icon } from 'phosphor-react-native'
 import {
   LockKeyIcon,

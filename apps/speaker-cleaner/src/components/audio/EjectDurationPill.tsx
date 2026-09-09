@@ -1,5 +1,5 @@
-import { Pressable, Text } from '@rhysle/core/components/base'
-import { type PaywallSource, usePremiumGate } from '@rhysle/core/services/revenueCat'
+import { Pressable, Text } from '@shared/core/components/base'
+import { type PaywallSource, usePremiumGate } from '@shared/core/services/revenueCat'
 import { LockKeyIcon } from 'phosphor-react-native'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'

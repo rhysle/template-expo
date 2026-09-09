@@ -1,10 +1,10 @@
-import type { SegmentedOption } from '@rhysle/core/components/base'
-import { Button, Card, Pressable, SegmentedControl, Text } from '@rhysle/core/components/base'
-import { usePremiumGate } from '@rhysle/core/services/revenueCat'
-import { clearUserId as clearUserIdService } from '@rhysle/core/services/userIdentity'
-import { useSnackbarState } from '@rhysle/core/stores/features/snackbar'
-import { type PremiumState, useSubscriptionState } from '@rhysle/core/stores/features/subscription'
-import { useUserIdentityState } from '@rhysle/core/stores/features/userIdentity'
+import type { SegmentedOption } from '@shared/core/components/base'
+import { Button, Card, Pressable, SegmentedControl, Text } from '@shared/core/components/base'
+import { usePremiumGate } from '@shared/core/services/revenueCat'
+import { clearUserId as clearUserIdService } from '@shared/core/services/userIdentity'
+import { useSnackbarState } from '@shared/core/stores/features/snackbar'
+import { type PremiumState, useSubscriptionState } from '@shared/core/stores/features/subscription'
+import { useUserIdentityState } from '@shared/core/stores/features/userIdentity'
 import {
   ArrowClockwiseIcon,
   CaretDownIcon,

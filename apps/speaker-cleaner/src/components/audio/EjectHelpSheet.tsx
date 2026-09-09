@@ -1,4 +1,4 @@
-import { Button, InlineNotice, NativeBottomSheet, Text } from '@rhysle/core/components/base'
+import { Button, InlineNotice, NativeBottomSheet, Text } from '@shared/core/components/base'
 import { HeadphonesIcon, SpeakerHighIcon } from 'phosphor-react-native'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'

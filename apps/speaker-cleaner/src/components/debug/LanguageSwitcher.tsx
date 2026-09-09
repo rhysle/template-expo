@@ -1,5 +1,5 @@
-import { Card, ChoiceChip, Text } from '@rhysle/core/components/base'
-import { getDebugLanguageOverride, setDebugLanguageOverride } from '@rhysle/core/storage'
+import { Card, ChoiceChip, Text } from '@shared/core/components/base'
+import { getDebugLanguageOverride, setDebugLanguageOverride } from '@shared/core/storage'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, View } from 'react-native'

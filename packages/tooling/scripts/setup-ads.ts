@@ -1,6 +1,6 @@
 import { execFileSync } from 'node:child_process'
 
-import type { CoreConfig } from '@rhysle/core/runtime/config'
+import type { CoreConfig } from '@shared/core/runtime/config'
 /**
  * Ads setup script
  *
@@ -29,7 +29,7 @@ const ADS_PACKAGE = 'react-native-google-mobile-ads'
 const ATT_PACKAGE = 'expo-tracking-transparency'
 
 const getAdsFacadeSource = (enabled: boolean): string =>
-  `export * from '${enabled ? '@rhysle/ads/enabled' : '@rhysle/core/services/ads/disabled'}'\n`
+  `export * from '${enabled ? '@shared/ads/enabled' : '@shared/core/services/ads/disabled'}'\n`
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -175,11 +175,11 @@ function main() {
   const previousDependencies = JSON.stringify(packageJson.dependencies)
   packageJson.dependencies ??= {}
   if (enabled) {
-    packageJson.dependencies['@rhysle/ads'] = 'workspace:*'
+    packageJson.dependencies['@shared/ads'] = 'workspace:*'
     packageJson.dependencies[ADS_PACKAGE] = '16.3.4'
     packageJson.dependencies[ATT_PACKAGE] = '~57.0.1'
   } else {
-    delete packageJson.dependencies['@rhysle/ads']
+    delete packageJson.dependencies['@shared/ads']
     delete packageJson.dependencies[ADS_PACKAGE]
     delete packageJson.dependencies[ATT_PACKAGE]
   }

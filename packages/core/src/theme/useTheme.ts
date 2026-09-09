@@ -1,5 +1,5 @@
-import { useCoreRuntime } from '@rhysle/core/runtime'
-import { useThemeState } from '@rhysle/core/stores/features/theme'
+import { useCoreRuntime } from '@shared/core/runtime'
+import { useThemeState } from '@shared/core/stores/features/theme'
 import { useTranslation } from 'react-i18next'
 
 import { getTheme } from './themes'

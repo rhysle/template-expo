@@ -1,5 +1,5 @@
-import { useCoreRuntime } from '@rhysle/core/runtime'
-import { useAdsState } from '@rhysle/core/stores/features/ads'
+import { useCoreRuntime } from '@shared/core/runtime'
+import { useAdsState } from '@shared/core/stores/features/ads'
 import { useEffect } from 'react'
 
 import { initMobileAds, isAnyAdFormatEnabled } from './adsService'

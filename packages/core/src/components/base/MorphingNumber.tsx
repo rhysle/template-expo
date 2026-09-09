@@ -1,4 +1,4 @@
-import { useTheme } from '@rhysle/core/theme'
+import { useTheme } from '@shared/core/theme'
 import { useEffect, useLayoutEffect, useState } from 'react'
 import { type ColorValue, type StyleProp, StyleSheet, type TextStyle, View } from 'react-native'
 import Animated, { Keyframe, ReduceMotion, useReducedMotion } from 'react-native-reanimated'

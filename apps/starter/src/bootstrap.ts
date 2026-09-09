@@ -1,4 +1,4 @@
-import { createCoreRuntime } from '@rhysle/core/runtime'
+import { createCoreRuntime } from '@shared/core/runtime'
 
 import { AppConfig } from './configs/AppConfig'
 import * as fonts from './configs/fonts'

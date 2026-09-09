@@ -1,4 +1,4 @@
-import type { PaywallComparisonItem, PaywallComparisonValue } from '@rhysle/core/components/base'
+import type { PaywallComparisonItem, PaywallComparisonValue } from '@shared/core/components/base'
 import {
   ClockCounterClockwiseIcon,
   DropIcon,

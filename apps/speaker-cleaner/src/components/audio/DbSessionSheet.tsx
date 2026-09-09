@@ -2,8 +2,8 @@ import {
   NativeBottomSheet,
   type NativeBottomSheetMethods,
   Text,
-} from '@rhysle/core/components/base'
-import type { PremiumState } from '@rhysle/core/stores/features/subscription'
+} from '@shared/core/components/base'
+import type { PremiumState } from '@shared/core/stores/features/subscription'
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Platform, View } from 'react-native'

@@ -1,4 +1,4 @@
-import { createThemedStyles, useThemedStyles } from '@rhysle/core/theme'
+import { createThemedStyles, useThemedStyles } from '@shared/core/theme'
 import type { ReactNode } from 'react'
 import { type StyleProp, View, type ViewProps, type ViewStyle } from 'react-native'
 

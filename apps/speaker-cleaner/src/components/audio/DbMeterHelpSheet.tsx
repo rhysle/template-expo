@@ -1,5 +1,5 @@
-import { Button, NativeBottomSheet, Text } from '@rhysle/core/components/base'
-import { withAlpha } from '@rhysle/core/utils/color'
+import { Button, NativeBottomSheet, Text } from '@shared/core/components/base'
+import { withAlpha } from '@shared/core/utils/color'
 import { LinearGradient } from 'expo-linear-gradient'
 import { HeadphonesIcon, MapPinIcon, MicrophoneIcon } from 'phosphor-react-native'
 import { useTranslation } from 'react-i18next'

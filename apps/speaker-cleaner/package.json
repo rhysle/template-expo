@@ -1,5 +1,5 @@
 {
-  "name": "@rhysle/speaker-cleaner",
+  "name": "@apps/speaker-cleaner",
   "main": "expo-router/entry",
   "version": "1.1.0",
   "scripts": {
@@ -126,8 +126,8 @@
     "react-native-web": "0.21.2",
     "react-native-worklets": "0.10.1",
     "zustand": "5.0.14",
-    "@rhysle/core": "workspace:*",
-    "@rhysle/ads": "workspace:*"
+    "@shared/core": "workspace:*",
+    "@shared/ads": "workspace:*"
   },
   "devDependencies": {
     "@babel/core": "7.29.7",
@@ -151,7 +151,7 @@
     "typescript": "6.0.3",
     "typescript-eslint": "8.66.0",
     "zod-validation-error": "4.0.2",
-    "@rhysle/tooling": "workspace:*"
+    "@shared/tooling": "workspace:*"
   },
   "private": true,
   "expo": {

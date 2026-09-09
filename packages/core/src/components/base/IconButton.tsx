@@ -1,4 +1,4 @@
-import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@rhysle/core/theme'
+import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@shared/core/theme'
 import type { Icon, IconWeight } from 'phosphor-react-native'
 import { ActivityIndicator, type StyleProp, type ViewStyle } from 'react-native'
 

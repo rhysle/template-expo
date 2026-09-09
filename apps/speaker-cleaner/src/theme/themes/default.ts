@@ -1,4 +1,4 @@
-import type { Theme } from '@rhysle/core/theme'
+import type { Theme } from '@shared/core/theme'
 
 export const defaultTheme: Theme = {
   appearance: 'light', // Drives system UI content and blur treatments

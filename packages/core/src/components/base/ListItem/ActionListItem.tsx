@@ -1,5 +1,5 @@
-import { useIsRTL } from '@rhysle/core/services/rtl'
-import { iconSizes, useTheme } from '@rhysle/core/theme'
+import { useIsRTL } from '@shared/core/services/rtl'
+import { iconSizes, useTheme } from '@shared/core/theme'
 import { CaretRightIcon, type Icon } from 'phosphor-react-native'
 
 import { ListItem, type ListItemProps } from './ListItem'

@@ -1,4 +1,4 @@
-import type { MonetizationConfig } from '@rhysle/tooling/monetization-types'
+import type { MonetizationConfig } from '@shared/tooling/monetization-types'
 
 /**
  * Store-product catalog for a product fork.

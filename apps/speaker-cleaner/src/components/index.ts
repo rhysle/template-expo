@@ -7,4 +7,4 @@ export {
   SearchInput,
   Text,
   Toggle,
-} from '@rhysle/core/components/base'
+} from '@shared/core/components/base'

@@ -1,7 +1,7 @@
 import { useReactQueryDevTools } from '@dev-plugins/react-query'
-import { queryStorage } from '@rhysle/core/storage'
-import { isNetworkOnline } from '@rhysle/core/utils/network'
-import { OfflineError } from '@rhysle/core/utils/OfflineError'
+import { queryStorage } from '@shared/core/storage'
+import { isNetworkOnline } from '@shared/core/utils/network'
+import { OfflineError } from '@shared/core/utils/OfflineError'
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
 import {
   defaultShouldDehydrateQuery,

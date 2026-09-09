@@ -1,5 +1,5 @@
-import { InlineNotice, NativeToggle, Text } from '@rhysle/core/components/base'
-import { type PaywallSource, usePremiumGate } from '@rhysle/core/services/revenueCat'
+import { InlineNotice, NativeToggle, Text } from '@shared/core/components/base'
+import { type PaywallSource, usePremiumGate } from '@shared/core/services/revenueCat'
 import { LockKeyIcon, WaveformIcon } from 'phosphor-react-native'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'

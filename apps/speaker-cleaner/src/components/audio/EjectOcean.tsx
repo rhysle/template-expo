@@ -1,4 +1,4 @@
-import { withAlpha } from '@rhysle/core/utils/color'
+import { withAlpha } from '@shared/core/utils/color'
 import {
   Canvas,
   LinearGradient as SkiaLinearGradient,

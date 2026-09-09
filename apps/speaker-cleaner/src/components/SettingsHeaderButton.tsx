@@ -1,4 +1,4 @@
-import { Pressable } from '@rhysle/core/components/base'
+import { Pressable } from '@shared/core/components/base'
 import { useRouter } from 'expo-router'
 import { GearIcon } from 'phosphor-react-native'
 import { useTranslation } from 'react-i18next'

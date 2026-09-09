@@ -1,5 +1,5 @@
-import { useCoreRuntime } from '@rhysle/core/runtime'
-import { AnalyticsGeneralEvents, trackEvent } from '@rhysle/core/services/firebase/analytics'
+import { useCoreRuntime } from '@shared/core/runtime'
+import { AnalyticsGeneralEvents, trackEvent } from '@shared/core/services/firebase/analytics'
 import {
   canMakePayments,
   fetchOfferings,
@@ -8,8 +8,8 @@ import {
   type PaywallSource,
   purchasePackage,
   restorePurchases,
-} from '@rhysle/core/services/revenueCat'
-import { recordError } from '@rhysle/core/services/sentry'
+} from '@shared/core/services/revenueCat'
+import { recordError } from '@shared/core/services/sentry'
 import { useEffect, useState } from 'react'
 import type { PurchasesPackage } from 'react-native-purchases'
 

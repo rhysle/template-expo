@@ -1,4 +1,4 @@
-import { TabScreen, Text } from '@rhysle/core/components/base'
+import { TabScreen, Text } from '@shared/core/components/base'
 import type { PropsWithChildren } from 'react'
 import { View } from 'react-native'
 

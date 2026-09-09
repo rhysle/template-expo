@@ -1,5 +1,5 @@
-import { useIsRTL } from '@rhysle/core/services/rtl'
-import { createThemedStyles, useThemedStyles } from '@rhysle/core/theme'
+import { useIsRTL } from '@shared/core/services/rtl'
+import { createThemedStyles, useThemedStyles } from '@shared/core/theme'
 import { useState } from 'react'
 import { useWindowDimensions, View } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'

@@ -1,11 +1,11 @@
-import { Text } from '@rhysle/core/components/base/Text'
+import { Text } from '@shared/core/components/base/Text'
 import {
   createShadows,
   createThemedStyles,
   iconSizes,
   useTheme,
   useThemedStyles,
-} from '@rhysle/core/theme'
+} from '@shared/core/theme'
 import { CheckCircleIcon, CrownIcon } from 'phosphor-react-native'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'

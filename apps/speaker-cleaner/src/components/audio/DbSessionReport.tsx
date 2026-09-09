@@ -1,6 +1,6 @@
-import { Button, Card, Text } from '@rhysle/core/components/base'
-import type { PremiumState } from '@rhysle/core/stores/features/subscription'
-import { withAlpha } from '@rhysle/core/utils/color'
+import { Button, Card, Text } from '@shared/core/components/base'
+import type { PremiumState } from '@shared/core/stores/features/subscription'
+import { withAlpha } from '@shared/core/utils/color'
 import { BlurTargetView, BlurView } from 'expo-blur'
 import { LinearGradient } from 'expo-linear-gradient'
 import {
