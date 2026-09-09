@@ -25,6 +25,6 @@ tmp/
 .superpowers/
 .worktrees/
 .DS_Store
-!apps/water-eject/.env.local
-!apps/water-eject/GoogleService-Info.plist
-!apps/water-eject/google-services.json
+!apps/speaker-cleaner/.env.local
+!apps/speaker-cleaner/GoogleService-Info.plist
+!apps/speaker-cleaner/google-services.json

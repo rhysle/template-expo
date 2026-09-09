@@ -8,7 +8,7 @@ Current stack: Expo SDK 57, React Native 0.86, React 19 with React Compiler, Exp
 
 ## Workspace ownership and commands
 
-Apps live in `apps/starter` and `apps/water-eject`; create future apps with `pnpm create:app <slug> --name "Name" --bundle-id com.company.app`. Use pnpm 10.33.0, one root lockfile, and workspace dependencies. Do not reintroduce npm lockfiles. Root `pnpm check` covers all app and shared-package lint/types. Run app commands from the app directory or with `pnpm --filter @rhysle/<app>`.
+Apps live in `apps/starter` and `apps/speaker-cleaner`; create future apps with `pnpm create:app <slug> --name "Name" --bundle-id com.company.app`. Use pnpm 10.33.0, one root lockfile, and workspace dependencies. Do not reintroduce npm lockfiles. Root `pnpm check` covers all app and shared-package lint/types. Run app commands from the app directory or with `pnpm --filter @rhysle/<app>`.
 
 Unless explicitly stated otherwise below, `src/`, `assets/`, `app.json`, `eas.json`, and `fastlane/` are relative to the selected app. Shared implementations live in `packages/core/src`, optional native ads in `packages/ads/src`, and scripts/plugins/Fastlane lane implementations in `packages/tooling`. Apps import shared code through the declared `@rhysle/core/...` package entry points; `@/` remains reserved for app-owned source. Do not add app-local pass-through re-exports for shared modules. The app-local ads entry point is the intentional exception because setup switches it between enabled and disabled implementations. Modify shared implementations rather than copying them back into apps.
 

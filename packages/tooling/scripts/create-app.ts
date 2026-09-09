@@ -19,6 +19,14 @@ interface EasConfig {
 }
 const readJson = <T extends object>(file: string): T =>
   JSON.parse(fs.readFileSync(file, 'utf8')) as T
+const assertAppDirectoryMatchesSlug = (root: string): void => {
+  const { expo } = readJson<{ expo: ExpoConfig }>(path.join(root, 'app.json'))
+  const directoryName = path.basename(root)
+  if (!expo.slug || directoryName !== expo.slug)
+    throw new Error(
+      `App directory must match its Expo slug: apps/${directoryName} should be apps/${expo.slug ?? '<missing>'}`
+    )
+}
 export const resetAppConfiguration = (
   root: string,
   slug: string,
@@ -134,6 +142,7 @@ const main = (): void => {
   for (const entry of fs.readdirSync(appsRoot)) {
     const appFile = path.join(appsRoot, entry, 'app.json')
     if (!fs.existsSync(appFile)) continue
+    assertAppDirectoryMatchesSlug(path.join(appsRoot, entry))
     const { expo } = readJson<{ expo: ExpoConfig }>(appFile)
     const pkg = readJson<AppPackage>(path.join(appsRoot, entry, 'package.json'))
     const schemes = Array.isArray(expo.scheme) ? expo.scheme : [expo.scheme]
@@ -152,6 +161,7 @@ const main = (): void => {
       throw new Error(`App identity conflicts with ${entry}`)
   }
   const staging = fs.mkdtempSync(path.join(appsRoot, '.generate-'))
+  let generatedRoot = staging
   try {
     const starter = path.join(appsRoot, 'starter')
     const starterBaseComponents = path.join(starter, 'src/components/base')
@@ -206,8 +216,10 @@ const main = (): void => {
       `# ${name}\n\nRun pnpm install at the repository root.\n\nFrom this app directory, configure app copy/assets/legal links, then run pnpm setup:expo, pnpm setup:firebase, and pnpm setup:sentry with the documented machine credentials. Configure RevenueCat and store listings separately. Run pnpm setup:ads only after choosing an ads policy, then regenerate native projects. No remote services have been provisioned.\n`
     )
     fs.renameSync(staging, destination)
+    generatedRoot = destination
+    assertAppDirectoryMatchesSlug(destination)
   } catch (error) {
-    fs.rmSync(staging, { recursive: true, force: true })
+    fs.rmSync(generatedRoot, { recursive: true, force: true })
     throw error
   }
   console.log(

@@ -30,7 +30,7 @@ Implemented on `feat/monorepo`.
 
 Existing root app environment and Firebase files were verified against water-eject destination copies before redundant root copies were removed. Original files remain backed up under gitignored `fastlane/.private/pre-monorepo-local-files/`; the original combined Fastlane environment is also backed up privately. The provisioning token was excluded from the app build environment. Shared Apple/Google credentials remain root-owned, and no product credentials were copied to starter.
 
-Old ignored root native/build caches may still exist from the pre-migration checkout; they are not used by workspace commands or included in archives. The active generated iOS project is `apps/water-eject/ios/`.
+Old ignored root native/build caches may still exist from the pre-migration checkout; they are not used by workspace commands or included in archives. The active generated iOS project is `apps/speaker-cleaner/ios/`.
 
 ## Deferred checks and limits
 

@@ -4,14 +4,14 @@ A pnpm workspace containing independently released Expo iOS/Android apps and one
 
 ## Workspace
 
-| Location            | Owns                                                                                               |
-| ------------------- | -------------------------------------------------------------------------------------------------- |
-| `apps/starter`      | Clean reference app and source for the app generator                                               |
-| `apps/water-eject`  | Speaker Cleaner product, assets, translations, configuration, and store metadata                   |
-| `packages/core`     | Reusable UI, themes, state/storage/query infrastructure, and native service integrations           |
-| `packages/ads`      | Optional enabled native ads integration                                                            |
-| `packages/tooling`  | Setup/release scripts, config plugin, monetization tooling, PPP dataset, and shared Fastlane lanes |
-| `fastlane/.private` | Gitignored shared store account keys; never included in builds                                     |
+| Location               | Owns                                                                                               |
+| ---------------------- | -------------------------------------------------------------------------------------------------- |
+| `apps/starter`         | Clean reference app and source for the app generator                                               |
+| `apps/speaker-cleaner` | Speaker Cleaner product, assets, translations, configuration, and store metadata                   |
+| `packages/core`        | Reusable UI, themes, state/storage/query infrastructure, and native service integrations           |
+| `packages/ads`         | Optional enabled native ads integration                                                            |
+| `packages/tooling`     | Setup/release scripts, config plugin, monetization tooling, PPP dataset, and shared Fastlane lanes |
+| `fastlane/.private`    | Gitignored shared store account keys; never included in builds                                     |
 
 Use Node compatible with Expo SDK 57 and **pnpm 10.33.0**. The root `packageManager` pins pnpm. Install once at the repository root:
 
@@ -28,10 +28,10 @@ There is one root lockfile. Internal packages use `workspace:*` and the initial 
 Run commands from its directory or select its workspace:
 
 ```sh
-pnpm --filter @rhysle/water-eject start
-pnpm --filter @rhysle/water-eject ios
-pnpm --filter @rhysle/water-eject check:i18n
-pnpm --filter @rhysle/water-eject release:patch --dry-run
+pnpm --filter @rhysle/speaker-cleaner start
+pnpm --filter @rhysle/speaker-cleaner ios
+pnpm --filter @rhysle/speaker-cleaner check:i18n
+pnpm --filter @rhysle/speaker-cleaner release:patch --dry-run
 ```
 
 `src/`, `assets/`, `app.json`, `eas.json`, and `fastlane/` in app-specific instructions are relative to the selected app. Native projects are generated inside each app and are not committed. Regenerate only when native configuration or dependencies change. Never edit generated native source.
@@ -93,8 +93,8 @@ Use the app's `eas-build:*` scripts. They prepare a disposable workspace with on
 Staging avoids rewriting the live repository's ignore rules and permits independent builds. It uses EAS's no-VCS mode in the temporary workspace, so EAS may display a no-VCS warning. Source remains in the real Git repository. The archive includes workspace packages and the root lockfile; it excludes all private Fastlane credentials, sibling app secrets, generated native directories, and development Firebase files. EAS still obtains the selected project's configured production file variables.
 
 ```sh
-pnpm --filter @rhysle/water-eject eas-build:inspect --output /tmp/water-eject-archive
-pnpm --filter @rhysle/water-eject eas-build:ios
+pnpm --filter @rhysle/speaker-cleaner eas-build:inspect --output /tmp/speaker-cleaner-archive
+pnpm --filter @rhysle/speaker-cleaner eas-build:ios
 ```
 
 Run submit/update commands from the real app directory. Mobile OTA scripts export only iOS/Android and upload that app's Sentry source maps. A shared source change does not automatically publish any app.
