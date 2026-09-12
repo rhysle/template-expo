@@ -1,0 +1,4 @@
+interface:
+  display_name: "Store Release Notes"
+  short_description: "Draft and localize mobile store release notes"
+  default_prompt: "Use $release-notes to prepare release notes for one app and the selected mobile platforms."
