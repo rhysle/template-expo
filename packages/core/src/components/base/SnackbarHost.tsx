@@ -1,12 +1,13 @@
-import { Snackbar } from '@shared/core/components/base'
 import type { SnackbarState } from '@shared/core/stores/features/snackbar'
 import { useSnackbarState } from '@shared/core/stores/features/snackbar'
+import { useTheme } from '@shared/core/theme'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { View } from 'react-native'
+import { Platform, StyleSheet, View } from 'react-native'
 import { cancelAnimation, Easing, useSharedValue, withTiming } from 'react-native-reanimated'
+import { FullWindowOverlay } from 'react-native-screens'
 import { scheduleOnRN } from 'react-native-worklets'
 
-import { useTheme } from '@/theme'
+import { Snackbar } from './Snackbar'
 
 const APPEAR_CONFIG = { duration: 220, easing: Easing.out(Easing.ease) }
 const DISMISS_CONFIG = { duration: 160, easing: Easing.in(Easing.quad) }
@@ -73,11 +74,11 @@ export const SnackbarHost = () => {
     }
   }, [lastSnackbar, triggerDismiss])
 
-  return (
+  const content = (
     // pointerEvents: snackbar is non-null while visible and mid-dismiss (hideSnackbar
     // only fires after animation ends). It becomes null after animation completes -
     // exactly when we want 'none' to prevent tapping invisible buttons.
-    <View pointerEvents={snackbar !== null ? 'auto' : 'none'}>
+    <View pointerEvents={snackbar !== null ? 'box-none' : 'none'} style={StyleSheet.absoluteFill}>
       <Snackbar
         progress={progress}
         title={lastSnackbar?.title ?? ''}
@@ -94,5 +95,16 @@ export const SnackbarHost = () => {
         blurIntensity={lastSnackbar?.blurIntensity ?? 60}
       />
     </View>
+  )
+
+  // A native-stack full-screen modal is hosted above the root React view on iOS,
+  // so zIndex alone cannot place the snackbar over it. FullWindowOverlay attaches
+  // this non-modal notification layer directly to the active UIWindow.
+  return Platform.OS === 'ios' && snackbar !== null ? (
+    <FullWindowOverlay unstable_accessibilityContainerViewIsModal={false}>
+      {content}
+    </FullWindowOverlay>
+  ) : (
+    content
   )
 }

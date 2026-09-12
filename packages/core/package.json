@@ -106,6 +106,7 @@
     "./components/base/Toggle": "./src/components/base/Toggle.tsx",
     "./components/base/Text": "./src/components/base/Text.tsx",
     "./components/base/Snackbar": "./src/components/base/Snackbar.tsx",
+    "./components/base/SnackbarHost": "./src/components/base/SnackbarHost.tsx",
     "./components/base/TabBar": "./src/components/base/TabBar.tsx",
     "./components/base/SegmentedControl": "./src/components/base/SegmentedControl.tsx",
     "./components/base/SearchInput": "./src/components/base/SearchInput.tsx",
@@ -250,6 +251,7 @@
     "react-native-purchases": "10.4.2",
     "react-native-reanimated": "4.5.1",
     "react-native-safe-area-context": "~5.7.0",
+    "react-native-screens": "4.26.2",
     "react-native-svg": "15.15.4",
     "react-native-worklets": "0.10.1",
     "zustand": "^5.0.13"

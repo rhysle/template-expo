@@ -1,7 +1,7 @@
 import 'react-native-reanimated'
 
 import * as Sentry from '@sentry/react-native'
-import { ErrorBoundary, TabBarHeightProvider } from '@shared/core/components/base'
+import { ErrorBoundary, SnackbarHost, TabBarHeightProvider } from '@shared/core/components/base'
 import { CoreProvider } from '@shared/core/runtime'
 import { useLoadFonts } from '@shared/core/services/fonts'
 import { useOtaUpdateInit } from '@shared/core/services/otaUpdate'
@@ -20,7 +20,6 @@ import { useTranslation } from 'react-i18next'
 import { Platform } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
-import { SnackbarHost } from '@/components/SnackbarHost'
 import { I18nProvider } from '@/i18n'
 import { useAdsInit } from '@/services/ads'
 import { setAnalyticsUserProperties, useScreenTracker } from '@/services/firebase/analytics'
