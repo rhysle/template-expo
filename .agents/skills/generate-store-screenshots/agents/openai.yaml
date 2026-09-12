@@ -1,0 +1,4 @@
+interface:
+  display_name: 'Generate Store Screenshots'
+  short_description: 'Create store images for one monorepo app'
+  default_prompt: 'Use $generate-store-screenshots to create store marketing screenshots for one app, platform set, and locale set.'

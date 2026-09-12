@@ -1,0 +1,4 @@
+interface:
+  display_name: 'App Store Review Notes'
+  short_description: 'Prepare reviewer notes for one monorepo app'
+  default_prompt: 'Use $app-store-review-notes to prepare Apple reviewer notes for one app in this monorepo.'

@@ -1,0 +1,4 @@
+interface:
+  display_name: 'Generate Feature Graphic'
+  short_description: 'Create a Play graphic for one monorepo app'
+  default_prompt: 'Use $generate-feature-graphic to create a Google Play feature graphic for one app in this monorepo.'

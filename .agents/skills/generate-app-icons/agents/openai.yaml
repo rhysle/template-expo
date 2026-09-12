@@ -1,0 +1,4 @@
+interface:
+  display_name: 'Generate App Icons'
+  short_description: 'Create icons for one template-expo app'
+  default_prompt: 'Use $generate-app-icons to create or import icon assets for one app in this monorepo.'
