@@ -85,6 +85,7 @@ pnpm fastlane:ios:metadata
 ```
 
 Commands keep their existing remote-change semantics. `apply`, activation, price changes, metadata uploads, and provisioning are not local validation commands. Final App Review submission stays manual.
+The confirmed activation command also reconciles the app-level Apple Billing Grace Period configured in `src/configs/monetization.ts`; Google grace periods remain store-managed unless explicitly added to the tooling.
 
 ## EAS builds and archives
 

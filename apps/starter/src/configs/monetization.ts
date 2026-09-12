@@ -87,6 +87,13 @@ export const monetizationConfig = {
     baseTerritory: 'USA',
     familySharable: false,
     reviewNote: '',
+    // Set to null to disable Billing Grace Period in production and sandbox.
+    // Changes are applied only by monetization:activate --confirm.
+    billingGracePeriod: {
+      duration: '3-days',
+      renewalType: 'all-renewals',
+      environment: 'production-and-sandbox',
+    },
   },
 
   google: {

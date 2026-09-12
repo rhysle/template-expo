@@ -18,6 +18,9 @@ const GOOGLE_PRODUCT_ID_PATTERN = /^[a-z0-9][a-z0-9._]{0,39}$/
 const GOOGLE_PLAN_ID_PATTERN = /^[a-z0-9][a-z0-9-]{0,62}$/
 const ISO_ALPHA_2_PATTERN = /^[A-Z]{2}$/
 const PPP_BANDS = [0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2]
+const APPLE_BILLING_GRACE_PERIOD_DURATIONS = ['3-days', '16-days', '28-days']
+const APPLE_BILLING_GRACE_PERIOD_RENEWAL_TYPES = ['all-renewals', 'paid-to-paid-only']
+const APPLE_BILLING_GRACE_PERIOD_ENVIRONMENTS = ['sandbox-only', 'production-and-sandbox']
 const ROOT = getAppContext().appRoot
 
 const assert = (condition: boolean, message: string): void => {
@@ -79,6 +82,27 @@ export const validateConfig = (config: MonetizationConfig): void => {
     assert(
       FREE_TRIAL_DURATIONS.includes(config.freeTrial.duration),
       `freeTrial.duration must be one of: ${FREE_TRIAL_DURATIONS.join(', ')}`
+    )
+  }
+
+  if (config.apple.billingGracePeriod) {
+    assert(
+      SUBSCRIPTION_KEYS.some((key) => config.enabledProducts.includes(key)),
+      'apple.billingGracePeriod requires at least one enabled subscription'
+    )
+    assert(
+      APPLE_BILLING_GRACE_PERIOD_DURATIONS.includes(config.apple.billingGracePeriod.duration),
+      `apple.billingGracePeriod.duration must be one of: ${APPLE_BILLING_GRACE_PERIOD_DURATIONS.join(', ')}`
+    )
+    assert(
+      APPLE_BILLING_GRACE_PERIOD_RENEWAL_TYPES.includes(
+        config.apple.billingGracePeriod.renewalType
+      ),
+      `apple.billingGracePeriod.renewalType must be one of: ${APPLE_BILLING_GRACE_PERIOD_RENEWAL_TYPES.join(', ')}`
+    )
+    assert(
+      APPLE_BILLING_GRACE_PERIOD_ENVIRONMENTS.includes(config.apple.billingGracePeriod.environment),
+      `apple.billingGracePeriod.environment must be one of: ${APPLE_BILLING_GRACE_PERIOD_ENVIRONMENTS.join(', ')}`
     )
   }
 

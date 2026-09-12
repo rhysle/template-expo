@@ -8,6 +8,8 @@ import { loadStoreLocalizations } from './localizations'
 import { adjustedPriceUsd, RegionalPricingResolver, selectClosestUsdPrice } from './ppp'
 import { Reporter } from './reporter'
 import type {
+  AppleBillingGracePeriodDuration,
+  AppleBillingGracePeriodRenewalType,
   JsonApiListResponse,
   JsonApiResource,
   JsonApiSingleResponse,
@@ -58,6 +60,13 @@ interface SubscriptionIntroductoryOfferAttributes {
   targetSubscriptionPlanType?: string
 }
 
+interface SubscriptionGracePeriodAttributes {
+  optIn: boolean
+  sandboxOptIn: boolean
+  duration?: 'THREE_DAYS' | 'SIXTEEN_DAYS' | 'TWENTY_EIGHT_DAYS'
+  renewalType?: 'ALL_RENEWALS' | 'PAID_TO_PAID_ONLY'
+}
+
 interface AppleFreeTrialOffer {
   key: SubscriptionProductKey
   resource: JsonApiResource<SubscriptionIntroductoryOfferAttributes>
@@ -82,6 +91,21 @@ const SUBSCRIPTION_PERIOD: Record<SubscriptionProductKey, string> = {
 }
 const SUBSCRIPTION_KEYS: SubscriptionProductKey[] = ['weekly', 'monthly', 'yearly']
 const SUBSCRIPTION_PLAN_TYPE = 'UPFRONT' as const
+const BILLING_GRACE_PERIOD_DURATION: Record<
+  AppleBillingGracePeriodDuration,
+  NonNullable<SubscriptionGracePeriodAttributes['duration']>
+> = {
+  '3-days': 'THREE_DAYS',
+  '16-days': 'SIXTEEN_DAYS',
+  '28-days': 'TWENTY_EIGHT_DAYS',
+}
+const BILLING_GRACE_PERIOD_RENEWAL_TYPE: Record<
+  AppleBillingGracePeriodRenewalType,
+  NonNullable<SubscriptionGracePeriodAttributes['renewalType']>
+> = {
+  'all-renewals': 'ALL_RENEWALS',
+  'paid-to-paid-only': 'PAID_TO_PAID_ONLY',
+}
 
 const today = (): string => new Date().toISOString().slice(0, 10)
 const decimalMagnitude = (value: string): { magnitude: bigint; scale: number } => {
@@ -196,13 +220,15 @@ export class AppleStoreClient {
   async sync(): Promise<void> {
     this.reporter.section('App Store Connect')
     this.appId = await this.resolveAppId()
+    await this.reconcileBillingGracePeriod()
     await this.syncSubscriptions()
     await this.syncLifetimePurchase()
   }
 
   async activate(): Promise<void> {
-    this.reporter.section('App Store Connect free-trial activation')
+    this.reporter.section('App Store Connect activation')
     this.appId = await this.resolveAppId()
+    await this.activateBillingGracePeriod()
     const groups = await this.listAll<JsonApiResource<{ referenceName: string }>>(
       `/v1/apps/${this.requiredAppId()}/subscriptionGroups?limit=200`
     )
@@ -293,6 +319,96 @@ export class AppleStoreClient {
   private requiredAppId(): string {
     if (!this.appId) throw new Error('Apple app ID has not been resolved')
     return this.appId
+  }
+
+  private desiredBillingGracePeriodAttributes(): SubscriptionGracePeriodAttributes {
+    const desired = this.config.apple.billingGracePeriod
+    if (!desired) return { optIn: false, sandboxOptIn: false }
+    return {
+      optIn: desired.environment === 'production-and-sandbox',
+      sandboxOptIn: true,
+      duration: BILLING_GRACE_PERIOD_DURATION[desired.duration],
+      renewalType: BILLING_GRACE_PERIOD_RENEWAL_TYPE[desired.renewalType],
+    }
+  }
+
+  private billingGracePeriodMatches(current: SubscriptionGracePeriodAttributes): boolean {
+    const desired = this.config.apple.billingGracePeriod
+    if (!desired) return current.optIn === false && current.sandboxOptIn === false
+    const attributes = this.desiredBillingGracePeriodAttributes()
+    return (
+      current.optIn === attributes.optIn &&
+      current.sandboxOptIn === attributes.sandboxOptIn &&
+      current.duration === attributes.duration &&
+      current.renewalType === attributes.renewalType
+    )
+  }
+
+  private billingGracePeriodDescription(): string {
+    const desired = this.config.apple.billingGracePeriod
+    if (!desired) return 'disable Apple billing grace period in production and sandbox'
+    const renewalType =
+      desired.renewalType === 'all-renewals' ? 'all renewals' : 'paid-to-paid renewals only'
+    const environment =
+      desired.environment === 'production-and-sandbox' ? 'production and sandbox' : 'sandbox only'
+    return `set Apple billing grace period to ${desired.duration} for ${renewalType} in ${environment}`
+  }
+
+  private async getBillingGracePeriod(): Promise<
+    JsonApiResource<SubscriptionGracePeriodAttributes>
+  > {
+    const response = await this.request<
+      JsonApiSingleResponse<JsonApiResource<SubscriptionGracePeriodAttributes>>
+    >(`/v1/apps/${this.requiredAppId()}/subscriptionGracePeriod`)
+    if (!response) throw new Error('Apple did not return the billing grace period configuration')
+    return response.data
+  }
+
+  private async reconcileBillingGracePeriod(): Promise<void> {
+    const current = await this.getBillingGracePeriod()
+    if (this.billingGracePeriodMatches(current.attributes)) {
+      this.reporter.ok(
+        this.config.apple.billingGracePeriod
+          ? 'Apple billing grace period'
+          : 'Apple billing grace period is disabled'
+      )
+      return
+    }
+
+    const description = this.billingGracePeriodDescription()
+    if (this.reporter.command === 'verify') {
+      this.reporter.error(`Apple billing grace period differs from config: ${description}`)
+    } else if (this.reporter.command === 'plan') {
+      this.reporter.change(description)
+    } else {
+      this.reporter.info(
+        'Apple billing grace-period transition pending: pnpm monetization:activate -- --confirm'
+      )
+    }
+  }
+
+  private async activateBillingGracePeriod(): Promise<void> {
+    const current = await this.getBillingGracePeriod()
+    if (this.billingGracePeriodMatches(current.attributes)) {
+      this.reporter.ok(
+        this.config.apple.billingGracePeriod
+          ? 'Apple billing grace period already configured'
+          : 'Apple billing grace period is disabled'
+      )
+      return
+    }
+
+    await this.request(`/v1/subscriptionGracePeriods/${current.id}`, {
+      method: 'PATCH',
+      body: {
+        data: {
+          type: 'subscriptionGracePeriods',
+          id: current.id,
+          attributes: this.desiredBillingGracePeriodAttributes(),
+        },
+      },
+    })
+    this.reporter.change(this.billingGracePeriodDescription())
   }
 
   private async syncSubscriptions(): Promise<void> {

@@ -13,10 +13,7 @@ export const monetizationConfig = {
 
   // Set to null to disable trials. Change target to move the one cross-store
   // trial to another enabled subscription, or use e.g. '7-days' for one week.
-  freeTrial: {
-    target: 'weekly',
-    duration: '3-days',
-  },
+  freeTrial: null,
 
   stores: {
     apple: true,
@@ -87,6 +84,13 @@ export const monetizationConfig = {
     baseTerritory: 'USA',
     familySharable: false,
     reviewNote: '',
+    // Set to null to disable Billing Grace Period in production and sandbox.
+    // Changes are applied only by monetization:activate --confirm.
+    billingGracePeriod: {
+      duration: '3-days',
+      renewalType: 'all-renewals',
+      environment: 'production-and-sandbox',
+    },
   },
 
   google: {

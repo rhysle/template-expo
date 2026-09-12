@@ -4,10 +4,19 @@ export type Command =
   'plan' | 'apply' | 'verify' | 'activate' | 'prices-plan' | 'prices-apply' | 'prices-verify'
 export type FreeTrialDuration =
   '3-days' | '7-days' | '14-days' | '1-month' | '2-months' | '3-months' | '6-months' | '1-year'
+export type AppleBillingGracePeriodDuration = '3-days' | '16-days' | '28-days'
+export type AppleBillingGracePeriodRenewalType = 'all-renewals' | 'paid-to-paid-only'
+export type AppleBillingGracePeriodEnvironment = 'sandbox-only' | 'production-and-sandbox'
 
 export interface FreeTrialConfig {
   target: SubscriptionProductKey
   duration: FreeTrialDuration
+}
+
+export interface AppleBillingGracePeriodConfig {
+  duration: AppleBillingGracePeriodDuration
+  renewalType: AppleBillingGracePeriodRenewalType
+  environment: AppleBillingGracePeriodEnvironment
 }
 
 export interface SubscriptionProductConfig {
@@ -56,6 +65,7 @@ export interface MonetizationConfig {
     baseTerritory: string
     familySharable: boolean
     reviewNote: string
+    billingGracePeriod: AppleBillingGracePeriodConfig | null
   }
   google: {
     subscriptionProductId: string

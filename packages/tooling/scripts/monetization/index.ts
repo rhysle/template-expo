@@ -29,6 +29,7 @@ Usage:
   pnpm monetization:prices:verify
 
 Edit src/configs/monetization.ts to select weekly, monthly, yearly, and/or lifetime products.
+Apple Billing Grace Period is configured there and applied by the confirmed activation command.
 App identifiers are read from app.json; remote credentials are loaded from .env.fastlane.local.
 `.trim()
 

@@ -3,7 +3,7 @@ import type { Command } from './types'
 export const requireCommandConfirmation = (command: Command, args: readonly string[]): void => {
   if (command === 'activate' && !args.includes('--confirm')) {
     throw new Error(
-      'Activation changes live Apple trials and makes Google Play products purchasable. Re-run with:\n' +
+      'Activation changes live Apple trials and Billing Grace Period, and makes Google Play products purchasable. Re-run with:\n' +
         'pnpm monetization:activate -- --confirm'
     )
   }
