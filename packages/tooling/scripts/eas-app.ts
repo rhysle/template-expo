@@ -9,6 +9,7 @@ import { parseEnvironment } from './store-environment'
 // EAS reads .easignore from the repository root. Build from a disposable workspace
 // so parallel app builds never rewrite each other's archive rules or include secrets.
 const { appRoot, repoRoot } = getAppContext()
+const appRelative = path.relative(repoRoot, appRoot)
 const args = process.argv.slice(2)
 if (!['build', 'build:inspect'].includes(args[0]))
   throw new Error('eas-app supports build and build:inspect only')
@@ -23,7 +24,9 @@ try {
     .filter(Boolean)
   for (const relative of new Set(paths)) {
     if (
-      !/^(apps\/|packages\/|package\.json$|pnpm-lock\.yaml$|pnpm-workspace\.yaml$|tsconfig\.json$|eslint\.config\.mjs$|\.prettierrc$)/.test(
+      !relative.startsWith(`${appRelative}/`) &&
+      !relative.startsWith('packages/') &&
+      !/^(package\.json$|pnpm-lock\.yaml$|pnpm-workspace\.yaml$|tsconfig\.json$|eslint\.config\.mjs$|\.prettierrc$)/.test(
         relative
       )
     )
@@ -45,7 +48,6 @@ try {
     fs.mkdirSync(path.dirname(destination), { recursive: true })
     fs.copyFileSync(source, destination)
   }
-  const appRelative = path.relative(repoRoot, appRoot)
   const stagedApp = path.join(stage, appRelative)
   const environmentPath = path.join(appRoot, '.env.local')
   if (fs.existsSync(environmentPath)) {

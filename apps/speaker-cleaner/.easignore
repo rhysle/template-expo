@@ -4,8 +4,8 @@ node_modules/
 **/dist/
 **/ios/
 **/android/
-!apps/*/fastlane/ios/
-!apps/*/fastlane/android/
+**/fastlane/
+**/assets/screenshots/
 **/.env*
 **/fastlane/.private/
 **/fastlane/.tmp/
