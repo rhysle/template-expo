@@ -1,10 +1,10 @@
-import { QUERY_STATE_PERSIST_KEY } from '@shared/core/services/queries'
-import { storage } from '@shared/core/storage/core/engine'
-import { buildQueryKey } from '@shared/core/storage/queryStorage'
-import { buildStoreKey } from '@shared/core/storage/storeStorage'
-import { SLICE_VERSIONS_KEY } from '@shared/core/stores/slices/migrate'
-
-import { APP_STATE_PERSIST_NAME, appSliceModules, useAppStore } from '@/stores'
+import { QUERY_STATE_PERSIST_KEY } from '../services/queries'
+import { storage } from '../storage/core/engine'
+import { buildQueryKey } from '../storage/queryStorage'
+import { buildStoreKey } from '../storage/storeStorage'
+import { APP_STATE_PERSIST_NAME } from '../stores/createAppStore'
+import { SLICE_VERSIONS_KEY } from '../stores/slices/migrate'
+import type { AnySliceConfig } from '../stores/slices/registry'
 
 const ZUSTAND_KEY = buildStoreKey(APP_STATE_PERSIST_NAME)
 const QUERY_KEY = buildQueryKey(QUERY_STATE_PERSIST_KEY)
@@ -15,6 +15,11 @@ export type StorageEntry = {
   key: string
   value: unknown
   rawSize: number
+}
+
+export interface DebugStore {
+  getState: () => unknown
+  persist: { rehydrate: () => void | Promise<void> }
 }
 
 export const getAllStorageEntries = (): StorageEntry[] => {
@@ -48,8 +53,8 @@ export const getRawPersistedZustandState = (): Record<string, unknown> | null =>
   }
 }
 
-export const getLiveZustandState = (): Record<string, unknown> => {
-  const state = useAppStore.getState() as unknown as Record<string, unknown>
+export const getLiveZustandState = (store: DebugStore): Record<string, unknown> => {
+  const state = store.getState() as Record<string, unknown>
   const result: Record<string, unknown> = {}
   for (const [key, value] of Object.entries(state)) {
     if (key === SLICE_VERSIONS_KEY) {
@@ -131,11 +136,13 @@ export type SliceVersionInfo = {
   needsMigration: boolean
 }
 
-export const getSliceVersionInfo = (): SliceVersionInfo[] => {
+export const getSliceVersionInfo = (
+  sliceModules: Record<string, AnySliceConfig>
+): SliceVersionInfo[] => {
   const persisted = getRawPersistedZustandState()
   const persistedVersions = (persisted?.[SLICE_VERSIONS_KEY] ?? {}) as Record<string, number>
 
-  return Object.entries(appSliceModules).map(([key, mod]) => {
+  return Object.entries(sliceModules).map(([key, mod]) => {
     const name = key.replace(/^\.\//, '').replace(/\.ts$/, '')
     const currentVersion = mod.sliceConfig.version ?? 0
     const persistedVersion = persistedVersions[name] ?? 0
@@ -162,6 +169,6 @@ export const clearAllStorage = (): void => {
   storage.clearAll()
 }
 
-export const forceRehydrate = (): void => {
-  void useAppStore.persist.rehydrate()
+export const forceRehydrate = (store: DebugStore): void => {
+  void store.persist.rehydrate()
 }

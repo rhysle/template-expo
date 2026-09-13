@@ -1,32 +1,3 @@
-import {
-  BottomSheet,
-  BouncingDotsLoader,
-  Button,
-  Card,
-  ChoiceChip,
-  type ComponentTone,
-  IconButton,
-  InlineNotice,
-  NativeAlertDialog,
-  NativeBottomSheet,
-  NativeMenu,
-  type NativeMenuAction,
-  NativeSegmentedControl,
-  NativeSlider,
-  NativeToggle,
-  ProgressRing,
-  PulsingRingLoader,
-  SearchInput,
-  SegmentedControl,
-  type SegmentedOption,
-  Slider,
-  SpinArcLoader,
-  StatusBadge,
-  Text,
-  TextField,
-  Toggle,
-} from '@shared/core/components/base'
-import { useSnackbarState } from '@shared/core/stores/features/snackbar'
 import type { Icon } from 'phosphor-react-native'
 import {
   ArrowRightIcon,
@@ -43,7 +14,35 @@ import {
 import { useState } from 'react'
 import { View } from 'react-native'
 
-import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
+import {
+  BottomSheet,
+  BouncingDotsLoader,
+  Button,
+  Card,
+  ChoiceChip,
+  type ComponentTone,
+  IconButton,
+  InlineNotice,
+  NativeAlertDialog,
+  NativeBottomSheet,
+  NativeMenu,
+  type NativeMenuAction,
+  NativeSegmentedControl,
+  NativeSlider,
+  NativeToggle,
+  PulsingRingLoader,
+  SearchInput,
+  SegmentedControl,
+  type SegmentedOption,
+  Slider,
+  SpinArcLoader,
+  StatusBadge,
+  Text,
+  TextField,
+  Toggle,
+} from '../components/base'
+import { useSnackbarState } from '../stores/features/snackbar'
+import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '../theme'
 
 type PlaygroundTab = 'first' | 'second' | 'third'
 
@@ -80,7 +79,6 @@ export const BaseComponentGallery = () => {
   const [selectedPreset, setSelectedPreset] = useState('440')
   const [fieldValue, setFieldValue] = useState('')
   const [searchValue, setSearchValue] = useState('speaker')
-  const [progressValue, setProgressValue] = useState(68)
   const [playgroundTab, setPlaygroundTab] = useState<PlaygroundTab>('first')
   const [toggleEnabled, setToggleEnabled] = useState(false)
   const [sliderValue, setSliderValue] = useState(40)
@@ -259,60 +257,6 @@ export const BaseComponentGallery = () => {
             placeholder="Search"
             value={searchValue}
             onChangeText={setSearchValue}
-          />
-        </GalleryCard>
-
-        <GalleryCard title="Progress rings">
-          <View style={styles.progressRow}>
-            <ProgressPreview label="Empty">
-              <ProgressRing
-                value={-20}
-                size={96}
-                tone="neutral"
-                animated={false}
-                accessibilityLabel="Empty progress">
-                <Text variant="subtitle" weight="bold" selectable>
-                  0%
-                </Text>
-              </ProgressRing>
-            </ProgressPreview>
-
-            <ProgressPreview label="Interactive">
-              <ProgressRing
-                value={progressValue}
-                size={120}
-                tone="accent"
-                accessibilityLabel="Interactive progress"
-                accessibilityValueText={`${progressValue} percent`}>
-                <IconButton
-                  icon={PlayIcon}
-                  accessibilityLabel="Toggle progress value"
-                  variant="primary"
-                  size="md"
-                  onPress={() => setProgressValue((current) => (current === 68 ? 32 : 68))}
-                />
-              </ProgressRing>
-              <Text variant="caption" tone="muted" style={styles.tabularNumbers} selectable>
-                {progressValue}%
-              </Text>
-            </ProgressPreview>
-
-            <ProgressPreview label="Complete">
-              <ProgressRing
-                value={140}
-                size={96}
-                tone="success"
-                animated={false}
-                accessibilityLabel="Complete progress">
-                <CheckIcon size={iconSizes.lg} color={colors.status.success} weight="bold" />
-              </ProgressRing>
-            </ProgressPreview>
-          </View>
-          <Button
-            variant="secondary"
-            size="sm"
-            label="Toggle animated progress"
-            onPress={() => setProgressValue((current) => (current === 68 ? 32 : 68))}
           />
         </GalleryCard>
 
@@ -588,19 +532,6 @@ const GalleryCard = ({ title, children }: { title: string; children: React.React
   )
 }
 
-const ProgressPreview = ({ label, children }: { label: string; children: React.ReactNode }) => {
-  const styles = useThemedStyles(createStyles)
-
-  return (
-    <View style={styles.progressPreview}>
-      {children}
-      <Text variant="caption" tone="muted" align="center">
-        {label}
-      </Text>
-    </View>
-  )
-}
-
 const LoaderPreview = ({ label, children }: { label: string; children: React.ReactNode }) => {
   const styles = useThemedStyles(createStyles)
 
@@ -659,18 +590,6 @@ const createStyles = createThemedStyles((t) => ({
   wrapRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    alignItems: 'center',
-    gap: t.spacing.sm,
-  },
-  progressRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'flex-start',
-    justifyContent: 'space-around',
-    gap: t.spacing.md,
-  },
-  progressPreview: {
-    minWidth: 120,
     alignItems: 'center',
     gap: t.spacing.sm,
   },

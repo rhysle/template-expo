@@ -7,7 +7,12 @@ for (const key of context.keys()) {
   if (key in appSliceModules) throw new Error(`Duplicate core slice: ${key}`)
   appSliceModules[key] = context(key) as AnySliceConfig
 }
-export const useAppStore = createAppStore<AppSlices>(appSliceModules)
+const appStore = createAppStore<AppSlices>(appSliceModules)
+export const useAppStore = appStore
+export const appDebugStore = {
+  getState: appStore.getState,
+  persist: { rehydrate: appStore.persist.rehydrate },
+}
 export { APP_STATE_PERSIST_NAME }
 export type AppStore = AppSlices
 export type AppStorePersistedState =

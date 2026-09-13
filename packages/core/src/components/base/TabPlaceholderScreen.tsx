@@ -1,8 +1,9 @@
-import { TabScreen, Text } from '@shared/core/components/base'
 import type { PropsWithChildren } from 'react'
 import { View } from 'react-native'
 
-import { createThemedStyles, useThemedStyles } from '@/theme'
+import { createThemedStyles, useThemedStyles } from '../../theme'
+import { TabScreen } from './TabNavigator'
+import { Text } from './Text'
 
 export interface TabPlaceholderScreenProps extends PropsWithChildren {
   description: string

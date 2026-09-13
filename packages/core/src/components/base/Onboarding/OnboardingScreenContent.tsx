@@ -1,10 +1,10 @@
-import { Text } from '@shared/core/components/base'
 import type { AnimationObject, LottieViewProps } from 'lottie-react-native'
 import LottieView from 'lottie-react-native'
 import { useWindowDimensions, View } from 'react-native'
 import { useReducedMotion } from 'react-native-reanimated'
 
-import { createThemedStyles, useThemedStyles } from '@/theme'
+import { createThemedStyles, useThemedStyles } from '../../../theme'
+import { Text } from '../Text'
 
 const PREFERRED_ANIMATION_SIZE = 300
 const MAX_ANIMATION_WIDTH_RATIO = 0.8

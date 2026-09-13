@@ -1,7 +1,5 @@
-import { Button } from '@shared/core/components/base'
+import { Button, TabPlaceholderScreen } from '@shared/core/components/base'
 import { useSnackbarState } from '@shared/core/stores/features/snackbar'
-
-import { TabPlaceholderScreen } from '@/components/TabPlaceholderScreen'
 
 export default function HomeScreen() {
   const { showSnackbar } = useSnackbarState()

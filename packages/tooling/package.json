@@ -4,6 +4,7 @@
   "private": true,
   "exports": {
     "./app-variant": "./scripts/app-variant.js",
+    "./expo-app-config": "./scripts/expo-app-config.js",
     "./monetization-types": "./scripts/monetization/types.ts",
     "./plugins/withRNFirebaseStaticFramework": "./plugins/withRNFirebaseStaticFramework.js"
   },

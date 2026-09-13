@@ -1,7 +1,9 @@
-import type { OnboardingPageItem } from '@shared/core/components/base'
+import {
+  type OnboardingAnimationConfig,
+  type OnboardingPageItem,
+  OnboardingScreenContent,
+} from '@shared/core/components/base'
 import { useTranslation } from 'react-i18next'
-
-import { type OnboardingAnimationConfig, OnboardingScreenContent } from './OnboardingScreenContent'
 
 const onboardingAnimations = {
   page1: {

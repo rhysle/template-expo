@@ -1,8 +1,8 @@
-import { Text } from '@shared/core/components/base'
 import type { ReactNode } from 'react'
 import { View, type ViewProps } from 'react-native'
 
-import { createThemedStyles, useThemedStyles } from '@/theme'
+import { Text } from '../components/base'
+import { createThemedStyles, useThemedStyles } from '../theme'
 
 export interface ScreenHeaderProps extends ViewProps {
   title: string

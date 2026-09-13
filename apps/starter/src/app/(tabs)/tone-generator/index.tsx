@@ -1,4 +1,4 @@
-import { TabPlaceholderScreen } from '@/components/TabPlaceholderScreen'
+import { TabPlaceholderScreen } from '@shared/core/components/base'
 
 export default function ToneGeneratorScreen() {
   return (

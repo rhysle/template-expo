@@ -110,11 +110,6 @@ export const resetAppConfiguration = (
   const eas = readJson<EasConfig>(easFile)
   eas.submit = { production: {} }
   fs.writeFileSync(easFile, JSON.stringify(eas, null, 2) + '\n')
-  const ignore = fs.readFileSync(path.join(repoRoot, '.easignore'), 'utf8')
-  fs.writeFileSync(
-    path.join(root, '.easignore'),
-    `${ignore}!apps/${slug}/.env.local\n!apps/${slug}/GoogleService-Info.plist\n!apps/${slug}/google-services.json\n`
-  )
 }
 
 const main = (): void => {

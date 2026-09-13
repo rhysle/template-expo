@@ -1,11 +1,10 @@
-import { Card, ChoiceChip, Text } from '@shared/core/components/base'
-import { getDebugLanguageOverride, setDebugLanguageOverride } from '@shared/core/storage'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, View } from 'react-native'
 
-import { getDeviceLanguage, supportedLanguageCodes } from '@/i18n'
-import { createThemedStyles, useThemedStyles } from '@/theme'
+import { Card, ChoiceChip, Text } from '../components/base'
+import { getDebugLanguageOverride, setDebugLanguageOverride } from '../storage'
+import { createThemedStyles, useThemedStyles } from '../theme'
 
 const LANGUAGE_NAMES: Readonly<Record<string, string>> = {
   ar: 'العربية',
@@ -49,30 +48,40 @@ const LANGUAGE_NAMES: Readonly<Record<string, string>> = {
 
 const PRIORITY_LANGUAGES = ['en', 'vi', 'ar', 'he']
 
-const languageCodes = [...supportedLanguageCodes].sort((a, b) => {
-  const aPriority = PRIORITY_LANGUAGES.indexOf(a)
-  const bPriority = PRIORITY_LANGUAGES.indexOf(b)
+const sortLanguageCodes = (supportedLanguageCodes: readonly string[]) =>
+  [...supportedLanguageCodes].sort((a, b) => {
+    const aPriority = PRIORITY_LANGUAGES.indexOf(a)
+    const bPriority = PRIORITY_LANGUAGES.indexOf(b)
 
-  if (aPriority !== -1 || bPriority !== -1) {
-    if (aPriority === -1) return 1
-    if (bPriority === -1) return -1
-    return aPriority - bPriority
-  }
+    if (aPriority !== -1 || bPriority !== -1) {
+      if (aPriority === -1) return 1
+      if (bPriority === -1) return -1
+      return aPriority - bPriority
+    }
 
-  return a.localeCompare(b)
-})
+    return a.localeCompare(b)
+  })
 
 const getLanguageLabel = (language: string): string => {
   const name = LANGUAGE_NAMES[language] ?? language
   return `${language} · ${name}`
 }
 
-export const LanguageSwitcher = () => {
+export interface LanguageSwitcherProps {
+  getDeviceLanguage: () => string
+  supportedLanguageCodes: readonly string[]
+}
+
+export const LanguageSwitcher = ({
+  getDeviceLanguage,
+  supportedLanguageCodes,
+}: LanguageSwitcherProps) => {
   const styles = useThemedStyles(createStyles)
   const { i18n } = useTranslation()
   const [languageOverride, setLanguageOverride] = useState(getDebugLanguageOverride)
   const [isChanging, setIsChanging] = useState(false)
   const deviceLanguage = getDeviceLanguage()
+  const languageCodes = sortLanguageCodes(supportedLanguageCodes)
 
   const changeLanguage = async (nextLanguage: string | null) => {
     if (nextLanguage === languageOverride || isChanging) return

@@ -1,20 +1,19 @@
-import { Button, Card, Pressable, Text } from '@shared/core/components/base'
-import { useSnackbarState } from '@shared/core/stores/features/snackbar'
-import { useThemeState } from '@shared/core/stores/features/theme'
 import * as Clipboard from 'expo-clipboard'
 import { BugIcon, CaretDownIcon, CaretUpIcon } from 'phosphor-react-native'
 import { useRef, useState } from 'react'
 import { Platform, type TextStyle, View } from 'react-native'
 
+import { Button, Card, Pressable, Text } from '../components/base'
+import { useCoreRuntime } from '../runtime'
+import { useSnackbarState } from '../stores/features/snackbar'
+import { useThemeState } from '../stores/features/theme'
 import {
   type ColorScheme,
   createThemedStyles,
-  defaultTheme,
   iconSizes,
   useTheme,
   useThemedStyles,
-} from '@/theme'
-
+} from '../theme'
 import { ColorPickerControl } from './ColorPickerControl'
 
 const clampByte = (value: number) => Math.max(0, Math.min(255, Math.round(value)))
@@ -74,6 +73,7 @@ const formatColorsForSource = (colors: ColorScheme) => {
 }
 
 export const DesignTokenSection = () => {
+  const { themes } = useCoreRuntime()
   const theme = useTheme()
   const styles = useThemedStyles(createStyles)
   const { setPreviewColors } = useThemeState()
@@ -84,7 +84,7 @@ export const DesignTokenSection = () => {
   )
   const draftColorsRef = useRef(draftColors)
   const effectiveColors = normalizeColorScheme(theme.colors)
-  const defaultColors = normalizeColorScheme(defaultTheme.colors)
+  const defaultColors = normalizeColorScheme(themes.default.colors)
   const canResetColors =
     JSON.stringify(draftColors) !== JSON.stringify(defaultColors) ||
     JSON.stringify(effectiveColors) !== JSON.stringify(defaultColors)
