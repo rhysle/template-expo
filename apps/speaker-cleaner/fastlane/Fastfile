@@ -1,0 +1,2 @@
+ENV['RHYSLE_APP_ROOT'] = File.expand_path('..', __dir__)
+import File.expand_path('../../../packages/tooling/fastlane/Fastfile', __dir__)

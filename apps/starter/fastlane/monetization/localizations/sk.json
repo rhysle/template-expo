@@ -1,0 +1,36 @@
+{
+  "appleLocale": "sk",
+  "googleLocale": "sk",
+  "apple": {
+    "subscriptionGroupDisplayName": "Premium",
+    "products": {
+      "weekly": {
+        "displayName": "Premium · Týždenné",
+        "description": "Všetky prémiové funkcie bez obmedzení."
+      },
+      "monthly": {
+        "displayName": "Premium · Mesačné",
+        "description": "Všetky prémiové funkcie bez obmedzení."
+      },
+      "yearly": {
+        "displayName": "Premium · Ročné",
+        "description": "Všetky prémiové funkcie bez obmedzení."
+      },
+      "lifetime": {
+        "displayName": "Premium · Doživotné",
+        "description": "Všetky prémiové funkcie navždy."
+      }
+    }
+  },
+  "google": {
+    "subscription": {
+      "title": "Premium",
+      "description": "Všetky prémiové funkcie bez obmedzení.",
+      "benefits": ["Všetky prémiové funkcie"]
+    },
+    "lifetime": {
+      "title": "Premium · Doživotné",
+      "description": "Všetky prémiové funkcie navždy."
+    }
+  }
+}

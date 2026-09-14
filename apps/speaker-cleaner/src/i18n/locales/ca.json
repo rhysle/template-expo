@@ -1,0 +1,423 @@
+{
+  "common": {
+    "back": "Enrere",
+    "cancel": "Cancel·la",
+    "close": "Tanca",
+    "confirm": "Confirma",
+    "continue": "Continua",
+    "done": "Fet",
+    "getStarted": "Comença",
+    "next": "Següent",
+    "ok": "D’acord",
+    "openSettings": "Obre la configuració",
+    "reset": "Restableix",
+    "retry": "Torna-ho a provar",
+    "restart": "Reinicia",
+    "save": "Desa",
+    "skip": "Omet",
+    "start": "Inicia",
+    "stop": "Atura"
+  },
+  "premium": {
+    "lockedHint": "Obre la pantalla d’actualització a Premium",
+    "accessChecking": "S’està comprovant l’accés Premium…",
+    "accessUnknown": "Connecta’t a Internet per comprovar l’accés Premium."
+  },
+  "tabs": {
+    "eject": "Expulsió",
+    "toneGenerator": "Generador de tons",
+    "stereoTest": "Prova estèreo",
+    "dbMeter": "Sonòmetre"
+  },
+  "settings": {
+    "title": "Configuració",
+    "subtitle": "Ajusta les eines de l’altaveu i el sonòmetre",
+    "support": "Assistència",
+    "contactSupport": "Contacta amb assistència",
+    "contactSupportSubtitle": "Som aquí per ajudar-te",
+    "contactSupportError": "No s’ha pogut obrir l’aplicació de correu",
+    "rateApp": "Valora’ns",
+    "rateAppSubtitle": "T’agrada l’aplicació? Deixa’ns una ressenya",
+    "shareApp": "Comparteix",
+    "shareAppSubtitle": "Recomana-la a amics i familiars",
+    "shareMessage": "Descobreix {{appName}}!",
+    "shareMessageWithUrl": "Descobreix {{appName}}! Baixa-la aquí: {{url}}",
+    "userId": "ID d’usuari",
+    "userIdCopied": "S’ha copiat l’ID d’usuari",
+    "legalSection": "Informació legal",
+    "privacyConsent": "Privadesa i consentiment",
+    "version": "Versió {{version}}",
+    "otaUpdateId": "Actualització: {{updateId}}",
+    "upgradeBanner": {
+      "title": "Actualitza a Premium",
+      "subtitle": "Desbloqueja neteges Turbo més llargues, controls d’àudio avançats i una experiència sense anuncis"
+    },
+    "audio": {
+      "section": "Àudio i sonòmetre",
+      "ejectDuration": "Durada de la neteja",
+      "durationValue": "{{count}} segons",
+      "haptics": "Resposta hàptica",
+      "hapticsSubtitle": "Utilitza resposta tàctil a les eines de so",
+      "safety": "Seguretat i privadesa de l’àudio",
+      "safetySubtitle": "Guia de reproducció, micròfon i mesurament"
+    },
+    "activity": {
+      "section": "Dades d’activitat",
+      "saved": "Activitat desada",
+      "clear": "Esborra l’historial d’activitat",
+      "clearSubtitle": "Elimina les sessions de neteja i so desades localment",
+      "clearConfirmTitle": "Vols esborrar tota l’activitat?",
+      "clearConfirmBody": "Això elimina permanentment d’aquest dispositiu les sessions de neteja i so desades. L’hora de la pròxima neteja gratuïta no canviarà.",
+      "cleared": "S’ha esborrat l’historial d’activitat"
+    }
+  },
+  "audioTools": {
+    "common": {
+      "mascot": "Mascota d’expulsió d’aigua",
+      "error": "No s’ha pogut iniciar l’àudio. Comprova la sortida actual i torna-ho a provar."
+    },
+    "eject": {
+      "start": "Inicia la neteja",
+      "stop": "Atura la neteja",
+      "externalTitle": "Desconnecta l’àudio extern",
+      "externalBody": "La neteja de l’altaveu funciona a través de l’altaveu del dispositiu, no dels auriculars ni de les sortides Bluetooth.",
+      "turbo": {
+        "title": "Mode Turbo",
+        "guide": {
+          "title": "Mode Turbo",
+          "description": "Un cicle de neteja més potent per a l’aigua i la brutícia resistents.",
+          "frequency": "Utilitza cinc etapes diferents de doble freqüència que evolucionen durant tot el cicle.",
+          "duration": "El mode Turbo pot superar breument el límit de volum del sistema. Utilitza’l només en cicles de neteja curts.",
+          "cta": "Activa el mode Turbo"
+        }
+      },
+      "help": {
+        "title": "Com s’utilitza",
+        "disconnect": "Desconnecta els auriculars i els dispositius Bluetooth perquè el so de neteja es reprodueixi en aquest dispositiu.",
+        "position": "Col·loca el dispositiu amb l’altaveu cap avall sobre una superfície seca i mantén lliures les obertures de l’altaveu.",
+        "start": "Apuja el volum del dispositiu, toca Inicia la neteja i mantén el dispositiu quiet fins que acabi el cicle.",
+        "hearingTitle": "Protegeix l’oïda",
+        "hearingWarning": "No portis auriculars durant la prova d’expulsió. Els tons forts de neteja poden causar danys auditius."
+      },
+      "routine": {
+        "standard": "Estàndard",
+        "turbo": "Turbo"
+      }
+    },
+    "tone": {
+      "currentFrequency": "Freqüència actual",
+      "frequencyValue": "{{frequency}} Hz",
+      "waveformLabel": "Forma d’ona {{waveform}} a {{frequency}} hertzs",
+      "waveform": {
+        "label": "Forma d’ona",
+        "sine": "Sinusoïdal",
+        "square": "Quadrada",
+        "triangle": "Triangular",
+        "sawtooth": "Dent de serra"
+      },
+      "play": "Reprodueix el to",
+      "stop": "Atura el to",
+      "band": {
+        "veryLow": "Molt baixa",
+        "low": "Baixa",
+        "midLow": "Mitjana-baixa",
+        "mid": "Mitjana",
+        "high": "Alta",
+        "veryHigh": "Molt alta"
+      }
+    },
+    "stereo": {
+      "auto": "Alternança automàtica",
+      "autoHint": "Alterna entre esquerra, dreta i tots dos",
+      "tapToChange": "Toca els altaveus per canviar de canal",
+      "start": "Inicia la prova",
+      "helpTitle": "Com s’utilitza la prova estèreo",
+      "helpTap": "Toca l’altaveu esquerre o dret per provar aquest canal immediatament.",
+      "helpBoth": "Activa tots dos altaveus per reproduir el to de prova pels dos canals.",
+      "helpAuto": "Utilitza l’alternança automàtica per canviar entre el canal esquerre, el dret i tots dos.",
+      "helpStop": "Utilitza Atura la prova quan vulguis finalitzar la reproducció.",
+      "left": "Esquerra",
+      "right": "Dreta",
+      "positionLeft": "S’està reproduint el canal esquerre",
+      "positionCenter": "S’estan reproduint tots dos canals",
+      "positionRight": "S’està reproduint el canal dret",
+      "idlePosition": "Toca un altaveu per començar",
+      "stop": "Atura la prova"
+    },
+    "meter": {
+      "estimated": "dB estimats",
+      "start": "Inicia el mesurament",
+      "stop": "Atura el mesurament",
+      "permissionTitle": "L’accés al micròfon està desactivat",
+      "permissionBody": "L’accés al micròfon només s’utilitza mentre el sonòmetre funciona per estimar els nivells de so propers. Les mostres d’àudio es processen a la memòria i mai no es desen ni es pugen. Les estimacions arrodonides de cada sessió només es desen en aquest dispositiu i es poden esborrar a Configuració.",
+      "minimum": "Mínim",
+      "average": "Mitjana",
+      "maximum": "Màxim",
+      "timeline": "Cronologia estimada del nivell de so",
+      "status": {
+        "veryQuiet": "Molt silenciós",
+        "normal": "Normal",
+        "loud": "Fort",
+        "danger": "Perill"
+      },
+      "description": {
+        "veryQuiet": "Biblioteca, respiració suau",
+        "normal": "Conversa, oficina",
+        "loud": "Carrer transitat, música alta",
+        "danger": "Concert, sirena"
+      },
+      "help": {
+        "title": "Guia del sonòmetre",
+        "howToMeasure": "Com es mesura",
+        "stepPlace": "Col·loca el telèfon on vulguis comprovar el so.",
+        "stepUncovered": "Mantén el micròfon descobert.",
+        "stepStart": "Toca Inicia el mesurament i observa l’estimació en directe.",
+        "everydayLevels": "Nivells de so quotidians",
+        "examplesApproximate": "Els exemples són aproximats i varien segons la distància.",
+        "currentEstimate": "Estimació actual",
+        "exposureTitle": "El temps d’exposició al soroll és important",
+        "exposureDescription": "Segons les directrius de NIOSH sobre el soroll laboral, cada augment de 3 dB redueix a la meitat el temps d’exposició recomanat.",
+        "useItWell": "Consells de mesurament",
+        "tipMicrophoneTitle": "Mantén el micròfon descobert",
+        "tipMicrophoneBody": "Evita tapar el micròfon amb la mà o la funda del telèfon.",
+        "tipPositionTitle": "Mesura allà on escoltes",
+        "tipPositionBody": "Mou el dispositiu fins al lloc que vulguis avaluar.",
+        "tipProtectTitle": "Si el so és massa fort, protegeix-te les orelles",
+        "tipProtectBody": "Allunya’t de la font o utilitza protecció auditiva.",
+        "reference": {
+          "concertSpeaker": "Altaveu de concert",
+          "sirenNightclub": "Sirena o discoteca",
+          "lawnMower": "Tallagespa",
+          "busyStreet": "Carrer transitat",
+          "conversation": "Conversa",
+          "quietHome": "Casa tranquil·la",
+          "whisper": "Xiuxiueig",
+          "hearingThreshold": "Llindar d’audició"
+        }
+      }
+    },
+    "safety": {
+      "title": "Seguretat i privadesa de l’àudio",
+      "intro": "Utilitza aquestes eines amb cura i entén què pot mesurar el telèfon i què no.",
+      "playbackTitle": "Reproducció segura",
+      "playbackBody": "Comença amb un volum baix, apuja’l gradualment, mantén l’altaveu lluny de les orelles i atura’t si el so resulta incòmode.",
+      "routingTitle": "Encaminament de l’àudio",
+      "routingBody": "El so de neteja ha d’utilitzar l’altaveu del dispositiu. La separació estèreo depèn de l’altaveu o dels auriculars connectats.",
+      "estimateTitle": "Nivells de so estimats",
+      "estimateBody": "Els micròfons del telèfon informen del nivell del senyal digital, no del nivell SPL de laboratori. L’aplicació calcula una estimació que varia segons el dispositiu.",
+      "privacyTitle": "Privadesa del micròfon",
+      "privacyBody": "El micròfon només funciona mentre el sonòmetre està actiu. Les mostres es processen a la memòria i mai no es desen ni es pugen. Les estimacions arrodonides d’una sessió es poden desar localment a l’historial d’activitat i es poden esborrar a Configuració.",
+      "limitationsTitle": "Limitacions importants",
+      "limitationsBody": "Aquesta aplicació no pot garantir l’eliminació de l’aigua o la pols. No introdueixis objectes a l’altaveu ni utilitzis aquestes eines com a substitut d’una reparació professional, equips calibrats, assessorament mèdic o orientació sobre protecció auditiva."
+    }
+  },
+  "paywall": {
+    "title": "Desbloqueja totes les eines d’àudio",
+    "subtitle": "Neteja l’altaveu, accedeix als controls avançats i elimina tots els anuncis.",
+    "ctaFreeTrial": "Prova-ho de franc",
+    "trialDisclaimer": "Cancel·la quan vulguis. Ara no has de pagar res",
+    "subscriptionDisclaimer": "Cancel·la quan vulguis.",
+    "lifetimeDisclaimer": "Paga una sola vegada. Sense càrrecs recurrents.",
+    "restore": "Restaura les compres",
+    "terms": "Condicions del servei",
+    "privacy": "Política de privadesa",
+    "then": "després",
+    "trial": "Prova gratuïta de {{count}} {{unit}}",
+    "save": "Estalvia un {{percent}}%",
+    "availability": {
+      "loading": "S'estan comprovant les opcions de compra…",
+      "temporary_error": {
+        "title": "No s'han pogut carregar les opcions de compra",
+        "subtitle": "Comprova la connexió i torna-ho a provar."
+      },
+      "configuration_error": {
+        "title": "Les opcions de compra no estan disponibles",
+        "subtitle": "La botiga no ha pogut carregar els productes d'aquesta aplicació. Torna-ho a provar d'aquí a una estona."
+      },
+      "purchase_not_allowed": {
+        "title": "Aquest dispositiu no admet compres",
+        "subtitle": "Aquest dispositiu o compte de la botiga no pot fer compres des de l'aplicació."
+      }
+    },
+    "trialUnit": {
+      "day": "dia",
+      "week": "setmana",
+      "month": "mes",
+      "year": "any"
+    },
+    "period": {
+      "day": "al dia",
+      "week": "a la setmana",
+      "month": "al mes",
+      "year": "a l’any",
+      "lifetime": "Compra única"
+    },
+    "comparison": {
+      "features": "Funcions",
+      "free": "Gratuït",
+      "pro": "Pro",
+      "included": "Inclòs",
+      "excluded": "No inclòs",
+      "unlimited": "Il·limitat",
+      "rows": {
+        "cleaningDuration": {
+          "title": "Durada de la neteja",
+          "free": "30 s",
+          "pro": "30/60/90 s"
+        },
+        "turbo": {
+          "title": "Mode Turbo"
+        },
+        "waveforms": {
+          "title": "Formes d’ona",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "Prova estèreo",
+          "free": "Manual",
+          "pro": "Automàtica"
+        },
+        "soundInsights": {
+          "title": "Anàlisi del so",
+          "free": "Bàsica",
+          "pro": "Avançada"
+        },
+        "activityHistory": {
+          "title": "Historial d’activitat"
+        },
+        "adExperience": {
+          "title": "Experiència publicitària",
+          "free": "Amb anuncis",
+          "pro": "Sense anuncis"
+        }
+      }
+    },
+    "context": {
+      "historyTitle": "Desbloqueja l’activitat desada",
+      "historySubtitle": "Ja hi ha {{cleaning}} activitats de neteja de l’altaveu i {{db}} mesuraments de so desats en aquest dispositiu.",
+      "cleaningSubtitle": "Neteja quan vulguis amb cicles més llargs i l’ona de neteja Turbo de diverses etapes.",
+      "dbSubtitle": "Desbloqueja l’anàlisi completa d’aquesta sessió i torna a consultar els informes de so desats."
+    },
+    "feedback": {
+      "subscribeSuccess": "Benvingut! L’accés Premium està actiu.",
+      "subscribeError": "Hi ha hagut un problema. Torna-ho a provar.",
+      "restoreSuccess": "L’accés Premium s’ha restaurat correctament!",
+      "restoreNotFound": "No s’ha trobat cap compra Premium activa.",
+      "restoreError": "No s’han pogut restaurar les compres. Torna-ho a provar."
+    },
+    "packageTitle": {
+      "day": "Diari",
+      "week": "Setmanal",
+      "month": "Mensual",
+      "year": "Anual",
+      "lifetime": "Per sempre"
+    }
+  },
+  "activity": {
+    "history": "Historial d’activitat",
+    "cleaning": "Neteja",
+    "soundSessions": "Sessions de so",
+    "savedCount": "{{cleaning}} activitats de neteja · {{db}} sessions de so desades",
+    "emptyTitle": "Encara no hi ha activitat desada",
+    "emptyBody": "Les sessions de neteja i so completades apareixeran aquí.",
+    "select": "Selecciona",
+    "selectAll": "Selecciona-ho tot",
+    "deselectAll": "Desselecciona-ho tot",
+    "selectedCount": "{{count}} seleccionades",
+    "delete": "Elimina",
+    "deleteSelected": "Elimina ({{count}})",
+    "deleteConfirmTitleSingle": "Vols eliminar aquesta activitat?",
+    "deleteConfirmTitleMultiple": "Vols eliminar {{count}} activitats?",
+    "deleteConfirmBodySingle": "Això elimina permanentment l’activitat seleccionada d’aquest dispositiu.",
+    "deleteConfirmBodyMultiple": "Això elimina permanentment les {{count}} activitats seleccionades d’aquest dispositiu.",
+    "deletedSingle": "S’ha eliminat l’activitat",
+    "deletedMultiple": "S’han eliminat {{count}} activitats",
+    "dbSession": "Sessió de nivell de so",
+    "duration": "{{seconds}} segons",
+    "cleaningDetail": "Activitat de neteja",
+    "dbDetail": "Sessió de so",
+    "mode": "Mode de neteja",
+    "durationLabel": "Durada",
+    "result": "Resultat",
+    "report": {
+      "title": "Anàlisi del so",
+      "subtitle": "Una visió personalitzada d’aquesta sessió",
+      "premium": "Premium",
+      "sessionSummary": "Mitjana de {{average}} dB · Pic de {{maximum}} dB · {{seconds}} s",
+      "environmentRating": "Valoració de l’entorn",
+      "suitableFor": "Adequat per a",
+      "recommendation": "Recomanació",
+      "unlockTitle": "Descobreix què significa aquest nivell de so",
+      "unlockBody": "Desbloqueja la valoració completa de l’entorn, les activitats adequades i la recomanació d’escolta.",
+      "unlockAction": "Desbloqueja l’informe complet",
+      "disclaimer": "Les estimacions del micròfon varien segons el dispositiu i la ubicació. Aquest informe és una orientació general, no un mesurament calibrat ni un assessorament mèdic.",
+      "profile": {
+        "veryQuiet": {
+          "label": "Molt silenciós",
+          "range": "Per sota de 30 dB",
+          "overview": "Aquesta sessió indica un entorn molt tranquil amb poc soroll de fons.",
+          "suitable": "Descans tranquil, lectura, escriptura concentrada, meditació i altres activitats que es beneficien de poques distraccions.",
+          "recommendation": "Mantén el micròfon descobert i mesura allà on seus o dorms habitualment. Les estimacions molt baixes també poden indicar que el micròfon està obstruït."
+        },
+        "normal": {
+          "label": "Quotidià",
+          "range": "30–69 dB",
+          "overview": "Aquesta sessió es troba en un interval quotidià habitual, semblant al d’una casa tranquil·la, una oficina o una conversa normal segons la distància.",
+          "suitable": "Converses, feina d’oficina, escolta ocasional, estudi i la majoria d’activitats diàries en interiors.",
+          "recommendation": "Si necessites més concentració, redueix les veus properes o allunya’t de la font de so i compara-ho amb una altra sessió."
+        },
+        "loud": {
+          "label": "Fort",
+          "range": "70–99 dB",
+          "overview": "Aquesta sessió indica un entorn sorollós on el so pot resultar cansat o incòmode amb el temps.",
+          "suitable": "Comprovacions breus de carrers transitats, electrodomèstics, esdeveniments o música quan vulguis entendre com canvien els nivells.",
+          "recommendation": "Abaixa el volum de la font, augmenta la distància, fes pauses en silenci i considera utilitzar protecció auditiva si l’exposició continua."
+        },
+        "danger": {
+          "label": "Potencialment perillós",
+          "range": "100 dB o més",
+          "overview": "Aquesta sessió indica un entorn sonor molt intens que requereix atenció immediata.",
+          "suitable": "Només per a comprovacions de seguretat breus. Evita aquest entorn per escoltar, treballar, descansar o fer activitats prolongades.",
+          "recommendation": "Allunya’t de la font, abaixa el volum quan sigui possible i utilitza protecció auditiva adequada. No confiïs en l’estimació d’un telèfon per determinar una exposició segura."
+        }
+      }
+    },
+    "stopReason": {
+      "completed": "Completada",
+      "manual": "Aturada manualment",
+      "blur": "Aturada en sortir de la pantalla",
+      "background": "Aturada en segon pla",
+      "interruption": "Interrompuda",
+      "route-change": "S’ha canviat la ruta d’àudio",
+      "replaced": "Substituïda per una altra eina",
+      "error": "Aturada per un error",
+      "incomplete": "Incompleta"
+    }
+  },
+  "otaUpdate": {
+    "updateReady": "Hi ha una actualització nova preparada — reinicia per aplicar-la"
+  },
+  "errorBoundary": {
+    "title": "Hi ha hagut un problema",
+    "message": "S’ha produït un error inesperat. Torna-ho a provar."
+  },
+  "onboarding": {
+    "waterEject": {
+      "title": "Elimina l’aigua\ni la pols ràpidament",
+      "description": "Reprodueix un so de neteja potent per ajudar a expulsar l’aigua i la pols atrapades a l’altaveu."
+    },
+    "toneGenerator": {
+      "title": "Genera\nel to adequat",
+      "description": "Tria entre diferents freqüències per provar, ajustar, emmascarar soroll o fer qualsevol comprovació de so."
+    },
+    "dbMeter": {
+      "title": "Descobreix com\nde fort sona",
+      "description": "Utilitza el sonòmetre per estimar els nivells de soroll del teu voltant i prendre decisions d’escolta més intel·ligents."
+    },
+    "privacy": {
+      "title": "Privat i al dispositiu",
+      "description": "El processament d’àudio es fa al telèfon, amb indicacions clares sobre seguretat i ús del micròfon."
+    }
+  }
+}

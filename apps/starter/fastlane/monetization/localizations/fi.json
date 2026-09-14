@@ -1,0 +1,36 @@
+{
+  "appleLocale": "fi",
+  "googleLocale": "fi-FI",
+  "apple": {
+    "subscriptionGroupDisplayName": "Premium",
+    "products": {
+      "weekly": {
+        "displayName": "Premium · Viikoittainen",
+        "description": "Täysi pääsy kaikkiin premium-ominaisuuksiin."
+      },
+      "monthly": {
+        "displayName": "Premium · Kuukausittainen",
+        "description": "Täysi pääsy kaikkiin premium-ominaisuuksiin."
+      },
+      "yearly": {
+        "displayName": "Premium · Vuosittainen",
+        "description": "Täysi pääsy kaikkiin premium-ominaisuuksiin."
+      },
+      "lifetime": {
+        "displayName": "Premium · Elinikäinen",
+        "description": "Elinikäinen pääsy kaikkiin premium-ominaisuuksiin."
+      }
+    }
+  },
+  "google": {
+    "subscription": {
+      "title": "Premium",
+      "description": "Täysi pääsy kaikkiin premium-ominaisuuksiin.",
+      "benefits": ["Kaikki premium-ominaisuudet"]
+    },
+    "lifetime": {
+      "title": "Premium · Elinikäinen",
+      "description": "Elinikäinen pääsy kaikkiin premium-ominaisuuksiin."
+    }
+  }
+}

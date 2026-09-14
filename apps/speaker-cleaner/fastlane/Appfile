@@ -1,0 +1,2 @@
+ENV['RHYSLE_APP_ROOT'] = File.expand_path('..', __dir__)
+eval(File.read(File.expand_path('../../../packages/tooling/fastlane/Appfile', __dir__)), binding, File.expand_path('../../../packages/tooling/fastlane/Appfile', __dir__))

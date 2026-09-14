@@ -1,0 +1,14 @@
+require_relative 'environment'
+RhysleEnvironment.load(ENV.fetch('RHYSLE_APP_ROOT'))
+require "json"
+
+expo_config = JSON.parse(File.read(File.join(ENV.fetch("RHYSLE_APP_ROOT"), "app.json"))).fetch("expo")
+
+app_identifier(expo_config.fetch("ios").fetch("bundleIdentifier"))
+
+apple_id(ENV["APPLE_ID"]) if ENV["APPLE_ID"]
+team_id(ENV["APPLE_TEAM_ID"]) if ENV["APPLE_TEAM_ID"]
+itc_team_id(ENV["ITC_TEAM_ID"]) if ENV["ITC_TEAM_ID"]
+
+json_key_file(ENV["GOOGLE_PLAY_JSON_KEY_PATH"]) if ENV["GOOGLE_PLAY_JSON_KEY_PATH"]
+package_name(expo_config.fetch("android").fetch("package"))

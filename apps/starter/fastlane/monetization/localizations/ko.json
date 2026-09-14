@@ -1,0 +1,36 @@
+{
+  "appleLocale": "ko",
+  "googleLocale": "ko-KR",
+  "apple": {
+    "subscriptionGroupDisplayName": "Premium",
+    "products": {
+      "weekly": {
+        "displayName": "Premium · 주간",
+        "description": "모든 프리미엄 기능을 이용하세요."
+      },
+      "monthly": {
+        "displayName": "Premium · 월간",
+        "description": "모든 프리미엄 기능을 이용하세요."
+      },
+      "yearly": {
+        "displayName": "Premium · 연간",
+        "description": "모든 프리미엄 기능을 이용하세요."
+      },
+      "lifetime": {
+        "displayName": "Premium · 평생",
+        "description": "모든 프리미엄 기능을 평생 이용하세요."
+      }
+    }
+  },
+  "google": {
+    "subscription": {
+      "title": "Premium",
+      "description": "모든 프리미엄 기능을 이용하세요.",
+      "benefits": ["모든 프리미엄 기능 이용"]
+    },
+    "lifetime": {
+      "title": "Premium · 평생",
+      "description": "모든 프리미엄 기능을 평생 이용하세요."
+    }
+  }
+}

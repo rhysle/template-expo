@@ -1,0 +1,4 @@
+Nytt i version 1.1:
+• Kör obegränsat med kostnadsfria Standard-rengöringscykler på 30 sekunder.
+• Premium omfattar nu Turboläge, privat aktivitetshistorik på enheten och detaljerade ljudrapporter med tidslinjer.
+• Upplev uppdaterad design och förbättrad användbarhet i alla fyra ljudverktygen.

@@ -1,0 +1,38 @@
+import { createThemedStyles, useThemedStyles } from '@shared/core/theme'
+import type { PropsWithChildren } from 'react'
+import type { StyleProp, ViewStyle } from 'react-native'
+import { View } from 'react-native'
+
+import { useTabBarContentInset } from '../FloatingTabBar/tabBarHeight'
+
+export interface TabScreenProps extends PropsWithChildren {
+  contentUnderTabBar?: boolean
+  style?: StyleProp<ViewStyle>
+}
+
+export const TabScreen = ({ children, contentUnderTabBar = false, style }: TabScreenProps) => {
+  const bottomInset = useTabBarContentInset()
+  const styles = useThemedStyles(createStyles)
+
+  return (
+    <View
+      collapsable={false}
+      style={[
+        styles.container,
+        contentUnderTabBar ? undefined : { paddingBottom: bottomInset },
+        style,
+      ]}>
+      <View style={styles.content}>{children}</View>
+    </View>
+  )
+}
+
+const createStyles = createThemedStyles((t) => ({
+  container: {
+    flex: 1,
+    backgroundColor: t.colors.background.base,
+  },
+  content: {
+    flex: 1,
+  },
+}))

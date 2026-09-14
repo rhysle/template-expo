@@ -1,609 +1,107 @@
-# Expo App Template
+# Rhysle mobile apps
 
-A production-minded Expo starter for building a new React Native app. It includes a routed app shell, design system, localization, persisted client and server state, onboarding, subscriptions, ads, analytics, error reporting, OTA updates, and store-listing automation.
+A pnpm workspace containing independently released Expo iOS/Android apps and one maintained mobile core. Apps live in workspace directories; feature branches represent changes rather than permanent app variants.
 
-This repository intentionally contains sample screens and app-specific placeholders. Treat them as starting points, not product requirements.
+## Workspace
 
-## Stack
+| Location               | Owns                                                                                               |
+| ---------------------- | -------------------------------------------------------------------------------------------------- |
+| `apps/starter`         | Clean reference app and source for the app generator                                               |
+| `apps/speaker-cleaner` | Speaker Cleaner product, assets, translations, configuration, and store metadata                   |
+| `packages/core`        | Reusable UI, themes, state/storage/query infrastructure, and native service integrations           |
+| `packages/ads`         | Optional enabled native ads integration                                                            |
+| `packages/tooling`     | Setup/release scripts, config plugin, monetization tooling, PPP dataset, and shared Fastlane lanes |
+| `fastlane/.private`    | Gitignored shared store account keys; never included in builds                                     |
 
-- Expo SDK 57, React Native 0.86, React 19, and Expo Router
-- TypeScript with strict checking and React Compiler
-- Zustand + Immer with MMKV persistence
-- TanStack Query with persisted query cache
-- i18next / react-i18next for localization
-- Reanimated, Gesture Handler, and Skia for interaction and motion
-- RevenueCat, AdMob, Firebase Analytics, Sentry, and EAS integrations
+Use Node compatible with Expo SDK 57 and **pnpm 11.9.0**. The root `packageManager` pins pnpm. Install once at the repository root:
 
-## New Project Setup
-
-Use this ordered process when turning the template into a new app. The template contains sample credentials and product content, so do not ship until every applicable section has been completed.
-
-Before implementing product features, fill in [`docs/PRODUCT.md`](docs/PRODUCT.md) with the app's problem, users, scope, core flows, requirements, privacy choices, monetization, analytics, and release criteria. Keep it lightweight and remove sections that do not apply.
-
-### 1. Configure Expo
-
-1. Fork or copy this repository and run `npm install`.
-2. Sign in to the intended Expo account, then run:
-
-   ```bash
-   npm run setup:expo
-   ```
-
-   The script separately prompts for the app display name, Expo slug, URL scheme, iOS bundle identifier, and Android package name. It then lets you create or link an EAS project, verifies the resulting project and resolved Expo configuration, and writes the project ID and update URL to `app.json`. Rerunning it against an already linked app requires confirmation, and failed setup restores the local configuration files.
-
-   Choose final, globally unique native identifiers before continuing. They identify the app in Apple and Google services and should not change after publishing. This command intentionally does not configure Firebase, Sentry, AdMob, RevenueCat, or store metadata; complete those dedicated setup steps separately.
-
-3. Replace icons, adaptive-icon layers, splash art, and favicon under `assets/images/`, then update their references and colors in `app.json`.
-4. Replace the four onboarding Lottie assets in `assets/animations/onboarding/page-1.json` through `page-4.json`. Keep those fixed filenames and the matching generic page keys so no code changes are needed.
-
-### 2. Configure Firebase Analytics
-
-Firebase provisioning is automated after `npm run setup:expo`. It uses your personal Google account
-through Application Default Credentials (ADC) and creates standalone projects under **No
-organization**, so it does not require Google Workspace, Cloud Identity, a domain, or a provisioning
-service account.
-
-Complete these one-time administration steps:
-
-1. Install the Google Cloud CLI and create user ADC. Use an existing personal Google Cloud project
-   as the quota project; your account needs `serviceusage.services.use` on it. Enable the Cloud
-   Resource Manager, Firebase Management, and Service Usage APIs in that quota project.
-
-   ```bash
-   gcloud auth application-default login
-   gcloud auth application-default set-quota-project YOUR_EXISTING_PROJECT_ID
-   unset GOOGLE_APPLICATION_CREDENTIALS
-   ```
-
-2. Add the same personal Google account as **Editor** to the reusable Google Analytics account that
-   will contain one new property per app fork.
-3. Configure the Analytics account ID as a stable machine environment variable. The optional
-   Firebase override applies only when the deterministic slug + EAS UUID project ID is unsuitable:
-
-   ```bash
-   export FIREBASE_ANALYTICS_ACCOUNT_ID=123456789
-   # Optional:
-   export FIREBASE_PROJECT_ID=my-globally-unique-project-id
-   ```
-
-Then provision the current fork:
-
-```bash
-npm run setup:firebase
+```sh
+pnpm install --frozen-lockfile
+pnpm check
+pnpm check:i18n
 ```
 
-The command verifies personal ADC and rejects `GOOGLE_APPLICATION_CREDENTIALS` so it cannot silently
-use a service account. It reads the native identifiers and EAS UUID from `app.json`, asks for
-confirmation, and idempotently creates or reuses the standalone product-specific Google
-Cloud/Firebase project, iOS app, Android app, and Analytics link. It also requires the shared
-`rhysle-template-expo` development Firebase project to exist and be accessible, then creates or
-reuses native app registrations there with `.dev` appended to the production bundle identifier and
-package name. The shared project itself, its Analytics link, and its other project-level settings
-are not created or modified by this workflow.
+There is one root lockfile. Internal packages use `workspace:*` and the initial native-compatible installation strategy is `nodeLinker: hoisted`. Apps explicitly declare their native dependencies; shared packages declare their consumers as peers. Upgrade Expo, React, and React Native together across apps. No internal package publication or separate package compilation is required.
 
-The command explicitly verifies that Gemini in Firebase is disabled for the production project,
-downloads and validates both environments, and atomically replaces these four Git-ignored files:
+## Work on an app
 
-```text
-GoogleService-Info.plist
-google-services.json
-GoogleService-Info.dev.plist
-google-services.dev.json
+Run commands from its directory or select its workspace:
+
+```sh
+pnpm --filter @apps/speaker-cleaner start
+pnpm --filter @apps/speaker-cleaner ios
+pnpm --filter @apps/speaker-cleaner check:i18n
+pnpm --filter @apps/speaker-cleaner release:patch --dry-run
 ```
 
-Local development appends `.dev` to the iOS bundle identifier, Android package, and URL scheme, and
-resolves the matching `.dev` Firebase files. Production keeps the canonical values from `app.json`
-and resolves the production EAS file variables, with the unsuffixed root files retained as a local
-production-build fallback. Only the unsuffixed production pair is uploaded to the linked EAS
-project as production-only **Sensitive** file variables; development builds are local-only and the
-`.dev` pair is excluded from EAS archives. Existing production Analytics properties are never
-relinked, and cloud resources are not automatically deleted after a partial failure; rerun the same
-command to reconcile them. Time-based Google API quota responses are retried automatically with
-bounded exponential backoff. The shared project supports at most 30 registered Firebase Apps, so
-each two-platform product consumes two of its app slots.
+`src/`, `assets/`, `app.json`, `eas.json`, and `fastlane/` in app-specific instructions are relative to the selected app. Native projects are generated inside each app and are not committed. Regenerate only when native configuration or dependencies change. Never edit generated native source.
 
-Firebase recommends marking the live project as a **Production** environment. This marker currently
-changes only the Firebase console presentation: it adds a visible production warning and does not
-change project behavior or features. Firebase does not expose the marker through its public
-Management REST API or CLI, so the setup command prints a direct Project settings link for the one
-remaining manual step: under **Your project > Environment**, select **Production**.
+Each app retains its own EAS project, bundle/package IDs, scheme, versions, update channel, Firebase files, RevenueCat project, Sentry project, and store metadata. Development adds `.dev` to the canonical identifiers and scheme. Runtime service selection continues to use `__DEV__`.
 
-All four root Firebase files remain Git-ignored. The unsuffixed production pair is intentionally
-included by `.easignore` as a local production fallback, while the `.dev` pair is excluded from EAS
-archives. Production EAS builds resolve the `GOOGLE_SERVICE_INFO_PLIST` and
-`GOOGLE_SERVICES_JSON` file variables instead. Run a clean prebuild after provisioning, then replace
-the sample events in `src/services/firebase/analytics/analyticsAppEvents.ts`; keep generic lifecycle
-events in `analyticsGeneralEvents.ts`.
+## Create another app
 
-The local `prebuild:*` npm scripts explicitly use the development variant. Run the matching Prebuild
-script before `ios*` or `android*`; those run scripts compile the existing generated native project
-and do not reapply Expo config plugins themselves. Use a clean Prebuild after changing a native
-identifier, native dependency, or native configuration. EAS Build does not use these local scripts:
-`.easignore` excludes `ios/` and `android/`, so cloud and `--local` production builds receive no
-generated native tree and regenerate it from the production profile and production Firebase file
-variables. Keep both native-directory exclusions in `.easignore`.
-
-### 3. Configure RevenueCat
-
-1. Create the RevenueCat project and add its App Store and/or Google Play app records. Configure each app's store credentials so RevenueCat can validate purchases and read its catalog.
-2. Use the product-provisioning workflow below to create the store products, `premium` entitlement, default offering, and package associations.
-3. Set the single RevenueCat Test Store key in `AppConfig.revenueCat.testStoreApiKey` in `src/configs/AppConfig.ts`. Local development uses this key on both iOS and Android; the empty template placeholder fails closed until it is replaced.
-4. Set the platform-specific production keys in `AppConfig.revenueCat.iosApiKey` and `androidApiKey`. Release bundles select these keys automatically and reject a Test Store key, so development never needs to overwrite production configuration.
-5. Keep `AppConfig.revenueCat.entitlementId` aligned with `revenueCat.entitlementLookupKey` in `src/configs/monetization.ts`, then replace the product-specific comparison rows and Free/Pro values in `src/components/paywall/usePaywallFeatures.ts` and confirm the paywall and automatic-presentation behavior fit the product.
-
-Paywall source IDs are intentionally defined beside the route or component that opens the paywall. When replacing a sample feature, replace or remove its local source ID in the same file; do not add a product-wide source registry under `src/configs/`. Route paywall navigation through `usePremiumGate` or `buildPaywallPath` so analytics attribution is retained. Every source renders the same complete comparison table; product-level context changes are limited to the paywall title and subtitle.
-
-Subscription access is runtime-only and resolves to `loading`, `free`, `premium`, or `unknown`. Premium actions run only for `premium`; paywalls and ads are eligible only for confirmed `free` users. Keep `loading` and `unknown` fail-closed when adapting gates or monetization flows.
-
-### Provision store products
-
-Store products are declared in `src/configs/monetization.ts`. Select any combination of
-`weekly`, `monthly`, `yearly`, and `lifetime`; disabled products are not created or attached
-to RevenueCat. Monthly is preconfigured at USD 4.99 but disabled by default. The enabled
-template defaults are USD 1.99 weekly, USD 19.99 yearly, and USD 49.99 lifetime. Apple and
-Google generate the initial PPP regional prices from those US anchors. Product IDs and
-internal reference names remain explicit because store identifiers cannot be changed after
-activation. Apple product IDs are automatically formed as
-`<expo.ios.bundleIdentifier>.<configured appleProductId suffix>`, so a new product fork only needs
-to replace the bundle identifier in `app.json`; the suffixes in `src/configs/monetization.ts` stay
-stable. The resolved Apple identifier must use only letters, numbers, periods, hyphens, and
-underscores and must not exceed 100 characters. Google product IDs remain unprefixed because the
-Play Developer API scopes them to the parent Android package and limits them to 40 characters.
-
-Regional pricing uses `ppp-bands` with the required complete fixed multiplier range from `0.4`
-through `1.2`, including premium bands; do not add, remove, or reorder those bands. The checked-in `world-bank-2025` snapshot combines World Bank
-`PA.NUS.PPP` and `PA.NUS.FCRF` observations. For each country it selects the newest year from
-2025 back through 2023 where both indicators are positive, then calculates:
-
-```text
-(country PPP conversion factor / country exchange rate)
-/
-(US PPP conversion factor / US exchange rate from the same year)
+```sh
+pnpm create:app my-app --name "My App" --bundle-id com.rhysle.myapp
+pnpm install
+cd apps/my-app
+pnpm setup:expo
 ```
 
-The nearest configured band wins, with the lower band winning an exact tie. The United States is
-always `1.0`; ISO alpha-2 `countryOverrides` must select one of the fixed bands. Overrides for
-the known App Store territories without World Bank data are supported; an unknown no-data country
-is rejected rather than silently falling back. Countries without a complete indicator pair use
-`1.0` with a warning. Set `strategy: 'store-equalized'` to opt out.
-Economic data is never downloaded by normal monetization commands. Refresh it deliberately and
-review the resulting checked-in snapshot with:
+The generator copies an explicit list from the maintained starter, connects shared packages, resets version/identities, and rejects conflicting names, identifiers, schemes, and existing directories. It never provisions services or copies local credentials. The identifier is initially used for both iOS and Android; the slug becomes the scheme.
 
-```bash
-npm run monetization:ppp:refresh -- --year 2025
+Then configure product assets/copy/legal links and run the app's Firebase and Sentry setup workflows with the documented machine credentials. Configure RevenueCat keys/entitlement and store records separately. Ads start disabled; configure actual IDs before `pnpm setup:ads`. Run the appropriate clean prebuild after native setup. A new app requires its own Firebase setup before a native build; an unconfigured starter can still be bundled for source validation.
+
+## Share improvements
+
+Import shared base UI through `@shared/core/components/base` and other shared modules through their `@shared/core/...` entry points. `@/` means the current app's source, while the `@shared/core` package identifies core-owned source. Do not mirror shared modules with app-local pass-through re-exports. The app-local ads entry point is the exception: setup rewrites it to the enabled package or the core no-op implementation so disabled apps do not depend on ads code. Shared packages must not import app source, app aliases, or product assets.
+
+An app creates a core runtime with its configuration, fonts, themes, ads adapter, and store. Its root `CoreProvider` makes that runtime available to shared hooks. Non-React services receive configuration explicitly. The app root layout still controls navigation and initialization ordering; Sentry initializes before rendering.
+
+Core slice definitions and persistence mechanics are shared. Each app discovers its product slices locally, rejects collisions with core slice names, and creates its own store. Product slice hooks retain their app-local typing. Do not change MMKV IDs, key namespaces, slice names, or persistence formats as a side effect of moving files.
+
+Routes, product events, theme colors, font choice, locale resources, onboarding artwork/content, paywall comparisons, product state, and requests remain app-owned. The shared paywall receives its icon from the app. English is the development source; release localization remains a separate task. Localization audits include shared UI references.
+
+## Credentials and release tooling
+
+Copy the root `.env.fastlane.example` to `.env.fastlane.local` for the **shared** Apple/Google account. Keep `.p8` and Google service-account files under root `fastlane/.private/` or use absolute paths. These keys cannot be overridden in app files.
+
+Copy an app's `.env.fastlane.example` to its `.env.fastlane.local` for its RevenueCat project/API key and optional iOS review recording. Each app owns its Fastlane metadata, screenshots, review configuration, and temporary output. Its tiny Fastfile/Appfile wrappers load one shared implementation. Store URLs and Content Rights are app-owned in `fastlane/ios/app_store_config.json`.
+
+Both Ruby and TypeScript loaders enforce the same ownership rules. Explicit process variables take precedence. Shared credential paths resolve from the repository root, while review attachment paths resolve from the app root, even when supplied through process variables. Quoted values and `export KEY=value` declarations are supported. Empty required values fail validation.
+
+App `.env.local` is for app build settings such as the upload-only Sentry token. Keep provisioning and investigation tokens in a secure machine environment; do not place them in app build files. Never use the upload token for issue investigation. See `AGENTS.md` for Firebase, Sentry, monetization, and localization contracts.
+
+Run setup, metadata, and monetization commands from the selected app:
+
+```sh
+pnpm setup:i18n
+pnpm setup:font
+pnpm setup:ads
+pnpm monetization:plan
+pnpm monetization:apply
+pnpm monetization:activate --confirm
+pnpm monetization:verify
+pnpm fastlane:ios:metadata
 ```
 
-Adjusted USD anchors use integer cents with half-up rounding. Apple chooses its closest valid USD
-price point (lower on a tie) and uses Apple's storefront equalizations. Google uses the `Money`
-values returned by `pricing:convertRegionPrices`. Neither path post-processes local prices, so
-zero-decimal currencies such as VND, JPY, and KRW retain store-native price patterns.
+Commands keep their existing remote-change semantics. `apply`, activation, price changes, metadata uploads, and provisioning are not local validation commands. Final App Review submission stays manual.
+The confirmed activation command also reconciles the app-level Apple Billing Grace Period configured in `src/configs/monetization.ts`; Google grace periods remain store-managed unless explicitly added to the tooling.
 
-The optional top-level `freeTrial` selects exactly one enabled subscription for a cross-store
-trial. The template defaults to a 3-day weekly trial. Set `duration` to `7-days`, `14-days`,
-`1-month`, `2-months`, `3-months`, `6-months`, or `1-year` as needed; change `target` to an
-enabled `monthly` or `yearly` product to move it, or set `freeTrial` to `null` to disable it.
-Set the stable managed offer ID in `google.freeTrialOfferId`; it stays configured while the trial
-is disabled so `monetization:activate` can identify and deactivate the previously managed offer.
-Google eligibility is limited to customers who have never had any subscription in the app,
-which most closely matches Apple's subscription-group eligibility. The paywall reads the
-localized trial details returned by RevenueCat rather than duplicating this duration in UI copy.
+## EAS builds and archives
 
-The app name, iOS bundle identifier, and Android package name are read from `app.json`.
-The Apple app's numeric resource ID is looked up by bundle identifier, so those values are
-not duplicated in `.env.fastlane.local`.
+Use the app's `eas-build:*` scripts. They prepare a disposable workspace with only the selected app's local production fallback files, then run EAS from that staged app directory. EAS only reads the repository-root `.easignore`; app-local ignore files cannot select an app by themselves.
 
-Copy `.env.fastlane.example` to `.env.fastlane.local` and provide the App Store Connect,
-Google Play, and RevenueCat API identifiers and credentials. The App Store Connect key needs
-the App Manager role. The Google service account needs access to the app and permissions to
-manage products and subscriptions. The RevenueCat V2 key needs read/write project-configuration
-permissions for products, entitlements, offerings, and packages.
-It also needs app read access. The RevenueCat App Store and Google Play app records must already
-exist; the scripts find them by matching the bundle ID and package name from `app.json`, and stop
-with an error when no unique match exists.
+Staging avoids rewriting the live repository's ignore rules and permits independent builds. It uses EAS's no-VCS mode in the temporary workspace, so EAS may display a no-VCS warning. Source remains in the real Git repository. The archive includes workspace packages and the root lockfile; it excludes all private Fastlane credentials, sibling app secrets, generated native directories, and development Firebase files. EAS still obtains the selected project's configured production file variables.
 
-Store-product localizations are declared independently under
-`fastlane/monetization/localizations/`, with one JSON file per language and explicit Apple and
-Google sections. These files are the sole source for subscription-group, subscription, and
-lifetime-purchase listing text; monetization setup never derives store metadata from
-`src/i18n/locales/`. Review the generic premium wording for product accuracy before provisioning,
-and add or remove store locale files independently from the app's runtime locale set.
-
-Apple App Review screenshots are optional per product. Set
-`appleReviewScreenshotPath` on `weekly`, `monthly`, `yearly`, and/or `lifetime`. The same local image
-may be referenced by multiple products, but App Store Connect receives a separate Review Information
-screenshot upload for each product. A content hash is included in the uploaded filename so
-changing the local image is detected reliably.
-
-Run the commands in this order:
-
-```bash
-npm run monetization:plan
-npm run monetization:apply
-npm run monetization:activate -- --confirm
-npm run monetization:verify
+```sh
+pnpm --filter @apps/speaker-cleaner eas-build:inspect --output /tmp/speaker-cleaner-archive
+pnpm --filter @apps/speaker-cleaner eas-build:ios
 ```
 
-`plan` does not write store state. For a new app, `apply` creates missing products directly with
-their complete initial PPP matrix, reconciles mutable store metadata and RevenueCat product,
-entitlement, offering, and package metadata, and creates or updates every configured localization.
-RevenueCat product types, like store product IDs and purchase types, are immutable; resolve a type
-conflict with a new store product identifier instead of attempting to mutate it. Apple reviewable
-metadata uses the version-based App Store Connect API: an editable draft is updated in place,
-or a new draft metadata version is created when the previous version is no longer editable.
-Configured review screenshots are uploaded to each product's private Review Information field,
-separate from its public promotional image. Google base plans and purchase
-options and free-trial offers remain in draft. The setup intentionally refuses to replace an
-existing regional matrix or update a live Google offer. An interrupted Apple run may leave draft
-products without all prices; rerunning `apply` safely completes a matching partial matrix.
-`activate` requires explicit confirmation: it
-creates or replaces the configured Apple introductory free trial in every storefront, activates
-the desired Google offer and base plans, and deactivates the previous managed Google trial when
-the target moves.
-`verify` then checks the selected catalog, localized metadata, screenshots, RevenueCat
-associations, and exact live trial state. Apple products still require submission to App Review;
-the first subscription group must be submitted with an app version. `activate` does not click
-**Add for Review**, create an App Review submission, or submit one; manage that separately in
-App Store Connect after provisioning and verification succeed.
-
-After prices have been established, changing a `priceUsd`, PPP snapshot, band, or override uses a
-separate confirmed workflow that never creates products, changes metadata, or touches RevenueCat:
-
-```bash
-npm run monetization:prices:plan
-npm run monetization:prices:apply -- --confirm
-npm run monetization:prices:verify
-```
-
-The plan regenerates and compares the complete regional matrix. Subscription increases preserve
-existing subscriber prices on Apple and leave Google subscribers in legacy cohorts. Decreases
-reach existing Apple subscribers and migrate affected Google legacy cohorts to the lower current
-price. Lifetime changes affect future purchases only. Apple and Google writes are not
-transactional; rerun the command to reconcile any remaining differences after a partial failure.
-
-The setup is non-destructive. Removing a product from `enabledProducts` prevents future setup work
-for it but does not delete, deactivate, or detach a product that was provisioned previously. The
-only exception is the explicitly confirmed free-trial transition: this workflow owns Apple
-`FREE_TRIAL` introductory offers on its configured subscriptions and the Google offer ID declared
-in `freeTrial`; it replaces/removes obsolete Apple trials and deactivates obsolete managed Google
-offers. Paid introductory, promotional, and unrecognized Google offers are never changed.
-
-### 4. Configure Sentry
-
-1. Keep the fixed-scope Sentry Organization Token as `SENTRY_AUTH_TOKEN` in the gitignored
-   `.env.local` file and in the existing account- or project-level EAS environment configuration.
-   Its `org:ci` scope is used only for build/update source-map uploads.
-   Do not use or permission-test this token for issue/event investigation. Use the connected Sentry
-   MCP first; if it is unavailable, provide a separate read-only `SENTRY_READ_AUTH_TOKEN` from a
-   secure machine-level environment and map it to `SENTRY_AUTH_TOKEN` only for the individual query
-   process. Never store the read token in `.env.local` or EAS.
-2. In Sentry Organization Settings, open **Developer Settings > Custom Integrations**, create an
-   **Internal Integration**, and grant **Organization: Read**, **Team: Admin**, and **Project: Read
-   & Write**. Team Admin allows project creation while the organization disables member project
-   creation; it is narrower than granting Organization Write. Keep this reusable provisioning token
-   in a secure machine-level environment as `SENTRY_SETUP_AUTH_TOKEN` and use the same token when
-   bootstrapping future app forks. Do not add it to EAS. This template intentionally includes
-   `.env.local` in EAS build archives for local-build inputs, so only place the setup token there
-   temporarily and remove it before any EAS build.
-3. After `npm run setup:expo` has linked the app to EAS, run:
-
-   ```bash
-   npm run setup:sentry
-   ```
-
-   The command derives the Sentry project name and slug from `expo.name` and `expo.slug`, selects an
-   existing Sentry team, and idempotently creates or reuses the React Native project. It then
-   retrieves or creates an active client key, writes its public DSN to `AppConfig.sentry.dsn`, and
-   updates the Sentry Expo plugin's `organization`, `project`, and `url` properties in `app.json`.
-   The organization is read from the existing Sentry Expo plugin configuration in `app.json`; set
-   `SENTRY_ORG` in `.env.local` only to override it. A sole team is selected automatically; set
-   `SENTRY_TEAM` when the organization has multiple teams. Set `SENTRY_URL` only for self-hosted
-   Sentry. A normal Sentry Organization Token cannot be used for this command because Sentry fixes
-   it to the `org:ci` scope.
-
-4. Run a clean prebuild before the next local native build. A release build is still required to
-   verify event delivery and native/JavaScript symbolication end to end.
-
-EAS Build uploads source maps automatically when `SENTRY_AUTH_TOKEN` is available. The
-`eas-update`, `eas-update:ios`, and `eas-update:android` commands upload the generated `dist`
-source maps after a successful update. If the upload fails, the update has already been published,
-but the overall command reports failure so the symbolication problem is visible.
-
-### 5. Configure AdMob (if the app shows ads)
-
-1. In AdMob, create an app record for each platform and copy its app ID. Add them to `AppConfig.ads.ios.appId` and `AppConfig.ads.android.appId` in `src/configs/AppConfig.ts`.
-2. For each AdMob app, open **Ad units**, choose **Add ad unit**, and create the formats used by this template: one **Banner** unit and one **Interstitial** unit.
-3. Copy each platform's Banner and Interstitial ad-unit IDs into the matching `bannerAdUnitId` and `interstitialAdUnitId` fields in `AppConfig.ads`.
-4. Set `AppConfig.ads.enabled` to `true`, choose the `banner.enabled` and `interstitial.enabled` flags, review the interstitial completion thresholds and cooldown, then run `npm run setup:ads` to synchronize the native configuration. Keep the shared ads hooks and provider mounted in either configuration. The setup command selects the matching `src/services/ads/` facade; the disabled facade does not import the ads SDK or tracking transparency.
-5. Development builds automatically use Google's banner and interstitial test ad-unit IDs. Register any physical device used to test a production variant as an AdMob test device; never click live ads during development.
-6. The template requests UMP consent before initializing Mobile Ads or constructing ad objects. Preserve that gate and configure any required Privacy & messaging forms in AdMob before release.
-7. Run a clean prebuild after changing the ads configuration.
-
-The tab layout owns one `InterstitialAdProvider`. Product completion points request an opportunity with `useRequestInterstitialAd()`; the provider applies the configured grace/completion counts, cooldown, one-ad-per-foreground cap, paywall precedence, consent/readiness, and premium-access checks. Use `canPresent` or `usePreventInterstitialAd()` to suppress presentation during product states such as active audio, recording, or another sensitive interaction.
-
-### 6. Configure fonts, localization, and OTA updates
-
-- **Fonts:** Change `FONT_NAME` in `src/configs/fonts.ts`, run `npm run setup:font`, then run a clean prebuild so the selected font is embedded in release builds.
-- **Localization:** During product development, update only `src/i18n/locales/en.json`; missing non-English values fall back to English. Do not copy English text into other locale files. Before store submission, translate the complete current English resource for every locale the product will ship, or remove unsupported locales, then run `npm run check:i18n:release`. Run `npm run setup:i18n` after adding or removing a locale, and `npm run check:i18n` after changing English copy.
-- **OTA updates:** Keep `AppConfig.otaUpdate.enabled` only when the new EAS project and update channels are ready. OTA builds and updates must share the same EAS project and runtime-version policy. This template supports only `development` and `production`: local Prebuild scripts select development, the production EAS build profile selects production, and production updates require a project-scoped plaintext `APP_VARIANT=production` variable in the EAS production environment. Runtime code derives the variant directly from `__DEV__` and must not read `process.env.APP_VARIANT` for behavior.
-
-### 7. Configure app-facing settings
-
-Replace the remaining product values in `src/configs/AppConfig.ts`:
-
-- The iOS App Store ID once the App Store Connect record exists.
-- Support email, terms-of-service URL, and privacy-policy URL.
-- App-review and automatic-paywall behavior, if those template defaults do not suit the product.
-
-### 8. Replace the template product shell
-
-Replace the sample tabs, routes, settings preferences, onboarding pages, paywall content, analytics events, and API/query modules:
-
-- `src/app/(tabs)/` and the tab metadata in `src/app/(tabs)/_layout.tsx`
-- `src/components/onboarding/` and the four local animation slots in `assets/animations/onboarding/page-1.json` through `page-4.json`; replace those files in place without changing their generic names or page keys
-- `src/components/paywall/usePaywallFeatures.ts`
-- `src/services/firebase/analytics/analyticsAppEvents.ts`
-- Product data modules under `src/services/queries/`
-
-### 9. Prepare store delivery
-
-Create the App Store Connect and Google Play app records using the same identifiers as `app.json`. Then replace the template identifiers, URLs, metadata, screenshots, reviewer details, and credentials in `fastlane/` before using a `fastlane:*` command. Keep API keys, service-account JSON, signing credentials, and review credentials outside Git.
-
-### 10. Regenerate and verify
-
-Native configuration changes—including `app.json`, Firebase files, fonts, ads, or config plugins—require regeneration because `ios/` and `android/` are generated directories. The local commands below always select the development variant, and `ios`/`android` reapply the platform Prebuild before compiling so stale native service files cannot be reused:
-
-```bash
-npm run prebuild:clean
-npm run ios        # verify iOS changes
-npm run android    # verify Android changes
-npm run check
-npm run check:i18n # after changing English product copy
-npm run check:i18n:release # after completing release translations
-npm run check:i18n:release:fix # remove obsolete locale keys, then audit
-npm run release:verify-config
-```
-
-This repository does not maintain automated test files or suites. Do not add `*.test.*`, `*.spec.*`, or `__tests__/`; use the lint, TypeScript, i18n, configuration, build, and native verification commands above when applicable.
-
-Before a production build, confirm the app uses the new EAS project, Firebase configuration, Sentry project, store identifiers, support/legal URLs, and any enabled RevenueCat or AdMob credentials.
-
-## Common Commands
-
-```bash
-npm start                 # Expo development server
-npm run prebuild:ios      # Apply development config to the generated iOS project
-npm run ios               # Compile and run the generated iOS project
-npm run prebuild:android  # Apply development config to the generated Android project
-npm run android           # Compile and run the generated Android project
-npm run web               # Web development server
-
-npm run lint              # ESLint
-npm run check:type        # TypeScript, no emit
-npm run check:i18n        # English source-locale audit
-npm run check:i18n:release # All-locale release audit
-npm run check:i18n:release:fix # Remove obsolete locale keys, then audit
-npm run check             # Lint + type check
-npm run format            # Format and apply safe lint fixes
-
-npm run prebuild:clean    # Regenerate development native projects from Expo config
-npm run doctor            # Expo environment diagnostics
-npm run align-deps        # Align installed packages with the Expo SDK
-
-npm run setup:expo        # Rename the app and create/link its EAS project
-npm run setup:firebase    # Provision Firebase, Analytics, native configs, and EAS files
-npm run setup:sentry      # Create/reuse the Sentry project and sync local config
-npm run setup:ads         # Synchronize AdMob native configuration
-npm run setup:font        # Synchronize the selected embedded font
-npm run setup:i18n        # Synchronize supported locales in Expo config
-```
-
-## Project Layout
-
-```text
-src/
-  app/             Expo Router routes and layouts
-  components/      Reusable product UI and template components
-  configs/         Product configuration and font selection
-  i18n/            Localization setup and locale resources
-  services/        External integrations and server-state infrastructure
-  storage/         MMKV adapters and key namespacing
-  stores/          Auto-discovered Zustand feature slices
-  theme/           Design tokens, themes, and themed-style helpers
-  utils/           Focused shared helpers
-```
-
-Generated `ios/` and `android/` directories must not be edited directly. Change Expo configuration or config plugins, then run a prebuild when native projects need to be regenerated.
-
-## Product Shell
-
-`src/app/_layout.tsx` mounts the app-wide providers and lifecycle hooks: fonts, identity, subscriptions, RTL sync, query persistence, i18n, error boundary, navigator-aware tab insets, analytics screen tracking, OTA update checks, and snackbar rendering.
-
-Anonymous identity is a per-variant, installation-scoped UUID stored in MMKV and shared with configured analytics, diagnostics, and subscription services. It persists across app launches and updates, but resets after uninstall/reinstall on both iOS and Android. Android Auto Backup is disabled for this barebone template; each product fork should define its own backup policy before release.
-
-The current routes demonstrate a common paid-app shape:
-
-- `onboarding` is shown before the persisted onboarding gate is complete.
-- `(tabs)` contains four sample product tabs, each with its own navigation stack.
-- `paywall` is a full-screen modal route available after onboarding.
-- `debug` is a development-only diagnostic screen.
-
-Replace, add, or remove routes to match the product. Keep provider initialization in the root layout unless an integration truly belongs to a narrower navigation scope.
-
-### Tab Navigation
-
-The checked-in mobile navigator uses Expo Router native tabs. Tab labels and icon metadata are declared once in `src/app/(tabs)/_layout.tsx` and shared by `NativeTabNavigator` and `CustomTabNavigator`. Native tabs use SF Symbols on iOS and Material Symbols on Android; Android supports at most five native tabs.
-
-To switch the app back to the floating custom tab bar, change only the navigator alias import:
-
-```ts
-import { CustomTabNavigator as TabNavigator, type TabDefinition } from '@/components/base'
-```
-
-`NativeTabNavigator` resolves to `CustomTabNavigator` on web, so the existing custom web UI remains unchanged. Native tabs do not provide headers, so every tab is a folder with its own `TabStack`. Keep that structure when adding detail routes.
-
-Expo Router does not expose native tab-bar height. `useTabBarHeight()` therefore returns the measured custom height or a conservative native fallback for root overlays. `TabNavigatorFrame` owns one persistent compact fixed-size banner above the bottom bar for both navigator implementations, so tab changes do not remount the ad or issue new requests. It publishes the measured banner height; `TabScreen` clears the combined navigator-aware inset for non-scrolling content. Scroll roots opt into `contentUnderTabBar` and add `useTabBarContentInset()` to their scroll-content bottom padding, which lets content remain visible behind the bar while keeping the final item reachable. Change `TabBarBanner` when a product needs a different policy-appropriate placement rather than mounting banners inside individual tab routes. The native bar is intentionally fixed at the bottom: iOS minimization and iPad sidebar adaptation are disabled by default.
-
-## UI and Theme
-
-Theme tokens live in `src/theme/`. Use `useThemedStyles(createStyles)` for themed styles and `useTheme()` for values passed to components or animation APIs. Prefer tokens for colors, spacing, typography, radius, shadows, and icon sizes.
-
-Each theme declares an `appearance` of `light` or `dark`. Use it for appearance-dependent native props such as blur tint, and invert it when choosing status-bar content so system UI stays legible. Do not hardcode theme-dependent `light` or `dark` values in components.
-
-The default theme uses a light surface hierarchy: `background.base` for screens, `surface` and `card` for foreground content, `subtle` for inactive controls or nested sections, and `overlay` for modal scrims. Create actual elevation by combining a surface color with a shadow token; `subtle` is not an elevation color.
-
-Status colors are flat semantic values for icons, indicators, and borders. Derive a tinted feedback surface with `withAlpha(statusColor, 0.08)` only when a component needs one, and keep feedback text on the normal text tokens so color is not the only carrier of meaning. The status roles are `success`, `error`, `warning`, `info`, and `neutral`.
-
-`iconSizes` is a static token and should be imported from `@/theme`; do not supply raw icon-size literals.
-
-Font configuration lives only in `src/configs/fonts.ts`. After changing `FONT_NAME`, run:
-
-```bash
-npm run setup:font
-npm run prebuild:clean
-```
-
-The template enables RTL support through Expo configuration. `useIsRTL()` is available for visuals that cannot be mirrored automatically, such as directional canvas animations.
-
-### Reusable Components
-
-`src/components/base/` is the reusable layer. Notable building blocks include `Button`, `Text`, `Card`, `ListItem` variants, `Toggle`, `SegmentedControl`, `BottomSheet`, `SearchInput`, `FadeScrollView`, `Snackbar`, `CollapsingHeader`, `NativeTabNavigator`, `CustomTabNavigator`, `TabStack`, `TabScreen`, `FloatingTabBar`, `Onboarding`, `Paywall`, and loading indicators.
-
-Expo UI wrappers live in `src/components/base/NativeUI/` and use PascalCase `Native*` names such as `NativeToggle`, `NativeBottomSheet`, and `NativeAlertDialog`. They preserve the custom base components for side-by-side comparison, expose platform-neutral props, inherit the app theme and RTL direction where supported, and target iOS and Android only.
-
-`NativeBottomSheet` keeps raw snap points internal. Use its behavior-based `content`, `large`, or `resizable` preset. It composes Expo UI's direct SwiftUI primitives on iOS and Material 3 Compose primitives on Android. Content sheets use native fit-to-content sizing and the system-centered fitted presentation on iPad, large sheets fill the available height, and resizable sheets use the native iOS medium/large detents with Android's equivalent partial/expanded states. Scrollable iOS sheets use the native SwiftUI `ScrollView` around naturally measured React Native content.
-
-Keep reusable behavior here. Put product-specific composition in `src/components/` or route files.
-
-## State and Persistence
-
-Zustand state is split into auto-discovered files in `src/stores/features/`. A new feature slice needs one file that declares the global `AppSlices` augmentation, exports its `sliceConfig`, and exposes a focused hook. It does not need manual registration.
-
-```ts
-import { useShallow } from 'zustand/react/shallow'
-import { getUseAppStore, type ExcludeKeys, type SliceConfig } from '../slices/types'
-
-declare global {
-  interface AppSlices {
-    example: ExampleSlice
-  }
-}
-
-interface ExampleSlice {
-  value: string
-  setValue: (value: string) => void
-}
-
-export const examplePersistExcludeKeys: ExcludeKeys<ExampleSlice> = []
-
-const createExampleSlice = (set: any): ExampleSlice => ({
-  value: '',
-  setValue: (value) =>
-    set((state: AppSlices) => {
-      state.example.value = value
-    }),
-})
-
-export const sliceConfig = {
-  create: createExampleSlice,
-  persistExcludeKeys: examplePersistExcludeKeys,
-} satisfies SliceConfig<ExampleSlice>
-
-export const useExampleState = () =>
-  getUseAppStore()(
-    useShallow(({ example }) => ({ value: example.value, setValue: example.setValue }))
-  )
-```
-
-Only list non-function state values in `persistExcludeKeys`; actions are excluded automatically. Add a per-slice version and migrations only after that slice has shipped persisted state.
-
-MMKV keys use a `namespace.name` convention. Use storage helpers to create keys rather than hardcoding them.
-
-## Data Fetching
-
-`src/services/queries/provider/` is template infrastructure: it configures TanStack Query, network awareness, retries, persistence, and development tools. Add product API modules alongside it under `src/services/queries/`.
-
-For a domain module, keep related code together in this order:
-
-1. Private request function
-2. Query-key export
-3. Query-options export
-4. Query-hook exports
-
-Use the shared network and offline-error utilities where appropriate. Persist only successful, serializable query results.
-
-## Localization
-
-Locale resources live in `src/i18n/locales/`, are loaded dynamically, and are type-checked against English. User-visible product text belongs in translations, except for the development-only debug route.
-
-### Supported Languages
-
-The app ships with 37 UI locales. In production, the active language follows the app or device
-locale reported by the operating system; there is no in-app language picker. Unmatched locales and
-missing translations fall back to English.
-
-| #   | Code      | Language              | Script            | Direction |
-| --- | --------- | --------------------- | ----------------- | --------- |
-| 1   | `ar`      | Arabic                | Arabic            | RTL       |
-| 2   | `bn`      | Bangla                | Bengali           | LTR       |
-| 3   | `ca`      | Catalan               | Latin             | LTR       |
-| 4   | `cs`      | Czech                 | Latin             | LTR       |
-| 5   | `da`      | Danish                | Latin             | LTR       |
-| 6   | `de`      | German                | Latin             | LTR       |
-| 7   | `el`      | Greek                 | Greek             | LTR       |
-| 8   | `en`      | English               | Latin             | LTR       |
-| 9   | `es`      | Spanish (Spain)       | Latin             | LTR       |
-| 10  | `es-MX`   | Spanish (Mexico)      | Latin             | LTR       |
-| 11  | `fi`      | Finnish               | Latin             | LTR       |
-| 12  | `fr`      | French (France)       | Latin             | LTR       |
-| 13  | `fr-CA`   | French (Canada)       | Latin             | LTR       |
-| 14  | `he`      | Hebrew                | Hebrew            | RTL       |
-| 15  | `hi`      | Hindi                 | Devanagari        | LTR       |
-| 16  | `hr`      | Croatian              | Latin             | LTR       |
-| 17  | `hu`      | Hungarian             | Latin             | LTR       |
-| 18  | `id`      | Indonesian            | Latin             | LTR       |
-| 19  | `it`      | Italian               | Latin             | LTR       |
-| 20  | `ja`      | Japanese              | Japanese          | LTR       |
-| 21  | `ko`      | Korean                | Hangul            | LTR       |
-| 22  | `ms`      | Malay                 | Latin             | LTR       |
-| 23  | `nl`      | Dutch                 | Latin             | LTR       |
-| 24  | `nb`      | Norwegian Bokmål      | Latin             | LTR       |
-| 25  | `pl`      | Polish                | Latin             | LTR       |
-| 26  | `pt-BR`   | Portuguese (Brazil)   | Latin             | LTR       |
-| 27  | `pt`      | Portuguese (Portugal) | Latin             | LTR       |
-| 28  | `ro`      | Romanian              | Latin             | LTR       |
-| 29  | `ru`      | Russian               | Cyrillic          | LTR       |
-| 30  | `sk`      | Slovak                | Latin             | LTR       |
-| 31  | `sv`      | Swedish               | Latin             | LTR       |
-| 32  | `th`      | Thai                  | Thai              | LTR       |
-| 33  | `tr`      | Turkish               | Latin             | LTR       |
-| 34  | `uk`      | Ukrainian             | Cyrillic          | LTR       |
-| 35  | `vi`      | Vietnamese            | Latin             | LTR       |
-| 36  | `zh-Hans` | Chinese (Simplified)  | Han (Simplified)  | LTR       |
-| 37  | `zh-Hant` | Chinese (Traditional) | Han (Traditional) | LTR       |
-
-```tsx
-const { t } = useTranslation()
-return <Text>{t('settings.title')}</Text>
-```
-
-During product development, treat `src/i18n/locales/en.json` as the only source locale. Add and revise copy there, then run `npm run check:i18n`. The command checks English key usage and empty values while intentionally ignoring every non-English locale. Do not copy English values into other locale files to make their keys match; missing translations use the English fallback.
-
-Before publishing a product fork, translate the complete current English resource into every locale the product will ship. Preserve interpolation placeholders, review translation quality, remove locale files for languages the product will not support, and run `npm run check:i18n:release` to verify key coverage, non-empty values, and placeholders across every configured locale. Run `npm run check:i18n:release:fix` when obsolete English keys should also be removed from every release locale before the audit; missing translations, empty values, and placeholder mismatches remain manual release blockers. To add or remove a locale, update its JSON resource and run `npm run setup:i18n` to synchronize `app.json`.
-
-The i18n configuration includes `number` and `currency` formatters for products that need them, but neither is a requirement of the template.
-
-## Build and Release
-
-EAS profiles are defined in `eas.json`. Common production commands are `npm run eas-build`, `npm run eas-build:ios:submit`, `npm run eas-build:android:submit`, and `npm run eas-update`. The EAS Update commands publish only when the update succeeds, then upload the generated `dist` source maps to Sentry.
-
-Fastlane at the repository root manages App Store Connect and Google Play listing metadata and screenshots. It reads the bundle identifier and package name from `app.json`; update its shared URLs, locale folders, and credentials for each new app before running the `fastlane:*` scripts. Keep secrets and reviewer contact information out of Git.
-
-Every iOS metadata upload reads the tracked `fastlane/ios/app_store_config.json`, synchronizes the app-level Content Rights declaration, and replaces the App Review attachment when a configured local recording exists. Set `IOS_APP_REVIEW_ATTACHMENT_PATH` in `.env.fastlane.local` from `.env.fastlane.example` and store product-specific recordings under the gitignored `fastlane/ios/review/` directory. When the path is unset or the recording is missing, the lane warns and skips the attachment while preserving the existing App Store Connect attachment; an invalid tracked config still stops the lane before remote changes. It uploads metadata only and leaves app pricing, App Privacy responses, build selection, and the final App Review submission as manual App Store Connect release steps.
-
-Store-product provisioning uses the official App Store Connect, Android Publisher, and RevenueCat
-APIs through the `monetization:*` commands above. Fastlane remains responsible for listing metadata,
-screenshots, and release tasks.
+Run submit/update commands from the real app directory. Mobile OTA scripts export only iOS/Android and upload that app's Sentry source maps. A shared source change does not automatically publish any app.
 
 ## Verification
 
-At a minimum, run `npm run check` after code changes and `npm run check:i18n` after changing English product copy. For native dependency or configuration changes, also run `npm run prebuild:clean` and verify the affected platform.
+`pnpm check` runs lint and TypeScript for both apps and shared packages, including tooling. `pnpm check:i18n` audits each app's English resource and shared references. No automated test files or suites belong in this repository.
+
+Migration provenance and verification results are recorded in `docs/monorepo-migration.md`. Water eject is the initial iOS native validation candidate. Android native builds/runtime, EAS cloud builds, submissions, OTA publication, and remote provisioning are outside migration validation.

@@ -1,0 +1,11 @@
+packages:
+  - apps/*
+  - packages/*
+nodeLinker: hoisted
+allowBuilds:
+  esbuild: true
+  '@sentry/cli': true
+  unrs-resolver: true
+  '@firebase/util': false
+  protobufjs: false
+  sharp: false

@@ -1,0 +1,26 @@
+{
+  "name": "@shared/ads",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./useCanShowAds": "./src/useCanShowAds.ts",
+    "./useAdsInit": "./src/useAdsInit.ts",
+    "./adsService": "./src/adsService.ts",
+    "./usePreventInterstitialAd": "./src/usePreventInterstitialAd.ts",
+    "./InterstitialAdProvider": "./src/InterstitialAdProvider.tsx",
+    "./BannerAd": "./src/BannerAd.tsx",
+    "./enabled": "./src/enabled.ts",
+    "./useConsentInit": "./src/useConsentInit.ts",
+    "./interstitialPolicy": "./src/interstitialPolicy.ts"
+  },
+  "scripts": {
+    "check:type": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "expo-tracking-transparency": "~57.0.1",
+    "react": "19.2.3",
+    "react-native": "0.86.2",
+    "react-native-google-mobile-ads": "16.3.4",
+    "@shared/core": "workspace:*"
+  }
+}

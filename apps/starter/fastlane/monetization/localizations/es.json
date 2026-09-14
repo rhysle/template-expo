@@ -1,0 +1,36 @@
+{
+  "appleLocale": "es-ES",
+  "googleLocale": "es-ES",
+  "apple": {
+    "subscriptionGroupDisplayName": "Premium",
+    "products": {
+      "weekly": {
+        "displayName": "Premium · Semanal",
+        "description": "Acceso completo a todas las funciones premium."
+      },
+      "monthly": {
+        "displayName": "Premium · Mensual",
+        "description": "Acceso completo a todas las funciones premium."
+      },
+      "yearly": {
+        "displayName": "Premium · Anual",
+        "description": "Acceso completo a todas las funciones premium."
+      },
+      "lifetime": {
+        "displayName": "Premium · De por vida",
+        "description": "Acceso de por vida a todas las funciones premium."
+      }
+    }
+  },
+  "google": {
+    "subscription": {
+      "title": "Premium",
+      "description": "Acceso completo a todas las funciones premium.",
+      "benefits": ["Acceso a todas las funciones premium"]
+    },
+    "lifetime": {
+      "title": "Premium · De por vida",
+      "description": "Acceso de por vida a todas las funciones premium."
+    }
+  }
+}

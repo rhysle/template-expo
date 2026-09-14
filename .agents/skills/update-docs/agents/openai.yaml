@@ -1,0 +1,4 @@
+interface:
+  display_name: 'Update Monorepo Docs'
+  short_description: 'Sync docs with template-expo changes'
+  default_prompt: "Use $update-docs to reconcile this branch's changes with the relevant monorepo documentation."

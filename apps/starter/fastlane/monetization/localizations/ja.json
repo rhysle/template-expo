@@ -1,0 +1,36 @@
+{
+  "appleLocale": "ja",
+  "googleLocale": "ja-JP",
+  "apple": {
+    "subscriptionGroupDisplayName": "Premium",
+    "products": {
+      "weekly": {
+        "displayName": "Premium · 週次",
+        "description": "すべてのプレミアム機能にフルアクセス。"
+      },
+      "monthly": {
+        "displayName": "Premium · 月次",
+        "description": "すべてのプレミアム機能にフルアクセス。"
+      },
+      "yearly": {
+        "displayName": "Premium · 年次",
+        "description": "すべてのプレミアム機能にフルアクセス。"
+      },
+      "lifetime": {
+        "displayName": "Premium · 生涯",
+        "description": "すべてのプレミアム機能に生涯アクセス。"
+      }
+    }
+  },
+  "google": {
+    "subscription": {
+      "title": "Premium",
+      "description": "すべてのプレミアム機能にフルアクセス。",
+      "benefits": ["すべてのプレミアム機能にアクセス"]
+    },
+    "lifetime": {
+      "title": "Premium · 生涯",
+      "description": "すべてのプレミアム機能に生涯アクセス。"
+    }
+  }
+}

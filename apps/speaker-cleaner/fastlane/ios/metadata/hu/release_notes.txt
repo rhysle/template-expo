@@ -1,0 +1,4 @@
+Az 1.1-es verzió újdonságai:
+• Futtass korlátlan számú, 30 másodperces Standard tisztítási ciklust ingyen.
+• A Premium mostantól Turbó módot, az eszközön tárolt privát tevékenységtörténetet és idővonalas, részletes hangjelentéseket is tartalmaz.
+• Mind a négy hangeszköz megjelenését és használhatóságát továbbfejlesztettük.

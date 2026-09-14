@@ -1,0 +1,36 @@
+{
+  "appleLocale": "pt-BR",
+  "googleLocale": "pt-BR",
+  "apple": {
+    "subscriptionGroupDisplayName": "Premium",
+    "products": {
+      "weekly": {
+        "displayName": "Premium · Semanal",
+        "description": "Acesso completo a todos os recursos premium."
+      },
+      "monthly": {
+        "displayName": "Premium · Mensal",
+        "description": "Acesso completo a todos os recursos premium."
+      },
+      "yearly": {
+        "displayName": "Premium · Anual",
+        "description": "Acesso completo a todos os recursos premium."
+      },
+      "lifetime": {
+        "displayName": "Premium · Vitalício",
+        "description": "Acesso vitalício a todos os recursos premium."
+      }
+    }
+  },
+  "google": {
+    "subscription": {
+      "title": "Premium",
+      "description": "Acesso completo a todos os recursos premium.",
+      "benefits": ["Acesso a todos os recursos premium"]
+    },
+    "lifetime": {
+      "title": "Premium · Vitalício",
+      "description": "Acesso vitalício a todos os recursos premium."
+    }
+  }
+}
