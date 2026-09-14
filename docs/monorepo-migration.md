@@ -14,7 +14,7 @@ Implemented on `feat/monorepo`.
 
 - Root `pnpm check`: lint and TypeScript passed for both apps and all three shared packages.
 - Root `pnpm check:i18n`: both English development audits passed, including shared UI references. Release translation parity was not requested.
-- Clean isolated `pnpm install --offline --frozen-lockfile`: passed using the installed pnpm cache with no existing node_modules. One root lockfile and pnpm 10.33.0 are retained.
+- Clean isolated `pnpm install --frozen-lockfile`: passed with no existing node_modules using pnpm 11.9.0. The existing root lockfile remains unchanged.
 - Both apps resolve the same React 19.2.3, React Native 0.86.2, Expo 57.0.11, MMKV 4.3.2, Reanimated 4.5.1, Firebase app 24.1.1 and RevenueCat 10.4.2 installations. Original resolved direct versions were preserved.
 - Development and production Expo public configuration passed for both apps, including both platform identifiers and the development suffix convention.
 - TypeScript/Ruby environment parity checks passed for quoted/export declarations, process overrides, root/app relative paths, ownership rejection and root-command rejection. Fastlane local validation confirmed selected metadata, required nonempty credentials and missing-attachment preservation.

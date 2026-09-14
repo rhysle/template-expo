@@ -2,10 +2,10 @@ packages:
   - apps/*
   - packages/*
 nodeLinker: hoisted
-onlyBuiltDependencies:
-  - esbuild
-  - '@sentry/cli'
-  - unrs-resolver
-ignoredBuiltDependencies:
-  - "@firebase/util"
-  - protobufjs
+allowBuilds:
+  esbuild: true
+  '@sentry/cli': true
+  unrs-resolver: true
+  '@firebase/util': false
+  protobufjs: false
+  sharp: false

@@ -13,7 +13,7 @@ A pnpm workspace containing independently released Expo iOS/Android apps and one
 | `packages/tooling`     | Setup/release scripts, config plugin, monetization tooling, PPP dataset, and shared Fastlane lanes |
 | `fastlane/.private`    | Gitignored shared store account keys; never included in builds                                     |
 
-Use Node compatible with Expo SDK 57 and **pnpm 10.33.0**. The root `packageManager` pins pnpm. Install once at the repository root:
+Use Node compatible with Expo SDK 57 and **pnpm 11.9.0**. The root `packageManager` pins pnpm. Install once at the repository root:
 
 ```sh
 pnpm install --frozen-lockfile
