@@ -1,3 +1,4 @@
+# Keep store-listing images out of regular Git history for every app.
 apps/*/fastlane/**/*.png filter=lfs diff=lfs merge=lfs -text
 apps/*/fastlane/**/*.jpg filter=lfs diff=lfs merge=lfs -text
 apps/*/fastlane/**/*.jpeg filter=lfs diff=lfs merge=lfs -text
