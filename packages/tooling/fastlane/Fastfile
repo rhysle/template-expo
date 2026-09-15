@@ -65,9 +65,13 @@ def ios_submission_values
     localized_urls[key.to_sym] = { "default" => value }
   end
 
-  review_attachment_value = ENV["IOS_APP_REVIEW_ATTACHMENT_PATH"].to_s.strip
+  review_attachment_value = app_store_config["reviewAttachmentPath"]
+  unless review_attachment_value.nil? || review_attachment_value.is_a?(String)
+    UI.user_error!("reviewAttachmentPath in iOS App Store config must be a string")
+  end
+  review_attachment_value = review_attachment_value.to_s.strip
   if review_attachment_value.empty?
-    UI.important("IOS_APP_REVIEW_ATTACHMENT_PATH is not configured; skipping App Review attachment upload.")
+    UI.important("reviewAttachmentPath is not configured in iOS App Store config; skipping App Review attachment upload.")
     review_attachment_path = nil
   else
     review_attachment_path = resolve_project_path(review_attachment_value)

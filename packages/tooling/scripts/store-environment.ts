@@ -12,11 +12,7 @@ export const sharedStoreKeys = [
   'APPLE_TEAM_ID',
   'ITC_TEAM_ID',
 ] as const
-export const appStoreKeys = [
-  'REVENUECAT_PROJECT_ID',
-  'REVENUECAT_API_V2_KEY',
-  'IOS_APP_REVIEW_ATTACHMENT_PATH',
-] as const
+export const appStoreKeys = ['REVENUECAT_PROJECT_ID', 'REVENUECAT_API_V2_KEY'] as const
 export const parseEnvironment = (source: string): Record<string, string> => {
   const values: Record<string, string> = {}
   for (const line of source.split(/\r?\n/)) {
@@ -56,6 +52,4 @@ export const loadStoreEnvironment = (): void => {
     const value = process.env[key]?.trim()
     if (value) process.env[key] = path.resolve(repoRoot, value)
   }
-  const attachment = process.env.IOS_APP_REVIEW_ATTACHMENT_PATH?.trim()
-  if (attachment) process.env.IOS_APP_REVIEW_ATTACHMENT_PATH = path.resolve(appRoot, attachment)
 }

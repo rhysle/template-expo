@@ -65,9 +65,9 @@ Routes, product events, theme colors, font choice, locale resources, onboarding 
 
 Copy the root `.env.fastlane.example` to `.env.fastlane.local` for the **shared** Apple/Google account. Keep `.p8` and Google service-account files under root `fastlane/.private/` or use absolute paths. These keys cannot be overridden in app files.
 
-Copy an app's `.env.fastlane.example` to its `.env.fastlane.local` for its RevenueCat project/API key and optional iOS review recording. Each app owns its Fastlane metadata, screenshots, review configuration, and temporary output. Its tiny Fastfile/Appfile wrappers load one shared implementation. Store URLs and Content Rights are app-owned in `fastlane/ios/app_store_config.json`.
+Copy an app's `.env.fastlane.example` to its `.env.fastlane.local` for its RevenueCat project/API key. Each app owns its Fastlane metadata, screenshots, review configuration, and temporary output. Its tiny Fastfile/Appfile wrappers load one shared implementation. Store URLs, Content Rights, and the optional app-relative iOS review recording path are app-owned in `fastlane/ios/app_store_config.json`.
 
-Both Ruby and TypeScript loaders enforce the same ownership rules. Explicit process variables take precedence. Shared credential paths resolve from the repository root, while review attachment paths resolve from the app root, even when supplied through process variables. Quoted values and `export KEY=value` declarations are supported. Empty required values fail validation.
+Both Ruby and TypeScript loaders enforce the same ownership rules. Explicit process variables take precedence. Shared credential paths resolve from the repository root. Quoted values and `export KEY=value` declarations are supported. Empty required values fail validation.
 
 App `.env.local` is for app build settings such as the upload-only Sentry token. Keep provisioning and investigation tokens in a secure machine environment; do not place them in app build files. Never use the upload token for issue investigation. See `AGENTS.md` for Firebase, Sentry, monetization, and localization contracts.
 

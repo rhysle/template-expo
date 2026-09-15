@@ -1,7 +1,6 @@
-require 'pathname'
 module RhysleEnvironment
   SHARED_KEYS = %w[APP_STORE_CONNECT_API_KEY_KEY_ID APP_STORE_CONNECT_API_KEY_ISSUER_ID APP_STORE_CONNECT_API_KEY_KEY_FILEPATH GOOGLE_PLAY_JSON_KEY_PATH APPLE_ID APPLE_TEAM_ID ITC_TEAM_ID].freeze
-  APP_KEYS = %w[REVENUECAT_PROJECT_ID REVENUECAT_API_V2_KEY IOS_APP_REVIEW_ATTACHMENT_PATH].freeze
+  APP_KEYS = %w[REVENUECAT_PROJECT_ID REVENUECAT_API_V2_KEY].freeze
   def self.required(key)
     value = ENV[key].to_s.strip
     raise "Missing #{key}. Add it to the appropriate .env.fastlane.local." if value.empty?
@@ -37,8 +36,6 @@ module RhysleEnvironment
       value = ENV[key].to_s.strip
       ENV[key] = File.expand_path(value, repo_root) unless value.empty?
     end
-    value = ENV['IOS_APP_REVIEW_ATTACHMENT_PATH'].to_s.strip
-    ENV['IOS_APP_REVIEW_ATTACHMENT_PATH'] = File.expand_path(value, app_root) unless value.empty?
     app_root
   end
 end
