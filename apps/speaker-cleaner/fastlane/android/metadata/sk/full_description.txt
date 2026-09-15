@@ -1,27 +1,42 @@
-Čistá vlna odstráni vodu a opraví tlmený zvuk; test tónov, sterea a dB.
-
-Znie reproduktor po namočení tlmene? Čistič reproduktora pomáha riadeným trojfázovým čistiacim zvukom vytlačiť zachytenú vodu, uvoľnený prach a nečistoty. Potom môžete výsledok hneď otestovať.
+Dostala sa do reproduktora telefónu voda? Čistič reproduktora používa riadené zvukové vlny, ktoré pomáhajú vytlačiť zachytenú vodu a uvoľniť prach alebo nečistoty. Spustite 30-sekundový cyklus a výsledok overte vstavanými testami reproduktora.
 
 VYČISTITE A OTESTUJTE REPRODUKTOR
-• Spúšťajte zdarma neobmedzené 30-sekundové cykly na vytlačenie vody
-• S Premium odomknite 60/90-sekundové cykly a režim Turbo
-• Generujte presné tóny od 20 do 20 000 Hz
-• Otestujte ľavý, pravý aj oba stereo kanály
-• Odhadnite okolitý hluk pomocou živého dB metra
-• Minimum, priemer a maximum si pozrite zdarma
-• S Premium uchovajte v zariadení súkromnú históriu čistení a zvukových relácií
+• Riadené vytlačenie vody: trojfázový čistiaci zvuk pomáha rozhýbať zachytené kvapky
+• Voliteľné trvanie: neobmedzené 30-sekundové cykly Standard zdarma; Premium pridáva 60 a 90 sekúnd
+• Režim Turbo: intenzívnejšia rutina Premium pre pretrvávajúci tlmený zvuk
+• Generátor tónov a frekvencií: presné zvuky od 20 do 20 000 Hz
+• Stereo test: skontrolujte ľavý, pravý alebo oba kanály
+• Orientačný hlukomer: živé minimum, priemer a maximum okolitého zvuku
+• Súkromná história: s Premium uchovajte súhrny čistenia a meraní v zariadení
 
-ŠTYRI ZVUKOVÉ NÁSTROJE, JEDEN SÚKROMNÝ BALÍK
-Čistenie reproduktora, generátor tónov, stereo test a merač zvuku pracujú v zariadení. Vzorky mikrofónu sa spracúvajú v pamäti a nikdy sa neukladajú ani neodosielajú.
+ŠTYRI ZVUKOVÉ NÁSTROJE V JEDNEJ APLIKÁCII
+Čistič reproduktora spája vytlačenie vody, generátor tónov, stereo test a merač zvuku. Vzorky mikrofónu sa spracúvajú iba v pamäti; zvuk sa nenahráva, neukladá ani neodosiela. Správy a história zostávajú v zariadení a možno ich vymazať v Nastaveniach.
 
-ZDARMA
-Neobmedzené 30-sekundové čistenie, sínusové tóny, manuálny stereo test, živý odhad dB a hodnoty minima, priemeru a maxima.
+AKO DOSTAŤ VODU Z REPRODUKTORA TELEFÓNU
+1. Odstráňte kryt, ktorý zakrýva reproduktor, a položte zariadenie reproduktorom nadol.
+2. Odpojte slúchadlá a externé reproduktory a začnite pri nízkej, príjemnej hlasitosti.
+3. Spustite riadený čistiaci cyklus.
+4. Otestujte zvuk a cyklus zopakujte, ak je stále tlmený.
 
-PREMIUM
-Odomknite 60/90-sekundové cykly, režim Turbo, ďalšie tvary vĺn, automatický stereo test, podrobné správy zvukových relácií, súkromnú históriu aktivít a používanie bez reklám.
+Zvukové vlny môžu pomôcť rozhýbať kvapky a uvoľniť ľahký prach bez otvárania telefónu. Poškodený hardvér však neopravujú.
 
-AKO POUŽIŤ VYTLAČENIE VODY
-Položte zariadenie reproduktorom nadol, začnite nízkou hlasitosťou, spustite cyklus a otestujte zvuk. Ak je stále tlmený, cyklus zopakujte.
+NÁSTROJE ZDARMA
+Neobmedzené 30-sekundové cykly Standard, sínusové tóny, manuálny stereo test a živý odhad dB s minimom, priemerom a maximom.
+
+FUNKCIE PREMIUM
+Cykly 60 a 90 sekúnd, režim Turbo, obdĺžnikový, trojuholníkový a pílový priebeh, automatický stereo test, podrobné zvukové správy, súkromná história a používanie bez reklám.
+
+ČISTIČ REPRODUKTORA SA HODÍ, KEĎ
+• Je zvuk po postriekaní tlmený, tichý alebo skreslený
+• Chcete pomôcť vytlačiť vodu z reproduktora
+• Ľahký prach alebo nečistoty môžu znižovať čistotu zvuku
+• Potrebujete skontrolovať ľavý a pravý kanál
+• Hľadáte generátor frekvencií alebo orientačný hlukomer
+
+SÚKROMIE NA PRVOM MIESTE
+Čistiace zvuky a testy fungujú v zariadení. Mikrofón sa používa iba na živý odhad hlasitosti; jeho vzorky sa nikdy nenahrávajú, neukladajú ani neodosielajú.
 
 DÔLEŽITÉ
-Odstránenie vody, prachu ani nečistôt nemožno zaručiť. dB meter poskytuje iba odhad a nie je kalibrovaným profesionálnym ani zdravotníckym zariadením. Reproduktor držte ďalej od uší a pri nepríjemnom zvuku prehrávanie zastavte.
+Odstránenie vody, prachu ani nečistôt nemožno zaručiť. dB meter poskytuje odhad a nie je kalibrovaným profesionálnym, bezpečnostným ani zdravotníckym zariadením. Držte reproduktor ďalej od uší, začnite potichu a pri nepríjemnom zvuku prehrávanie zastavte. Pri vážnom zasiahnutí kvapalinou alebo trvalom skreslení kontaktujte odborný servis.
+
+Stiahnite si Čistič reproduktora, Voda von na riadené čistenie, stereo testy a súkromné zvukové nástroje.

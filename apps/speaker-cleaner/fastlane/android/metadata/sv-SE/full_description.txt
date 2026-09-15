@@ -1,19 +1,42 @@
-Klar våg tar bort vatten och fixar dämpat ljud; testa toner, stereo och dB.
-
-Låter högtalaren dämpad efter ett stänk? Rengör Högtalare hjälper till att pressa ut instängt vatten, löst damm och skräp med ett guidat rengöringsljud i tre steg. Sedan kan du testa resultatet direkt.
+Har det kommit vatten i telefonens högtalare? Rengör Högtalare använder guidade ljudvågor för att hjälpa till att pressa ut instängt vatten och lossa damm eller skräp. Kör en 30-sekunderscykel och kontrollera sedan resultatet med de inbyggda högtalartesterna.
 
 RENGÖR OCH TESTA HÖGTALAREN
-• Kör obegränsade 30-sekunderscykler gratis; Premium ger 60/90 sekunder och Turbo
-• Skapa exakta toner från 20 till 20 000 Hz
-• Testa vänster, höger och båda stereokanalerna
-• Uppskatta ljudnivån omkring dig med en live dB-mätare
-• Se sessionens minimum, genomsnitt och maximum
+• Guidad vattenutstötning: ett rengöringsljud i tre steg hjälper till att flytta droppar som har fastnat
+• Flexibel längd: obegränsade Standard-cykler på 30 sekunder gratis; Premium ger även 60 och 90 sekunder
+• Turbo: en intensivare Premium-rutin för ihållande dämpat ljud
+• Ton- och frekvensgenerator: exakta ljud från 20 till 20 000 Hz
+• Stereotest: kontrollera vänster, höger eller båda kanalerna
+• Vägledande decibelmätare: följ omgivningsljudet med minimum, genomsnitt och maximum
+• Privat historik: spara sammanfattningar av rengöring och ljud på enheten med Premium
 
-FYRA LJUDVERKTYG I ETT PRIVAT PAKET
-Högtalarrengöring, tongenerator, stereotest och ljudmätare körs på enheten. Mikrofonprover behandlas i minnet och sparas eller laddas aldrig upp.
+FYRA LJUDVERKTYG I EN APP
+Rengör Högtalare kombinerar vattenutstötning, tongenerator, stereotest och ljudmätare. Mikrofonprover behandlas endast i minnet; ljud spelas inte in, sparas eller laddas upp. Rapporter och historik stannar på enheten och kan raderas i Inställningar.
 
-Gratis får du obegränsade 30-sekunderscykler, sinustoner, manuellt stereotest, live dB samt minimum, genomsnitt och maximum. Premium låser upp 60/90-sekunderscykler, Turbo, fler vågformer, automatiskt test, ljudrapporter, privat aktivitetshistorik och användning utan annonser.
+SÅ FÅR DU UT VATTEN UR TELEFONENS HÖGTALARE
+1. Ta bort skal som täcker högtalaren och lägg enheten med högtalaren nedåt.
+2. Koppla bort hörlurar och externa högtalare och börja med en låg, behaglig volym.
+3. Kör en guidad rengöringscykel.
+4. Testa ljudet och upprepa om det fortfarande är dämpat.
 
-Lägg enheten med högtalaren nedåt, börja med låg volym, kör en cykel och testa ljudet. Upprepa vid behov.
+Ljudvågor kan hjälpa till att flytta droppar och lossa lätt damm utan att öppna telefonen, men de kan inte reparera skadad maskinvara.
 
-Viktigt: borttagning av vatten, damm eller skräp kan inte garanteras. dB-mätaren ger en uppskattning och är inte kalibrerad professionell eller medicinsk utrustning.
+GRATISVERKTYG
+Obegränsade Standard-cykler på 30 sekunder, sinustoner, manuellt stereotest och live dB-uppskattningar med minimum, genomsnitt och maximum.
+
+PREMIUM-FUNKTIONER
+Cykler på 60 och 90 sekunder, Turbo, fyrkants-, triangel- och sågtandsvågor, automatiskt stereotest, detaljerade ljudrapporter, privat historik och användning utan annonser.
+
+ANVÄND RENGÖR HÖGTALARE NÄR
+• Ljudet är dämpat, lågt eller förvrängt efter ett vattenstänk
+• Du vill hjälpa till att få ut vatten ur högtalaren
+• Lätt damm eller skräp kan påverka ljudets klarhet
+• Du behöver kontrollera vänster och höger kanal
+• Du behöver en frekvensgenerator eller vägledande ljudmätare
+
+INTEGRITET FÖRST
+Rengöringsljud och ljudtester körs på enheten. Mikrofonen används bara för att uppskatta ljudnivån i realtid; proverna spelas aldrig in, sparas eller laddas upp.
+
+VIKTIGT
+Borttagning av vatten, damm eller skräp kan inte garanteras. dB-mätaren ger uppskattningar och är inte kalibrerad professionell, arbetsmiljö- eller medicinsk utrustning. Håll högtalaren borta från öronen, börja med låg volym och stoppa om ljudet känns obehagligt. Kontakta en kvalificerad verkstad vid allvarlig vätskeexponering eller ihållande förvrängning.
+
+Ladda ned Rengör Högtalare: Vatten för guidad rengöring, stereotester och privata ljudverktyg.

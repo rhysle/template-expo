@@ -1,19 +1,42 @@
-Đẩy nước, sửa loa bị rè và nghẹt; kiểm tra tần số, stereo và độ ồn dB.
-
-Loa bị rè hoặc nghe nhỏ sau khi dính nước? Làm Sạch Loa giúp đẩy nước đọng, bụi và tạp chất ra ngoài bằng âm thanh làm sạch 3 giai đoạn có hướng dẫn, sau đó cho bạn kiểm tra kết quả ngay.
+Loa điện thoại bị vào nước? Đẩy Nước Khỏi Loa dùng sóng âm có hướng dẫn để hỗ trợ đẩy nước đọng ra ngoài và làm bong bụi hoặc tạp chất. Chạy chu kỳ 30 giây, sau đó kiểm tra kết quả bằng các công cụ thử loa tích hợp.
 
 LÀM SẠCH VÀ KIỂM TRA LOA
-• Chạy miễn phí không giới hạn chu kỳ 30 giây; Premium thêm 60/90 giây và chế độ Turbo
-• Tạo âm chính xác từ 20 đến 20.000 Hz
-• Kiểm tra kênh stereo trái, phải và cả hai
-• Ước tính tiếng ồn xung quanh bằng máy đo dB trực tiếp
-• Xem mức thấp nhất, trung bình và cao nhất của phiên
+• Đẩy nước có hướng dẫn: âm thanh làm sạch 3 giai đoạn giúp dịch chuyển các giọt nước còn kẹt
+• Thời lượng linh hoạt: chu kỳ Standard 30 giây miễn phí không giới hạn; Premium thêm 60 và 90 giây
+• Chế độ Turbo: quy trình Premium mạnh hơn dành cho âm thanh bị nghẹt kéo dài
+• Bộ tạo âm và tần số: phát âm thanh chính xác từ 20 đến 20.000 Hz
+• Kiểm tra stereo: thử kênh trái, phải hoặc cả hai
+• Máy đo decibel ước tính: theo dõi tiếng ồn xung quanh với mức thấp nhất, trung bình và cao nhất
+• Lịch sử riêng tư: Premium lưu bản tóm tắt làm sạch và đo âm thanh trên thiết bị
 
-BỐN CÔNG CỤ ÂM THANH, MỘT BỘ CÔNG CỤ RIÊNG TƯ
-Làm sạch loa, tạo tần số, kiểm tra stereo và đo âm thanh đều hoạt động trên thiết bị. Mẫu micrô được xử lý trong bộ nhớ, không bao giờ được lưu hoặc tải lên.
+BỐN CÔNG CỤ ÂM THANH TRONG MỘT ỨNG DỤNG
+Đẩy Nước Khỏi Loa kết hợp làm sạch loa, tạo tần số, kiểm tra stereo và đo âm thanh. Mẫu micrô chỉ được xử lý trong bộ nhớ; âm thanh không bị ghi, lưu hoặc tải lên. Báo cáo và lịch sử nằm trên thiết bị và có thể xóa trong Cài đặt.
 
-Miễn phí: chu kỳ làm sạch 30 giây không giới hạn, sóng sin, kiểm tra stereo thủ công, dB trực tiếp cùng mức thấp nhất, trung bình và cao nhất. Premium mở chu kỳ 60/90 giây, chế độ Turbo, thêm dạng sóng, kiểm tra tự động, báo cáo phiên âm thanh, lịch sử hoạt động riêng tư và trải nghiệm không quảng cáo.
+CÁCH ĐẨY NƯỚC RA KHỎI LOA ĐIỆN THOẠI
+1. Tháo ốp nếu che loa và đặt thiết bị với mặt loa hướng xuống.
+2. Ngắt kết nối tai nghe hoặc loa ngoài, rồi bắt đầu ở mức âm lượng thấp, dễ chịu.
+3. Chạy một chu kỳ làm sạch có hướng dẫn.
+4. Kiểm tra âm thanh và lặp lại nếu loa vẫn bị nghẹt.
 
-Đặt loa hướng xuống, bắt đầu với âm lượng thấp, chạy một chu kỳ rồi kiểm tra âm thanh. Lặp lại nếu loa vẫn bị rè.
+Sóng âm có thể hỗ trợ dịch chuyển giọt nước và làm bong bụi nhẹ mà không cần mở điện thoại, nhưng không thể sửa phần cứng bị hỏng.
 
-Quan trọng: không đảm bảo loại bỏ hoàn toàn nước, bụi hoặc tạp chất. Máy đo dB chỉ ước tính và không phải thiết bị chuyên nghiệp hay y tế đã hiệu chuẩn.
+CÔNG CỤ MIỄN PHÍ
+Chu kỳ Standard 30 giây không giới hạn, âm sin, kiểm tra stereo thủ công và ước tính dB trực tiếp với mức thấp nhất, trung bình và cao nhất.
+
+TÍNH NĂNG PREMIUM
+Chu kỳ 60 và 90 giây, chế độ Turbo, sóng vuông, tam giác và răng cưa, kiểm tra stereo tự động, báo cáo chi tiết, lịch sử riêng tư và sử dụng không quảng cáo.
+
+DÙNG ĐẨY NƯỚC KHỎI LOA KHI
+• Âm thanh bị nghẹt, nhỏ hoặc méo sau khi dính nước
+• Bạn muốn hỗ trợ đẩy nước ra khỏi loa bằng âm thanh
+• Bụi nhẹ hoặc tạp chất có thể làm giảm độ rõ
+• Bạn cần thử kênh trái và phải
+• Bạn cần bộ tạo tần số hoặc máy đo tiếng ồn ước tính
+
+ƯU TIÊN QUYỀN RIÊNG TƯ
+Âm thanh làm sạch và các bài kiểm tra chạy trên thiết bị. Micrô chỉ được dùng để ước tính mức âm thanh trực tiếp; mẫu không bao giờ được ghi, lưu hoặc tải lên.
+
+QUAN TRỌNG
+Không đảm bảo loại bỏ được nước, bụi hoặc tạp chất. Máy đo dB chỉ cung cấp số liệu ước tính, không phải thiết bị chuyên nghiệp, an toàn lao động hoặc y tế đã hiệu chuẩn. Giữ loa cách xa tai, bắt đầu ở âm lượng thấp và dừng nếu thấy khó chịu. Nếu điện thoại tiếp xúc nhiều với chất lỏng hoặc âm thanh tiếp tục bị méo, hãy liên hệ kỹ thuật viên đủ chuyên môn.
+
+Tải Đẩy Nước Khỏi Loa, Vệ Sinh Loa để làm sạch có hướng dẫn, kiểm tra stereo và dùng các công cụ âm thanh riêng tư.

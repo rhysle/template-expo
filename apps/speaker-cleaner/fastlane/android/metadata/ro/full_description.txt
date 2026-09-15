@@ -1,19 +1,42 @@
-Undă clară elimină apa și repară sunetul înfundat; test tonuri, stereo și dB.
-
-Difuzorul se aude înfundat după ce s-a udat? Curățare Difuzor ajută la eliminarea apei prinse, prafului și reziduurilor cu un sunet de curățare ghidat în trei etape. Apoi poți verifica imediat rezultatul.
+A intrat apă în difuzorul telefonului? Curățare Difuzor folosește unde sonore ghidate pentru a ajuta la scoaterea apei prinse și la desprinderea prafului sau reziduurilor. Rulează un ciclu de 30 de secunde, apoi verifică rezultatul cu testele de difuzor integrate.
 
 CURĂȚĂ ȘI TESTEAZĂ DIFUZORUL
-• Rulează gratuit cicluri nelimitate de 30 s; Premium adaugă 60/90 s și modul Turbo
-• Generează tonuri precise între 20 și 20.000 Hz
-• Testează canalul stereo stâng, drept sau ambele
-• Estimează zgomotul din jur cu un dB-metru în timp real
-• Vezi valorile minimă, medie și maximă ale sesiunii
+• Eliminare ghidată a apei: un sunet de curățare în trei etape ajută la mișcarea picăturilor prinse
+• Durată flexibilă: cicluri Standard nelimitate de 30 s gratuite; Premium adaugă 60 și 90 s
+• Modul Turbo: rutină Premium mai intensă pentru sunetul înfundat persistent
+• Generator de tonuri și frecvențe: sunete precise între 20 și 20.000 Hz
+• Test stereo: verifică canalul stâng, drept sau ambele
+• Sonometru estimativ: urmărește zgomotul din jur cu valorile minimă, medie și maximă
+• Istoric privat: păstrează pe dispozitiv rezumatele curățării și sunetului cu Premium
 
-PATRU INSTRUMENTE AUDIO, UN SINGUR KIT PRIVAT
-Curățarea difuzorului, generatorul de tonuri, testul stereo și sonometrul rulează pe dispozitiv. Mostrele microfonului sunt procesate în memorie și nu sunt salvate sau încărcate.
+PATRU INSTRUMENTE AUDIO ÎNTR-O SINGURĂ APLICAȚIE
+Curățare Difuzor combină eliminarea apei, generatorul de tonuri, testul stereo și sonometrul. Mostrele microfonului sunt procesate doar în memorie; sunetul nu este înregistrat, salvat sau încărcat. Rapoartele și istoricul rămân pe dispozitiv și pot fi șterse din Setări.
 
-Gratuit: cicluri nelimitate de 30 s, tonuri sinusoidale, test stereo manual, dB în timp real și valorile minimă, medie și maximă. Premium oferă cicluri de 60/90 s, modul Turbo, forme de undă suplimentare, test automat, rapoarte ale sesiunilor de sunet, istoric privat al activității și utilizare fără reclame.
+CUM SCOȚI APA DIN DIFUZORUL TELEFONULUI
+1. Scoate husa care acoperă difuzorul și așază dispozitivul cu difuzorul în jos.
+2. Deconectează căștile și difuzoarele externe, apoi începe la un volum redus și confortabil.
+3. Rulează un ciclu de curățare ghidat.
+4. Testează sunetul și repetă dacă încă se aude înfundat.
 
-Așază difuzorul în jos, începe cu volum redus, rulează un ciclu și testează sunetul. Repetă dacă încă se aude înfundat.
+Undele sonore pot ajuta la mișcarea picăturilor și la desprinderea prafului ușor fără deschiderea telefonului, dar nu pot repara componente defecte.
 
-Important: eliminarea apei, prafului sau reziduurilor nu este garantată. dB-metrul oferă o estimare și nu este echipament profesional sau medical calibrat.
+INSTRUMENTE GRATUITE
+Cicluri Standard nelimitate de 30 s, tonuri sinusoidale, test stereo manual și estimări dB în timp real cu minimum, medie și maximum.
+
+FUNCȚII PREMIUM
+Cicluri de 60 și 90 s, modul Turbo, unde pătrate, triunghiulare și dinte de fierăstrău, test stereo automat, rapoarte detaliate, istoric privat și utilizare fără reclame.
+
+FOLOSEȘTE CURĂȚARE DIFUZOR CÂND
+• Sunetul este înfundat, slab sau distorsionat după o stropire
+• Vrei să ajuți la scoaterea apei din difuzor
+• Praful ușor sau reziduurile pot reduce claritatea
+• Trebuie să verifici canalul stâng și drept
+• Ai nevoie de un generator de frecvențe sau sonometru estimativ
+
+CONFIDENȚIALITATEA PE PRIMUL LOC
+Sunetele de curățare și testele audio rulează pe dispozitiv. Microfonul este folosit doar pentru estimarea în timp real a nivelului sonor; mostrele nu sunt niciodată înregistrate, salvate sau încărcate.
+
+IMPORTANT
+Eliminarea apei, prafului sau reziduurilor nu este garantată. dB-metrul oferă estimări și nu este un aparat profesional, medical sau pentru securitatea muncii calibrat. Ține difuzorul departe de urechi, începe încet și oprește redarea dacă sunetul este neplăcut. Pentru expunere gravă la lichide sau distorsiuni persistente, contactează un service calificat.
+
+Descarcă Curățare Difuzor: Scoate Apa pentru curățare ghidată, teste stereo și instrumente audio private.

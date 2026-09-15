@@ -1,19 +1,42 @@
-Kirkas aalto poistaa veden ja korjaa vaimean äänen; testaa stereo ja dB.
-
-Kuulostaako kaiutin vaimealta kastumisen jälkeen? Kaiuttimen Puhdistus auttaa työntämään loukkuun jäänyttä vettä, irtopölyä ja likaa ulos ohjatulla kolmivaiheisella puhdistusäänellä. Sen jälkeen voit testata tuloksen.
+Menikö puhelimen kaiuttimeen vettä? Kaiuttimen Puhdistus käyttää ohjattuja ääniaaltoja, jotka auttavat siirtämään loukkuun jäänyttä vettä ja irrottamaan pölyä tai likaa. Suorita 30 sekunnin jakso ja tarkista tulos sovelluksen kaiutintesteillä.
 
 PUHDISTA JA TESTAA KAIUTIN
-• Suorita rajattomasti ilmaisia 30 sekunnin jaksoja; Premium lisää 60/90 sekuntia ja Turbo-tilan
-• Luo tarkkoja ääniä välillä 20–20 000 Hz
-• Testaa vasen, oikea ja molemmat stereokanavat
-• Arvioi ympäristön melutaso suoralla dB-mittarilla
-• Tarkista istunnon minimi, keskiarvo ja maksimi
+• Ohjattu vedenpoisto: kolmivaiheinen puhdistusääni auttaa liikuttamaan kaiuttimeen jääneitä pisaroita
+• Joustava kesto: rajattomat 30 sekunnin Standard-jaksot ilmaiseksi, Premiumilla myös 60 ja 90 sekuntia
+• Turbo-tila: tavallista tehokkaampi Premium-rutiini sitkeään vaimeaan ääneen
+• Ääni- ja taajuusgeneraattori: tarkat äänet välillä 20–20 000 Hz
+• Stereotesti: tarkista vasen, oikea tai molemmat kanavat
+• Suuntaa antava desibelimittari: seuraa ympäristön ääntä sekä minimi-, keski- ja maksimiarvoja
+• Yksityinen historia: tallenna puhdistus- ja äänimittausten yhteenvedot laitteelle Premiumilla
 
-NELJÄ ÄÄNITYÖKALUA, YKSI YKSITYINEN PAKETTI
-Kaiuttimen puhdistus, äänigeneraattori, stereotesti ja äänimittari toimivat laitteella. Mikrofoninäytteet käsitellään muistissa, eikä niitä tallenneta tai lähetetä.
+NELJÄ ÄÄNITYÖKALUA YHDESSÄ SOVELLUKSESSA
+Kaiuttimen Puhdistus yhdistää vedenpoiston, äänigeneraattorin, stereotestin ja äänitasomittarin. Mikrofoninäytteet käsitellään vain muistissa: ääntä ei tallenneta eikä lähetetä palvelimelle. Raportit ja historia pysyvät laitteella ja ne voi poistaa Asetuksista.
 
-Ilmaiseksi saat rajattomat 30 sekunnin puhdistusjaksot, siniaallot, manuaalisen stereotestin, suoran dB-arvion sekä minimin, keskiarvon ja maksimin. Premium avaa 60/90 sekunnin jaksot, Turbo-tilan, muut aaltomuodot, automaattisen testin, ääniraportit, yksityisen toimintahistorian ja mainoksettoman käytön.
+NÄIN POISTAT VETTÄ PUHELIMEN KAIUTTIMESTA
+1. Poista kaiuttimen peittävä suojakuori ja aseta laite kaiutin alaspäin.
+2. Irrota kuulokkeet ja ulkoiset kaiuttimet. Aloita pienellä, miellyttävällä äänenvoimakkuudella.
+3. Suorita ohjattu puhdistusjakso.
+4. Testaa ääni ja toista tarvittaessa, jos se on edelleen vaimea.
 
-Aseta kaiutin alaspäin, aloita pienellä äänenvoimakkuudella, suorita jakso ja testaa ääni. Toista tarvittaessa.
+Ääniaallot voivat auttaa liikuttamaan pisaroita ja irrottamaan kevyttä pölyä avaamatta puhelinta. Ne eivät kuitenkaan korjaa laitevaurioita.
 
-Tärkeää: veden, pölyn tai lian poistumista ei voida taata. dB-mittari antaa arvion eikä ole kalibroitu ammatti- tai lääkintälaite.
+ILMAISET TYÖKALUT
+Rajattomat 30 sekunnin Standard-jaksot, siniaallot, manuaalinen stereotesti sekä reaaliaikaiset dB-arviot minimi-, keski- ja maksimiarvoineen.
+
+PREMIUM-OMINAISUUDET
+60 ja 90 sekunnin jaksot, Turbo-tila, kantti-, kolmio- ja sahalaita-aallot, automaattinen stereotesti, yksityiskohtaiset ääniraportit, yksityinen toimintahistoria ja mainokseton käyttö.
+
+KAIUTTIMEN PUHDISTUS AUTTAA, KUN
+• Ääni on roiskeen jälkeen vaimea, hiljainen tai säröinen
+• Haluat auttaa poistamaan vettä kaiuttimesta
+• Kevyt pöly tai lika voi heikentää äänen selkeyttä
+• Haluat tarkistaa vasemman ja oikean kanavan
+• Tarvitset taajuusgeneraattorin tai suuntaa antavan äänimittarin
+
+YKSITYISYYS ENNEN KAIKKEA
+Puhdistusäänet ja äänitestit toimivat laitteella. Mikrofonia käytetään vain reaaliaikaiseen äänitason arviointiin; näytteitä ei koskaan äänitetä, tallenneta tai lähetetä.
+
+TÄRKEÄÄ
+Veden, pölyn tai lian poistumista ei voida taata. dB-mittari näyttää arvioita eikä ole kalibroitu ammatti-, työturvallisuus- tai lääkintälaite. Pidä kaiutin poissa korvien läheltä, aloita hiljaa ja lopeta, jos ääni tuntuu epämukavalta. Jos laite on kastunut pahasti tai ääni säröilee jatkuvasti, ota yhteyttä pätevään huoltoon.
+
+Lataa Kaiuttimen Puhdistus: Vesi ohjattuun puhdistukseen, stereotesteihin ja yksityisiin äänityökaluihin.

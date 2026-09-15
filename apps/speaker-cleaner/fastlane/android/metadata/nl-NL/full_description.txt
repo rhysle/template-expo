@@ -1,19 +1,42 @@
-Heldere golf verwijdert water en repareert dof geluid; test tonen, stereo en dB.
-
-Klinkt je speaker gedempt na een spat water? Speaker Reinigen helpt met een begeleid, drietraps reinigingsgeluid om opgesloten water, los stof en vuil naar buiten te duwen. Daarna kun je het resultaat meteen testen.
+Water in de speaker van je telefoon? Speaker Reinigen gebruikt begeleide geluidsgolven om opgesloten water naar buiten te helpen bewegen en stof of vuil los te maken. Start een cyclus van 30 seconden en controleer het resultaat met de ingebouwde speakertests.
 
 REINIG EN TEST JE SPEAKER
-• Start gratis onbeperkt cycli van 30 seconden; Premium voegt 60/90 seconden en Turbo toe
-• Genereer nauwkeurige tonen van 20 tot 20.000 Hz
-• Test het linker-, rechter- en beide stereokanalen
-• Schat omgevingsgeluid met een live dB-meter
-• Bekijk het minimum, gemiddelde en maximum van de sessie
+• Begeleide wateruitstoot: een reinigingsgeluid in drie stappen helpt opgesloten druppels te verplaatsen
+• Flexibele duur: onbeperkte Standard-cycli van 30 seconden gratis; Premium biedt ook 60 en 90 seconden
+• Turbo: een intensievere Premium-routine bij hardnekkig dof geluid
+• Toon- en frequentiegenerator: nauwkeurige geluiden van 20 tot 20.000 Hz
+• Stereotest: controleer het linker-, rechter- of beide kanalen
+• Indicatieve decibelmeter: volg omgevingsgeluid met minimum, gemiddelde en maximum
+• Privégeschiedenis: bewaar met Premium overzichten van reiniging en geluidsmetingen op je apparaat
 
-VIER AUDIOTOOLS, ÉÉN PRIVÉTOOLKIT
-Speakerreiniging, toongenerator, stereotest en geluidsmeter werken op het apparaat. Microfoonsamples worden in het geheugen verwerkt en nooit opgeslagen of geüpload.
+VIER AUDIOTOOLS IN ÉÉN APP
+Speaker Reinigen combineert wateruitstoot, toongenerator, stereotest en geluidsmeter. Microfoonsamples worden alleen in het geheugen verwerkt; audio wordt niet opgenomen, opgeslagen of geüpload. Rapporten en geschiedenis blijven op je apparaat en kunnen via Instellingen worden verwijderd.
 
-Gratis: onbeperkte reinigingscycli van 30 seconden, sinustonen, handmatige stereotest, live dB en minimum, gemiddelde en maximum. Premium ontgrendelt cycli van 60/90 seconden, Turbo, extra golfvormen, automatische tests, geluidsrapporten, privé-activiteitshistorie en gebruik zonder advertenties.
+ZO KRIJG JE WATER UIT JE TELEFOONSPEAKER
+1. Verwijder een hoesje dat de speaker bedekt en leg het apparaat met de speaker omlaag.
+2. Koppel koptelefoons en externe speakers los en begin op een laag, prettig volume.
+3. Voer een begeleide reinigingscyclus uit.
+4. Test het geluid en herhaal als het nog steeds gedempt klinkt.
 
-Leg het apparaat met de speaker omlaag, begin met een laag volume, voer een cyclus uit en test het geluid. Herhaal indien nodig.
+Geluidsgolven kunnen helpen druppels te verplaatsen en licht stof los te maken zonder je telefoon te openen. Beschadigde hardware kunnen ze niet repareren.
 
-Belangrijk: verwijdering van water, stof of vuil kan niet worden gegarandeerd. De dB-meter geeft een schatting en is geen gekalibreerd professioneel of medisch instrument.
+GRATIS TOOLS
+Onbeperkte Standard-cycli van 30 seconden, sinustonen, handmatige stereotest en live dB-schattingen met minimum, gemiddelde en maximum.
+
+PREMIUM-FUNCTIES
+Cycli van 60 en 90 seconden, Turbo, blok-, driehoek- en zaagtandgolven, automatische stereotest, uitgebreide geluidsrapporten, privégeschiedenis en gebruik zonder advertenties.
+
+GEBRUIK SPEAKER REINIGEN WANNEER
+• Geluid na een spat water gedempt, zacht of vervormd klinkt
+• Je water uit de speaker wilt helpen verwijderen
+• Licht stof of vuil de helderheid kan beïnvloeden
+• Je het linker- en rechterkanaal wilt controleren
+• Je een frequentiegenerator of indicatieve geluidsmeter nodig hebt
+
+PRIVACY VOOROP
+Reinigingsgeluiden en audiotests draaien op je apparaat. De microfoon wordt alleen gebruikt om het geluidsniveau live te schatten; samples worden nooit opgenomen, opgeslagen of geüpload.
+
+BELANGRIJK
+Het verwijderen van water, stof of vuil kan niet worden gegarandeerd. De dB-meter geeft schattingen en is geen gekalibreerd professioneel, arbo- of medisch instrument. Houd de speaker uit de buurt van je oren, begin zacht en stop als het geluid onprettig is. Neem bij ernstige blootstelling aan vloeistof of blijvende vervorming contact op met een erkende reparateur.
+
+Download Speaker Reinigen: Water Eruit voor begeleide reiniging, stereotests en privé-audiotools.

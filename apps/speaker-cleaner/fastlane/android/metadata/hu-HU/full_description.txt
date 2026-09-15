@@ -1,19 +1,42 @@
-Tiszta hullám eltávolítja a vizet, javítja a tompa hangot; sztereó- és dB-teszt.
-
-Tompa lett a hangszóró egy fröccsenés után? A Hangszóró Tisztító vezetett, háromlépcsős tisztítóhanggal segít kijuttatni a bent maradt vizet, laza port és szennyeződést, majd azonnal ellenőrizheti az eredményt.
+Víz került a telefon hangszórójába? A Hangszóró Tisztító vezetett hanghullámokkal segít kijuttatni a bent maradt vizet, és fellazítani a port vagy szennyeződést. Futtasson egy 30 másodperces ciklust, majd ellenőrizze az eredményt a beépített hangszórótesztekkel.
 
 TISZTÍTÁS ÉS ELLENŐRZÉS
-• Futtasson ingyen korlátlan 30 másodperces ciklust; a Premium 60/90 másodpercet és Turbo módot ad
-• Hozzon létre pontos hangokat 20 és 20 000 Hz között
-• Tesztelje a bal, jobb és mindkét sztereó csatornát
-• Becsülje meg a környezeti zajt élő dB-mérővel
-• Nézze meg a munkamenet minimumát, átlagát és maximumát
+• Vezetett vízkilökés: a háromlépcsős tisztítóhang segít megmozgatni a bent rekedt cseppeket
+• Választható időtartam: korlátlan, ingyenes 30 másodperces Standard ciklusok; Premiumban 60 és 90 másodperc is
+• Turbo mód: intenzívebb Premium rutin a tartósan tompa hanghoz
+• Hang- és frekvenciagenerátor: pontos hangok 20 és 20 000 Hz között
+• Sztereó teszt: a bal, a jobb vagy mindkét csatorna ellenőrzése
+• Tájékoztató zajszintmérő: élő minimum, átlag és maximum a környezeti hangról
+• Privát előzmények: Premiumban a tisztítások és mérések összegzése az eszközön marad
 
-NÉGY AUDIOESZKÖZ EGY PRIVÁT CSOMAGBAN
-A hangszórótisztítás, hanggenerátor, sztereó teszt és hangszintmérő az eszközön működik. A mikrofonmintákat a memória dolgozza fel; soha nem mentjük vagy töltjük fel őket.
+NÉGY AUDIOESZKÖZ EGY HELYEN
+A Hangszóró Tisztító egyesíti a vízkilökést, a hanggenerátort, a sztereó tesztet és a zajszintmérőt. A mikrofonminták feldolgozása csak a memóriában történik; a hangot nem rögzítjük, mentjük vagy töltjük fel. A jelentések és előzmények az eszközön maradnak, és a Beállításokban törölhetők.
 
-Ingyenes: korlátlan 30 másodperces tisztítás, szinuszhangok, kézi sztereó teszt, élő dB, valamint minimum, átlag és maximum. A Premium 60/90 másodperces ciklusokat, Turbo módot, további hullámformákat, automatikus tesztet, hangmérési jelentéseket, privát tevékenységelőzményeket és reklámmentes használatot ad.
+ÍGY TÁVOLÍTSA EL A VIZET A HANGSZÓRÓBÓL
+1. Vegye le a hangszórót takaró tokot, és tegye le az eszközt hangszóróval lefelé.
+2. Válassza le a fülhallgatót és a külső hangszórót, majd kezdje alacsony, kényelmes hangerővel.
+3. Futtasson egy vezetett tisztítási ciklust.
+4. Tesztelje a hangot, és ismételje meg, ha továbbra is tompa.
 
-Fordítsa lefelé a hangszórót, kezdjen kis hangerővel, futtasson egy ciklust, majd tesztelje a hangot. Szükség esetén ismételje meg.
+A hanghullámok segíthetnek megmozgatni a cseppeket és fellazítani az enyhe port a telefon felnyitása nélkül, de hardverhibát nem javítanak meg.
 
-Fontos: a víz, por vagy szennyeződés eltávolítása nem garantált. A dB-mérő becslést ad, és nem kalibrált professzionális vagy orvosi műszer.
+INGYENES ESZKÖZÖK
+Korlátlan 30 másodperces Standard ciklusok, szinuszhangok, kézi sztereó teszt és élő dB-becslések minimum-, átlag- és maximumértékkel.
+
+PREMIUM FUNKCIÓK
+60 és 90 másodperces ciklusok, Turbo mód, négyszög-, háromszög- és fűrészfogjelek, automatikus sztereó teszt, részletes hangjelentések, privát előzmények és reklámmentes használat.
+
+HASZNÁLJA A HANGSZÓRÓ TISZTÍTÓT, HA
+• Fröccsenés után a hang tompa, halk vagy torz
+• Szeretné segíteni a víz eltávolítását a hangszóróból
+• Enyhe por vagy szennyeződés ronthatja a hang tisztaságát
+• Ellenőrizni szeretné a bal és jobb csatornát
+• Frekvenciagenerátorra vagy tájékoztató zajszintmérőre van szüksége
+
+ADATVÉDELEM AZ ELSŐ
+A tisztítóhangok és audiotesztek az eszközön futnak. A mikrofont csak az élő hangszint becslésére használjuk; a mintákat soha nem rögzítjük, mentjük vagy töltjük fel.
+
+FONTOS
+A víz, por vagy szennyeződés eltávolítása nem garantált. A dB-mérő becslést ad, és nem kalibrált professzionális, munkavédelmi vagy orvosi műszer. Tartsa távol a hangszórót a fülétől, kezdje kis hangerővel, és állítsa le, ha a hang kellemetlen. Jelentős folyadékhatás vagy tartós torzítás esetén forduljon szakszervizhez.
+
+Töltse le a Hangszóró Tisztító: Víz alkalmazást vezetett tisztításhoz, sztereó tesztekhez és privát audioeszközökhöz.

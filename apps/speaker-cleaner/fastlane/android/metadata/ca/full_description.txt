@@ -1,27 +1,42 @@
-Ona clara per expulsar aigua i reparar so apagat; prova tons, estèreo i dB.
-
-L’altaveu sona apagat després de mullar-se? Neteja Altaveu ajuda a expulsar l’aigua atrapada, la pols i la brutícia amb un so de neteja guiat en tres fases. Després pots comprovar-ne el resultat.
+Ha entrat aigua a l’altaveu del mòbil? Neteja Altaveu fa servir cicles guiats d’ona clara per ajudar a expulsar l’aigua atrapada i desprendre pols o residus. Executa un cicle de 30 segons i comprova el resultat amb les eines de prova integrades.
 
 NETEJA I PROVA L’ALTAVEU
-• Executa gratis cicles il·limitats d’expulsió d’aigua de 30 segons
-• Desbloqueja cicles de 60/90 segons i el mode Turbo amb Premium
-• Genera tons precisos de 20 a 20.000 Hz
-• Prova els canals estèreo esquerre, dret i tots dos
-• Estima el soroll ambiental amb un mesurador de dB en directe
-• Consulta gratis els valors mínim, mitjà i màxim
-• Amb Premium, desa a l’aparell un historial privat de neteges i sessions de so
+• Expulsió d’aigua guiada: so de neteja en tres fases per ajudar a moure les gotes atrapades
+• Durada flexible: cicles Standard de 30 segons gratuïts i il·limitats; Premium afegeix 60 i 90 segons
+• Mode Turbo: rutina Premium més intensa per al so apagat persistent
+• Generador de tons i freqüències: sons precisos de 20 a 20.000 Hz
+• Prova estèreo: comprova el canal esquerre, el dret o tots dos
+• Sonòmetre estimatiu: segueix el nivell ambiental i els valors mínim, mitjà i màxim
+• Historial privat: desa al dispositiu les sessions de neteja i de so amb Premium
 
-QUATRE EINES D’ÀUDIO, UN ESPAI PRIVAT
-La neteja de l’altaveu, el generador de tons, la prova estèreo i el sonòmetre funcionen al dispositiu. Les mostres del micròfon es processen a la memòria i mai no es desen ni es pugen.
+QUATRE EINES D’ÀUDIO EN UN SOL LLOC
+Neteja Altaveu combina expulsió d’aigua, generador de tons, prova estèreo i sonòmetre. Les mostres del micròfon només es processen a la memòria: l’àudio no es grava, no es desa i no es puja. Els informes i l’historial es queden al dispositiu i es poden esborrar des de Configuració.
 
-GRATIS
-Cicles il·limitats de 30 segons, tons sinusoïdals, prova estèreo manual, dB en directe i valors mínim, mitjà i màxim.
+COM TREURE AIGUA DE L’ALTAVEU DEL MÒBIL
+1. Retira qualsevol funda que tapi l’altaveu i col·loca el dispositiu amb l’altaveu cap avall.
+2. Desconnecta auriculars o altaveus externs i comença amb un volum baix i còmode.
+3. Executa un cicle de neteja guiat.
+4. Prova el so i repeteix-lo si encara se sent apagat.
 
-PREMIUM
-Desbloqueja cicles de 60/90 segons, mode Turbo, més formes d’ona, prova estèreo automàtica, informes detallats de les sessions de so, historial privat d’activitat i una experiència sense anuncis.
+Les ones sonores poden ajudar a moure gotes atrapades i pols lleugera sense obrir el telèfon, però no reparen danys de maquinari.
 
-COM FER SERVIR L’EXPULSIÓ D’AIGUA
-Col·loca el dispositiu amb l’altaveu cap avall, comença amb un volum baix, executa un cicle i prova el so. Repeteix-ho si encara sona apagat.
+EINES GRATUÏTES
+Cicles Standard de 30 segons sense límit, tons sinusoïdals, prova estèreo manual i estimacions de dB en directe amb mínim, mitjana i màxim.
+
+FUNCIONS PREMIUM
+Cicles de 60 i 90 segons, mode Turbo, ones quadrades, triangulars i de dent de serra, prova estèreo automàtica, informes detallats, historial privat i ús sense anuncis.
+
+FES SERVIR NETEJA ALTAVEU QUAN
+• El so sigui apagat, fluix o distorsionat després d’una esquitxada
+• Vulguis ajudar a expulsar aigua amb un so d’ona clara
+• La pols lleugera pugui afectar la nitidesa
+• Necessitis provar els canals esquerre i dret
+• Busquis un generador de freqüències o un sonòmetre estimatiu
+
+PRIVACITAT PRIMER
+Els sons de neteja i les proves funcionen al dispositiu. El micròfon només s’utilitza per estimar el nivell de so en directe; les mostres no es graven, desen ni pugen.
 
 IMPORTANT
-No es pot garantir l’eliminació de l’aigua, la pols o la brutícia. El mesurador de dB ofereix una estimació i no és un equip professional ni mèdic calibrat. Mantén l’altaveu lluny de les orelles i atura’l si el so resulta molest.
+No es pot garantir l’eliminació de l’aigua, la pols o els residus. El mesurador de dB ofereix estimacions i no és equip professional, mèdic ni de seguretat laboral calibrat. Mantén l’altaveu lluny de les orelles, comença a poc volum i atura la reproducció si et molesta. En cas d’exposició important a líquids o distorsió persistent, consulta un tècnic qualificat.
+
+Descarrega Neteja Altaveu: Expulsa Aigua per gaudir de neteja guiada, proves estèreo i eines d’àudio privades.

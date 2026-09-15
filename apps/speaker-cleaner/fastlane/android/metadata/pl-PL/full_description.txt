@@ -1,19 +1,42 @@
-Czysta fala usuwa wodę i naprawia głuchy dźwięk; test tonów, stereo i dB.
-
-Głośnik brzmi głucho po kontakcie z wodą? Czyszczenie Głośnika pomaga wypchnąć uwięzioną wodę, luźny kurz i zabrudzenia za pomocą prowadzonego, trzystopniowego dźwięku czyszczącego. Potem od razu sprawdzisz efekt.
+Woda dostała się do głośnika telefonu? Czyszczenie Głośnika wykorzystuje prowadzone fale dźwiękowe, aby pomóc wypchnąć uwięzioną wodę i poluzować kurz lub zabrudzenia. Uruchom 30-sekundowy cykl, a potem sprawdź efekt za pomocą wbudowanych testów głośnika.
 
 WYCZYŚĆ I SPRAWDŹ GŁOŚNIK
-• Uruchamiaj bezpłatnie nielimitowane cykle 30 s; Premium dodaje 60/90 s i tryb Turbo
-• Generuj precyzyjne tony od 20 do 20 000 Hz
-• Testuj lewy, prawy i oba kanały stereo
-• Oszacuj hałas otoczenia miernikiem dB na żywo
-• Zobacz minimum, średnią i maksimum sesji
+• Prowadzone usuwanie wody: trzystopniowy dźwięk czyszczący pomaga poruszyć uwięzione krople
+• Elastyczny czas: nielimitowane, bezpłatne cykle Standard po 30 sekund; Premium dodaje 60 i 90 sekund
+• Tryb Turbo: intensywniejszy program Premium na uporczywie stłumiony dźwięk
+• Generator tonów i częstotliwości: precyzyjne dźwięki od 20 do 20 000 Hz
+• Test stereo: sprawdź lewy, prawy lub oba kanały
+• Orientacyjny miernik decybeli: śledź hałas otoczenia oraz minimum, średnią i maksimum
+• Prywatna historia: w Premium zachowaj podsumowania czyszczenia i pomiarów na urządzeniu
 
-CZTERY NARZĘDZIA AUDIO, JEDEN PRYWATNY ZESTAW
-Czyszczenie głośnika, generator tonów, test stereo i miernik dźwięku działają na urządzeniu. Próbki mikrofonu są przetwarzane w pamięci i nigdy nie są zapisywane ani wysyłane.
+CZTERY NARZĘDZIA AUDIO W JEDNEJ APLIKACJI
+Czyszczenie Głośnika łączy usuwanie wody, generator tonów, test stereo i miernik dźwięku. Próbki mikrofonu są przetwarzane wyłącznie w pamięci; dźwięk nie jest nagrywany, zapisywany ani wysyłany. Raporty i historia pozostają na urządzeniu i można je usunąć w Ustawieniach.
 
-Bezpłatnie: nielimitowane cykle 30 s, tony sinusoidalne, ręczny test stereo, dB na żywo oraz wartości minimalna, średnia i maksymalna. Premium odblokowuje cykle 60/90 s, tryb Turbo, dodatkowe przebiegi, test automatyczny, raporty sesji dźwiękowych, prywatną historię aktywności i korzystanie bez reklam.
+JAK USUNĄĆ WODĘ Z GŁOŚNIKA TELEFONU
+1. Zdejmij etui zasłaniające głośnik i połóż urządzenie głośnikiem w dół.
+2. Odłącz słuchawki i głośniki zewnętrzne, a następnie zacznij od niskiej, komfortowej głośności.
+3. Uruchom prowadzony cykl czyszczenia.
+4. Sprawdź dźwięk i powtórz, jeśli nadal jest stłumiony.
 
-Ułóż urządzenie głośnikiem w dół, zacznij od niskiej głośności, uruchom cykl i sprawdź dźwięk. W razie potrzeby powtórz.
+Fale dźwiękowe mogą pomóc poruszyć krople i poluzować lekki kurz bez otwierania telefonu, ale nie naprawią uszkodzonego sprzętu.
 
-Ważne: usunięcie wody, kurzu ani zabrudzeń nie jest gwarantowane. Miernik dB podaje przybliżenie i nie jest skalibrowanym sprzętem profesjonalnym ani medycznym.
+BEZPŁATNE NARZĘDZIA
+Nielimitowane 30-sekundowe cykle Standard, tony sinusoidalne, ręczny test stereo oraz bieżące szacunki dB z minimum, średnią i maksimum.
+
+FUNKCJE PREMIUM
+Cykle 60- i 90-sekundowe, tryb Turbo, fale prostokątne, trójkątne i piłokształtne, automatyczny test stereo, szczegółowe raporty, prywatna historia i korzystanie bez reklam.
+
+UŻYJ CZYSZCZENIA GŁOŚNIKA, GDY
+• Po zachlapaniu dźwięk jest stłumiony, cichy lub zniekształcony
+• Chcesz pomóc usunąć wodę z głośnika
+• Lekki kurz lub zabrudzenia mogą pogarszać czystość dźwięku
+• Musisz sprawdzić lewy i prawy kanał
+• Potrzebujesz generatora częstotliwości albo orientacyjnego miernika hałasu
+
+PRYWATNOŚĆ PRZEDE WSZYSTKIM
+Dźwięki czyszczące i testy działają na urządzeniu. Mikrofon służy wyłącznie do bieżącego szacowania poziomu dźwięku; próbki nigdy nie są nagrywane, zapisywane ani wysyłane.
+
+WAŻNE
+Usunięcie wody, kurzu ani zabrudzeń nie jest gwarantowane. Miernik dB podaje szacunki i nie jest skalibrowanym sprzętem profesjonalnym, BHP ani medycznym. Trzymaj głośnik z dala od uszu, zacznij cicho i zatrzymaj odtwarzanie, jeśli dźwięk jest nieprzyjemny. Przy poważnym zalaniu lub trwałych zniekształceniach skontaktuj się z wykwalifikowanym serwisem.
+
+Pobierz Czyszczenie Głośnika: Woda, aby korzystać z prowadzonego czyszczenia, testów stereo i prywatnych narzędzi audio.

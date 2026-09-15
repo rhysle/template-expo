@@ -1,19 +1,42 @@
-Berrak dalga suyu çıkarır ve boğuk sesi düzeltir; ton, stereo ve dB testi.
-
-Su temasından sonra hoparlör boğuk mu geliyor? Hoparlör Temizleme, üç aşamalı yönlendirmeli temizlik sesiyle içeride kalan suyu, gevşek tozu ve kiri dışarı itmeye yardımcı olur. Ardından sonucu hemen test edebilirsiniz.
+Telefonun hoparlörüne su mu kaçtı? Hoparlör Temizleme, içeride kalan suyu dışarı itmeye ve toz ya da kiri gevşetmeye yardımcı olan yönlendirmeli ses dalgaları kullanır. 30 saniyelik bir döngü çalıştırın ve sonucu yerleşik hoparlör testleriyle kontrol edin.
 
 HOPARLÖRÜ TEMİZLEYİN VE TEST EDİN
-• Ücretsiz, sınırsız 30 saniyelik döngüler çalıştırın; Premium 60/90 saniye ve Turbo Modu ekler
-• 20 ile 20.000 Hz arasında hassas tonlar üretin
-• Sol, sağ ve her iki stereo kanalı test edin
-• Canlı dB ölçerle çevredeki gürültüyü tahmin edin
-• Oturumun minimum, ortalama ve maksimum değerlerini görün
+• Yönlendirmeli su çıkarma: üç aşamalı temizlik sesi, içeride kalan damlaları hareket ettirmeye yardımcı olur
+• Esnek süre: sınırsız 30 saniyelik Standard döngüler ücretsiz; Premium ile 60 ve 90 saniye
+• Turbo Modu: inatçı boğuk ses için daha yoğun Premium rutini
+• Ton ve frekans üreteci: 20 ile 20.000 Hz arasında hassas sesler
+• Stereo test: sol, sağ veya her iki kanalı kontrol edin
+• Tahmini desibel ölçer: çevre sesini canlı minimum, ortalama ve maksimum değerlerle izleyin
+• Özel geçmiş: Premium ile temizlik ve ses özetlerini cihazda saklayın
 
-DÖRT SES ARACI, TEK BİR ÖZEL ARAÇ KUTUSU
-Hoparlör temizleme, ton üreteci, stereo test ve ses ölçer cihazda çalışır. Mikrofon örnekleri bellekte işlenir; kaydedilmez veya yüklenmez.
+DÖRT SES ARACI TEK UYGULAMADA
+Hoparlör Temizleme; su çıkarma, ton üreteci, stereo test ve ses ölçeri bir araya getirir. Mikrofon örnekleri yalnızca bellekte işlenir; ses kaydedilmez, saklanmaz veya yüklenmez. Raporlar ve geçmiş cihazda kalır ve Ayarlar’dan silinebilir.
 
-Ücretsiz: sınırsız 30 saniyelik temizlik, sinüs tonları, manuel stereo test, canlı dB ile minimum, ortalama ve maksimum değerler. Premium 60/90 saniyelik döngüleri, Turbo Modunu, ek dalga biçimlerini, otomatik testi, ses oturumu raporlarını, özel etkinlik geçmişini ve reklamsız kullanımı açar.
+TELEFON HOPARLÖRÜNDEN SU NASIL ÇIKARILIR?
+1. Hoparlörü kapatan kılıfı çıkarın ve cihazı hoparlör aşağı bakacak şekilde yerleştirin.
+2. Kulaklıkları ve harici hoparlörleri ayırın, düşük ve rahat bir ses düzeyinde başlayın.
+3. Yönlendirmeli bir temizlik döngüsü çalıştırın.
+4. Sesi test edin; hâlâ boğuksa işlemi tekrarlayın.
 
-Cihazı hoparlör aşağı bakacak şekilde yerleştirin, düşük sesle başlayın, bir döngü çalıştırın ve sesi test edin. Gerekirse tekrarlayın.
+Ses dalgaları, telefonu açmadan damlaları hareket ettirmeye ve hafif tozu gevşetmeye yardımcı olabilir ancak donanım arızasını onaramaz.
 
-Önemli: su, toz veya kirin giderilmesi garanti edilmez. dB ölçer tahmin sunar; kalibre edilmiş profesyonel ya da tıbbi ekipman değildir.
+ÜCRETSİZ ARAÇLAR
+Sınırsız 30 saniyelik Standard döngüler, sinüs tonları, manuel stereo test ve minimum, ortalama, maksimum değerlerle canlı dB tahminleri.
+
+PREMIUM ÖZELLİKLERİ
+60 ve 90 saniyelik döngüler, Turbo Modu, kare, üçgen ve testere dişi dalgalar, otomatik stereo test, ayrıntılı ses raporları, özel geçmiş ve reklamsız kullanım.
+
+HOPARLÖR TEMİZLEMEYİ ŞU DURUMLARDA KULLANIN
+• Su sıçramasından sonra ses boğuk, düşük veya bozuksa
+• Hoparlördeki suyu çıkarmaya yardımcı olmak istiyorsanız
+• Hafif toz veya kir ses netliğini etkiliyorsa
+• Sol ve sağ kanalı kontrol etmeniz gerekiyorsa
+• Frekans üreteci veya tahmini ses ölçer arıyorsanız
+
+ÖNCE GİZLİLİK
+Temizlik sesleri ve ses testleri cihazda çalışır. Mikrofon yalnızca canlı ses düzeyini tahmin etmek için kullanılır; örnekler hiçbir zaman kaydedilmez, saklanmaz veya yüklenmez.
+
+ÖNEMLİ
+Su, toz veya kirin giderilmesi garanti edilmez. dB ölçer tahmini değerler sunar ve kalibre edilmiş profesyonel, iş güvenliği veya tıbbi ekipman değildir. Hoparlörü kulaklarınızdan uzak tutun, düşük sesle başlayın ve rahatsız olursanız durdurun. Ciddi sıvı teması veya devam eden bozulmada yetkili bir servise başvurun.
+
+Yönlendirmeli temizlik, stereo kontrolleri ve cihazda çalışan özel ses araçları için Hoparlör Temizleme: Su Çıkar’ı indirin.

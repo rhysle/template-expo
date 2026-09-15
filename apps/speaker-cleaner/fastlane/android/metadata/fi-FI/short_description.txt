@@ -1,1 +1,1 @@
-Kirkas aalto poistaa veden ja korjaa vaimean äänen; testaa stereo ja dB.
+Auttaa poistamaan vettä, irrottamaan pölyä ja testaamaan vaimean kaiuttimen.

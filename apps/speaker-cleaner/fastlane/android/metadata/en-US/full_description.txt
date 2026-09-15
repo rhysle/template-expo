@@ -1,27 +1,51 @@
-Clear wave water eject fixes muffled speakers; test tones, stereo and sound dB.
+Water in your phone speaker? Speaker Cleaner uses guided clear-wave sound cycles to help eject trapped water and loosen dust or debris. Run a 30-second Water Eject cycle, then check the result with built-in speaker test tools.
 
-Muffled speaker after a splash? Water Eject – Speaker Cleaner helps push out trapped water, loose dust, and debris with a guided three-stage cleaning sound—then lets you check the result.
-
-CLEAR AND CHECK YOUR SPEAKER
-• Run unlimited 30-second Water Eject cycles free
-• Unlock 60/90-second cycles and Turbo Mode with Premium
-• Generate precise tones from 20 to 20,000 Hz
-• Test left, right, and both stereo channels
-• Estimate nearby sound levels with a live dB meter
-• View minimum, average, and maximum session estimates free
-• Keep a private on-device history of cleaning and sound sessions with Premium
+CLEAN AND CHECK YOUR SPEAKER
+• Guided Water Eject: Play a three-stage cleaning sound designed to help move trapped droplets
+• Flexible cleaning cycles: Run unlimited 30-second Standard cycles, or unlock 60/90-second options with Premium
+• Turbo Mode: Use a more intensive Premium routine for stubborn muffled sound
+• Tone and frequency generator: Create precise sounds from 20 to 20,000 Hz
+• Stereo speaker test: Check the left, right, or both audio channels
+• Estimated decibel meter: Monitor nearby sound levels with live minimum, average, and maximum dB readings
+• Private activity history: Keep cleaning and sound-session summaries on your device with Premium
 
 FOUR AUDIO TOOLS, ONE PRIVATE TOOLKIT
-Use speaker cleaning, a tone generator, a stereo test, and a sound meter without sending audio to a server. Microphone samples are processed in memory and are never saved or uploaded. Rounded session estimates and cleaning activity can be stored locally and cleared in Settings.
+Use one focused audio toolkit instead of switching between a water eject app, tone generator, stereo test, and sound meter. Speaker Cleaner processes microphone samples in memory; audio is never saved or uploaded. Rounded sound estimates and activity history stay on your device and can be cleared in Settings.
 
-FREE TOOLS
-Run unlimited 30-second cleaning cycles, generate sine tones, test stereo channels manually, and view live estimated dB levels with minimum, average, and maximum readings.
+HOW TO REMOVE WATER FROM A PHONE SPEAKER
+1. Remove anything covering the speaker and place the device speaker-side down.
+2. Start at a low, comfortable volume and disconnect headphones or external speakers.
+3. Run a guided cleaning cycle.
+4. Use the speaker test to check the result, then repeat if the sound is still muffled.
 
-PREMIUM
-Unlock 60/90-second cleaning cycles, Turbo Mode, square/triangle/sawtooth waveforms, automatic stereo testing, detailed sound-session reports, private activity history, and an ad-free experience.
+Sound waves may help move trapped droplets and loosen light dust without opening your phone. Speaker Cleaner is useful after rain, a splash, or other light moisture exposure, but it cannot repair hardware damage.
 
-HOW TO USE WATER EJECT
-Place the device speaker-side down, start at a low volume, run a cleaning cycle, and test the speaker. Repeat if the sound is still muffled.
+FREE AUDIO TOOLS
+• Run unlimited 30-second Standard cleaning cycles
+• Generate sine-wave tones across the audible frequency range
+• Test stereo channels manually
+• View live estimated dB levels with minimum, average, and maximum readings
+
+PREMIUM FEATURES
+• Unlock 60-second and 90-second cleaning cycles
+• Use Turbo Mode for a more intensive speaker cleaning routine
+• Generate square, triangle, and sawtooth waveforms
+• Automatically alternate left and right channels during a stereo test
+• Review detailed sound-session reports and private activity history
+• Use every tool without ads
+
+USE SPEAKER CLEANER WHEN
+• Your speaker sounds muffled, quiet, or distorted after a splash
+• You want to help remove water from a speaker using a clear wave sound
+• Light dust or debris may be affecting audio clarity
+• You need a quick speaker test for left and right channels
+• You want a tone generator or frequency generator for audio checks
+• You need an estimated sound meter or decibel meter for nearby noise levels
+
+PRIVACY FIRST
+Cleaning tones and audio tests run directly on your device. Microphone access is used only for live sound-level estimates. Microphone samples are processed in memory and are never recorded, saved, or uploaded.
 
 IMPORTANT
-Water Eject cannot guarantee water, dust, or debris removal. The dB meter is an estimate, not calibrated professional or medical equipment. Keep the speaker away from your ears and stop if playback is uncomfortable.
+Water Eject cannot guarantee water, dust, or debris removal. The dB meter provides estimates and is not calibrated professional, workplace-safety, or medical equipment. Keep the speaker away from your ears, start at a low volume, and stop playback if it feels uncomfortable. For serious liquid exposure, hardware damage, or continuing distortion, contact a qualified repair professional.
+
+Download Water Eject – Speaker Cleaner for guided speaker cleaning, clear-wave tones, stereo checks, and private on-device audio tools.

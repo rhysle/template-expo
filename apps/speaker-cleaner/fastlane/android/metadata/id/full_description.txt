@@ -1,19 +1,42 @@
-Clear Wave keluarkan air dan perbaiki speaker teredam; uji nada, stereo, dan dB.
-
-Speaker terdengar teredam setelah terkena air? Pembersih Speaker membantu mendorong keluar air yang terperangkap, debu lepas, dan kotoran dengan suara pembersih terpandu tiga tahap. Setelah itu, langsung uji hasilnya.
+Ada air di speaker HP? Pembersih Speaker memakai gelombang suara terpandu untuk membantu mengeluarkan air yang terperangkap serta melonggarkan debu atau kotoran. Jalankan siklus 30 detik, lalu cek hasilnya dengan alat uji speaker bawaan.
 
 BERSIHKAN DAN UJI SPEAKER
-• Jalankan siklus 30 detik tanpa batas secara gratis; Premium menambah 60/90 detik dan Mode Turbo
-• Buat nada presisi dari 20 hingga 20.000 Hz
-• Uji kanal stereo kiri, kanan, dan keduanya
-• Perkirakan kebisingan sekitar dengan meter dB langsung
-• Lihat nilai minimum, rata-rata, dan maksimum sesi
+• Water Eject terpandu: suara pembersih tiga tahap membantu menggerakkan tetesan yang terperangkap
+• Durasi fleksibel: siklus Standard 30 detik tanpa batas secara gratis; Premium menambah 60 dan 90 detik
+• Mode Turbo: rutinitas Premium yang lebih intens untuk suara teredam yang membandel
+• Generator nada dan frekuensi: suara presisi dari 20 hingga 20.000 Hz
+• Tes stereo: cek kanal kiri, kanan, atau keduanya
+• Meter desibel perkiraan: pantau suara sekitar dengan nilai minimum, rata-rata, dan maksimum
+• Riwayat privat: simpan ringkasan pembersihan dan suara di perangkat dengan Premium
 
-EMPAT ALAT AUDIO, SATU TOOLKIT PRIVAT
-Pembersih speaker, generator nada, tes stereo, dan meter suara bekerja di perangkat. Sampel mikrofon diproses dalam memori dan tidak pernah disimpan atau diunggah.
+EMPAT ALAT AUDIO DALAM SATU APLIKASI
+Pembersih Speaker menggabungkan Water Eject, generator nada, tes stereo, dan meter suara. Sampel mikrofon hanya diproses dalam memori; audio tidak direkam, disimpan, atau diunggah. Laporan dan riwayat tetap berada di perangkat dan dapat dihapus melalui Pengaturan.
 
-Gratis: siklus pembersihan 30 detik tanpa batas, nada sinus, tes stereo manual, dB langsung, serta nilai minimum, rata-rata, dan maksimum. Premium membuka siklus 60/90 detik, Mode Turbo, bentuk gelombang tambahan, tes otomatis, laporan sesi suara, riwayat aktivitas pribadi, dan penggunaan bebas iklan.
+CARA MENGELUARKAN AIR DARI SPEAKER HP
+1. Lepaskan casing yang menutupi speaker dan letakkan perangkat dengan speaker menghadap ke bawah.
+2. Putuskan headphone atau speaker eksternal, lalu mulai dari volume rendah yang nyaman.
+3. Jalankan siklus pembersihan terpandu.
+4. Uji suara dan ulangi jika masih terdengar teredam.
 
-Arahkan speaker ke bawah, mulai dengan volume rendah, jalankan siklus, lalu uji suaranya. Ulangi jika masih teredam.
+Gelombang suara dapat membantu menggerakkan tetesan serta melonggarkan debu ringan tanpa membuka HP, tetapi tidak dapat memperbaiki kerusakan perangkat keras.
 
-Penting: penghilangan air, debu, atau kotoran tidak dapat dijamin. Meter dB hanya memberikan perkiraan dan bukan alat profesional atau medis yang terkalibrasi.
+ALAT GRATIS
+Siklus Standard 30 detik tanpa batas, nada sinus, tes stereo manual, dan perkiraan dB langsung dengan nilai minimum, rata-rata, dan maksimum.
+
+FITUR PREMIUM
+Siklus 60 dan 90 detik, Mode Turbo, gelombang kotak, segitiga, dan gigi gergaji, tes stereo otomatis, laporan terperinci, riwayat privat, serta penggunaan bebas iklan.
+
+GUNAKAN PEMBERSIH SPEAKER SAAT
+• Suara teredam, pelan, atau terdistorsi setelah terkena percikan
+• Anda ingin membantu mengeluarkan air dari speaker
+• Debu ringan atau kotoran mungkin mengurangi kejernihan suara
+• Anda perlu mengecek kanal kiri dan kanan
+• Anda membutuhkan generator frekuensi atau meter suara perkiraan
+
+PRIVASI NOMOR SATU
+Suara pembersih dan tes audio berjalan di perangkat. Mikrofon hanya digunakan untuk memperkirakan tingkat suara secara langsung; sampelnya tidak pernah direkam, disimpan, atau diunggah.
+
+PENTING
+Penghilangan air, debu, atau kotoran tidak dapat dijamin. Meter dB hanya memberikan perkiraan dan bukan alat profesional, keselamatan kerja, atau medis yang terkalibrasi. Jauhkan speaker dari telinga, mulai dari volume rendah, dan hentikan jika suaranya tidak nyaman. Untuk paparan cairan serius atau distorsi yang terus terjadi, hubungi teknisi yang berkualifikasi.
+
+Unduh Pembersih Speaker: Buang Air untuk pembersihan terpandu, tes stereo, dan alat audio privat.

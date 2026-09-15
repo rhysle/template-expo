@@ -1,19 +1,42 @@
-Klar bølge fjerner vand og fikser dæmpet lyd; test toner, stereo og dB.
-
-Lyder højttaleren dæmpet efter et stænk? Rens Højttaler hjælper med at skubbe fanget vand, løst støv og snavs ud med en guidet rengøringslyd i tre trin. Test derefter resultatet med det samme.
+Er der kommet vand i telefonens højttaler? Rens Højttaler bruger guidede lydbølger til at hjælpe med at skubbe fanget vand ud og løsne støv eller snavs. Kør en 30-sekunders cyklus, og kontrollér resultatet med de indbyggede højttalertests.
 
 RENS OG TEST DIN HØJTTALER
-• Kør ubegrænsede 30-sekunders cyklusser gratis; Premium tilføjer 60/90 sekunder og Turbo
-• Generér præcise toner fra 20 til 20.000 Hz
-• Test venstre, højre og begge stereokanaler
-• Anslå lydniveauet omkring dig med en live dB-måler
-• Se minimum, gennemsnit og maksimum for sessionen
+• Guidet vandudstødning: En rengøringslyd i tre trin hjælper med at flytte fangede dråber
+• Fleksibel varighed: Ubegrænsede 30-sekunders Standard-cyklusser gratis; Premium giver også 60 og 90 sekunder
+• Turbo: En mere intensiv Premium-rutine til vedvarende dæmpet lyd
+• Tone- og frekvensgenerator: Præcise lyde fra 20 til 20.000 Hz
+• Stereotest: Kontrollér venstre, højre eller begge kanaler
+• Vejledende dB-måler: Følg omgivelseslyd med minimum, gennemsnit og maksimum
+• Privat historik: Gem oversigter over rengøring og lyd på enheden med Premium
 
-FIRE LYDVÆRKTØJER I ÉN PRIVAT VÆRKTØJSKASSE
-Højttalerrens, tonegenerator, stereotest og lydmåler arbejder på enheden. Mikrofonsamples behandles i hukommelsen og bliver aldrig gemt eller uploadet.
+FIRE LYDVÆRKTØJER SAMLET
+Rens Højttaler kombinerer vandudstødning, tonegenerator, stereotest og lydmåler. Mikrofonprøver behandles kun i hukommelsen; lyd bliver hverken optaget, gemt eller uploadet. Rapporter og historik forbliver på enheden og kan slettes i Indstillinger.
 
-Gratis får du ubegrænsede 30-sekunders rensecyklusser, sinustoner, manuel stereotest, live dB samt minimum, gennemsnit og maksimum. Premium låser op for 60/90-sekunders cyklusser, Turbo, flere bølgeformer, automatisk stereotest, lydrapporter, privat aktivitetshistorik og brug uden reklamer.
+SÅDAN FÅR DU VAND UD AF TELEFONENS HØJTTALER
+1. Fjern et eventuelt cover, der blokerer højttaleren, og læg enheden med højttaleren nedad.
+2. Afbryd hovedtelefoner og eksterne højttalere, og begynd ved en lav, behagelig lydstyrke.
+3. Kør en guidet rengøringscyklus.
+4. Test lyden, og gentag, hvis den stadig er dæmpet.
 
-Vend højttaleren nedad, start ved lav lydstyrke, kør en cyklus og test lyden. Gentag, hvis den stadig er dæmpet.
+Lydbølger kan hjælpe med at flytte dråber og løsne let støv uden at åbne telefonen. De kan ikke reparere beskadiget hardware.
 
-Vigtigt: Appen kan ikke garantere, at vand, støv eller snavs fjernes. dB-måleren er et estimat og ikke kalibreret professionelt eller medicinsk udstyr.
+GRATIS VÆRKTØJER
+Ubegrænsede 30-sekunders Standard-cyklusser, sinustoner, manuel stereotest og live dB-estimater med minimum, gennemsnit og maksimum.
+
+PREMIUM-FUNKTIONER
+Cyklusser på 60 og 90 sekunder, Turbo, firkantede, trekantede og savtakkede bølger, automatisk stereotest, detaljerede lydrapporter, privat aktivitetshistorik og brug uden reklamer.
+
+BRUG RENS HØJTTALER, NÅR
+• Lyden er dæmpet, lav eller forvrænget efter et stænk
+• Du vil hjælpe med at få vand ud af højttaleren
+• Let støv eller snavs kan påvirke lydens klarhed
+• Du skal kontrollere venstre og højre kanal
+• Du mangler en frekvensgenerator eller vejledende lydmåler
+
+PRIVATLIV FØRST
+Rengøringslyde og lydtests kører på enheden. Mikrofonen bruges kun til at anslå lydniveauet live; prøver bliver aldrig optaget, gemt eller uploadet.
+
+VIGTIGT
+Fjernelse af vand, støv eller snavs kan ikke garanteres. dB-måleren giver estimater og er ikke kalibreret professionelt, arbejdssikkerheds- eller medicinsk udstyr. Hold højttaleren væk fra ørerne, begynd ved lav lydstyrke, og stop, hvis lyden føles ubehagelig. Kontakt et kvalificeret værksted ved alvorlig væskeskade eller fortsat forvrængning.
+
+Download Rens Højttaler: Fjern Vand for guidet rengøring, stereotest og private lydværktøjer.

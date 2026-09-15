@@ -1,1 +1,1 @@
-Bistar val izbacuje vodu i popravlja prigušen zvuk; test tona, sterea i dB.
+Pomaže izbaciti vodu, otpustiti prašinu i testirati prigušen zvučnik.

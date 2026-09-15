@@ -1,19 +1,42 @@
-Onda clara expulsa água e repara som abafado; teste tons, estéreo e dB.
-
-O altifalante ficou abafado depois de se molhar? Limpar Altifalante ajuda a expulsar água retida, pó solto e resíduos com um som de limpeza guiado em três fases. Depois, pode verificar o resultado.
+Entrou água no altifalante do telemóvel? Limpar Altifalante utiliza ondas sonoras guiadas para ajudar a expulsar a água retida e soltar pó ou resíduos. Execute um ciclo de 30 segundos e verifique o resultado com os testes de altifalante integrados.
 
 LIMPE E TESTE O ALTIFALANTE
-• Execute grátis ciclos ilimitados de 30 segundos; o Premium adiciona 60/90 segundos e modo Turbo
-• Gere tons precisos de 20 a 20 000 Hz
-• Teste os canais estéreo esquerdo, direito e ambos
-• Estime o ruído ambiente com um medidor de dB em direto
-• Veja os valores mínimo, médio e máximo da sessão
+• Expulsão de água guiada: um som de limpeza em três fases ajuda a deslocar gotas retidas
+• Duração flexível: ciclos Standard ilimitados de 30 segundos grátis; o Premium adiciona 60 e 90 segundos
+• Modo Turbo: rotina Premium mais intensa para som abafado persistente
+• Gerador de tons e frequências: sons precisos de 20 a 20 000 Hz
+• Teste estéreo: verifique o canal esquerdo, o direito ou ambos
+• Sonómetro indicativo: acompanhe o som ambiente com valores mínimo, médio e máximo
+• Histórico privado: guarde no dispositivo os resumos de limpeza e som com Premium
 
-QUATRO FERRAMENTAS DE ÁUDIO, UM KIT PRIVADO
-A limpeza do altifalante, o gerador de tons, o teste estéreo e o medidor de som funcionam no dispositivo. As amostras do microfone são processadas na memória e nunca são guardadas nem enviadas.
+QUATRO FERRAMENTAS DE ÁUDIO NUMA SÓ APLICAÇÃO
+Limpar Altifalante reúne expulsão de água, gerador de tons, teste estéreo e sonómetro. As amostras do microfone são processadas apenas na memória: o áudio não é gravado, guardado ou enviado. Os relatórios e o histórico ficam no dispositivo e podem ser apagados nas Definições.
 
-Grátis: ciclos ilimitados de 30 segundos, tons sinusoidais, teste estéreo manual, dB em direto e valores mínimo, médio e máximo. O Premium desbloqueia ciclos de 60/90 segundos, modo Turbo, outras formas de onda, teste automático, relatórios de sessões de som, histórico privado de atividades e utilização sem anúncios.
+COMO TIRAR ÁGUA DO ALTIFALANTE DO TELEMÓVEL
+1. Retire a capa que esteja a tapar o altifalante e coloque o dispositivo com o altifalante virado para baixo.
+2. Desligue auscultadores e colunas externas e comece com um volume baixo e confortável.
+3. Execute um ciclo de limpeza guiado.
+4. Teste o som e repita se continuar abafado.
 
-Coloque o altifalante virado para baixo, comece com volume baixo, execute um ciclo e teste o som. Repita se continuar abafado.
+As ondas sonoras podem ajudar a deslocar gotas e soltar pó ligeiro sem abrir o telemóvel, mas não reparam danos no equipamento.
 
-Importante: não é possível garantir a remoção de água, pó ou resíduos. O medidor de dB fornece uma estimativa e não é equipamento profissional ou médico calibrado.
+FERRAMENTAS GRATUITAS
+Ciclos Standard ilimitados de 30 segundos, tons sinusoidais, teste estéreo manual e estimativas de dB em direto com valores mínimo, médio e máximo.
+
+FUNÇÕES PREMIUM
+Ciclos de 60 e 90 segundos, modo Turbo, ondas quadradas, triangulares e dente de serra, teste estéreo automático, relatórios detalhados, histórico privado e utilização sem anúncios.
+
+UTILIZE LIMPAR ALTIFALANTE QUANDO
+• O som estiver abafado, baixo ou distorcido depois de um salpico
+• Quiser ajudar a tirar água do altifalante
+• Pó ligeiro ou resíduos puderem reduzir a nitidez
+• Precisar de verificar os canais esquerdo e direito
+• Quiser um gerador de frequências ou sonómetro indicativo
+
+PRIVACIDADE EM PRIMEIRO LUGAR
+Os sons de limpeza e testes de áudio funcionam no dispositivo. O microfone é utilizado apenas para estimar o nível sonoro em direto; as amostras nunca são gravadas, guardadas ou enviadas.
+
+IMPORTANTE
+Não é possível garantir a remoção de água, pó ou resíduos. O medidor de dB fornece estimativas e não é equipamento profissional, médico ou de segurança no trabalho calibrado. Mantenha o altifalante longe dos ouvidos, comece com volume baixo e pare se o som incomodar. Em caso de contacto intenso com líquidos ou distorção persistente, procure um técnico qualificado.
+
+Transfira Limpar Altifalante: Água para obter limpeza guiada, testes estéreo e ferramentas de áudio privadas.
