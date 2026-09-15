@@ -106,6 +106,7 @@ const runEas = (args: string[], captureOutput = false): string =>
   execFileSync('pnpm', ['dlx', 'eas-cli@latest', ...args], {
     cwd: ROOT,
     encoding: 'utf8',
+    env: { ...process.env, CI: '1' },
     stdio: captureOutput ? ['ignore', 'pipe', 'inherit'] : 'inherit',
   })
 

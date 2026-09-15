@@ -60,6 +60,7 @@ function runEas(args: string[], captureOutput = false): string {
   return execFileSync('pnpm', ['dlx', 'eas-cli@latest', ...args], {
     cwd: ROOT,
     encoding: 'utf8',
+    env: { ...process.env, CI: '1' },
     stdio: captureOutput ? ['inherit', 'pipe', 'inherit'] : 'inherit',
   })
 }
