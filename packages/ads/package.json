@@ -17,9 +17,9 @@
     "check:type": "tsc --noEmit"
   },
   "peerDependencies": {
-    "expo-tracking-transparency": "~57.0.1",
+    "expo-tracking-transparency": "~57.0.2",
     "react": "19.2.3",
-    "react-native": "0.86.2",
+    "react-native": "0.86.3",
     "react-native-google-mobile-ads": "16.3.4",
     "@shared/core": "workspace:*"
   }
