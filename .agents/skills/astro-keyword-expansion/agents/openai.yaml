@@ -1,0 +1,4 @@
+interface:
+  display_name: "Astro Keyword Expansion"
+  short_description: "Track Astro suggestions across top storefronts"
+  default_prompt: "Use $astro-keyword-expansion to add eligible Astro keyword suggestions for these App Store apps."
