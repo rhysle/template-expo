@@ -180,7 +180,7 @@ platform :ios do
     end
   end
 
-  desc "Upload iOS metadata + screenshots. Pass `locales:\"en-US,vi\"` to limit."
+  desc "Upload iOS metadata + screenshots. Pass `metadata_only:true` to preserve screenshots or `locales:\"en-US,vi\"` to limit."
   lane :metadata do |options|
     submission_values = ios_submission_values
     api_key = app_store_connect_api_key(
@@ -195,6 +195,7 @@ platform :ios do
     screenshots_root = File.join(PROJECT_ROOT, "fastlane/ios/screenshots")
     locales = parse_locales(options)
     globals_only = options[:globals] == true || options[:globals] == "true"
+    metadata_only = options[:metadata_only] == true || options[:metadata_only] == "true"
 
     if globals_only
       UI.message("Globals-only upload: skipping all locale folders and screenshots.")
@@ -213,14 +214,16 @@ platform :ios do
         locales,
         preserve: ["review_information"],
       )
-      screenshots_path = build_filtered_locale_tree(
-        screenshots_root,
-        File.join(PROJECT_ROOT, "fastlane/.tmp/ios-screenshots"),
-        locales,
-      )
+      unless metadata_only
+        screenshots_path = build_filtered_locale_tree(
+          screenshots_root,
+          File.join(PROJECT_ROOT, "fastlane/.tmp/ios-screenshots"),
+          locales,
+        )
+      end
     else
       metadata_path = metadata_root
-      screenshots_path = screenshots_root
+      screenshots_path = screenshots_root unless metadata_only
     end
 
     deliver_options = {
@@ -242,7 +245,8 @@ platform :ios do
       deliver_options[:app_review_attachment_file] = review_attachment_path
     end
 
-    if globals_only
+    if globals_only || metadata_only
+      UI.message("Metadata-only upload: preserving existing App Store screenshots.") if metadata_only && !globals_only
       deliver_options[:skip_screenshots] = true
       deliver_options[:skip_metadata] = false
     else
@@ -269,11 +273,12 @@ platform :android do
     end
   end
 
-  desc "Upload Android metadata + screenshots against the latest internal release. Pass `locales:\"en-US,vi\"` to limit."
+  desc "Upload Android metadata + listing assets against the latest internal release. Pass `metadata_only:true` to preserve listing assets or `locales:\"en-US,vi\"` to limit."
   lane :metadata do |options|
     metadata_root = File.join(PROJECT_ROOT, "fastlane/android/metadata")
     locales = parse_locales(options)
     track = options[:track] || "internal"
+    metadata_only = options[:metadata_only] == true || options[:metadata_only] == "true"
 
     version_code = options[:version_code] || google_play_track_version_codes(track: track).max
     unless version_code.to_s.match?(/\A\d+\z/)
@@ -298,6 +303,9 @@ platform :android do
       end
 
     UI.message("Uploading Android metadata for versionCode #{version_code} on the #{track} track.")
+    if metadata_only
+      UI.message("Metadata-only upload: preserving existing Play Store images and screenshots.")
+    end
 
     supply(
       track: track,
@@ -306,8 +314,8 @@ platform :android do
       skip_upload_apk: true,
       skip_upload_aab: true,
       skip_upload_changelogs: true, # changelogs are handled by the separate `changelog` lane
-      skip_upload_images: false,
-      skip_upload_screenshots: false,
+      skip_upload_images: metadata_only,
+      skip_upload_screenshots: metadata_only,
       validate_only: options[:validate_only] == true || options[:validate_only] == "true",
     )
   end

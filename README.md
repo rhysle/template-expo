@@ -82,7 +82,11 @@ pnpm monetization:apply
 pnpm monetization:activate --confirm
 pnpm monetization:verify
 pnpm fastlane:ios:metadata
+pnpm fastlane:ios:metadata:only
+pnpm fastlane:android:metadata:only
 ```
+
+The `fastlane:*:metadata:only` commands update listing metadata while preserving existing store screenshots. On Google Play, they also preserve the icon, feature graphic, promo graphic, and TV banner.
 
 Commands keep their existing remote-change semantics. `apply`, activation, price changes, metadata uploads, and provisioning are not local validation commands. Final App Review submission stays manual.
 The confirmed activation command also reconciles the app-level Apple Billing Grace Period configured in `src/configs/monetization.ts`; Google grace periods remain store-managed unless explicitly added to the tooling.
