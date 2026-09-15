@@ -1,9 +1,9 @@
 import { useIsRTL } from '@shared/core/services/rtl'
-import { createThemedStyles, useThemedStyles } from '@shared/core/theme'
+import { createThemedStyles, useTheme, useThemedStyles } from '@shared/core/theme'
 import { withAlpha } from '@shared/core/utils/color'
-import { Canvas, Group, LinearGradient, Path, Rect, Skia, vec } from '@shopify/react-native-skia'
+import { LinearGradient } from 'expo-linear-gradient'
 import type { ReactNode } from 'react'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import {
   type GestureResponderEvent,
   type LayoutChangeEvent,
@@ -12,15 +12,17 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {
+import Animated, {
   cancelAnimation,
   Easing,
-  useAnimatedReaction,
-  useDerivedValue,
+  ReduceMotion,
+  useAnimatedStyle,
+  useReducedMotion,
   useSharedValue,
   withRepeat,
   withTiming,
 } from 'react-native-reanimated'
+import Svg, { Polygon } from 'react-native-svg'
 
 import { Pressable } from './Pressable'
 import { Text } from './Text'
@@ -34,112 +36,120 @@ export interface PromoBannerProps {
 }
 
 const STRIPE_WIDTH = 40
-const STRIPE_GAP = 0
+const STRIPE_COUNT = 3
 const STRIPE_LEAN_DEGREES = 22
-const STRIPE_MIDDLE_COLOR = 'rgba(255,255,255,0.2)'
-const STRIPE_OUTER_COLOR = 'rgba(255,255,255,0.1)'
+const STRIPE_CONTENT_WIDTH = STRIPE_WIDTH * STRIPE_COUNT
+const SHIMMER_EDGE_PADDING = 1
+const RIPPLE_RADIUS = 800
+const RIPPLE_DIAMETER = RIPPLE_RADIUS * 2
+const RIPPLE_LOCATIONS = [0, 0.5, 1] as const
+const GRADIENT_START = { x: 0, y: 0.5 } as const
+const GRADIENT_END = { x: 1, y: 0.5 } as const
+
+interface BannerSize {
+  width: number
+  height: number
+}
+
+const getStripePoints = (index: number, lean: number, height: number): string => {
+  const startX = index * STRIPE_WIDTH
+  const endX = startX + STRIPE_WIDTH
+  return `${startX + lean},0 ${endX + lean},0 ${endX},${height} ${startX},${height}`
+}
 
 export const PromoBanner = ({ icon, title, subtitle, onPress, style }: PromoBannerProps) => {
   const styles = useThemedStyles(createStyles)
+  const { colors } = useTheme()
   const isRTL = useIsRTL()
+  const reducedMotion = useReducedMotion()
+  const [bannerSize, setBannerSize] = useState<BannerSize>({ width: 0, height: 0 })
 
-  // Canvas dimensions - set from onLayout
-  const canvasWidth = useSharedValue(0)
-  const canvasHeight = useSharedValue(0)
+  const stripeLean = bannerSize.height * Math.tan((STRIPE_LEAN_DEGREES * Math.PI) / 180)
+  const shimmerWidth = STRIPE_CONTENT_WIDTH + stripeLean
+  const shimmerTravelDistance = (bannerSize.width + shimmerWidth) / 2 + SHIMMER_EDGE_PADDING
 
   // Shimmer - 3 grouped diagonal stripes (/// direction) sweeping left to right
   // Outer stripes are softer; middle stripe is deeper for a layered sheen
-  const shimmerOffset = useSharedValue(-200)
-  // Pre-allocate paths and mutate in-place to avoid returning SkPath JSI HostObjects
-  // from useDerivedValue - Reanimated's valueSetter misidentifies them as animation objects
-  // (via the .onFrame check), crashing with "onStart is not a function".
-  // useAnimatedReaction is used instead of useDerivedValue because its callback only ever
-  // runs on the UI/worklet runtime (no initial JS-thread run), so _value writes are safe.
-  // Pattern mirrors Skia's own usePathValue / notifyChange approach.
-  const shimmerOuterPath = useSharedValue(Skia.Path.Make())
-  useAnimatedReaction(
-    () => ({ offset: shimmerOffset.value, h: canvasHeight.value }),
-    ({ offset, h }) => {
-      const path = shimmerOuterPath.value
-      path.reset()
-      if (h > 0) {
-        const lean = h * Math.tan((STRIPE_LEAN_DEGREES * Math.PI) / 180)
-        for (const i of [0, 2]) {
-          const x = offset + i * (STRIPE_WIDTH + STRIPE_GAP)
-          // /// direction: top edge shifted right by lean, bottom edge stays
-          path.moveTo(x + lean, 0)
-          path.lineTo(x + lean + STRIPE_WIDTH, 0)
-          path.lineTo(x + STRIPE_WIDTH, h)
-          path.lineTo(x, h)
-          path.close()
-        }
-      }
-      // Notify Skia's canvas mapper - write _value directly to trigger listeners
-      ;(shimmerOuterPath as unknown as { _value: typeof shimmerOuterPath.value })._value = path
-    }
-  )
-  const shimmerMiddlePath = useSharedValue(Skia.Path.Make())
-  useAnimatedReaction(
-    () => ({ offset: shimmerOffset.value, h: canvasHeight.value }),
-    ({ offset, h }) => {
-      const path = shimmerMiddlePath.value
-      path.reset()
-      if (h > 0) {
-        const lean = h * Math.tan((STRIPE_LEAN_DEGREES * Math.PI) / 180)
-        const x = offset + 1 * (STRIPE_WIDTH + STRIPE_GAP)
-        path.moveTo(x + lean, 0)
-        path.lineTo(x + lean + STRIPE_WIDTH, 0)
-        path.lineTo(x + STRIPE_WIDTH, h)
-        path.lineTo(x, h)
-        path.close()
-      }
-      // Notify Skia's canvas mapper - write _value directly to trigger listeners
-      ;(shimmerMiddlePath as unknown as { _value: typeof shimmerMiddlePath.value })._value = path
-    }
-  )
+  const shimmerOffset = useSharedValue(0)
+  const shimmerAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: shimmerOffset.value }],
+  }))
 
   // Ripple - horizontal spread from press point, fades as it expands
   const rippleCX = useSharedValue(0)
-  const rippleRadius = useSharedValue(0)
+  const rippleScale = useSharedValue(0)
   const rippleOpacity = useSharedValue(0)
-  const rippleStart = useDerivedValue(() =>
-    vec(rippleCX.value - rippleRadius.value, canvasHeight.value / 2)
-  )
-  const rippleEnd = useDerivedValue(() =>
-    vec(rippleCX.value + rippleRadius.value, canvasHeight.value / 2)
-  )
-  const rippleColors: [string, string, string] = [
-    'transparent',
-    'rgba(255,255,255,0.5)',
-    'transparent',
-  ]
+  const ripplePositionAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: rippleOpacity.value,
+    transform: [{ translateX: rippleCX.value - bannerSize.width / 2 }],
+  }))
+  const rippleScaleAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scaleX: rippleScale.value }],
+  }))
+  const rippleColors = [
+    withAlpha(colors.text.inverse, 0),
+    withAlpha(colors.text.inverse, 0.5),
+    withAlpha(colors.text.inverse, 0),
+  ] as const
+  const shimmerOuterColor = withAlpha(colors.text.inverse, 0.1)
+  const shimmerMiddleColor = withAlpha(colors.text.inverse, 0.2)
 
   const handleLayout = (e: LayoutChangeEvent) => {
     const { width, height } = e.nativeEvent.layout
-    canvasWidth.value = width
-    canvasHeight.value = height
-    // Start shimmer here - canvasWidth is a SharedValue and won't trigger useEffect
-    cancelAnimation(shimmerOffset)
-    shimmerOffset.value = isRTL ? width + 200 : -200
-    shimmerOffset.value = withRepeat(
-      withTiming(isRTL ? -200 : width + 60, { duration: 2000, easing: Easing.inOut(Easing.ease) }),
-      -1,
-      false
-    )
-  }
-
-  const handlePressIn = (e: GestureResponderEvent) => {
-    // Ripple: reset then animate - setting .value = 0 cancels any in-flight animation
-    rippleCX.value = e.nativeEvent.locationX
-    rippleRadius.value = 0
-    rippleOpacity.value = 0.5
-    rippleRadius.value = withTiming(800, { duration: 550, easing: Easing.out(Easing.quad) })
-    rippleOpacity.value = withTiming(0, { duration: 550 })
+    setBannerSize((currentSize) => {
+      if (currentSize.width === width && currentSize.height === height) return currentSize
+      return { width, height }
+    })
   }
 
   useEffect(() => {
+    cancelAnimation(shimmerOffset)
+    if (bannerSize.width <= 0 || bannerSize.height <= 0) return
+
+    shimmerOffset.value = isRTL ? shimmerTravelDistance : -shimmerTravelDistance
+    if (reducedMotion) return () => cancelAnimation(shimmerOffset)
+
+    shimmerOffset.value = withRepeat(
+      withTiming(isRTL ? -shimmerTravelDistance : shimmerTravelDistance, {
+        duration: 2000,
+        easing: Easing.inOut(Easing.ease),
+        reduceMotion: ReduceMotion.System,
+      }),
+      -1,
+      false,
+      undefined,
+      ReduceMotion.System
+    )
+
     return () => cancelAnimation(shimmerOffset)
-  }, [shimmerOffset])
+  }, [
+    bannerSize.height,
+    bannerSize.width,
+    isRTL,
+    reducedMotion,
+    shimmerOffset,
+    shimmerTravelDistance,
+  ])
+
+  const handlePressIn = (e: GestureResponderEvent) => {
+    rippleCX.value = e.nativeEvent.locationX
+    rippleScale.value = 0
+    if (reducedMotion) {
+      rippleOpacity.value = 0
+      return
+    }
+
+    rippleOpacity.value = 0.5
+    rippleScale.value = withTiming(1, {
+      duration: 550,
+      easing: Easing.out(Easing.quad),
+      reduceMotion: ReduceMotion.System,
+    })
+    rippleOpacity.value = withTiming(0, {
+      duration: 550,
+      reduceMotion: ReduceMotion.System,
+    })
+  }
 
   return (
     <Pressable onPress={onPress} onPressIn={handlePressIn} haptic style={[styles.container, style]}>
@@ -155,22 +165,37 @@ export const PromoBanner = ({ icon, title, subtitle, onPress, style }: PromoBann
             </Text>
           </View>
         </View>
-        <Canvas style={StyleSheet.absoluteFill} pointerEvents="none">
-          {/* Layer 1: Shimmer stripes - outer soft, middle deep */}
-          <Path path={shimmerOuterPath} color={STRIPE_OUTER_COLOR} />
-          <Path path={shimmerMiddlePath} color={STRIPE_MIDDLE_COLOR} />
-          {/* Layer 2: Press ripple */}
-          <Group opacity={rippleOpacity}>
-            <Rect x={0} y={0} width={canvasWidth} height={canvasHeight}>
+        <View style={styles.animationOverlay} pointerEvents="none">
+          <Animated.View style={[styles.shimmerTrack, shimmerAnimatedStyle]}>
+            {bannerSize.height > 0 ? (
+              <Svg width={shimmerWidth} height={bannerSize.height}>
+                <Polygon
+                  points={getStripePoints(0, stripeLean, bannerSize.height)}
+                  fill={shimmerOuterColor}
+                />
+                <Polygon
+                  points={getStripePoints(1, stripeLean, bannerSize.height)}
+                  fill={shimmerMiddleColor}
+                />
+                <Polygon
+                  points={getStripePoints(2, stripeLean, bannerSize.height)}
+                  fill={shimmerOuterColor}
+                />
+              </Svg>
+            ) : null}
+          </Animated.View>
+          <Animated.View style={[styles.ripplePosition, ripplePositionAnimatedStyle]}>
+            <Animated.View style={[styles.ripple, rippleScaleAnimatedStyle]}>
               <LinearGradient
-                start={rippleStart}
-                end={rippleEnd}
                 colors={rippleColors}
-                positions={[0, 0.5, 1]}
+                locations={RIPPLE_LOCATIONS}
+                start={GRADIENT_START}
+                end={GRADIENT_END}
+                style={styles.gradient}
               />
-            </Rect>
-          </Group>
-        </Canvas>
+            </Animated.View>
+          </Animated.View>
+        </View>
       </View>
     </Pressable>
   )
@@ -191,6 +216,25 @@ const createStyles = createThemedStyles((t) => ({
     paddingVertical: t.spacing.lg,
     paddingHorizontal: t.spacing.lg,
     gap: t.spacing.md,
+  },
+  animationOverlay: {
+    ...StyleSheet.absoluteFill,
+    overflow: 'hidden',
+  },
+  shimmerTrack: {
+    ...StyleSheet.absoluteFill,
+    alignItems: 'center',
+  },
+  ripplePosition: {
+    ...StyleSheet.absoluteFill,
+    alignItems: 'center',
+  },
+  ripple: {
+    width: RIPPLE_DIAMETER,
+    height: '100%',
+  },
+  gradient: {
+    ...StyleSheet.absoluteFill,
   },
   iconContainer: {
     width: 52,
