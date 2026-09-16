@@ -69,7 +69,9 @@ Copy an app's `.env.fastlane.example` to its `.env.fastlane.local` for its Reven
 
 Both Ruby and TypeScript loaders enforce the same ownership rules. Explicit process variables take precedence. Shared credential paths resolve from the repository root. Quoted values and `export KEY=value` declarations are supported. Empty required values fail validation.
 
-App `.env.local` is for app build settings such as the upload-only Sentry token. Keep provisioning and investigation tokens in a secure machine environment; do not place them in app build files. Never use the upload token for issue investigation. See `AGENTS.md` for Firebase, Sentry, monetization, and localization contracts.
+App `.env.local` is for app build settings such as the upload-only Sentry token. Never use the upload token for issue investigation. Keep investigation tokens in a secure machine environment, not app build files. See `AGENTS.md` for Firebase, Sentry, monetization, and localization contracts.
+
+Copy root `.env.setup.example` to `.env.setup.local` and set `SENTRY_SETUP_AUTH_TOKEN` once. Every app's `pnpm setup:sentry` reads this same reusable Internal Integration token; an explicit process token takes precedence. The root setup file is excluded from Git and EAS archives, is not copied by the app generator, and is read only by Sentry provisioning. Do not put the setup token in app `.env.local` or EAS variables. Source-map uploads continue to use the separate upload-only `SENTRY_AUTH_TOKEN`.
 
 Run setup, metadata, and monetization commands from the selected app:
 
