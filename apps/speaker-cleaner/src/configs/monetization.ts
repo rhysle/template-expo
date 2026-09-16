@@ -13,7 +13,10 @@ export const monetizationConfig = {
 
   // Set to null to disable trials. Change target to move the one cross-store
   // trial to another enabled subscription, or use e.g. '7-days' for one week.
-  freeTrial: null,
+  freeTrial: {
+    target: 'weekly',
+    duration: '3-days',
+  },
 
   stores: {
     apple: true,
