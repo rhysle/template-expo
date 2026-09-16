@@ -1,4 +1,4 @@
 interface:
   display_name: "Astro Keyword Expansion"
-  short_description: "Track Astro suggestions across top storefronts"
-  default_prompt: "Use $astro-keyword-expansion to add eligible Astro keyword suggestions for these App Store apps."
+  short_description: "Track suggestions across top and base storefronts"
+  default_prompt: "Use $astro-keyword-expansion to add eligible Astro keyword suggestions across top-rating and required base storefronts for these App Store apps."
