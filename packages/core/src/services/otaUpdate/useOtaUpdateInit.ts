@@ -6,6 +6,7 @@ import { useOtaUpdateState } from '@shared/core/stores/features/otaUpdate'
 import { useSnackbarState } from '@shared/core/stores/features/snackbar'
 import { assertOnline } from '@shared/core/utils/network'
 import { OfflineError } from '@shared/core/utils/OfflineError'
+import { isEnabled as isUpdatesEnabled } from 'expo-updates'
 import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AppState } from 'react-native'
@@ -69,7 +70,7 @@ export const useOtaUpdateInit = () => {
   // ── Effect 1: Detect if a new OTA was applied on this cold start ──────────
   // setLastAppliedUpdateId is a stable Zustand action - this runs once on mount
   useEffect(() => {
-    if (__DEV__ || !appConfig.otaUpdate.enabled) return
+    if (__DEV__ || !appConfig.otaUpdate.enabled || !isUpdatesEnabled) return
 
     const currentOtaUpdateId = getCurrentOtaUpdateId()
 
@@ -90,7 +91,8 @@ export const useOtaUpdateInit = () => {
   // ── Effect 2: Check for updates on launch + app foreground ────────────────
   // showSnackbar and t are both stable references - this runs once on mount
   useEffect(() => {
-    if (__DEV__ || !appConfig.otaUpdate.enabled) return
+    // New apps have no native update URL until setup:expo links their own EAS project.
+    if (__DEV__ || !appConfig.otaUpdate.enabled || !isUpdatesEnabled) return
 
     const performCheck = async () => {
       if (isCheckingRef.current || hasDownloadedRef.current) return

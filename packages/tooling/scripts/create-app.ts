@@ -88,7 +88,6 @@ export const resetAppConfiguration = (
   config.ads.enabled = false
   for (const platform of ['ios', 'android'] as const)
     config.ads[platform] = { appId: '', bannerAdUnitId: '', interstitialAdUnitId: '' }
-  config.otaUpdate.enabled = false
   fs.writeFileSync(
     configFile,
     `// App-owned configuration. Run setup commands before release.\nexport const AppConfig = ${JSON.stringify(config, null, 2).replace(/^(\s*)"([A-Za-z_$][\w$]*)":/gm, '$1$2:')} as const\n`

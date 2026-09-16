@@ -9,7 +9,7 @@ export const AppConfig = {
     privacyPolicy: 'https://rhysle.com/privacy/',
   },
   otaUpdate: {
-    enabled: false,
+    enabled: true,
   },
   appReview: {
     minActionsBeforeRequest: 1,

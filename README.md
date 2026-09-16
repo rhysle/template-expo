@@ -106,6 +106,8 @@ pnpm --filter @apps/speaker-cleaner eas-build:ios
 
 Run submit/update commands from the real app directory. Mobile OTA scripts export only iOS/Android and upload that app's Sentry source maps. A shared source change does not automatically publish any app.
 
+Starter enables OTA checks by default, and generated apps inherit that setting. Checks run only in release bundles when the native Expo update system is enabled. Run the app's `pnpm setup:expo` to configure its own EAS project ID and update URL before building a production binary. Set `APP_VARIANT=production` in that project's EAS production environment before publishing with the `eas-update:*` scripts; updates do not inherit build-profile environment variables. The `appVersion` runtime policy requires a new app version and binary when native dependencies or configuration change.
+
 ## Verification
 
 `pnpm check` runs lint and TypeScript for both apps and shared packages, including tooling. `pnpm check:i18n` audits each app's English resource and shared references. No automated test files or suites belong in this repository.
