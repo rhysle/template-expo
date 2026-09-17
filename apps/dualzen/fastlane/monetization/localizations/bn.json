@@ -1,0 +1,36 @@
+{
+  "appleLocale": "bn-BD",
+  "googleLocale": "bn-BD",
+  "apple": {
+    "subscriptionGroupDisplayName": "Premium",
+    "products": {
+      "weekly": {
+        "displayName": "Premium · সাপ্তাহিক",
+        "description": "সব প্রিমিয়াম ফিচারে সম্পূর্ণ অ্যাক্সেস।"
+      },
+      "monthly": {
+        "displayName": "Premium · মাসিক",
+        "description": "সব প্রিমিয়াম ফিচারে সম্পূর্ণ অ্যাক্সেস।"
+      },
+      "yearly": {
+        "displayName": "Premium · বার্ষিক",
+        "description": "সব প্রিমিয়াম ফিচারে সম্পূর্ণ অ্যাক্সেস।"
+      },
+      "lifetime": {
+        "displayName": "Premium · আজীবন",
+        "description": "সব প্রিমিয়াম ফিচারে আজীবন অ্যাক্সেস।"
+      }
+    }
+  },
+  "google": {
+    "subscription": {
+      "title": "Premium",
+      "description": "সব প্রিমিয়াম ফিচারে সম্পূর্ণ অ্যাক্সেস।",
+      "benefits": ["সব প্রিমিয়াম ফিচারে সম্পূর্ণ অ্যাক্সেস"]
+    },
+    "lifetime": {
+      "title": "Premium · আজীবন",
+      "description": "সব প্রিমিয়াম ফিচারে আজীবন অ্যাক্সেস।"
+    }
+  }
+}

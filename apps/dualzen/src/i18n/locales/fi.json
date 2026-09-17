@@ -1,0 +1,180 @@
+{
+  "common": {
+    "back": "Takaisin",
+    "cancel": "Peruuta",
+    "close": "Sulje",
+    "confirm": "Vahvista",
+    "continue": "Jatka",
+    "done": "Valmis",
+    "getStarted": "Aloita",
+    "next": "Seuraava",
+    "ok": "OK",
+    "openSettings": "Avaa asetukset",
+    "reset": "Nollaa",
+    "retry": "Yritä uudelleen",
+    "restart": "Käynnistä uudelleen",
+    "save": "Tallenna",
+    "skip": "Ohita",
+    "start": "Aloita",
+    "stop": "Pysäytä"
+  },
+  "premium": {
+    "accessChecking": "Premium-käyttöoikeutta tarkistetaan…",
+    "accessUnknown": "Yhdistä internetiin tarkistaaksesi Premium-käyttöoikeuden."
+  },
+  "tabs": {
+    "eject": "Poista",
+    "toneGenerator": "Äänigeneraattori",
+    "stereoTest": "Stereotesti",
+    "dbMeter": "dB-mittari"
+  },
+  "settings": {
+    "title": "Asetukset",
+    "subtitle": "Viritä kaiutintyökalusi ja äänimittarisi",
+    "support": "Tuki",
+    "contactSupport": "Ota yhteyttä tukeen",
+    "contactSupportSubtitle": "Olemme täällä auttamassa",
+    "contactSupportError": "Sähköpostiohjelmaa ei voitu avata",
+    "rateApp": "Arvioi meidät",
+    "rateAppSubtitle": "Pidätkö sovelluksesta? Jätä arvostelu",
+    "shareApp": "Jaa",
+    "shareAppSubtitle": "Kerro ystäville ja perheelle",
+    "shareMessage": "Tutustu sovellukseen {{appName}}!",
+    "shareMessageWithUrl": "Tutustu sovellukseen {{appName}}! Lataa se täältä: {{url}}",
+    "userId": "Käyttäjätunnus",
+    "userIdCopied": "Käyttäjätunnus kopioitu",
+    "legalSection": "Oikeudellinen",
+    "privacyConsent": "Tietosuoja ja suostumus",
+    "version": "Versio {{version}}",
+    "otaUpdateId": "Päivitys: {{updateId}}",
+    "upgradeBanner": {
+      "title": "Päivitä Premiumiin",
+      "subtitle": "Avaa pidempi Turbo-puhdistus, edistyneet äänisäätimet ja mainokseton käyttökokemus"
+    }
+  },
+  "paywall": {
+    "title": "Avaa täydellinen äänityökalupakettisi",
+    "subtitle": "Puhdista kaiutin, käytä lisäsäätimiä ja poista kaikki mainokset.",
+    "ctaFreeTrial": "Kokeile ilmaiseksi",
+    "trialDisclaimer": "Peruuta milloin tahansa. Maksua ei veloiteta nyt",
+    "subscriptionDisclaimer": "Peruuta milloin tahansa.",
+    "lifetimeDisclaimer": "Maksa kerran. Ei toistuvia maksuja.",
+    "restore": "Palauta ostokset",
+    "terms": "Käyttöehdot",
+    "privacy": "Tietosuojakäytäntö",
+    "then": "sitten",
+    "trial": "{{count}}-{{unit}} ilmainen kokeilu",
+    "save": "Säästä {{percent}}%",
+    "availability": {
+      "loading": "Tarkistetaan ostovaihtoehtoja…",
+      "temporary_error": {
+        "title": "Ostovaihtoehtoja ei voitu ladata",
+        "subtitle": "Tarkista yhteys ja yritä uudelleen."
+      },
+      "configuration_error": {
+        "title": "Ostovaihtoehdot eivät ole saatavilla",
+        "subtitle": "Kauppa ei voinut ladata tämän sovelluksen tuotteita. Yritä hetken kuluttua uudelleen."
+      },
+      "purchase_not_allowed": {
+        "title": "Ostoja ei tueta tällä laitteella",
+        "subtitle": "Tällä laitteella tai kauppatilillä ei voi tehdä sovelluksen sisäisiä ostoja."
+      }
+    },
+    "trialUnit": {
+      "day": "päivä",
+      "week": "viikko",
+      "month": "kuukausi",
+      "year": "vuosi"
+    },
+    "period": {
+      "day": "päivässä",
+      "week": "viikossa",
+      "month": "kuukaudessa",
+      "year": "vuodessa",
+      "lifetime": "Kertaostos"
+    },
+    "comparison": {
+      "features": "Ominaisuudet",
+      "free": "Ilmainen",
+      "pro": "Pro",
+      "included": "Sisältyy",
+      "excluded": "Ei sisälly",
+      "unlimited": "Rajoittamaton",
+      "rows": {
+        "cleaningDuration": {
+          "title": "Puhdistuksen kesto",
+          "free": "30 sekuntia",
+          "pro": "30/60/90 sekuntia"
+        },
+        "turbo": {
+          "title": "Turbo-tila"
+        },
+        "waveforms": {
+          "title": "Aaltomuoto",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "Stereotesti",
+          "free": "Manuaalinen",
+          "pro": "Automaattinen"
+        },
+        "soundInsights": {
+          "title": "Äänitason analyysi",
+          "free": "Perus",
+          "pro": "Edistynyt"
+        },
+        "activityHistory": {
+          "title": "Toimintahistoria"
+        },
+        "adExperience": {
+          "title": "Mainokset",
+          "free": "Mainokset",
+          "pro": "Ei mainoksia"
+        }
+      }
+    },
+    "context": {
+      "dbSubtitle": "Avaa tämän istunnon koko analyysi ja palaa tallennettuihin ääniraportteihin."
+    },
+    "feedback": {
+      "subscribeSuccess": "Tervetuloa! Premium-käyttöoikeutesi on aktiivinen.",
+      "subscribeError": "Jotain meni pieleen. Yritä uudelleen.",
+      "restoreSuccess": "Premium-käyttöoikeus palautettiin onnistuneesti!",
+      "restoreNotFound": "Aktiivista Premium-ostosta ei löytynyt.",
+      "restoreError": "Ostoksia ei voitu palauttaa. Yritä uudelleen."
+    },
+    "packageTitle": {
+      "day": "Päivittäin",
+      "week": "Viikoittain",
+      "month": "Kuukausittain",
+      "year": "Vuosittain",
+      "lifetime": "Elinikäinen"
+    }
+  },
+  "otaUpdate": {
+    "updateReady": "Uusi päivitys on valmis - käynnistä uudelleen ottaaksesi sen käyttöön"
+  },
+  "errorBoundary": {
+    "title": "Jotain meni pieleen",
+    "message": "Tapahtui odottamaton virhe. Yritä uudelleen."
+  },
+  "onboarding": {
+    "waterEject": {
+      "title": "Poista vesi\nja pöly nopeasti",
+      "description": "Toista tehokas puhdistusääni, joka auttaa työntämään loukkuun jääneen veden ja pölyn ulos kaiuttimesta."
+    },
+    "toneGenerator": {
+      "title": "Luo\noikea ääni",
+      "description": "Valitse eri taajuuksista testausta, viritystä, melun peittämistä tai mitä tahansa äänitarkistusta varten."
+    },
+    "dbMeter": {
+      "title": "Tiedä, kuinka kovaa\nääni todella on",
+      "description": "Arvioi ympäristösi melutasot dB-mittarilla ja tee harkitumpia kuuntelupäätöksiä."
+    },
+    "privacy": {
+      "title": "Yksityinen ja laitteellasi",
+      "description": "Äänenkäsittely pysyy puhelimessasi, ja saat selkeät turvallisuus- ja mikrofoniohjeet."
+    }
+  }
+}

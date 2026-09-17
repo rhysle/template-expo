@@ -1,0 +1,180 @@
+{
+  "common": {
+    "back": "Wstecz",
+    "cancel": "Anuluj",
+    "close": "Zamknij",
+    "confirm": "Potwierdź",
+    "continue": "Kontynuuj",
+    "done": "Gotowe",
+    "getStarted": "Zaczynamy",
+    "next": "Dalej",
+    "ok": "OK",
+    "openSettings": "Otwórz ustawienia",
+    "reset": "Resetuj",
+    "retry": "Spróbuj ponownie",
+    "restart": "Uruchom ponownie",
+    "save": "Zapisz",
+    "skip": "Pomiń",
+    "start": "Rozpocznij",
+    "stop": "Zatrzymaj"
+  },
+  "premium": {
+    "accessChecking": "Sprawdzanie dostępu Premium…",
+    "accessUnknown": "Połącz się z internetem, aby sprawdzić dostęp Premium."
+  },
+  "tabs": {
+    "eject": "Usuń",
+    "toneGenerator": "Generator tonu",
+    "stereoTest": "Test stereo",
+    "dbMeter": "Miernik dB"
+  },
+  "settings": {
+    "title": "Ustawienia",
+    "subtitle": "Dostrój narzędzia głośnikowe i miernik dźwięku",
+    "support": "Wsparcie",
+    "contactSupport": "Skontaktuj się z pomocą",
+    "contactSupportSubtitle": "Jesteśmy tu, aby pomóc",
+    "contactSupportError": "Nie można otworzyć klienta e-mail",
+    "rateApp": "Oceń nas",
+    "rateAppSubtitle": "Podoba Ci się aplikacja? Zostaw opinię",
+    "shareApp": "Udostępnij",
+    "shareAppSubtitle": "Powiedz znajomym i rodzinie",
+    "shareMessage": "Sprawdź {{appName}}!",
+    "shareMessageWithUrl": "Sprawdź {{appName}}! Pobierz tutaj: {{url}}",
+    "userId": "Identyfikator użytkownika",
+    "userIdCopied": "Identyfikator skopiowany",
+    "legalSection": "Prawne",
+    "privacyConsent": "Prywatność i zgoda",
+    "version": "Wersja {{version}}",
+    "otaUpdateId": "Aktualizacja: {{updateId}}",
+    "upgradeBanner": {
+      "title": "Przejdź na wersję Premium",
+      "subtitle": "Odblokuj dłuższe czyszczenie Turbo, zaawansowane sterowanie dźwiękiem i korzystanie bez reklam"
+    }
+  },
+  "paywall": {
+    "title": "Odblokuj swój kompletny zestaw narzędzi audio",
+    "subtitle": "Wyczyść głośnik, uzyskaj dostęp do zaawansowanych opcji i usuń wszystkie reklamy.",
+    "ctaFreeTrial": "Wypróbuj za darmo",
+    "trialDisclaimer": "Anuluj w dowolnym momencie. Teraz nic nie płacisz",
+    "subscriptionDisclaimer": "Anuluj w dowolnym momencie.",
+    "lifetimeDisclaimer": "Zapłać raz. Bez opłat cyklicznych.",
+    "restore": "Przywróć zakupy",
+    "terms": "Warunki korzystania z usługi",
+    "privacy": "Polityka prywatności",
+    "then": "następnie",
+    "trial": "{{count}}-{{unit}} bezpłatna wersja próbna",
+    "save": "Oszczędź {{percent}}%",
+    "availability": {
+      "loading": "Sprawdzanie opcji zakupu…",
+      "temporary_error": {
+        "title": "Nie udało się wczytać opcji zakupu",
+        "subtitle": "Sprawdź połączenie i spróbuj ponownie."
+      },
+      "configuration_error": {
+        "title": "Opcje zakupu są niedostępne",
+        "subtitle": "Sklep nie mógł wczytać produktów tej aplikacji. Spróbuj ponownie za chwilę."
+      },
+      "purchase_not_allowed": {
+        "title": "Zakupy nie są obsługiwane na tym urządzeniu",
+        "subtitle": "Na tym urządzeniu lub koncie sklepu nie można dokonywać zakupów w aplikacji."
+      }
+    },
+    "trialUnit": {
+      "day": "dzień",
+      "week": "tydzień",
+      "month": "miesiąc",
+      "year": "rok"
+    },
+    "period": {
+      "day": "dziennie",
+      "week": "tygodniowo",
+      "month": "miesięcznie",
+      "year": "rocznie",
+      "lifetime": "Jednorazowy zakup"
+    },
+    "comparison": {
+      "features": "Funkcje",
+      "free": "Bezpłatnie",
+      "pro": "Pro",
+      "included": "W cenie",
+      "excluded": "Niedostępne",
+      "unlimited": "Bez limitu",
+      "rows": {
+        "cleaningDuration": {
+          "title": "Czas czyszczenia",
+          "free": "30 sekund",
+          "pro": "30/60/90 sekund"
+        },
+        "turbo": {
+          "title": "Tryb Turbo"
+        },
+        "waveforms": {
+          "title": "Przebieg",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "Test stereo",
+          "free": "Ręcznie",
+          "pro": "Automatycznie"
+        },
+        "soundInsights": {
+          "title": "Analiza poziomu dźwięku",
+          "free": "Podstawowe",
+          "pro": "Zaawansowane"
+        },
+        "activityHistory": {
+          "title": "Historia aktywności"
+        },
+        "adExperience": {
+          "title": "Reklamy",
+          "free": "Reklamy",
+          "pro": "Bez reklam"
+        }
+      }
+    },
+    "context": {
+      "dbSubtitle": "Odblokuj pełną analizę tej sesji i wróć do zapisanych raportów dźwiękowych."
+    },
+    "feedback": {
+      "subscribeSuccess": "Witamy! Twój dostęp premium jest aktywny.",
+      "subscribeError": "Coś poszło nie tak. Spróbuj ponownie.",
+      "restoreSuccess": "Pomyślnie przywrócono dostęp premium!",
+      "restoreNotFound": "Nie znaleziono aktywnego zakupu Premium.",
+      "restoreError": "Nie można przywrócić zakupów. Spróbuj ponownie."
+    },
+    "packageTitle": {
+      "day": "Codziennie",
+      "week": "Co tydzień",
+      "month": "Miesięcznie",
+      "year": "Rocznie",
+      "lifetime": "Dożywotnia"
+    }
+  },
+  "otaUpdate": {
+    "updateReady": "Nowa aktualizacja jest gotowa - uruchom ponownie, aby zastosować"
+  },
+  "errorBoundary": {
+    "title": "Coś poszło nie tak",
+    "message": "Wystąpił nieoczekiwany błąd. Spróbuj ponownie."
+  },
+  "onboarding": {
+    "waterEject": {
+      "title": "Szybko usuń\nwodę i kurz",
+      "description": "Odtwórz silny dźwięk czyszczący, aby pomóc usunąć ze głośnika uwięzioną wodę i kurz."
+    },
+    "toneGenerator": {
+      "title": "Wygeneruj\nwłaściwy ton",
+      "description": "Wybieraj spośród różnych częstotliwości do testowania, strojenia, maskowania hałasu lub dowolnej kontroli dźwięku."
+    },
+    "dbMeter": {
+      "title": "Sprawdź, jak głośno\nnaprawdę jest",
+      "description": "Użyj miernika dB, aby oszacować poziom hałasu wokół siebie i podejmować lepsze decyzje dotyczące słuchania."
+    },
+    "privacy": {
+      "title": "Prywatnie i na urządzeniu",
+      "description": "Przetwarzanie dźwięku pozostaje w telefonie, wraz z jasnymi wskazówkami dotyczącymi bezpieczeństwa i mikrofonu."
+    }
+  }
+}

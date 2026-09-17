@@ -1,0 +1,180 @@
+{
+  "common": {
+    "back": "Natrag",
+    "cancel": "Odustani",
+    "close": "Zatvori",
+    "confirm": "Potvrdi",
+    "continue": "Nastavi",
+    "done": "Gotovo",
+    "getStarted": "Počni",
+    "next": "Dalje",
+    "ok": "U redu",
+    "openSettings": "Otvori postavke",
+    "reset": "Poništi",
+    "retry": "Pokušaj ponovo",
+    "restart": "Ponovo pokreni",
+    "save": "Spremi",
+    "skip": "Preskoči",
+    "start": "Pokreni",
+    "stop": "Zaustavi"
+  },
+  "premium": {
+    "accessChecking": "Provjera Premium pristupa…",
+    "accessUnknown": "Povežite se s internetom da biste provjerili Premium pristup."
+  },
+  "tabs": {
+    "eject": "Izbaci",
+    "toneGenerator": "Generator tona",
+    "stereoTest": "Stereo test",
+    "dbMeter": "dB mjerač"
+  },
+  "settings": {
+    "title": "Postavke",
+    "subtitle": "Podesite alate za zvučnike i mjerač zvuka",
+    "support": "Podrška",
+    "contactSupport": "Kontaktiraj podršku",
+    "contactSupportSubtitle": "Ovdje smo da pomognemo",
+    "contactSupportError": "Nije moguće otvoriti klijent e-pošte",
+    "rateApp": "Ocijeni nas",
+    "rateAppSubtitle": "Sviđa vam se aplikacija? Ostavite recenziju",
+    "shareApp": "Podijeli",
+    "shareAppSubtitle": "Preporučite prijateljima i obitelji",
+    "shareMessage": "Pogledajte {{appName}}!",
+    "shareMessageWithUrl": "Pogledajte {{appName}}! Preuzmite ovdje: {{url}}",
+    "userId": "Korisnički ID",
+    "userIdCopied": "Korisnički ID kopiran",
+    "legalSection": "Pravno",
+    "privacyConsent": "Privatnost i suglasnost",
+    "version": "Verzija {{version}}",
+    "otaUpdateId": "Ažuriranje: {{updateId}}",
+    "upgradeBanner": {
+      "title": "Nadogradite na Premium",
+      "subtitle": "Otključajte dulje Turbo čišćenje, napredne kontrole zvuka i upotrebu bez oglasa"
+    }
+  },
+  "paywall": {
+    "title": "Otključajte kompletan audio alat",
+    "subtitle": "Očistite svoj zvučnik, pristupite naprednim kontrolama i uklonite sve oglase.",
+    "ctaFreeTrial": "Isprobajte besplatno",
+    "trialDisclaimer": "Otkažite bilo kada. Sada nema naplate",
+    "subscriptionDisclaimer": "Otkažite bilo kada.",
+    "lifetimeDisclaimer": "Platite jednom. Bez ponavljajućih naplata.",
+    "restore": "Vrati kupnje",
+    "terms": "Uvjeti usluge",
+    "privacy": "Pravila o privatnosti",
+    "then": "zatim",
+    "trial": "{{count}}-{{unit}} besplatno probno razdoblje",
+    "save": "Uštedite {{percent}}%",
+    "availability": {
+      "loading": "Provjera opcija kupnje…",
+      "temporary_error": {
+        "title": "Opcije kupnje nije moguće učitati",
+        "subtitle": "Provjerite vezu i pokušajte ponovno."
+      },
+      "configuration_error": {
+        "title": "Opcije kupnje nisu dostupne",
+        "subtitle": "Trgovina nije mogla učitati proizvode ove aplikacije. Pokušajte ponovno uskoro."
+      },
+      "purchase_not_allowed": {
+        "title": "Kupnje nisu podržane na ovom uređaju",
+        "subtitle": "Ovaj uređaj ili račun trgovine ne može obavljati kupnje unutar aplikacije."
+      }
+    },
+    "trialUnit": {
+      "day": "dan",
+      "week": "tjedan",
+      "month": "mjesec",
+      "year": "godina"
+    },
+    "period": {
+      "day": "dnevno",
+      "week": "tjedno",
+      "month": "mjesečno",
+      "year": "godišnje",
+      "lifetime": "Jednokratna kupnja"
+    },
+    "comparison": {
+      "features": "Značajke",
+      "free": "Besplatno",
+      "pro": "Pro",
+      "included": "Uključeno",
+      "excluded": "Nije uključeno",
+      "unlimited": "Neograničeno",
+      "rows": {
+        "cleaningDuration": {
+          "title": "Trajanje čišćenja",
+          "free": "30 sekundi",
+          "pro": "30/60/90 sekundi"
+        },
+        "turbo": {
+          "title": "Turbo način rada"
+        },
+        "waveforms": {
+          "title": "Valni oblik",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "Stereo test",
+          "free": "Ručno",
+          "pro": "Automatski"
+        },
+        "soundInsights": {
+          "title": "Analiza razine zvuka",
+          "free": "Osnovno",
+          "pro": "Napredno"
+        },
+        "activityHistory": {
+          "title": "Povijest aktivnosti"
+        },
+        "adExperience": {
+          "title": "Oglasi",
+          "free": "Oglasi",
+          "pro": "Bez oglasa"
+        }
+      }
+    },
+    "context": {
+      "dbSubtitle": "Otključajte potpunu analizu za ovu sesiju i ponovno pregledajte spremljena izvješća o zvuku."
+    },
+    "feedback": {
+      "subscribeSuccess": "Dobro došli! Vaš premium pristup je aktivan.",
+      "subscribeError": "Nešto nije u redu. Molimo pokušajte ponovo.",
+      "restoreSuccess": "Premium pristup uspješno vraćen!",
+      "restoreNotFound": "Nije pronađena aktivna Premium kupnja.",
+      "restoreError": "Nije moguće vratiti kupnje. Molimo pokušajte ponovo."
+    },
+    "packageTitle": {
+      "day": "Dnevno",
+      "week": "Tjedno",
+      "month": "Mjesečno",
+      "year": "godišnje",
+      "lifetime": "Životni vijek"
+    }
+  },
+  "otaUpdate": {
+    "updateReady": "Novo ažuriranje je spremno - ponovo pokrenite za primjenu"
+  },
+  "errorBoundary": {
+    "title": "Nešto je pošlo po krivu",
+    "message": "Došlo je do neočekivane pogreške. Molimo pokušajte ponovo."
+  },
+  "onboarding": {
+    "waterEject": {
+      "title": "Brzo uklonite\nvodu i prašinu",
+      "description": "Pustite snažan zvuk čišćenja kako biste pomogli izbaciti zarobljenu vodu i prašinu iz zvučnika."
+    },
+    "toneGenerator": {
+      "title": "Stvorite\npravi ton",
+      "description": "Odaberite različite frekvencije za testiranje, ugađanje, maskiranje buke ili bilo koju provjeru zvuka."
+    },
+    "dbMeter": {
+      "title": "Saznajte koliko je\nzaista glasno",
+      "description": "Upotrijebite dB mjerač za procjenu razine buke oko sebe i pametnije odluke o slušanju."
+    },
+    "privacy": {
+      "title": "Privatno i na uređaju",
+      "description": "Obrada zvuka ostaje na telefonu uz jasne upute o sigurnosti i mikrofonu."
+    }
+  }
+}

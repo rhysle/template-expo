@@ -1,0 +1,180 @@
+{
+  "common": {
+    "back": "Retour",
+    "cancel": "Annuler",
+    "close": "Fermer",
+    "confirm": "Confirmer",
+    "continue": "Continuer",
+    "done": "Terminé",
+    "getStarted": "Commencer",
+    "next": "Suivant",
+    "ok": "OK",
+    "openSettings": "Ouvrir les réglages",
+    "reset": "Réinitialiser",
+    "retry": "Réessayer",
+    "restart": "Redémarrer",
+    "save": "Enregistrer",
+    "skip": "Ignorer",
+    "start": "Démarrer",
+    "stop": "Arrêter"
+  },
+  "premium": {
+    "accessChecking": "Vérification de l’accès Premium…",
+    "accessUnknown": "Connectez-vous à Internet pour vérifier l’accès Premium."
+  },
+  "tabs": {
+    "eject": "Éjecter",
+    "toneGenerator": "Générateur de sons",
+    "stereoTest": "Test stéréo",
+    "dbMeter": "Sonomètre dB"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "subtitle": "Ajustez vos outils d'enceintes et votre sonomètre",
+    "support": "Assistance",
+    "contactSupport": "Contacter l'assistance",
+    "contactSupportSubtitle": "Nous sommes là pour vous aider",
+    "contactSupportError": "Impossible d'ouvrir le client de messagerie",
+    "rateApp": "Notez-nous",
+    "rateAppSubtitle": "Vous aimez l'application ? Laissez un avis",
+    "shareApp": "Partager",
+    "shareAppSubtitle": "Recommandez-nous à vos amis et famille",
+    "shareMessage": "Découvrez {{appName}} !",
+    "shareMessageWithUrl": "Découvrez {{appName}} ! Téléchargez-le ici : {{url}}",
+    "userId": "ID utilisateur",
+    "userIdCopied": "ID utilisateur copié",
+    "legalSection": "Mentions légales",
+    "privacyConsent": "Confidentialité et consentement",
+    "version": "Version {{version}}",
+    "otaUpdateId": "Mise à jour : {{updateId}}",
+    "upgradeBanner": {
+      "title": "Passer à Premium",
+      "subtitle": "Débloquez des nettoyages Turbo plus longs, des réglages audio avancés et une utilisation sans publicité"
+    }
+  },
+  "paywall": {
+    "title": "Débloquez votre boîte à outils audio complète",
+    "subtitle": "Nettoyez votre enceinte, accédez aux commandes avancées et supprimez chaque publicité.",
+    "ctaFreeTrial": "Essayez gratuitement",
+    "trialDisclaimer": "Annulez à tout moment. Aucun paiement maintenant",
+    "subscriptionDisclaimer": "Annulez à tout moment.",
+    "lifetimeDisclaimer": "Payez une seule fois. Aucun frais récurrent.",
+    "restore": "Restaurer les achats",
+    "terms": "Conditions d'utilisation",
+    "privacy": "Politique de confidentialité",
+    "then": "puis",
+    "trial": "{{count}}-{{unit}} essai gratuit",
+    "save": "Économisez {{percent}} %",
+    "availability": {
+      "loading": "Vérification des options d’achat…",
+      "temporary_error": {
+        "title": "Impossible de charger les options d’achat",
+        "subtitle": "Vérifiez votre connexion et réessayez."
+      },
+      "configuration_error": {
+        "title": "Les options d’achat ne sont pas disponibles",
+        "subtitle": "La boutique n’a pas pu charger les produits de cette app. Veuillez réessayer dans quelques instants."
+      },
+      "purchase_not_allowed": {
+        "title": "Les achats ne sont pas pris en charge sur cet appareil",
+        "subtitle": "Cet appareil ou ce compte de boutique ne permet pas d’effectuer des achats intégrés."
+      }
+    },
+    "trialUnit": {
+      "day": "jour",
+      "week": "semaine",
+      "month": "mois",
+      "year": "année"
+    },
+    "period": {
+      "day": "par jour",
+      "week": "par semaine",
+      "month": "par mois",
+      "year": "par an",
+      "lifetime": "Achat unique"
+    },
+    "comparison": {
+      "features": "Fonctionnalités",
+      "free": "Gratuit",
+      "pro": "Pro",
+      "included": "Inclus",
+      "excluded": "Non inclus",
+      "unlimited": "Illimité",
+      "rows": {
+        "cleaningDuration": {
+          "title": "Durée du nettoyage",
+          "free": "30 secondes",
+          "pro": "30/60/90 secondes"
+        },
+        "turbo": {
+          "title": "Mode Turbo"
+        },
+        "waveforms": {
+          "title": "Forme d'onde",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "Test stéréo",
+          "free": "Manuel",
+          "pro": "Automatique"
+        },
+        "soundInsights": {
+          "title": "Analyse du niveau sonore",
+          "free": "Basique",
+          "pro": "Avancé"
+        },
+        "activityHistory": {
+          "title": "Historique d'activité"
+        },
+        "adExperience": {
+          "title": "Publicités",
+          "free": "Publicités",
+          "pro": "Sans publicité"
+        }
+      }
+    },
+    "context": {
+      "dbSubtitle": "Débloquez l’analyse complète de cette session et revisitez les rapports sonores enregistrés."
+    },
+    "feedback": {
+      "subscribeSuccess": "Bienvenue ! Votre accès premium est actif.",
+      "subscribeError": "Quelque chose s'est mal passé. Veuillez réessayer.",
+      "restoreSuccess": "Accès Premium restauré avec succès !",
+      "restoreNotFound": "Aucun achat Premium actif trouvé.",
+      "restoreError": "Impossible de restaurer les achats. Veuillez réessayer."
+    },
+    "packageTitle": {
+      "day": "Quotidiennement",
+      "week": "Hebdomadaire",
+      "month": "Mensuel",
+      "year": "Annuel",
+      "lifetime": "Durée de vie"
+    }
+  },
+  "otaUpdate": {
+    "updateReady": "Une nouvelle mise à jour est prête - redémarrez pour l'appliquer"
+  },
+  "errorBoundary": {
+    "title": "Une erreur s'est produite",
+    "message": "Une erreur inattendue s'est produite. Veuillez réessayer."
+  },
+  "onboarding": {
+    "waterEject": {
+      "title": "Éliminez l’eau\net la poussière vite",
+      "description": "Lancez un puissant son de nettoyage pour aider à chasser l’eau et la poussière coincées dans votre haut-parleur."
+    },
+    "toneGenerator": {
+      "title": "Générez\nle bon son",
+      "description": "Choisissez parmi différentes fréquences pour tester, régler, masquer le bruit ou effectuer toute vérification audio."
+    },
+    "dbMeter": {
+      "title": "Sachez à quel point\nc’est vraiment fort",
+      "description": "Utilisez le sonomètre dB pour estimer les niveaux de bruit autour de vous et écouter plus intelligemment."
+    },
+    "privacy": {
+      "title": "Privé et sur votre appareil",
+      "description": "Le traitement audio reste sur votre téléphone, avec des conseils clairs sur la sécurité et le microphone."
+    }
+  }
+}

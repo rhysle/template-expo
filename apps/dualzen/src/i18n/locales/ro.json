@@ -1,0 +1,180 @@
+{
+  "common": {
+    "back": "Înapoi",
+    "cancel": "Anulează",
+    "close": "Închide",
+    "confirm": "Confirmă",
+    "continue": "Continuă",
+    "done": "Gata",
+    "getStarted": "Începe",
+    "next": "Înainte",
+    "ok": "OK",
+    "openSettings": "Deschide setările",
+    "reset": "Resetează",
+    "retry": "Încearcă din nou",
+    "restart": "Repornește",
+    "save": "Salvează",
+    "skip": "Omite",
+    "start": "Pornește",
+    "stop": "Oprește"
+  },
+  "premium": {
+    "accessChecking": "Se verifică accesul Premium…",
+    "accessUnknown": "Conectează-te la internet pentru a verifica accesul Premium."
+  },
+  "tabs": {
+    "eject": "Elimină",
+    "toneGenerator": "Generator de ton",
+    "stereoTest": "Test stereo",
+    "dbMeter": "Sonometru dB"
+  },
+  "settings": {
+    "title": "Setări",
+    "subtitle": "Reglați instrumentele difuzoarelor și sunetmetrul",
+    "support": "Suport",
+    "contactSupport": "Contactează suportul",
+    "contactSupportSubtitle": "Suntem aici să ajutăm",
+    "contactSupportError": "Nu s-a putut deschide clientul de e-mail",
+    "rateApp": "Evaluează-ne",
+    "rateAppSubtitle": "Îți place aplicația? Lasă o recenzie",
+    "shareApp": "Distribuie",
+    "shareAppSubtitle": "Spune prietenilor și familiei",
+    "shareMessage": "Încearcă {{appName}}!",
+    "shareMessageWithUrl": "Încearcă {{appName}}! Descarcă-l aici: {{url}}",
+    "userId": "ID utilizator",
+    "userIdCopied": "ID utilizator copiat",
+    "legalSection": "Legal",
+    "privacyConsent": "Confidențialitate și consimțământ",
+    "version": "Versiunea {{version}}",
+    "otaUpdateId": "Actualizare: {{updateId}}",
+    "upgradeBanner": {
+      "title": "Faceți upgrade la Premium",
+      "subtitle": "Deblochează curățarea Turbo mai lungă, comenzile audio avansate și utilizarea fără reclame"
+    }
+  },
+  "paywall": {
+    "title": "Deblocați setul dvs. complet de instrumente audio",
+    "subtitle": "Curățați-vă difuzorul, accesați comenzi avansate și eliminați fiecare anunț.",
+    "ctaFreeTrial": "Încercați gratuit",
+    "trialDisclaimer": "Anulează oricând. Nu plătești nimic acum",
+    "subscriptionDisclaimer": "Anulează oricând.",
+    "lifetimeDisclaimer": "Plătești o singură dată. Fără taxe recurente.",
+    "restore": "Restabiliți achizițiile",
+    "terms": "Termeni și condiții",
+    "privacy": "Politica de confidențialitate",
+    "then": "apoi",
+    "trial": "{{count}}-{{unit}} încercare gratuită",
+    "save": "Economisiți {{percent}}%",
+    "availability": {
+      "loading": "Se verifică opțiunile de achiziție…",
+      "temporary_error": {
+        "title": "Opțiunile de achiziție nu au putut fi încărcate",
+        "subtitle": "Verificați conexiunea și încercați din nou."
+      },
+      "configuration_error": {
+        "title": "Opțiunile de achiziție nu sunt disponibile",
+        "subtitle": "Magazinul nu a putut încărca produsele acestei aplicații. Încercați din nou în scurt timp."
+      },
+      "purchase_not_allowed": {
+        "title": "Achizițiile nu sunt acceptate pe acest dispozitiv",
+        "subtitle": "Acest dispozitiv sau cont de magazin nu poate efectua achiziții în aplicație."
+      }
+    },
+    "trialUnit": {
+      "day": "zi",
+      "week": "săptămână",
+      "month": "lună",
+      "year": "an"
+    },
+    "period": {
+      "day": "pe zi",
+      "week": "pe săptămână",
+      "month": "pe lună",
+      "year": "pe an",
+      "lifetime": "Achiziție unică"
+    },
+    "comparison": {
+      "features": "Funcții",
+      "free": "Gratuit",
+      "pro": "Pro",
+      "included": "Inclus",
+      "excluded": "Nu este inclus",
+      "unlimited": "Nelimitat",
+      "rows": {
+        "cleaningDuration": {
+          "title": "Durata curățării",
+          "free": "30 secunde",
+          "pro": "30/60/90 secunde"
+        },
+        "turbo": {
+          "title": "Modul Turbo"
+        },
+        "waveforms": {
+          "title": "Formă de undă",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "Test stereo",
+          "free": "Manual",
+          "pro": "Automat"
+        },
+        "soundInsights": {
+          "title": "Analiza nivelului sonor",
+          "free": "De bază",
+          "pro": "Avansat"
+        },
+        "activityHistory": {
+          "title": "Istoricul activității"
+        },
+        "adExperience": {
+          "title": "Reclame",
+          "free": "Reclame",
+          "pro": "Fără reclame"
+        }
+      }
+    },
+    "context": {
+      "dbSubtitle": "Deblocați analiza completă pentru această sesiune și revedeți rapoartele audio salvate."
+    },
+    "feedback": {
+      "subscribeSuccess": "Bun venit! Accesul dvs. premium este activ.",
+      "subscribeError": "A apărut o eroare. Vă rugăm să încercați din nou.",
+      "restoreSuccess": "Accesul Premium a fost restabilit cu succes!",
+      "restoreNotFound": "Nu a fost găsită nicio achiziție Premium activă.",
+      "restoreError": "Nu s-au putut restabili achizițiile. Vă rugăm să încercați din nou."
+    },
+    "packageTitle": {
+      "day": "Zilnic",
+      "week": "Săptămânal",
+      "month": "Lunar",
+      "year": "Anual",
+      "lifetime": "Durată de viață"
+    }
+  },
+  "otaUpdate": {
+    "updateReady": "O nouă actualizare este gata - repornește pentru a o aplica"
+  },
+  "errorBoundary": {
+    "title": "Ceva a mers greșit",
+    "message": "A apărut o eroare neașteptată. Te rugăm să încerci din nou."
+  },
+  "onboarding": {
+    "waterEject": {
+      "title": "Elimină rapid\napa și praful",
+      "description": "Redă un sunet puternic de curățare pentru a ajuta la eliminarea apei și prafului blocate din difuzor."
+    },
+    "toneGenerator": {
+      "title": "Generează\ntonul potrivit",
+      "description": "Alege dintre frecvențe diferite pentru testare, reglaj, mascarea zgomotului sau orice verificare a sunetului."
+    },
+    "dbMeter": {
+      "title": "Află cât de tare\neste de fapt",
+      "description": "Folosește sonometrul dB pentru a estima nivelurile de zgomot din jur și a lua decizii mai bune de ascultare."
+    },
+    "privacy": {
+      "title": "Privat și pe dispozitivul tău",
+      "description": "Procesarea audio rămâne pe telefonul tău, cu îndrumări clare despre siguranță și microfon."
+    }
+  }
+}

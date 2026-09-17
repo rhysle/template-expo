@@ -1,0 +1,36 @@
+{
+  "appleLocale": "vi",
+  "googleLocale": "vi",
+  "apple": {
+    "subscriptionGroupDisplayName": "Premium",
+    "products": {
+      "weekly": {
+        "displayName": "Premium · Hàng tuần",
+        "description": "Truy cập đầy đủ mọi tính năng cao cấp."
+      },
+      "monthly": {
+        "displayName": "Premium · Hàng tháng",
+        "description": "Truy cập đầy đủ mọi tính năng cao cấp."
+      },
+      "yearly": {
+        "displayName": "Premium · Hàng năm",
+        "description": "Truy cập đầy đủ mọi tính năng cao cấp."
+      },
+      "lifetime": {
+        "displayName": "Premium · Trọn đời",
+        "description": "Truy cập trọn đời mọi tính năng cao cấp."
+      }
+    }
+  },
+  "google": {
+    "subscription": {
+      "title": "Premium",
+      "description": "Truy cập đầy đủ mọi tính năng cao cấp.",
+      "benefits": ["Truy cập mọi tính năng cao cấp"]
+    },
+    "lifetime": {
+      "title": "Premium · Trọn đời",
+      "description": "Truy cập trọn đời mọi tính năng cao cấp."
+    }
+  }
+}

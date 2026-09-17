@@ -1,0 +1,180 @@
+{
+  "common": {
+    "back": "Zpět",
+    "cancel": "Zrušit",
+    "close": "Zavřít",
+    "confirm": "Potvrdit",
+    "continue": "Pokračovat",
+    "done": "Hotovo",
+    "getStarted": "Začít",
+    "next": "Další",
+    "ok": "OK",
+    "openSettings": "Otevřít nastavení",
+    "reset": "Obnovit",
+    "retry": "Zkusit znovu",
+    "restart": "Restartovat",
+    "save": "Uložit",
+    "skip": "Přeskočit",
+    "start": "Spustit",
+    "stop": "Zastavit"
+  },
+  "premium": {
+    "accessChecking": "Ověřování přístupu Premium…",
+    "accessUnknown": "Připojte se k internetu a ověřte přístup Premium."
+  },
+  "tabs": {
+    "eject": "Vytlačit",
+    "toneGenerator": "Generátor tónů",
+    "stereoTest": "Test sterea",
+    "dbMeter": "dB metr"
+  },
+  "settings": {
+    "title": "Nastavení",
+    "subtitle": "Vylaďte si nástroje pro reproduktory a měřič zvuku",
+    "support": "Podpora",
+    "contactSupport": "Kontaktovat podporu",
+    "contactSupportSubtitle": "Jsme tu, abychom pomohli",
+    "contactSupportError": "Nepodařilo se otevřít e-mailového klienta",
+    "rateApp": "Ohodnotit nás",
+    "rateAppSubtitle": "Líbí se vám aplikace? Zanechte recenzi",
+    "shareApp": "Sdílet",
+    "shareAppSubtitle": "Řekněte o ní přátelům a rodině",
+    "shareMessage": "Podívejte se na {{appName}}!",
+    "shareMessageWithUrl": "Podívejte se na {{appName}}! Stáhněte zde: {{url}}",
+    "userId": "ID uživatele",
+    "userIdCopied": "ID uživatele zkopírováno",
+    "legalSection": "Právní",
+    "privacyConsent": "Soukromí a souhlas",
+    "version": "Verze {{version}}",
+    "otaUpdateId": "Aktualizace: {{updateId}}",
+    "upgradeBanner": {
+      "title": "Upgradovat na Premium",
+      "subtitle": "Odemkněte delší čištění Turbo, pokročilé ovládání zvuku a používání bez reklam"
+    }
+  },
+  "paywall": {
+    "title": "Odemkněte kompletní sadu zvukových nástrojů",
+    "subtitle": "Vyčistěte reproduktor, získejte přístup k pokročilým ovládacím prvkům a odstraňte všechny reklamy.",
+    "ctaFreeTrial": "Vyzkoušet zdarma",
+    "trialDisclaimer": "Kdykoli zrušte. Nyní nic neplatíte",
+    "subscriptionDisclaimer": "Kdykoli zrušte.",
+    "lifetimeDisclaimer": "Zaplaťte jednou. Žádné opakované platby.",
+    "restore": "Obnovit nákupy",
+    "terms": "Smluvní podmínky",
+    "privacy": "Zásady ochrany osobních údajů",
+    "then": "poté",
+    "trial": "{{count}}-{{unit}} bezplatná zkušební verze",
+    "save": "Ušetřete {{percent}}%",
+    "availability": {
+      "loading": "Kontrolují se možnosti nákupu…",
+      "temporary_error": {
+        "title": "Možnosti nákupu se nepodařilo načíst",
+        "subtitle": "Zkontrolujte připojení a zkuste to znovu."
+      },
+      "configuration_error": {
+        "title": "Možnosti nákupu nejsou k dispozici",
+        "subtitle": "Obchodu se nepodařilo načíst produkty této aplikace. Zkuste to prosím za chvíli znovu."
+      },
+      "purchase_not_allowed": {
+        "title": "Nákupy nejsou na tomto zařízení podporovány",
+        "subtitle": "Toto zařízení nebo účet obchodu nemůže provádět nákupy v aplikaci."
+      }
+    },
+    "trialUnit": {
+      "day": "den",
+      "week": "týden",
+      "month": "měsíc",
+      "year": "rok"
+    },
+    "period": {
+      "day": "za den",
+      "week": "za týden",
+      "month": "za měsíc",
+      "year": "ročně",
+      "lifetime": "Jednorázový nákup"
+    },
+    "comparison": {
+      "features": "Funkce",
+      "free": "Zdarma",
+      "pro": "Pro",
+      "included": "Zahrnuto",
+      "excluded": "Není zahrnuto",
+      "unlimited": "Neomezeně",
+      "rows": {
+        "cleaningDuration": {
+          "title": "Délka čištění",
+          "free": "30 sekund",
+          "pro": "30/60/90 sekund"
+        },
+        "turbo": {
+          "title": "Turbo režim"
+        },
+        "waveforms": {
+          "title": "Průběh",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "Test sterea",
+          "free": "Ručně",
+          "pro": "Automaticky"
+        },
+        "soundInsights": {
+          "title": "Analýza úrovně zvuku",
+          "free": "Základní",
+          "pro": "Pokročilé"
+        },
+        "activityHistory": {
+          "title": "Historie aktivit"
+        },
+        "adExperience": {
+          "title": "Reklamy",
+          "free": "Reklamy",
+          "pro": "Bez reklam"
+        }
+      }
+    },
+    "context": {
+      "dbSubtitle": "Odemkněte úplnou analýzu této relace a znovu si prohlédněte uložené zvukové zprávy."
+    },
+    "feedback": {
+      "subscribeSuccess": "Vítejte! Váš prémiový přístup je aktivní.",
+      "subscribeError": "Něco se pokazilo. Zkuste to prosím znovu.",
+      "restoreSuccess": "Prémiový přístup byl úspěšně obnoven!",
+      "restoreNotFound": "Nebyl nalezen žádný aktivní prémiový nákup.",
+      "restoreError": "Nákupy se nepodařilo obnovit. Zkuste to prosím znovu."
+    },
+    "packageTitle": {
+      "day": "denně",
+      "week": "Týdně",
+      "month": "Měsíčně",
+      "year": "ročně",
+      "lifetime": "Životnost"
+    }
+  },
+  "otaUpdate": {
+    "updateReady": "Nová aktualizace je připravena - restartujte pro použití"
+  },
+  "errorBoundary": {
+    "title": "Něco se pokazilo",
+    "message": "Došlo k neočekávané chybě. Zkuste to prosím znovu."
+  },
+  "onboarding": {
+    "waterEject": {
+      "title": "Rychle odstraňte\nvodu a prach",
+      "description": "Přehrajte silný čisticí zvuk, který pomůže vytlačit zachycenou vodu a prach z reproduktoru."
+    },
+    "toneGenerator": {
+      "title": "Vytvořte\nsprávný tón",
+      "description": "Vyberte si z různých frekvencí pro testování, ladění, maskování hluku nebo jakoukoli zvukovou kontrolu."
+    },
+    "dbMeter": {
+      "title": "Zjistěte, jak hlasité\nto skutečně je",
+      "description": "Pomocí měřiče dB odhadněte hladinu hluku kolem sebe a rozhodujte se při poslechu lépe."
+    },
+    "privacy": {
+      "title": "Soukromé a v zařízení",
+      "description": "Zpracování zvuku zůstává v telefonu a doplňují ho jasné pokyny k bezpečnosti a mikrofonu."
+    }
+  }
+}

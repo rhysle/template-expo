@@ -1,0 +1,180 @@
+{
+  "common": {
+    "back": "Atrás",
+    "cancel": "Cancelar",
+    "close": "Cerrar",
+    "confirm": "Confirmar",
+    "continue": "Continuar",
+    "done": "Hecho",
+    "getStarted": "Comenzar",
+    "next": "Siguiente",
+    "ok": "Aceptar",
+    "openSettings": "Abrir ajustes",
+    "reset": "Restablecer",
+    "retry": "Reintentar",
+    "restart": "Reiniciar",
+    "save": "Guardar",
+    "skip": "Omitir",
+    "start": "Iniciar",
+    "stop": "Detener"
+  },
+  "premium": {
+    "accessChecking": "Comprobando el acceso Premium…",
+    "accessUnknown": "Conéctate a Internet para comprobar el acceso Premium."
+  },
+  "tabs": {
+    "eject": "Expulsar",
+    "toneGenerator": "Generador de tonos",
+    "stereoTest": "Prueba estéreo",
+    "dbMeter": "Medidor de dB"
+  },
+  "settings": {
+    "title": "Ajustes",
+    "subtitle": "Ajusta tus herramientas de altavoz y medidor de sonido",
+    "support": "Soporte",
+    "contactSupport": "Contactar soporte",
+    "contactSupportSubtitle": "Estamos aquí para ayudar",
+    "contactSupportError": "No se pudo abrir el cliente de correo",
+    "rateApp": "Califícanos",
+    "rateAppSubtitle": "¿Te gusta la app? Déjanos una reseña",
+    "shareApp": "Compartir",
+    "shareAppSubtitle": "Recomiéndanos a amigos y familia",
+    "shareMessage": "¡Prueba {{appName}}!",
+    "shareMessageWithUrl": "¡Prueba {{appName}}! Descárgala aquí: {{url}}",
+    "userId": "ID de usuario",
+    "userIdCopied": "ID de usuario copiado",
+    "legalSection": "Legal",
+    "privacyConsent": "Privacidad y consentimiento",
+    "version": "Versión {{version}}",
+    "otaUpdateId": "Actualización: {{updateId}}",
+    "upgradeBanner": {
+      "title": "Actualiza a Premium",
+      "subtitle": "Desbloquea ciclos de limpieza Turbo más largos, controles de audio avanzados y una experiencia sin anuncios"
+    }
+  },
+  "paywall": {
+    "title": "Desbloquee su kit de herramientas de audio completo",
+    "subtitle": "Limpia tu altavoz, accede a controles avanzados y elimina todos los anuncios.",
+    "ctaFreeTrial": "Pruébelo gratis",
+    "trialDisclaimer": "Cancela cuando quieras. No se cobrará nada ahora",
+    "subscriptionDisclaimer": "Cancela cuando quieras.",
+    "lifetimeDisclaimer": "Paga una sola vez. Sin cargos recurrentes.",
+    "restore": "Restaurar compras",
+    "terms": "Condiciones de servicio",
+    "privacy": "Política de privacidad",
+    "then": "luego",
+    "trial": "{{count}}-{{unit}} prueba gratuita",
+    "save": "Ahorre {{percent}}%",
+    "availability": {
+      "loading": "Comprobando opciones de compra…",
+      "temporary_error": {
+        "title": "No se han podido cargar las opciones de compra",
+        "subtitle": "Comprueba tu conexión y vuelve a intentarlo."
+      },
+      "configuration_error": {
+        "title": "Las opciones de compra no están disponibles",
+        "subtitle": "La tienda no ha podido cargar los productos de esta app. Vuelve a intentarlo dentro de unos instantes."
+      },
+      "purchase_not_allowed": {
+        "title": "Este dispositivo no admite compras",
+        "subtitle": "Este dispositivo o cuenta de la tienda no permite realizar compras dentro de la app."
+      }
+    },
+    "trialUnit": {
+      "day": "día",
+      "week": "semana",
+      "month": "mes",
+      "year": "año"
+    },
+    "period": {
+      "day": "por día",
+      "week": "por semana",
+      "month": "por mes",
+      "year": "por año",
+      "lifetime": "Compra única"
+    },
+    "comparison": {
+      "features": "Funciones",
+      "free": "Gratis",
+      "pro": "Pro",
+      "included": "Incluido",
+      "excluded": "No incluido",
+      "unlimited": "Ilimitado",
+      "rows": {
+        "cleaningDuration": {
+          "title": "Duración de la limpieza",
+          "free": "30 segundos",
+          "pro": "30/60/90 segundos"
+        },
+        "turbo": {
+          "title": "Modo turbo"
+        },
+        "waveforms": {
+          "title": "Forma de onda",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "Prueba estéreo",
+          "free": "Manual",
+          "pro": "Automático"
+        },
+        "soundInsights": {
+          "title": "Análisis del nivel de sonido",
+          "free": "Básico",
+          "pro": "Avanzado"
+        },
+        "activityHistory": {
+          "title": "Historial de actividad"
+        },
+        "adExperience": {
+          "title": "Anuncios",
+          "free": "Anuncios",
+          "pro": "Sin anuncios"
+        }
+      }
+    },
+    "context": {
+      "dbSubtitle": "Desbloquee el análisis completo de esta sesión y vuelva a visitar los informes de sonido guardados."
+    },
+    "feedback": {
+      "subscribeSuccess": "¡Bienvenido! Tu acceso premium está activo.",
+      "subscribeError": "Algo salió mal. Por favor inténtalo de nuevo.",
+      "restoreSuccess": "¡El acceso premium se restableció exitosamente!",
+      "restoreNotFound": "No se encontró ninguna compra Premium activa.",
+      "restoreError": "No se pudieron restaurar las compras. Por favor inténtalo de nuevo."
+    },
+    "packageTitle": {
+      "day": "Diario",
+      "week": "Semanal",
+      "month": "Mensual",
+      "year": "Anual",
+      "lifetime": "De por vida"
+    }
+  },
+  "otaUpdate": {
+    "updateReady": "Una nueva actualización está lista - reinicia para aplicar"
+  },
+  "errorBoundary": {
+    "title": "Algo salió mal",
+    "message": "Se produjo un error inesperado. Por favor, inténtalo de nuevo."
+  },
+  "onboarding": {
+    "waterEject": {
+      "title": "Elimina agua\ny polvo rápido",
+      "description": "Reproduce un potente sonido de limpieza para ayudar a expulsar el agua y el polvo atrapados en el altavoz."
+    },
+    "toneGenerator": {
+      "title": "Genera el\ntono adecuado",
+      "description": "Elige entre distintas frecuencias para probar, ajustar, enmascarar ruido o realizar cualquier comprobación de sonido."
+    },
+    "dbMeter": {
+      "title": "Descubre lo alto\nque es realmente",
+      "description": "Usa el medidor de dB para estimar los niveles de ruido a tu alrededor y tomar mejores decisiones de escucha."
+    },
+    "privacy": {
+      "title": "Privado y en tu dispositivo",
+      "description": "El procesamiento de audio permanece en tu teléfono, con indicaciones claras de seguridad y micrófono."
+    }
+  }
+}

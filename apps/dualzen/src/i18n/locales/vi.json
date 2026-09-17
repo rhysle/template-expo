@@ -1,0 +1,180 @@
+{
+  "common": {
+    "back": "Quay lại",
+    "cancel": "Hủy",
+    "close": "Đóng",
+    "confirm": "Xác nhận",
+    "continue": "Tiếp tục",
+    "done": "Hoàn tất",
+    "getStarted": "Bắt đầu",
+    "next": "Tiếp theo",
+    "ok": "OK",
+    "openSettings": "Mở Cài đặt",
+    "reset": "Đặt lại",
+    "retry": "Thử lại",
+    "restart": "Khởi động lại",
+    "save": "Lưu",
+    "skip": "Bỏ qua",
+    "start": "Bắt đầu",
+    "stop": "Dừng"
+  },
+  "premium": {
+    "accessChecking": "Đang kiểm tra quyền truy cập Premium…",
+    "accessUnknown": "Kết nối Internet để kiểm tra quyền truy cập Premium."
+  },
+  "tabs": {
+    "eject": "Đẩy nước",
+    "toneGenerator": "Tạo âm",
+    "stereoTest": "Kiểm tra Stereo",
+    "dbMeter": "Đo dB"
+  },
+  "settings": {
+    "title": "Cài đặt",
+    "subtitle": "Điều chỉnh công cụ loa và máy đo âm thanh của bạn",
+    "support": "Hỗ trợ",
+    "contactSupport": "Liên hệ hỗ trợ",
+    "contactSupportSubtitle": "Chúng tôi luôn sẵn sàng hỗ trợ bạn",
+    "contactSupportError": "Không thể mở ứng dụng email",
+    "rateApp": "Đánh giá chúng tôi",
+    "rateAppSubtitle": "Bạn thích ứng dụng? Hãy để lại đánh giá nhé",
+    "shareApp": "Chia sẻ",
+    "shareAppSubtitle": "Giới thiệu ứng dụng đến bạn bè & gia đình",
+    "shareMessage": "Hãy thử {{appName}} nhé!",
+    "shareMessageWithUrl": "Hãy thử {{appName}} nhé! Tải về tại đây: {{url}}",
+    "userId": "ID người dùng",
+    "userIdCopied": "Đã sao chép ID người dùng",
+    "legalSection": "Pháp lý",
+    "privacyConsent": "Quyền riêng tư & Sự đồng ý",
+    "version": "Phiên bản {{version}}",
+    "otaUpdateId": "Cập nhật: {{updateId}}",
+    "upgradeBanner": {
+      "title": "Nâng cấp lên Premium",
+      "subtitle": "Mở khóa chế độ làm sạch Turbo lâu hơn, điều khiển âm thanh nâng cao và trải nghiệm không quảng cáo"
+    }
+  },
+  "paywall": {
+    "title": "Mở khóa Bộ công cụ âm thanh hoàn chỉnh của bạn",
+    "subtitle": "Làm sạch loa của bạn, truy cập các điều khiển nâng cao và xóa mọi quảng cáo.",
+    "ctaFreeTrial": "Dùng thử miễn phí",
+    "trialDisclaimer": "Hủy bất cứ lúc nào. Chưa cần thanh toán ngay",
+    "subscriptionDisclaimer": "Hủy bất cứ lúc nào.",
+    "lifetimeDisclaimer": "Thanh toán một lần. Không có phí định kỳ.",
+    "restore": "Khôi phục giao dịch mua",
+    "terms": "Điều khoản dịch vụ",
+    "privacy": "Chính sách bảo mật",
+    "then": "rồi",
+    "trial": "{{count}}-{{unit}} dùng thử miễn phí",
+    "save": "Tiết kiệm {{percent}}%",
+    "availability": {
+      "loading": "Đang kiểm tra các gói Premium…",
+      "temporary_error": {
+        "title": "Không thể tải các gói Premium",
+        "subtitle": "Kiểm tra kết nối rồi thử lại."
+      },
+      "configuration_error": {
+        "title": "Các gói Premium không khả dụng",
+        "subtitle": "Cửa hàng không thể tải gói Premium. Vui lòng thử lại sau giây lát."
+      },
+      "purchase_not_allowed": {
+        "title": "Thiết bị này không hỗ trợ mua hàng",
+        "subtitle": "Thiết bị hoặc tài khoản cửa hàng này không thể mua hàng trong ứng dụng."
+      }
+    },
+    "trialUnit": {
+      "day": "ngày",
+      "week": "tuần",
+      "month": "tháng",
+      "year": "năm"
+    },
+    "period": {
+      "day": "mỗi ngày",
+      "week": "mỗi tuần",
+      "month": "mỗi tháng",
+      "year": "mỗi năm",
+      "lifetime": "Mua một lần"
+    },
+    "comparison": {
+      "features": "Tính năng",
+      "free": "Miễn phí",
+      "pro": "Pro",
+      "included": "Có",
+      "excluded": "Không có",
+      "unlimited": "Không giới hạn",
+      "rows": {
+        "cleaningDuration": {
+          "title": "Thời gian vệ sinh",
+          "free": "30 giây",
+          "pro": "30/60/90 giây"
+        },
+        "turbo": {
+          "title": "Chế độ Turbo"
+        },
+        "waveforms": {
+          "title": "Dạng sóng",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "Kiểm tra Stereo",
+          "free": "Thủ công",
+          "pro": "Tự động"
+        },
+        "soundInsights": {
+          "title": "Phân tích mức âm thanh",
+          "free": "Cơ bản",
+          "pro": "Nâng cao"
+        },
+        "activityHistory": {
+          "title": "Lịch sử hoạt động"
+        },
+        "adExperience": {
+          "title": "Quảng cáo",
+          "free": "Quảng cáo",
+          "pro": "Không quảng cáo"
+        }
+      }
+    },
+    "context": {
+      "dbSubtitle": "Mở khóa phân tích đầy đủ cho phiên này và xem lại các báo cáo âm thanh đã lưu."
+    },
+    "feedback": {
+      "subscribeSuccess": "Chào mừng bạn! Quyền truy cập cao cấp của bạn đang hoạt động.",
+      "subscribeError": "Đã xảy ra lỗi. Vui lòng thử lại.",
+      "restoreSuccess": "Đã khôi phục thành công quyền truy cập cao cấp!",
+      "restoreNotFound": "Không tìm thấy giao dịch mua Premium nào đang hoạt động.",
+      "restoreError": "Không thể khôi phục giao dịch mua hàng. Vui lòng thử lại."
+    },
+    "packageTitle": {
+      "day": "Hàng ngày",
+      "week": "Hàng tuần",
+      "month": "Hàng tháng",
+      "year": "Hàng năm",
+      "lifetime": "Trọn đời"
+    }
+  },
+  "otaUpdate": {
+    "updateReady": "Có bản cập nhật mới - khởi động lại để áp dụng"
+  },
+  "errorBoundary": {
+    "title": "Đã xảy ra lỗi",
+    "message": "Có lỗi không mong muốn xảy ra. Vui lòng thử lại."
+  },
+  "onboarding": {
+    "waterEject": {
+      "title": "Loại bỏ nước\nvà bụi nhanh chóng",
+      "description": "Phát âm thanh làm sạch mạnh mẽ để giúp đẩy nước và bụi mắc kẹt ra khỏi loa."
+    },
+    "toneGenerator": {
+      "title": "Tạo âm tần\nphù hợp",
+      "description": "Chọn nhiều tần số để kiểm tra, tinh chỉnh, che lấp tiếng ồn hoặc thực hiện các phép thử âm thanh khác."
+    },
+    "dbMeter": {
+      "title": "Biết chính xác\nâm thanh lớn cỡ nào",
+      "description": "Dùng Máy đo dB để ước tính mức tiếng ồn xung quanh và đưa ra lựa chọn nghe thông minh hơn."
+    },
+    "privacy": {
+      "title": "Riêng tư, xử lý trên thiết bị",
+      "description": "Việc xử lý âm thanh diễn ra trên điện thoại của bạn, kèm hướng dẫn rõ ràng về an toàn và micrô."
+    }
+  }
+}

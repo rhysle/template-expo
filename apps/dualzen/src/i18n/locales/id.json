@@ -1,0 +1,180 @@
+{
+  "common": {
+    "back": "Kembali",
+    "cancel": "Batal",
+    "close": "Tutup",
+    "confirm": "Konfirmasi",
+    "continue": "Lanjutkan",
+    "done": "Selesai",
+    "getStarted": "Mulai",
+    "next": "Berikutnya",
+    "ok": "OK",
+    "openSettings": "Buka Pengaturan",
+    "reset": "Atur Ulang",
+    "retry": "Coba lagi",
+    "restart": "Mulai Ulang",
+    "save": "Simpan",
+    "skip": "Lewati",
+    "start": "Mulai",
+    "stop": "Berhenti"
+  },
+  "premium": {
+    "accessChecking": "Memeriksa akses Premium…",
+    "accessUnknown": "Sambungkan ke internet untuk memeriksa akses Premium."
+  },
+  "tabs": {
+    "eject": "Keluarkan",
+    "toneGenerator": "Generator Nada",
+    "stereoTest": "Tes Stereo",
+    "dbMeter": "Meter dB"
+  },
+  "settings": {
+    "title": "Pengaturan",
+    "subtitle": "Sesuaikan alat speaker dan pengukur suara Anda",
+    "support": "Dukungan",
+    "contactSupport": "Hubungi Dukungan",
+    "contactSupportSubtitle": "Kami siap membantu",
+    "contactSupportError": "Tidak dapat membuka klien email",
+    "rateApp": "Beri Nilai",
+    "rateAppSubtitle": "Menyukai aplikasinya? Tinggalkan ulasan",
+    "shareApp": "Bagikan",
+    "shareAppSubtitle": "Rekomendasikan kepada teman & keluarga",
+    "shareMessage": "Coba {{appName}}!",
+    "shareMessageWithUrl": "Coba {{appName}}! Unduh di sini: {{url}}",
+    "userId": "ID Pengguna",
+    "userIdCopied": "ID Pengguna disalin",
+    "legalSection": "Hukum",
+    "privacyConsent": "Privasi & Persetujuan",
+    "version": "Versi {{version}}",
+    "otaUpdateId": "Pembaruan: {{updateId}}",
+    "upgradeBanner": {
+      "title": "Tingkatkan ke Premium",
+      "subtitle": "Buka pembersihan Turbo yang lebih lama, kontrol audio lanjutan, dan pengalaman tanpa iklan"
+    }
+  },
+  "paywall": {
+    "title": "Buka Kunci Perangkat Audio Lengkap Anda",
+    "subtitle": "Bersihkan speaker Anda, akses kontrol lanjutan, dan hapus setiap iklan.",
+    "ctaFreeTrial": "Coba Gratis",
+    "trialDisclaimer": "Batalkan kapan saja. Tidak ada pembayaran sekarang",
+    "subscriptionDisclaimer": "Batalkan kapan saja.",
+    "lifetimeDisclaimer": "Bayar sekali. Tanpa biaya berulang.",
+    "restore": "Pulihkan Pembelian",
+    "terms": "Persyaratan Layanan",
+    "privacy": "Kebijakan Privasi",
+    "then": "lalu",
+    "trial": "{{count}}-{{unit}} uji coba gratis",
+    "save": "Hemat {{percent}}%",
+    "availability": {
+      "loading": "Memeriksa opsi pembelian…",
+      "temporary_error": {
+        "title": "Opsi pembelian tidak dapat dimuat",
+        "subtitle": "Periksa koneksi Anda, lalu coba lagi."
+      },
+      "configuration_error": {
+        "title": "Opsi pembelian tidak tersedia",
+        "subtitle": "Toko tidak dapat memuat produk aplikasi ini. Coba lagi beberapa saat."
+      },
+      "purchase_not_allowed": {
+        "title": "Pembelian tidak didukung di perangkat ini",
+        "subtitle": "Perangkat atau akun toko ini tidak dapat melakukan pembelian dalam aplikasi."
+      }
+    },
+    "trialUnit": {
+      "day": "hari",
+      "week": "minggu",
+      "month": "bulan",
+      "year": "tahun"
+    },
+    "period": {
+      "day": "per hari",
+      "week": "per minggu",
+      "month": "per bulan",
+      "year": "per tahun",
+      "lifetime": "Pembelian satu kali"
+    },
+    "comparison": {
+      "features": "Fitur",
+      "free": "Gratis",
+      "pro": "Pro",
+      "included": "Termasuk",
+      "excluded": "Tidak termasuk",
+      "unlimited": "Tanpa batas",
+      "rows": {
+        "cleaningDuration": {
+          "title": "Durasi pembersihan",
+          "free": "30 detik",
+          "pro": "30/60/90 detik"
+        },
+        "turbo": {
+          "title": "Modus Turbo"
+        },
+        "waveforms": {
+          "title": "Bentuk Gelombang",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "Tes Stereo",
+          "free": "Manual",
+          "pro": "Otomatis"
+        },
+        "soundInsights": {
+          "title": "Analisis tingkat suara",
+          "free": "Dasar",
+          "pro": "Lanjutan"
+        },
+        "activityHistory": {
+          "title": "Riwayat Aktivitas"
+        },
+        "adExperience": {
+          "title": "Iklan",
+          "free": "Iklan",
+          "pro": "Tanpa iklan"
+        }
+      }
+    },
+    "context": {
+      "dbSubtitle": "Buka kunci analisis lengkap untuk sesi ini dan lihat kembali laporan suara yang disimpan."
+    },
+    "feedback": {
+      "subscribeSuccess": "Selamat datang! Akses premium Anda aktif.",
+      "subscribeError": "Ada yang tidak beres. Silakan coba lagi.",
+      "restoreSuccess": "Akses premium berhasil dipulihkan!",
+      "restoreNotFound": "Tidak ditemukan pembelian Premium aktif.",
+      "restoreError": "Tidak dapat memulihkan pembelian. Silakan coba lagi."
+    },
+    "packageTitle": {
+      "day": "Setiap hari",
+      "week": "Mingguan",
+      "month": "Bulanan",
+      "year": "Tahunan",
+      "lifetime": "Seumur Hidup"
+    }
+  },
+  "otaUpdate": {
+    "updateReady": "Pembaruan baru siap - mulai ulang untuk menerapkan"
+  },
+  "errorBoundary": {
+    "title": "Terjadi kesalahan",
+    "message": "Terjadi kesalahan yang tidak terduga. Silakan coba lagi."
+  },
+  "onboarding": {
+    "waterEject": {
+      "title": "Keluarkan air\ndan debu dengan cepat",
+      "description": "Putar suara pembersih yang kuat untuk membantu mendorong air dan debu yang terperangkap keluar dari speaker."
+    },
+    "toneGenerator": {
+      "title": "Buat\nnada yang tepat",
+      "description": "Pilih dari berbagai frekuensi untuk pengujian, penyetelan, penyamaran kebisingan, atau pemeriksaan suara apa pun."
+    },
+    "dbMeter": {
+      "title": "Ketahui seberapa keras\nsuaranya sebenarnya",
+      "description": "Gunakan Pengukur dB untuk memperkirakan tingkat kebisingan di sekitar Anda dan membuat keputusan mendengar yang lebih baik."
+    },
+    "privacy": {
+      "title": "Pribadi dan di perangkat Anda",
+      "description": "Pemrosesan audio tetap di ponsel Anda, dengan panduan keselamatan dan mikrofon yang jelas."
+    }
+  }
+}

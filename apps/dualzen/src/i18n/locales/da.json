@@ -1,0 +1,180 @@
+{
+  "common": {
+    "back": "Tilbage",
+    "cancel": "Annuller",
+    "close": "Luk",
+    "confirm": "Bekræft",
+    "continue": "Fortsæt",
+    "done": "Færdig",
+    "getStarted": "Kom i gang",
+    "next": "Næste",
+    "ok": "OK",
+    "openSettings": "Åbn indstillinger",
+    "reset": "Nulstil",
+    "retry": "Prøv igen",
+    "restart": "Genstart",
+    "save": "Gem",
+    "skip": "Spring over",
+    "start": "Start",
+    "stop": "Stop"
+  },
+  "premium": {
+    "accessChecking": "Kontrollerer Premium-adgang…",
+    "accessUnknown": "Opret forbindelse til internettet for at kontrollere Premium-adgang."
+  },
+  "tabs": {
+    "eject": "Udtøm",
+    "toneGenerator": "Tonegenerator",
+    "stereoTest": "Stereotest",
+    "dbMeter": "dB-måler"
+  },
+  "settings": {
+    "title": "Indstillinger",
+    "subtitle": "Indstil dine højttalerværktøjer og lydmåler",
+    "support": "Support",
+    "contactSupport": "Kontakt support",
+    "contactSupportSubtitle": "Vi er her for at hjælpe",
+    "contactSupportError": "Kunne ikke åbne e-mailklient",
+    "rateApp": "Bedøm os",
+    "rateAppSubtitle": "Nyder du appen? Efterlad en anmeldelse",
+    "shareApp": "Del",
+    "shareAppSubtitle": "Fortæl det til venner og familie",
+    "shareMessage": "Tjek {{appName}}!",
+    "shareMessageWithUrl": "Tjek {{appName}}! Download den her: {{url}}",
+    "userId": "Bruger-ID",
+    "userIdCopied": "Bruger-ID kopieret",
+    "legalSection": "Juridisk",
+    "privacyConsent": "Privatliv og samtykke",
+    "version": "Version {{version}}",
+    "otaUpdateId": "Opdatering: {{updateId}}",
+    "upgradeBanner": {
+      "title": "Opgrader til Premium",
+      "subtitle": "Lås op for længere Turbo-rensning, avanceret lydstyring og en oplevelse uden annoncer"
+    }
+  },
+  "paywall": {
+    "title": "Lås dit komplette lydværktøjssæt op",
+    "subtitle": "Rens din højttaler, få adgang til avancerede kontroller, og fjern hver annonce.",
+    "ctaFreeTrial": "Prøv gratis",
+    "trialDisclaimer": "Opsig når som helst. Du betaler ikke noget nu",
+    "subscriptionDisclaimer": "Opsig når som helst.",
+    "lifetimeDisclaimer": "Betal én gang. Ingen løbende betalinger.",
+    "restore": "Gendan køb",
+    "terms": "Servicevilkår",
+    "privacy": "Privatlivspolitik",
+    "then": "derefter",
+    "trial": "{{count}}-{{unit}} gratis prøveperiode",
+    "save": "Spar {{percent}} %",
+    "availability": {
+      "loading": "Tjekker købsmuligheder…",
+      "temporary_error": {
+        "title": "Købsmulighederne kunne ikke indlæses",
+        "subtitle": "Kontrollér din forbindelse, og prøv igen."
+      },
+      "configuration_error": {
+        "title": "Købsmulighederne er ikke tilgængelige",
+        "subtitle": "Butikken kunne ikke indlæse produkterne til denne app. Prøv igen om lidt."
+      },
+      "purchase_not_allowed": {
+        "title": "Køb understøttes ikke på denne enhed",
+        "subtitle": "Denne enhed eller butikskonto kan ikke foretage køb i appen."
+      }
+    },
+    "trialUnit": {
+      "day": "dag",
+      "week": "uge",
+      "month": "måned",
+      "year": "år"
+    },
+    "period": {
+      "day": "pr. dag",
+      "week": "pr. uge",
+      "month": "pr. måned",
+      "year": "pr. år",
+      "lifetime": "Engangskøb"
+    },
+    "comparison": {
+      "features": "Funktioner",
+      "free": "Gratis",
+      "pro": "Pro",
+      "included": "Inkluderet",
+      "excluded": "Ikke inkluderet",
+      "unlimited": "Ubegrænset",
+      "rows": {
+        "cleaningDuration": {
+          "title": "Rengøringsvarighed",
+          "free": "30 sekunder",
+          "pro": "30/60/90 sekunder"
+        },
+        "turbo": {
+          "title": "Turbo tilstand"
+        },
+        "waveforms": {
+          "title": "Bølgeform",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "Stereotest",
+          "free": "Manuel",
+          "pro": "Automatisk"
+        },
+        "soundInsights": {
+          "title": "Analyse af lydniveau",
+          "free": "Grundlæggende",
+          "pro": "Avanceret"
+        },
+        "activityHistory": {
+          "title": "Aktivitetshistorie"
+        },
+        "adExperience": {
+          "title": "Annoncer",
+          "free": "Annoncer",
+          "pro": "Uden annoncer"
+        }
+      }
+    },
+    "context": {
+      "dbSubtitle": "Lås op for den fulde analyse for denne session, og gense gemte lydrapporter."
+    },
+    "feedback": {
+      "subscribeSuccess": "Velkommen! Din premium-adgang er aktiv.",
+      "subscribeError": "Something went wrong. Prøv venligst igen.",
+      "restoreSuccess": "Premium-adgang gendannet med succes!",
+      "restoreNotFound": "Der blev ikke fundet et aktivt Premium-køb.",
+      "restoreError": "Could not restore purchases. Prøv venligst igen."
+    },
+    "packageTitle": {
+      "day": "Daglig",
+      "week": "Ugentlig",
+      "month": "Månedlig",
+      "year": "Årlig",
+      "lifetime": "Livstid"
+    }
+  },
+  "otaUpdate": {
+    "updateReady": "En ny opdatering er klar - genstart for at anvende"
+  },
+  "errorBoundary": {
+    "title": "Noget gik galt",
+    "message": "Der opstod en uventet fejl. Prøv venligst igen."
+  },
+  "onboarding": {
+    "waterEject": {
+      "title": "Fjern vand\nog støv hurtigt",
+      "description": "Afspil en kraftig rengøringslyd, som hjælper med at skubbe fanget vand og støv ud af din højttaler."
+    },
+    "toneGenerator": {
+      "title": "Skab den\nrigtige tone",
+      "description": "Vælg mellem forskellige frekvenser til test, justering, støjmaskering eller enhver lydkontrol."
+    },
+    "dbMeter": {
+      "title": "Se, hvor højt\ndet virkelig er",
+      "description": "Brug dB-måleren til at anslå støjniveauet omkring dig og træffe bedre lyttevalg."
+    },
+    "privacy": {
+      "title": "Privat og på din enhed",
+      "description": "Lydbehandlingen bliver på din telefon med tydelig vejledning om sikkerhed og mikrofonen."
+    }
+  }
+}

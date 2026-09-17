@@ -1,0 +1,180 @@
+{
+  "common": {
+    "back": "חזרה",
+    "cancel": "ביטול",
+    "close": "סגור",
+    "confirm": "אישור",
+    "continue": "המשך",
+    "done": "סיום",
+    "getStarted": "בואו נתחיל",
+    "next": "הבא",
+    "ok": "אישור",
+    "openSettings": "פתיחת הגדרות",
+    "reset": "איפוס",
+    "retry": "נסה שוב",
+    "restart": "הפעל מחדש",
+    "save": "שמור",
+    "skip": "דלג",
+    "start": "התחל",
+    "stop": "עצור"
+  },
+  "premium": {
+    "accessChecking": "מתבצעת בדיקת גישת Premium…",
+    "accessUnknown": "התחברו לאינטרנט כדי לבדוק את גישת Premium."
+  },
+  "tabs": {
+    "eject": "הוצאה",
+    "toneGenerator": "מחולל צלילים",
+    "stereoTest": "בדיקת סטריאו",
+    "dbMeter": "מד דציבלים"
+  },
+  "settings": {
+    "title": "הגדרות",
+    "subtitle": "כוונן את כלי הרמקולים ומד הקול שלך",
+    "support": "תמיכה",
+    "contactSupport": "פנה לתמיכה",
+    "contactSupportSubtitle": "אנחנו כאן לעזור",
+    "contactSupportError": "לא ניתן לפתוח לקוח דוא\"ל",
+    "rateApp": "דרג אותנו",
+    "rateAppSubtitle": "נהנה מהאפליקציה? השאר ביקורת",
+    "shareApp": "שתף",
+    "shareAppSubtitle": "ספר לחברים ולמשפחה",
+    "shareMessage": "בדוק את {{appName}}!",
+    "shareMessageWithUrl": "בדוק את {{appName}}! הורד כאן: {{url}}",
+    "userId": "מזהה משתמש",
+    "userIdCopied": "מזהה משתמש הועתק",
+    "legalSection": "משפטי",
+    "privacyConsent": "פרטיות והסכמה",
+    "version": "גרסה {{version}}",
+    "otaUpdateId": "עדכון: {{updateId}}",
+    "upgradeBanner": {
+      "title": "שדרוג לפרימיום",
+      "subtitle": "פתחו מחזורי ניקוי Turbo ארוכים יותר, בקרות שמע מתקדמות וחוויה ללא פרסומות"
+    }
+  },
+  "paywall": {
+    "title": "פתח את הנעילה של ערכת כלי האודיו השלם שלך",
+    "subtitle": "נקה את הרמקול שלך, גש לפקדים מתקדמים והסר כל מודעה.",
+    "ctaFreeTrial": "נסה בחינם",
+    "trialDisclaimer": "אפשר לבטל בכל עת. לא ייגבה תשלום כעת",
+    "subscriptionDisclaimer": "אפשר לבטל בכל עת.",
+    "lifetimeDisclaimer": "משלמים פעם אחת. ללא חיובים חוזרים.",
+    "restore": "שחזור רכישות",
+    "terms": "תנאים והגבלות",
+    "privacy": "מדיניות פרטיות",
+    "then": "ואז",
+    "trial": "{{count}}-{{unit}} ניסיון חינם",
+    "save": "חסכו {{percent}}%",
+    "availability": {
+      "loading": "בודק אפשרויות רכישה…",
+      "temporary_error": {
+        "title": "לא ניתן לטעון את אפשרויות הרכישה",
+        "subtitle": "יש לבדוק את החיבור ולנסות שוב."
+      },
+      "configuration_error": {
+        "title": "אפשרויות הרכישה אינן זמינות",
+        "subtitle": "החנות לא הצליחה לטעון את המוצרים של האפליקציה. יש לנסות שוב בעוד זמן קצר."
+      },
+      "purchase_not_allowed": {
+        "title": "רכישות אינן נתמכות במכשיר הזה",
+        "subtitle": "לא ניתן לבצע רכישות בתוך האפליקציה במכשיר הזה או באמצעות חשבון החנות הזה."
+      }
+    },
+    "trialUnit": {
+      "day": "יום",
+      "week": "שבוע",
+      "month": "חודש",
+      "year": "שנה"
+    },
+    "period": {
+      "day": "ליום",
+      "week": "לשבוע",
+      "month": "לחודש",
+      "year": "לשנה",
+      "lifetime": "רכישה חד פעמית"
+    },
+    "comparison": {
+      "features": "תכונות",
+      "free": "חינם",
+      "pro": "Pro",
+      "included": "כלול",
+      "excluded": "לא כלול",
+      "unlimited": "ללא הגבלה",
+      "rows": {
+        "cleaningDuration": {
+          "title": "משך הניקוי",
+          "free": "30 שניות",
+          "pro": "30/60/90 שניות"
+        },
+        "turbo": {
+          "title": "מצב טורבו"
+        },
+        "waveforms": {
+          "title": "צורת גל",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "בדיקת סטריאו",
+          "free": "ידני",
+          "pro": "אוטומטי"
+        },
+        "soundInsights": {
+          "title": "ניתוח עוצמת הקול",
+          "free": "בסיסי",
+          "pro": "מתקדם"
+        },
+        "activityHistory": {
+          "title": "היסטוריית פעילות"
+        },
+        "adExperience": {
+          "title": "פרסומות",
+          "free": "פרסומות",
+          "pro": "ללא פרסומות"
+        }
+      }
+    },
+    "context": {
+      "dbSubtitle": "פתח את הנעילה של הניתוח המלא עבור הפגישה הזו ובקר מחדש בדוחות קול שמורים."
+    },
+    "feedback": {
+      "subscribeSuccess": "ברוך הבא! גישת הפרימיום שלך פעילה.",
+      "subscribeError": "משהו השתבש. אנא נסה שוב.",
+      "restoreSuccess": "גישת פרימיום שוחזרה בהצלחה!",
+      "restoreNotFound": "לא נמצאה רכישת פרימיום פעילה.",
+      "restoreError": "לא ניתן לשחזר רכישות. אנא נסה שוב."
+    },
+    "packageTitle": {
+      "day": "יומי",
+      "week": "שבועי",
+      "month": "חודשי",
+      "year": "שנתי",
+      "lifetime": "כל החיים"
+    }
+  },
+  "otaUpdate": {
+    "updateReady": "עדכון חדש מוכן - הפעל מחדש כדי להחיל"
+  },
+  "errorBoundary": {
+    "title": "משהו השתבש",
+    "message": "אירעה שגיאה בלתי צפויה. אנא נסה שוב."
+  },
+  "onboarding": {
+    "waterEject": {
+      "title": "הסירו מים\nואבק במהירות",
+      "description": "הפעילו צליל ניקוי עוצמתי כדי לסייע בהוצאת מים ואבק שנתקעו מהרמקול."
+    },
+    "toneGenerator": {
+      "title": "צרו את\nהצליל הנכון",
+      "description": "בחרו מבין תדרים שונים לבדיקה, כיוון, מיסוך רעשים או כל בדיקת שמע."
+    },
+    "dbMeter": {
+      "title": "דעו עד כמה\nזה באמת חזק",
+      "description": "השתמשו במד dB כדי להעריך את רמות הרעש סביבכם ולקבל החלטות האזנה טובות יותר."
+    },
+    "privacy": {
+      "title": "פרטי ונשאר במכשיר",
+      "description": "עיבוד השמע נשאר בטלפון שלכם, עם הנחיות ברורות לבטיחות ולמיקרופון."
+    }
+  }
+}

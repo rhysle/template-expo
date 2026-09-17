@@ -1,0 +1,180 @@
+{
+  "common": {
+    "back": "Tilbake",
+    "cancel": "Avbryt",
+    "close": "Lukk",
+    "confirm": "Bekreft",
+    "continue": "Fortsett",
+    "done": "Ferdig",
+    "getStarted": "Kom i gang",
+    "next": "Neste",
+    "ok": "OK",
+    "openSettings": "Åpne innstillinger",
+    "reset": "Tilbakestill",
+    "retry": "Prøv igjen",
+    "restart": "Start på nytt",
+    "save": "Lagre",
+    "skip": "Hopp over",
+    "start": "Start",
+    "stop": "Stopp"
+  },
+  "premium": {
+    "accessChecking": "Sjekker Premium-tilgang…",
+    "accessUnknown": "Koble til internett for å sjekke Premium-tilgang."
+  },
+  "tabs": {
+    "eject": "Tøm",
+    "toneGenerator": "Tonegenerator",
+    "stereoTest": "Stereotest",
+    "dbMeter": "dB-måler"
+  },
+  "settings": {
+    "title": "Innstillinger",
+    "subtitle": "Still inn høyttalerverktøyene og lydmåleren",
+    "support": "Support",
+    "contactSupport": "Kontakt support",
+    "contactSupportSubtitle": "Vi er her for å hjelpe",
+    "contactSupportError": "Kunne ikke åpne e-postklient",
+    "rateApp": "Vurder oss",
+    "rateAppSubtitle": "Liker du appen? Legg igjen en anmeldelse",
+    "shareApp": "Del",
+    "shareAppSubtitle": "Fortell venner og familie om den",
+    "shareMessage": "Sjekk ut {{appName}}!",
+    "shareMessageWithUrl": "Sjekk ut {{appName}}! Last den ned her: {{url}}",
+    "userId": "Bruker-ID",
+    "userIdCopied": "Bruker-ID kopiert",
+    "legalSection": "Juridisk",
+    "privacyConsent": "Personvern og samtykke",
+    "version": "Versjon {{version}}",
+    "otaUpdateId": "Oppdatering: {{updateId}}",
+    "upgradeBanner": {
+      "title": "Oppgrader til Premium",
+      "subtitle": "Lås opp lengre Turbo-rensing, avanserte lydkontroller og bruk uten annonser"
+    }
+  },
+  "paywall": {
+    "title": "Lås opp ditt komplette lydverktøysett",
+    "subtitle": "Rengjør høyttaleren din, få tilgang til avanserte kontroller og fjern hver annonse.",
+    "ctaFreeTrial": "Prøv gratis",
+    "trialDisclaimer": "Avslutt når som helst. Du betaler ingenting nå",
+    "subscriptionDisclaimer": "Avslutt når som helst.",
+    "lifetimeDisclaimer": "Betal én gang. Ingen løpende kostnader.",
+    "restore": "Gjenopprett kjøp",
+    "terms": "Vilkår for bruk",
+    "privacy": "Retningslinjer for personvern",
+    "then": "deretter",
+    "trial": "{{count}}-{{unit}} gratis prøveperiode",
+    "save": "Spar {{percent}} %",
+    "availability": {
+      "loading": "Sjekker kjøpsalternativer…",
+      "temporary_error": {
+        "title": "Kunne ikke laste inn kjøpsalternativene",
+        "subtitle": "Kontroller tilkoblingen og prøv igjen."
+      },
+      "configuration_error": {
+        "title": "Kjøpsalternativene er ikke tilgjengelige",
+        "subtitle": "Butikken kunne ikke laste inn produktene til denne appen. Prøv igjen om litt."
+      },
+      "purchase_not_allowed": {
+        "title": "Kjøp støttes ikke på denne enheten",
+        "subtitle": "Denne enheten eller butikkontoen kan ikke foreta kjøp i appen."
+      }
+    },
+    "trialUnit": {
+      "day": "dag",
+      "week": "uke",
+      "month": "måned",
+      "year": "år"
+    },
+    "period": {
+      "day": "per dag",
+      "week": "per uke",
+      "month": "per måned",
+      "year": "per år",
+      "lifetime": "Engangskjøp"
+    },
+    "comparison": {
+      "features": "Funksjoner",
+      "free": "Gratis",
+      "pro": "Pro",
+      "included": "Inkludert",
+      "excluded": "Ikke inkludert",
+      "unlimited": "Ubegrenset",
+      "rows": {
+        "cleaningDuration": {
+          "title": "Rengjøringsvarighet",
+          "free": "30 sekunder",
+          "pro": "30/60/90 sekunder"
+        },
+        "turbo": {
+          "title": "Turbo-modus"
+        },
+        "waveforms": {
+          "title": "Bølgeform",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "Stereotest",
+          "free": "Manuell",
+          "pro": "Automatisk"
+        },
+        "soundInsights": {
+          "title": "Analyse av lydnivå",
+          "free": "Grunnleggende",
+          "pro": "Avansert"
+        },
+        "activityHistory": {
+          "title": "Aktivitetshistorikk"
+        },
+        "adExperience": {
+          "title": "Annonser",
+          "free": "Annonser",
+          "pro": "Uten annonser"
+        }
+      }
+    },
+    "context": {
+      "dbSubtitle": "Lås opp hele analysen for denne økten og gå tilbake til lagrede lydrapporter."
+    },
+    "feedback": {
+      "subscribeSuccess": "Velkommen! Premium-tilgangen din er aktiv.",
+      "subscribeError": "Noe gikk galt. Vennligst prøv igjen.",
+      "restoreSuccess": "Premium-tilgang ble gjenopprettet!",
+      "restoreNotFound": "Fant ingen aktive Premium-kjøp.",
+      "restoreError": "Kunne ikke gjenopprette kjøp. Vennligst prøv igjen."
+    },
+    "packageTitle": {
+      "day": "Daglig",
+      "week": "Ukentlig",
+      "month": "Månedlig",
+      "year": "Årlig",
+      "lifetime": "Levetid"
+    }
+  },
+  "otaUpdate": {
+    "updateReady": "En ny oppdatering er klar - start på nytt for å bruke"
+  },
+  "errorBoundary": {
+    "title": "Noe gikk galt",
+    "message": "En uventet feil oppstod. Vennligst prøv igjen."
+  },
+  "onboarding": {
+    "waterEject": {
+      "title": "Fjern vann\nog støv raskt",
+      "description": "Spill av en kraftig rengjøringslyd som hjelper med å presse fastklemt vann og støv ut av høyttaleren."
+    },
+    "toneGenerator": {
+      "title": "Lag\nden riktige tonen",
+      "description": "Velg mellom ulike frekvenser for testing, justering, støymaskering eller enhver lydkontroll."
+    },
+    "dbMeter": {
+      "title": "Vit hvor høyt\ndet egentlig er",
+      "description": "Bruk dB-måleren til å anslå støynivået rundt deg og ta smartere lyttevalg."
+    },
+    "privacy": {
+      "title": "Privat og på enheten din",
+      "description": "Lydbehandlingen forblir på telefonen din, med tydelig veiledning om sikkerhet og mikrofon."
+    }
+  }
+}

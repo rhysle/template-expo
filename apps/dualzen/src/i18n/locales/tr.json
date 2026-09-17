@@ -1,0 +1,180 @@
+{
+  "common": {
+    "back": "Geri",
+    "cancel": "İptal",
+    "close": "Kapat",
+    "confirm": "Onayla",
+    "continue": "Devam Et",
+    "done": "Tamam",
+    "getStarted": "Başla",
+    "next": "İleri",
+    "ok": "Tamam",
+    "openSettings": "Ayarları Aç",
+    "reset": "Sıfırla",
+    "retry": "Tekrar dene",
+    "restart": "Yeniden Başlat",
+    "save": "Kaydet",
+    "skip": "Atla",
+    "start": "Başlat",
+    "stop": "Durdur"
+  },
+  "premium": {
+    "accessChecking": "Premium erişimi kontrol ediliyor…",
+    "accessUnknown": "Premium erişimini kontrol etmek için internete bağlanın."
+  },
+  "tabs": {
+    "eject": "Çıkar",
+    "toneGenerator": "Ton Üreteci",
+    "stereoTest": "Stereo Testi",
+    "dbMeter": "dB Ölçer"
+  },
+  "settings": {
+    "title": "Ayarlar",
+    "subtitle": "Hoparlör araçlarınızı ve ses ölçerinizi ayarlayın",
+    "support": "Destek",
+    "contactSupport": "Destekle İletişime Geç",
+    "contactSupportSubtitle": "Yardım etmek için buradayız",
+    "contactSupportError": "E-posta istemcisi açılamadı",
+    "rateApp": "Bizi Değerlendirin",
+    "rateAppSubtitle": "Uygulamayı beğendiniz mi? Yorum bırakın",
+    "shareApp": "Paylaş",
+    "shareAppSubtitle": "Arkadaşlarınıza ve ailenize önerin",
+    "shareMessage": "{{appName}}'ı deneyin!",
+    "shareMessageWithUrl": "{{appName}}'ı deneyin! Buradan indirin: {{url}}",
+    "userId": "Kullanıcı Kimliği",
+    "userIdCopied": "Kullanıcı Kimliği kopyalandı",
+    "legalSection": "Yasal",
+    "privacyConsent": "Gizlilik ve Onay",
+    "version": "Sürüm {{version}}",
+    "otaUpdateId": "Güncelleme: {{updateId}}",
+    "upgradeBanner": {
+      "title": "Premium'a Yükseltin",
+      "subtitle": "Daha uzun Turbo temizliğin, gelişmiş ses kontrollerinin ve reklamsız deneyimin kilidini açın"
+    }
+  },
+  "paywall": {
+    "title": "Eksiksiz Ses Araç Setinizin Kilidini Açın",
+    "subtitle": "Hoparlörünüzü temizleyin, gelişmiş kontrollere erişin ve tüm reklamları kaldırın.",
+    "ctaFreeTrial": "Ücretsiz Deneyin",
+    "trialDisclaimer": "İstediğiniz zaman iptal edin. Şimdi ödeme yok",
+    "subscriptionDisclaimer": "İstediğiniz zaman iptal edin.",
+    "lifetimeDisclaimer": "Bir kez ödeyin. Tekrarlayan ücret yok.",
+    "restore": "Satın Alınanları Geri Yükle",
+    "terms": "Hizmet Şartları",
+    "privacy": "Gizlilik Politikası",
+    "then": "sonra",
+    "trial": "{{count}}-{{unit}} ücretsiz deneme",
+    "save": "Tasarruf edin {{percent}}%",
+    "availability": {
+      "loading": "Satın alma seçenekleri kontrol ediliyor…",
+      "temporary_error": {
+        "title": "Satın alma seçenekleri yüklenemedi",
+        "subtitle": "Bağlantınızı kontrol edip tekrar deneyin."
+      },
+      "configuration_error": {
+        "title": "Satın alma seçenekleri kullanılamıyor",
+        "subtitle": "Mağaza bu uygulamanın ürünlerini yükleyemedi. Lütfen kısa süre sonra tekrar deneyin."
+      },
+      "purchase_not_allowed": {
+        "title": "Bu cihazda satın alma desteklenmiyor",
+        "subtitle": "Bu cihaz veya mağaza hesabı uygulama içi satın alma işlemi yapamıyor."
+      }
+    },
+    "trialUnit": {
+      "day": "gün",
+      "week": "hafta",
+      "month": "ay",
+      "year": "yıl"
+    },
+    "period": {
+      "day": "günlük",
+      "week": "haftada",
+      "month": "aylık",
+      "year": "yıllık",
+      "lifetime": "Tek seferlik satın alma"
+    },
+    "comparison": {
+      "features": "Özellikler",
+      "free": "Ücretsiz",
+      "pro": "Pro",
+      "included": "Dahil",
+      "excluded": "Dahil değil",
+      "unlimited": "Sınırsız",
+      "rows": {
+        "cleaningDuration": {
+          "title": "Temizleme süresi",
+          "free": "30 saniye",
+          "pro": "30/60/90 saniye"
+        },
+        "turbo": {
+          "title": "Turbo Modu"
+        },
+        "waveforms": {
+          "title": "Dalga Formu",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "Stereo Testi",
+          "free": "Manuel",
+          "pro": "Otomatik"
+        },
+        "soundInsights": {
+          "title": "Ses seviyesi analizi",
+          "free": "Temel",
+          "pro": "Gelişmiş"
+        },
+        "activityHistory": {
+          "title": "Etkinlik Geçmişi"
+        },
+        "adExperience": {
+          "title": "Reklamlar",
+          "free": "Reklamlar",
+          "pro": "Reklamsız"
+        }
+      }
+    },
+    "context": {
+      "dbSubtitle": "Bu oturumun tam analizinin kilidini açın ve kayıtlı ses raporlarını tekrar ziyaret edin."
+    },
+    "feedback": {
+      "subscribeSuccess": "Hoş geldiniz! Premium erişiminiz aktif.",
+      "subscribeError": "Bir şeyler ters gitti. Lütfen tekrar deneyin.",
+      "restoreSuccess": "Premium erişimi başarıyla geri yüklendi!",
+      "restoreNotFound": "Aktif Premium satın alımı bulunamadı.",
+      "restoreError": "Satın alınanlar geri yüklenemedi. Lütfen tekrar deneyin."
+    },
+    "packageTitle": {
+      "day": "Günlük",
+      "week": "Haftalık",
+      "month": "Aylık",
+      "year": "Yıllık",
+      "lifetime": "Ömür boyu"
+    }
+  },
+  "otaUpdate": {
+    "updateReady": "Yeni bir güncelleme hazır - uygulamak için yeniden başlatın"
+  },
+  "errorBoundary": {
+    "title": "Bir şeyler ters gitti",
+    "message": "Beklenmeyen bir hata oluştu. Lütfen tekrar deneyin."
+  },
+  "onboarding": {
+    "waterEject": {
+      "title": "Suyu ve tozu\nhızla çıkarın",
+      "description": "Hoparlörde sıkışan suyu ve tozu dışarı itmeye yardımcı olmak için güçlü bir temizleme sesi çalın."
+    },
+    "toneGenerator": {
+      "title": "Doğru tonu\noluşturun",
+      "description": "Test, ayarlama, gürültü maskeleme veya her türlü ses kontrolü için farklı frekanslardan seçim yapın."
+    },
+    "dbMeter": {
+      "title": "Sesin gerçekten\nne kadar yüksek olduğunu bilin",
+      "description": "Çevrenizdeki gürültü düzeylerini tahmin etmek ve daha akıllı dinleme kararları vermek için dB Ölçeri kullanın."
+    },
+    "privacy": {
+      "title": "Özel ve cihazınızda",
+      "description": "Ses işleme, açık güvenlik ve mikrofon yönergeleriyle telefonunuzda kalır."
+    }
+  }
+}

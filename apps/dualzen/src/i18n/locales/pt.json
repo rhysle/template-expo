@@ -1,0 +1,180 @@
+{
+  "common": {
+    "back": "Voltar",
+    "cancel": "Cancelar",
+    "close": "Fechar",
+    "confirm": "Confirmar",
+    "continue": "Continuar",
+    "done": "Concluído",
+    "getStarted": "Começar",
+    "next": "Seguinte",
+    "ok": "OK",
+    "openSettings": "Abrir definições",
+    "reset": "Repor",
+    "retry": "Tentar novamente",
+    "restart": "Reiniciar",
+    "save": "Guardar",
+    "skip": "Ignorar",
+    "start": "Iniciar",
+    "stop": "Parar"
+  },
+  "premium": {
+    "accessChecking": "A verificar o acesso Premium…",
+    "accessUnknown": "Ligue-se à internet para verificar o acesso Premium."
+  },
+  "tabs": {
+    "eject": "Ejetar",
+    "toneGenerator": "Gerador de tons",
+    "stereoTest": "Teste estéreo",
+    "dbMeter": "Medidor de dB"
+  },
+  "settings": {
+    "title": "Definições",
+    "subtitle": "Ajuste suas ferramentas de alto-falante e medidor de som",
+    "support": "Suporte",
+    "contactSupport": "Contactar suporte",
+    "contactSupportSubtitle": "Estamos aqui para ajudar",
+    "contactSupportError": "Não foi possível abrir o cliente de e-mail",
+    "rateApp": "Avaliar",
+    "rateAppSubtitle": "Gosta da aplicação? Deixe uma avaliação",
+    "shareApp": "Partilhar",
+    "shareAppSubtitle": "Diga aos seus amigos e família",
+    "shareMessage": "Experimenta o {{appName}}!",
+    "shareMessageWithUrl": "Experimenta o {{appName}}! Descarrega aqui: {{url}}",
+    "userId": "ID de utilizador",
+    "userIdCopied": "ID de utilizador copiado",
+    "legalSection": "Legal",
+    "privacyConsent": "Privacidade e consentimento",
+    "version": "Versão {{version}}",
+    "otaUpdateId": "Atualização: {{updateId}}",
+    "upgradeBanner": {
+      "title": "Atualize para Premium",
+      "subtitle": "Desbloqueie ciclos de limpeza Turbo mais longos, controlos de áudio avançados e uma experiência sem anúncios"
+    }
+  },
+  "paywall": {
+    "title": "Desbloqueie seu kit de ferramentas de áudio completo",
+    "subtitle": "Limpe seu alto-falante, acesse controles avançados e remova todos os anúncios.",
+    "ctaFreeTrial": "Experimente gratuitamente",
+    "trialDisclaimer": "Cancele quando quiser. Nada será cobrado agora",
+    "subscriptionDisclaimer": "Cancele quando quiser.",
+    "lifetimeDisclaimer": "Pague uma vez. Sem cobranças recorrentes.",
+    "restore": "Restaurar compras",
+    "terms": "Termos de Serviço",
+    "privacy": "Política de Privacidade",
+    "then": "então",
+    "trial": "{{count}}-{{unit}} teste gratuito",
+    "save": "Economize {{percent}}%",
+    "availability": {
+      "loading": "A verificar as opções de compra…",
+      "temporary_error": {
+        "title": "Não foi possível carregar as opções de compra",
+        "subtitle": "Verifique a ligação e tente novamente."
+      },
+      "configuration_error": {
+        "title": "As opções de compra não estão disponíveis",
+        "subtitle": "A loja não conseguiu carregar os produtos desta app. Tente novamente dentro de instantes."
+      },
+      "purchase_not_allowed": {
+        "title": "As compras não são suportadas neste dispositivo",
+        "subtitle": "Este dispositivo ou conta da loja não permite fazer compras na app."
+      }
+    },
+    "trialUnit": {
+      "day": "dia",
+      "week": "semana",
+      "month": "mês",
+      "year": "ano"
+    },
+    "period": {
+      "day": "por dia",
+      "week": "por semana",
+      "month": "por mês",
+      "year": "por ano",
+      "lifetime": "Compra única"
+    },
+    "comparison": {
+      "features": "Funcionalidades",
+      "free": "Grátis",
+      "pro": "Pro",
+      "included": "Incluído",
+      "excluded": "Não incluído",
+      "unlimited": "Ilimitado",
+      "rows": {
+        "cleaningDuration": {
+          "title": "Duração da limpeza",
+          "free": "30 segundos",
+          "pro": "30/60/90 segundos"
+        },
+        "turbo": {
+          "title": "Modo Turbo"
+        },
+        "waveforms": {
+          "title": "Forma de onda",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "Teste estéreo",
+          "free": "Manual",
+          "pro": "Automático"
+        },
+        "soundInsights": {
+          "title": "Análise do nível sonoro",
+          "free": "Básico",
+          "pro": "Avançado"
+        },
+        "activityHistory": {
+          "title": "Histórico de atividades"
+        },
+        "adExperience": {
+          "title": "Anúncios",
+          "free": "Anúncios",
+          "pro": "Sem anúncios"
+        }
+      }
+    },
+    "context": {
+      "dbSubtitle": "Desbloqueie a análise completa desta sessão e revisite os relatórios de som salvos."
+    },
+    "feedback": {
+      "subscribeSuccess": "Bem vindo! Seu acesso premium está ativo.",
+      "subscribeError": "Algo deu errado. Por favor, tente novamente.",
+      "restoreSuccess": "Acesso Premium restaurado com sucesso!",
+      "restoreNotFound": "Nenhuma compra Premium ativa encontrada.",
+      "restoreError": "Não foi possível restaurar as compras. Por favor, tente novamente."
+    },
+    "packageTitle": {
+      "day": "Diariamente",
+      "week": "Semanalmente",
+      "month": "Mensalmente",
+      "year": "Anual",
+      "lifetime": "Vitalício"
+    }
+  },
+  "otaUpdate": {
+    "updateReady": "Uma nova atualização está disponível - reinicie para aplicar"
+  },
+  "errorBoundary": {
+    "title": "Ocorreu um erro",
+    "message": "Ocorreu um erro inesperado. Por favor, tente novamente."
+  },
+  "onboarding": {
+    "waterEject": {
+      "title": "Remova água\ne pó rapidamente",
+      "description": "Reproduza um som de limpeza potente para ajudar a expulsar a água e o pó retidos no altifalante."
+    },
+    "toneGenerator": {
+      "title": "Gere\no tom certo",
+      "description": "Escolha entre diferentes frequências para testar, afinar, mascarar ruído ou fazer qualquer verificação de som."
+    },
+    "dbMeter": {
+      "title": "Saiba quão alto\né realmente",
+      "description": "Use o medidor de dB para estimar os níveis de ruído à sua volta e tomar decisões de audição mais informadas."
+    },
+    "privacy": {
+      "title": "Privado e no seu dispositivo",
+      "description": "O processamento de áudio fica no seu telemóvel, com orientação clara sobre segurança e microfone."
+    }
+  }
+}

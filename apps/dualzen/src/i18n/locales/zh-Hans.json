@@ -1,0 +1,180 @@
+{
+  "common": {
+    "back": "返回",
+    "cancel": "取消",
+    "close": "关闭",
+    "confirm": "确认",
+    "continue": "继续",
+    "done": "完成",
+    "getStarted": "开始使用",
+    "next": "下一步",
+    "ok": "好的",
+    "openSettings": "打开设置",
+    "reset": "重置",
+    "retry": "重试",
+    "restart": "重启",
+    "save": "保存",
+    "skip": "跳过",
+    "start": "开始",
+    "stop": "停止"
+  },
+  "premium": {
+    "accessChecking": "正在检查 Premium 访问权限…",
+    "accessUnknown": "请连接互联网以检查 Premium 访问权限。"
+  },
+  "tabs": {
+    "eject": "排水",
+    "toneGenerator": "音调发生器",
+    "stereoTest": "立体声测试",
+    "dbMeter": "分贝仪"
+  },
+  "settings": {
+    "title": "设置",
+    "subtitle": "调整扬声器工具和声音计",
+    "support": "支持",
+    "contactSupport": "联系支持",
+    "contactSupportSubtitle": "我们随时为您服务",
+    "contactSupportError": "无法打开邮件客户端",
+    "rateApp": "评价我们",
+    "rateAppSubtitle": "喜欢此应用？留下您的评价",
+    "shareApp": "分享",
+    "shareAppSubtitle": "向朋友和家人推荐",
+    "shareMessage": "来试试 {{appName}}！",
+    "shareMessageWithUrl": "来试试 {{appName}}！点击下载: {{url}}",
+    "userId": "用户ID",
+    "userIdCopied": "已复制用户ID",
+    "legalSection": "法律",
+    "privacyConsent": "隐私与同意",
+    "version": "版本 {{version}}",
+    "otaUpdateId": "更新: {{updateId}}",
+    "upgradeBanner": {
+      "title": "升级到高级版",
+      "subtitle": "解锁更长的 Turbo 清洁、高级音频控制和无广告体验"
+    }
+  },
+  "paywall": {
+    "title": "解锁完整的音频工具包",
+    "subtitle": "清洁扬声器，访问高级控件，并删除每个广告。",
+    "ctaFreeTrial": "免费试用",
+    "trialDisclaimer": "可随时取消。现在无需付款",
+    "subscriptionDisclaimer": "可随时取消。",
+    "lifetimeDisclaimer": "一次付费。无定期扣费。",
+    "restore": "恢复购买",
+    "terms": "服務條款",
+    "privacy": "隐私条款",
+    "then": "然后",
+    "trial": "{{count}} - {{unit}}免费试用",
+    "save": "节省{{percent}} %",
+    "availability": {
+      "loading": "正在检查购买选项…",
+      "temporary_error": {
+        "title": "无法加载购买选项",
+        "subtitle": "请检查网络连接，然后重试。"
+      },
+      "configuration_error": {
+        "title": "购买选项不可用",
+        "subtitle": "商店无法加载此 App 的产品。请稍后重试。"
+      },
+      "purchase_not_allowed": {
+        "title": "此设备不支持购买",
+        "subtitle": "此设备或商店帐户无法进行 App 内购买。"
+      }
+    },
+    "trialUnit": {
+      "day": "天",
+      "week": "星期",
+      "month": "月",
+      "year": "年"
+    },
+    "period": {
+      "day": "每天",
+      "week": "每周",
+      "month": "每月",
+      "year": "每年",
+      "lifetime": "一次性购买"
+    },
+    "comparison": {
+      "features": "功能",
+      "free": "免费",
+      "pro": "Pro",
+      "included": "包含",
+      "excluded": "不包含",
+      "unlimited": "无限制",
+      "rows": {
+        "cleaningDuration": {
+          "title": "清洁持续时间",
+          "free": "30 秒",
+          "pro": "30/60/90 秒"
+        },
+        "turbo": {
+          "title": "涡轮模式"
+        },
+        "waveforms": {
+          "title": "波形",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "立体声测试",
+          "free": "手动",
+          "pro": "自动"
+        },
+        "soundInsights": {
+          "title": "声音级别分析",
+          "free": "基础",
+          "pro": "高级"
+        },
+        "activityHistory": {
+          "title": "活动历史"
+        },
+        "adExperience": {
+          "title": "有广告",
+          "free": "有广告",
+          "pro": "无广告"
+        }
+      }
+    },
+    "context": {
+      "dbSubtitle": "解锁本次测量的完整分析，并重新查看已保存的声音报告。"
+    },
+    "feedback": {
+      "subscribeSuccess": "欢迎！您的高级访问权限已激活。",
+      "subscribeError": "出错了。请重试。",
+      "restoreSuccess": "高级访问权限已成功恢复！",
+      "restoreNotFound": "未找到有效的高级购买。",
+      "restoreError": "无法恢复购买。请重试。"
+    },
+    "packageTitle": {
+      "day": "每天",
+      "week": "每周",
+      "month": "每月",
+      "year": "每年",
+      "lifetime": "終身"
+    }
+  },
+  "otaUpdate": {
+    "updateReady": "新更新已就绪 - 重启以应用"
+  },
+  "errorBoundary": {
+    "title": "出现错误",
+    "message": "发生意外错误，请重试。"
+  },
+  "onboarding": {
+    "waterEject": {
+      "title": "快速清除\n水和灰尘",
+      "description": "播放强劲的清洁声音，帮助将困在扬声器中的水和灰尘推出。"
+    },
+    "toneGenerator": {
+      "title": "生成\n合适的音调",
+      "description": "可选择不同频率，用于测试、调音、掩蔽噪声或任何声音检查。"
+    },
+    "dbMeter": {
+      "title": "了解声音\n实际有多响",
+      "description": "使用分贝仪估计身边的噪声水平，做出更明智的聆听决定。"
+    },
+    "privacy": {
+      "title": "私密且仅在设备上处理",
+      "description": "音频处理始终在您的手机上进行，并提供清晰的安全和麦克风使用指引。"
+    }
+  }
+}

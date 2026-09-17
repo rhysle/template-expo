@@ -1,0 +1,180 @@
+{
+  "common": {
+    "back": "Kembali",
+    "cancel": "Batal",
+    "close": "Tutup",
+    "confirm": "Sahkan",
+    "continue": "Teruskan",
+    "done": "Selesai",
+    "getStarted": "Mulakan",
+    "next": "Seterusnya",
+    "ok": "OK",
+    "openSettings": "Buka Tetapan",
+    "reset": "Set Semula",
+    "retry": "Cuba lagi",
+    "restart": "Mulakan Semula",
+    "save": "Simpan",
+    "skip": "Langkau",
+    "start": "Mula",
+    "stop": "Berhenti"
+  },
+  "premium": {
+    "accessChecking": "Menyemak akses Premium…",
+    "accessUnknown": "Sambung ke internet untuk menyemak akses Premium."
+  },
+  "tabs": {
+    "eject": "Keluarkan",
+    "toneGenerator": "Penjana Nada",
+    "stereoTest": "Ujian Stereo",
+    "dbMeter": "Meter dB"
+  },
+  "settings": {
+    "title": "Tetapan",
+    "subtitle": "Tala alat pembesar suara dan meter bunyi anda",
+    "support": "Sokongan",
+    "contactSupport": "Hubungi Sokongan",
+    "contactSupportSubtitle": "Kami sedia membantu",
+    "contactSupportError": "Tidak dapat membuka klien e-mel",
+    "rateApp": "Nilaikan Kami",
+    "rateAppSubtitle": "Menikmati apl? Tinggalkan ulasan",
+    "shareApp": "Kongsi",
+    "shareAppSubtitle": "Beritahu rakan dan keluarga",
+    "shareMessage": "Lihat {{appName}}!",
+    "shareMessageWithUrl": "Lihat {{appName}}! Muat turun di sini: {{url}}",
+    "userId": "ID Pengguna",
+    "userIdCopied": "ID Pengguna disalin",
+    "legalSection": "Undang-undang",
+    "privacyConsent": "Privasi & Persetujuan",
+    "version": "Versi {{version}}",
+    "otaUpdateId": "Kemas kini: {{updateId}}",
+    "upgradeBanner": {
+      "title": "Naik taraf kepada Premium",
+      "subtitle": "Buka kunci pembersihan Turbo yang lebih lama, kawalan audio lanjutan dan pengalaman tanpa iklan"
+    }
+  },
+  "paywall": {
+    "title": "Buka Kunci Kit Alat Audio Lengkap Anda",
+    "subtitle": "Bersihkan pembesar suara anda, akses kawalan lanjutan dan alih keluar setiap iklan.",
+    "ctaFreeTrial": "Cuba Secara Percuma",
+    "trialDisclaimer": "Batalkan pada bila-bila masa. Tiada bayaran dikenakan sekarang",
+    "subscriptionDisclaimer": "Batalkan pada bila-bila masa.",
+    "lifetimeDisclaimer": "Bayar sekali sahaja. Tiada caj berulang.",
+    "restore": "Pulihkan Pembelian",
+    "terms": "Syarat Perkhidmatan",
+    "privacy": "Dasar Privasi",
+    "then": "kemudian",
+    "trial": "{{count}}-{{unit}} percubaan percuma",
+    "save": "Jimat {{percent}}%",
+    "availability": {
+      "loading": "Menyemak pilihan pembelian…",
+      "temporary_error": {
+        "title": "Pilihan pembelian tidak dapat dimuatkan",
+        "subtitle": "Semak sambungan anda dan cuba lagi."
+      },
+      "configuration_error": {
+        "title": "Pilihan pembelian tidak tersedia",
+        "subtitle": "Gedung tidak dapat memuatkan produk aplikasi ini. Cuba lagi sebentar lagi."
+      },
+      "purchase_not_allowed": {
+        "title": "Pembelian tidak disokong pada peranti ini",
+        "subtitle": "Peranti atau akaun gedung ini tidak boleh membuat pembelian dalam aplikasi."
+      }
+    },
+    "trialUnit": {
+      "day": "hari",
+      "week": "minggu",
+      "month": "bulan",
+      "year": "tahun"
+    },
+    "period": {
+      "day": "setiap hari",
+      "week": "seminggu",
+      "month": "sebulan",
+      "year": "setahun",
+      "lifetime": "Pembelian sekali"
+    },
+    "comparison": {
+      "features": "Ciri",
+      "free": "Percuma",
+      "pro": "Pro",
+      "included": "Disertakan",
+      "excluded": "Tidak disertakan",
+      "unlimited": "Tanpa had",
+      "rows": {
+        "cleaningDuration": {
+          "title": "Tempoh pembersihan",
+          "free": "30 saat",
+          "pro": "30/60/90 saat"
+        },
+        "turbo": {
+          "title": "Mod Turbo"
+        },
+        "waveforms": {
+          "title": "Bentuk gelombang",
+          "free": "1",
+          "pro": "4"
+        },
+        "stereoTesting": {
+          "title": "Ujian Stereo",
+          "free": "Manual",
+          "pro": "Automatik"
+        },
+        "soundInsights": {
+          "title": "Analisis tahap bunyi",
+          "free": "Asas",
+          "pro": "Lanjutan"
+        },
+        "activityHistory": {
+          "title": "Sejarah Aktiviti"
+        },
+        "adExperience": {
+          "title": "Iklan",
+          "free": "Iklan",
+          "pro": "Tanpa iklan"
+        }
+      }
+    },
+    "context": {
+      "dbSubtitle": "Buka kunci analisis penuh untuk sesi ini dan lawati semula laporan bunyi yang disimpan."
+    },
+    "feedback": {
+      "subscribeSuccess": "Selamat datang! Akses premium anda aktif.",
+      "subscribeError": "Kesilapan telah berlaku. Sila cuba lagi.",
+      "restoreSuccess": "Akses premium berjaya dipulihkan!",
+      "restoreNotFound": "Tiada pembelian Premium aktif ditemui.",
+      "restoreError": "Tidak dapat memulihkan pembelian. Sila cuba lagi."
+    },
+    "packageTitle": {
+      "day": "Setiap hari",
+      "week": "Mingguan",
+      "month": "Bulanan",
+      "year": "Tahunan",
+      "lifetime": "Seumur hidup"
+    }
+  },
+  "otaUpdate": {
+    "updateReady": "Kemas kini baharu sedia - mulakan semula untuk menerapkan"
+  },
+  "errorBoundary": {
+    "title": "Ada yang tidak kena",
+    "message": "Ralat yang tidak dijangka berlaku. Sila cuba lagi."
+  },
+  "onboarding": {
+    "waterEject": {
+      "title": "Keluarkan air\ndan habuk dengan pantas",
+      "description": "Mainkan bunyi pembersihan yang kuat untuk membantu menolak air dan habuk yang terperangkap keluar dari pembesar suara."
+    },
+    "toneGenerator": {
+      "title": "Jana\nnada yang betul",
+      "description": "Pilih daripada pelbagai frekuensi untuk ujian, pelarasan, penyamaran hingar atau sebarang semakan bunyi."
+    },
+    "dbMeter": {
+      "title": "Ketahui betapa kuat\nbunyinya sebenarnya",
+      "description": "Gunakan Meter dB untuk menganggar tahap bunyi di sekeliling anda dan membuat keputusan mendengar yang lebih baik."
+    },
+    "privacy": {
+      "title": "Peribadi dan pada peranti anda",
+      "description": "Pemprosesan audio kekal pada telefon anda, dengan panduan keselamatan dan mikrofon yang jelas."
+    }
+  }
+}

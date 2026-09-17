@@ -1,0 +1,36 @@
+{
+  "appleLocale": "he",
+  "googleLocale": "iw-IL",
+  "apple": {
+    "subscriptionGroupDisplayName": "Premium",
+    "products": {
+      "weekly": {
+        "displayName": "Premium · שבועי",
+        "description": "גישה מלאה לכל תכונות הפרימיום."
+      },
+      "monthly": {
+        "displayName": "Premium · חודשי",
+        "description": "גישה מלאה לכל תכונות הפרימיום."
+      },
+      "yearly": {
+        "displayName": "Premium · שנתי",
+        "description": "גישה מלאה לכל תכונות הפרימיום."
+      },
+      "lifetime": {
+        "displayName": "Premium · לכל החיים",
+        "description": "גישה לכל החיים לכל תכונות הפרימיום."
+      }
+    }
+  },
+  "google": {
+    "subscription": {
+      "title": "Premium",
+      "description": "גישה מלאה לכל תכונות הפרימיום.",
+      "benefits": ["גישה לכל תכונות הפרימיום"]
+    },
+    "lifetime": {
+      "title": "Premium · לכל החיים",
+      "description": "גישה לכל החיים לכל תכונות הפרימיום."
+    }
+  }
+}
