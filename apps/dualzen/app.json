@@ -151,7 +151,8 @@
             "forceStaticLinking": [
               "RNFBApp",
               "RNFBAnalytics"
-            ]
+            ],
+            "enableSceneSupport": true
           }
         }
       ],
