@@ -2,6 +2,9 @@ packages:
   - apps/*
   - packages/*
 nodeLinker: hoisted
+overrides:
+  # Expo Router's transitive DOM peers must match the workspace React version.
+  react-dom: 19.2.3
 allowBuilds:
   esbuild: true
   '@sentry/cli': true

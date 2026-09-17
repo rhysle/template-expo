@@ -9,7 +9,6 @@
     "android:device": "JAVA_HOME=$(/usr/libexec/java_home -v 17) expo run:android --device",
     "ios": "expo run:ios",
     "ios:device": "expo run:ios --device",
-    "web": "expo start --web",
     "prebuild": "APP_VARIANT=development expo prebuild",
     "prebuild:ios": "APP_VARIANT=development expo prebuild --platform ios",
     "prebuild:android": "APP_VARIANT=development expo prebuild --platform android",
@@ -109,7 +108,6 @@
     "lottie-react-native": "7.3.8",
     "phosphor-react-native": "3.0.6",
     "react": "19.2.3",
-    "react-dom": "19.2.3",
     "react-i18next": "17.0.11",
     "react-native": "0.86.3",
     "react-native-gesture-handler": "2.32.0",
@@ -120,7 +118,6 @@
     "react-native-safe-area-context": "5.7.0",
     "react-native-screens": "4.26.2",
     "react-native-svg": "15.15.4",
-    "react-native-web": "0.21.2",
     "react-native-worklets": "0.10.1",
     "zustand": "5.0.14",
     "@shared/core": "workspace:*"

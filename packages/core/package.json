@@ -147,7 +147,6 @@
     "./components/base/FloatingTabBar/FloatingTabBar": "./src/components/base/FloatingTabBar/FloatingTabBar.tsx",
     "./components/base/FloatingTabBar/tabBarHeight": "./src/components/base/FloatingTabBar/tabBarHeight.tsx",
     "./components/base/FloatingTabBar/tabBarContentInset": "./src/components/base/FloatingTabBar/tabBarContentInset.ts",
-    "./components/base/TabNavigator/NativeTabNavigator.web": "./src/components/base/TabNavigator/NativeTabNavigator.web.tsx",
     "./components/base/TabNavigator/NativeTabNavigator": "./src/components/base/TabNavigator/NativeTabNavigator.tsx",
     "./components/base/TabNavigator/TabBarBanner": "./src/components/base/TabNavigator/TabBarBanner.tsx",
     "./components/base/TabNavigator/TabNavigatorFrame": "./src/components/base/TabNavigator/TabNavigatorFrame.tsx",

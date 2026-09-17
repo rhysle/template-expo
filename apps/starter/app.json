@@ -33,10 +33,6 @@
         "android.permission.WRITE_EXTERNAL_STORAGE"
       ]
     },
-    "web": {
-      "output": "static",
-      "favicon": "./assets/images/favicon.png"
-    },
     "plugins": [
       "expo-router",
       [
@@ -173,6 +169,10 @@
     },
     "extra": {
       "router": {}
-    }
+    },
+    "platforms": [
+      "ios",
+      "android"
+    ]
   }
 }

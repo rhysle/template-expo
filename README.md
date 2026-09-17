@@ -23,6 +23,8 @@ pnpm check:i18n
 
 There is one root lockfile. Internal packages use `workspace:*` and the initial native-compatible installation strategy is `nodeLinker: hoisted`. Apps explicitly declare their native dependencies; shared packages declare their consumers as peers. Upgrade Expo, React, and React Native together across apps. No internal package publication or separate package compilation is required.
 
+Apps support iOS and Android only, declared by `expo.platforms` in each app's `app.json`. They do not declare `react-native-web`, `react-dom`, or a web launch script. New apps inherit this configuration from the starter. Expo Router still brings in `react-dom` through transitive peers; the workspace override keeps its version aligned with React. `expo-web-browser` remains a native dependency for opening browser views on iOS and Android.
+
 ## Work on an app
 
 Run commands from its directory or select its workspace:

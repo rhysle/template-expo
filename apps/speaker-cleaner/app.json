@@ -40,10 +40,6 @@
         "android.permission.WRITE_EXTERNAL_STORAGE"
       ]
     },
-    "web": {
-      "output": "static",
-      "favicon": "./assets/images/favicon.png"
-    },
     "plugins": [
       "expo-router",
       [
@@ -215,6 +211,10 @@
     "owner": "rhysle",
     "updates": {
       "url": "https://u.expo.dev/c7ee0090-40e2-48e0-b7f1-2774c6df510b"
-    }
+    },
+    "platforms": [
+      "ios",
+      "android"
+    ]
   }
 }
