@@ -13,7 +13,12 @@ import {
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Linking, Pressable, useWindowDimensions, View } from 'react-native'
-import { cancelAnimation, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
+import Animated, {
+  cancelAnimation,
+  useSharedValue,
+  withDelay,
+  withTiming,
+} from 'react-native-reanimated'
 import { scheduleOnRN } from 'react-native-worklets'
 
 import { formatDuration, RESOLUTION_LABELS } from '@/services/camera/types'
@@ -21,6 +26,7 @@ import type { RecorderController } from '@/services/camera/useRecorder'
 import { useCameraState } from '@/stores/features/camera'
 import { createThemedStyles, useThemedStyles } from '@/theme'
 
+import { CAMERA_CONTAINER_TRANSITION } from './cameraLayoutTransition'
 import { CameraStage, type PreviewLayout } from './CameraStage'
 import { FramingControl } from './FramingControl'
 import { RecordingOptions } from './RecordingOptions'
@@ -168,7 +174,9 @@ export function CameraScreen({
           onPress={onSettings}
         />
       </View>
-      <View style={[styles.body, landscape && styles.bodyLandscape]}>
+      <Animated.View
+        layout={CAMERA_CONTAINER_TRANSITION}
+        style={[styles.body, landscape && styles.bodyLandscape]}>
         <CameraStage
           recorder={recorder}
           layout={layout}
@@ -289,7 +297,7 @@ export function CameraScreen({
             </View>
           </View>
         </View>
-      </View>
+      </Animated.View>
       <RecordingOptions recorder={recorder} visible={options} onClose={() => setOptions(false)} />
     </View>
   )

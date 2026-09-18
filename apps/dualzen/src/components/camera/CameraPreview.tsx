@@ -2,7 +2,11 @@ import { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
-import { useSharedValue } from 'react-native-reanimated'
+import Animated, {
+  type SharedValue,
+  useAnimatedStyle,
+  useSharedValue,
+} from 'react-native-reanimated'
 import { scheduleOnRN } from 'react-native-worklets'
 
 import type { OutputKind } from '@/services/camera/types'
@@ -11,6 +15,7 @@ import { useCameraState } from '@/stores/features/camera'
 import { createThemedStyles, useThemedStyles } from '@/theme'
 
 import { DualRecorderPreview } from '../../../modules/dual-recorder/src/DualRecorderModule'
+import { getLandscapeGuideFrame } from './cameraLayoutGeometry'
 import { FocusReticle } from './FocusReticle'
 
 export type FocusPoint = { id: number; kind: OutputKind; x: number; y: number }
@@ -24,8 +29,9 @@ export function CameraPreview({
   onFocusPoint,
   onDismissFocus,
   guide = false,
+  guideOpacity,
   meteringEnabled = true,
-  pip = false,
+  embedded = false,
   pinchGesture,
   doubleTapGesture,
   drag,
@@ -38,8 +44,9 @@ export function CameraPreview({
   onFocusPoint: (point: FocusPoint | null) => void
   onDismissFocus: (id: number) => void
   guide?: boolean
+  guideOpacity?: SharedValue<number>
   meteringEnabled?: boolean
-  pip?: boolean
+  embedded?: boolean
   pinchGesture?: ReturnType<typeof Gesture.Pinch>
   doubleTapGesture?: ReturnType<typeof Gesture.Tap>
   drag?: ReturnType<typeof Gesture.Pan>
@@ -153,15 +160,19 @@ export function CameraPreview({
     zoomMax,
   ])
   // A reference rectangle must preserve 16:9, regardless of the negotiated source aspect ratio.
-  const guideHeight = (width * 9) / 16
-  const guidePosition = settings.front ? 1 - settings.landscapePosition : settings.landscapePosition
-  const guideTop = Math.max(0, height - guideHeight) * guidePosition
+  const guideFrame = getLandscapeGuideFrame(
+    width,
+    height,
+    settings.landscapePosition,
+    settings.front
+  )
+  const guideStyle = useAnimatedStyle(() => ({ opacity: guideOpacity?.value ?? 1 }))
   return (
     <GestureDetector gesture={gestures}>
       <View
         collapsable={false}
         accessibilityHint={meteringEnabled ? t('camera.focusHint') : undefined}
-        style={[styles.preview, pip ? styles.pip : { width, height }]}>
+        style={[styles.preview, { width, height }, embedded && styles.embedded]}>
         <DualRecorderPreview
           style={styles.fill}
           channel={settings.mode === 'single' ? 0 : kind === 'portrait' ? 1 : 2}
@@ -187,17 +198,8 @@ export function CameraPreview({
             ))}
           </View>
         )}
-        {guide && (
-          <View
-            pointerEvents="none"
-            style={[
-              styles.guide,
-              {
-                height: guideHeight,
-                top: guideTop,
-              },
-            ]}
-          />
+        {(guide || guideOpacity) && (
+          <Animated.View pointerEvents="none" style={[styles.guide, guideFrame, guideStyle]} />
         )}
         {point && (
           <FocusReticle
@@ -222,7 +224,7 @@ const createStyles = createThemedStyles((theme) => ({
     backgroundColor: theme.colors.background.surface,
   },
   fill: { position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 },
-  pip: { width: '100%', height: '100%', borderRadius: theme.borderRadius.sm },
+  embedded: { borderRadius: 0 },
   verticalGrid: {
     position: 'absolute',
     width: 1,

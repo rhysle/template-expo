@@ -6,15 +6,20 @@ import { Pressable, View } from 'react-native'
 import { Gesture } from 'react-native-gesture-handler'
 import Animated, {
   cancelAnimation,
+  interpolate,
   type SharedValue,
   useAnimatedStyle,
+  useDerivedValue,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
 
 import type { RecorderController } from '@/services/camera/useRecorder'
+import { useCameraState } from '@/stores/features/camera'
 import { cameraColors, createThemedStyles, useTheme, useThemedStyles } from '@/theme'
 
+import { getLandscapeGuideFrame } from './cameraLayoutGeometry'
+import { CAMERA_CONTAINER_TRANSITION, CAMERA_LAYOUT_TIMING } from './cameraLayoutTransition'
 import { CameraPreview, type FocusPoint } from './CameraPreview'
 import { CameraTransition } from './CameraTransition'
 
@@ -35,7 +40,16 @@ export function CameraStage({
   const { t } = useTranslation()
   const theme = useTheme()
   const styles = useThemedStyles(createStyles)
+  const { settings } = useCameraState()
   const [stage, setStage] = useState({ width: 0, height: 0 })
+  const stageHeight = useSharedValue(0)
+  useEffect(() => {
+    if (stage.height <= 0) return
+    // Single frame uses an immersive viewport; animate its change instead of resizing the surface.
+    stageHeight.set(
+      stageHeight.get() === 0 ? stage.height : withTiming(stage.height, CAMERA_LAYOUT_TIMING)
+    )
+  }, [stage.height, stageHeight])
   const [focusPoint, setFocusPoint] = useState<FocusPoint | null>(null)
   const insetX = useSharedValue(0)
   const insetY = useSharedValue(0)
@@ -45,6 +59,25 @@ export function CameraStage({
   const startScale = useSharedValue(1)
   const restoreFraction = useSharedValue(0.55)
   const expanded = useSharedValue(false)
+  const stackedProgress = useSharedValue(layout === 'stacked' ? 1 : 0)
+  const guideProgress = useSharedValue(layout === 'guide' ? 1 : 0)
+  const landscapeOpacity = useSharedValue(layout === 'guide' ? 0 : 1)
+  useEffect(() => {
+    stackedProgress.set(withTiming(layout === 'stacked' ? 1 : 0, CAMERA_LAYOUT_TIMING))
+    guideProgress.set(withTiming(layout === 'guide' ? 1 : 0, CAMERA_LAYOUT_TIMING))
+    // Fade throughout the same movement, including the reverse transition from the guide to PiP.
+    landscapeOpacity.set(withTiming(layout === 'guide' ? 0 : 1, CAMERA_LAYOUT_TIMING))
+  }, [layout, stackedProgress, guideProgress, landscapeOpacity])
+  const guideOpacity = useDerivedValue(() => guideProgress.value * (1 - landscapeOpacity.value))
+  useEffect(
+    () => () => {
+      cancelAnimation(stackedProgress)
+      cancelAnimation(guideProgress)
+      cancelAnimation(landscapeOpacity)
+      cancelAnimation(stageHeight)
+    },
+    [stackedProgress, guideProgress, landscapeOpacity, stageHeight]
+  )
   useEffect(() => {
     if (!recorder.ready) setFocusPoint(null)
   }, [recorder.ready])
@@ -58,6 +91,7 @@ export function CameraStage({
   const pan = useMemo(
     () =>
       Gesture.Pan()
+        .enabled(layout === 'pip')
         .minDistance(12)
         .maxPointers(1)
         .onStart(() => {
@@ -69,6 +103,7 @@ export function CameraStage({
           startY.value = Math.max(-maxY, Math.min(0, insetY.value))
         })
         .onUpdate((event) => {
+          if (stackedProgress.value !== 0 || guideProgress.value !== 0) return
           const scale = Math.max(minScale, Math.min(maxScale, insetScale.value))
           const maxX = Math.max(0, width - insetWidth * scale - padding)
           const maxY = Math.max(0, height - insetHeight * scale - padding)
@@ -88,17 +123,22 @@ export function CameraStage({
       insetWidth,
       insetHeight,
       padding,
+      layout,
+      stackedProgress,
+      guideProgress,
     ]
   )
   const resize = useMemo(
     () =>
       Gesture.Pinch()
+        .enabled(layout === 'pip')
         .onStart(() => {
           cancelAnimation(insetScale)
           expanded.value = false
           startScale.value = Math.max(minScale, Math.min(maxScale, insetScale.value))
         })
         .onUpdate((event) => {
+          if (stackedProgress.value !== 0 || guideProgress.value !== 0) return
           const scale = Math.max(minScale, Math.min(maxScale, startScale.value * event.scale))
           insetScale.value = scale
           insetX.value = Math.max(
@@ -123,17 +163,28 @@ export function CameraStage({
       insetWidth,
       insetHeight,
       padding,
+      layout,
+      stackedProgress,
+      guideProgress,
     ]
   )
   const doubleTap = useMemo(
     () =>
       Gesture.Tap()
+        .enabled(layout === 'pip')
         .numberOfTaps(2)
         .maxDuration(250)
         .maxDelay(280)
         .maxDistance(10)
         .onEnd((_event, success) => {
-          if (!success || width <= 0 || insetWidth <= 0) return
+          if (
+            !success ||
+            stackedProgress.value !== 0 ||
+            guideProgress.value !== 0 ||
+            width <= 0 ||
+            insetWidth <= 0
+          )
+            return
           const current = Math.max(minScale, Math.min(maxScale, insetScale.value))
           const restore = expanded.value || current >= maxScale - 0.001
           if (!restore) restoreFraction.value = (current * insetWidth) / width
@@ -143,28 +194,128 @@ export function CameraStage({
             : maxScale
           insetScale.value = withTiming(target, { duration: 180 })
         }),
-    [width, insetWidth, minScale, maxScale, insetScale, restoreFraction, expanded]
+    [
+      width,
+      insetWidth,
+      minScale,
+      maxScale,
+      insetScale,
+      restoreFraction,
+      expanded,
+      layout,
+      stackedProgress,
+      guideProgress,
+    ]
   )
-  const insetStyle = useAnimatedStyle(() => {
-    const scale = Math.max(minScale, Math.min(maxScale, insetScale.value))
-    const maxX = Math.max(0, width - insetWidth * scale - padding)
-    const maxY = Math.max(0, height - insetHeight * scale - padding)
+  // Native preview dimensions depend only on width, not on the toolbar/control layout.
+  const previewWidth = stage.width
+  const previewHeight = (previewWidth * 16) / 9
+  const landscapeHeight = (previewWidth * 9) / 16
+  const geometry = useDerivedValue(() => {
+    const viewportHeight = stageHeight.value
+    const portraitWidth = Math.min(stage.width, (viewportHeight * 9) / 16)
+    const stackedWidth = Math.max(
+      0,
+      Math.min(stage.width, (viewportHeight - theme.spacing.md) / (9 / 16 + (0.58 * 16) / 9))
+    )
+    const stackedLandscapeHeight = (stackedWidth * 9) / 16
+    const stackedPortraitHeight = (stackedWidth * 0.58 * 16) / 9
+    const portraitHeight = (portraitWidth * 16) / 9
+    const guide = getLandscapeGuideFrame(
+      portraitWidth,
+      portraitHeight,
+      settings.landscapePosition,
+      settings.front
+    )
     return {
-      width: insetWidth * scale,
-      height: insetHeight * scale,
+      viewportHeight,
+      portraitWidth,
+      portraitHeight,
+      guideCenterY: (viewportHeight - portraitHeight) / 2 + guide.top + guide.height / 2,
+      stackedWidth,
+      stackedLandscapeHeight,
+      stackedPortraitHeight,
+      stackedTop:
+        (viewportHeight - stackedLandscapeHeight - theme.spacing.md - stackedPortraitHeight) / 2,
+    }
+  })
+  const portraitStyle = useAnimatedStyle(() => {
+    const frame = geometry.value
+    const progress = stackedProgress.value
+    const renderedWidth = interpolate(
+      progress,
+      [0, 1],
+      [frame.portraitWidth, frame.stackedWidth * 0.58]
+    )
+    const scale = previewWidth > 0 ? renderedWidth / previewWidth : 1
+    const centerY = interpolate(
+      progress,
+      [0, 1],
+      [
+        frame.viewportHeight / 2,
+        frame.stackedTop +
+          frame.stackedLandscapeHeight +
+          theme.spacing.md +
+          frame.stackedPortraitHeight / 2,
+      ]
+    )
+    return {
+      borderRadius: theme.borderRadius.xl / Math.max(scale, 0.001),
+      transform: [{ translateY: centerY - previewHeight / 2 }, { scale }],
+    }
+  })
+  const insetStyle = useAnimatedStyle(() => {
+    const frame = geometry.value
+    const stackedWeight = stackedProgress.value
+    const guideWeight = guideProgress.value
+    const pipWeight = Math.max(0, 1 - stackedWeight - guideWeight)
+    const baseInsetWidth = Math.min(theme.spacing['9xl'], frame.portraitWidth * 0.55)
+    const minimumScale = baseInsetWidth > 0 ? (frame.portraitWidth * 0.4) / baseInsetWidth : 1
+    const maximumScale = baseInsetWidth > 0 ? (frame.portraitWidth * 0.75) / baseInsetWidth : 1
+    const pipScale = Math.max(minimumScale, Math.min(maximumScale, insetScale.value))
+    const pipWidth = baseInsetWidth * pipScale
+    const pipHeight = (pipWidth * 9) / 16
+    const maxX = Math.max(0, frame.portraitWidth - pipWidth - padding)
+    const maxY = Math.max(0, frame.portraitHeight - pipHeight - padding)
+    const pipCenterX =
+      (stage.width + frame.portraitWidth) / 2 -
+      theme.spacing.sm -
+      pipWidth / 2 +
+      Math.max(-maxX, Math.min(0, insetX.value))
+    const pipCenterY =
+      (frame.viewportHeight + frame.portraitHeight) / 2 -
+      theme.spacing.sm -
+      pipHeight / 2 +
+      Math.max(-maxY, Math.min(0, insetY.value))
+    // Blend three exact endpoints, rather than routing the Single mode transition through PiP.
+    const renderedWidth =
+      pipWidth * pipWeight + frame.stackedWidth * stackedWeight + frame.portraitWidth * guideWeight
+    const centerX = pipCenterX * pipWeight + (stage.width / 2) * (stackedWeight + guideWeight)
+    const centerY =
+      pipCenterY * pipWeight +
+      (frame.stackedTop + frame.stackedLandscapeHeight / 2) * stackedWeight +
+      frame.guideCenterY * guideWeight
+    const scale = previewWidth > 0 ? renderedWidth / previewWidth : 1
+    return {
+      opacity: landscapeOpacity.value,
+      borderRadius:
+        (theme.borderRadius.sm * pipWeight + theme.borderRadius.xl * stackedWeight) /
+        Math.max(scale, 0.001),
+      borderWidth: pipWeight / Math.max(scale, 0.001),
       transform: [
-        { translateX: Math.max(-maxX, Math.min(0, insetX.value)) },
-        { translateY: Math.max(-maxY, Math.min(0, insetY.value)) },
+        {
+          translateX: centerX - previewWidth / 2,
+        },
+        {
+          translateY: centerY - landscapeHeight / 2,
+        },
+        { scale },
       ],
     }
   })
   const feedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: 1 + switchProgress.value * 0.025 }],
   }))
-  const stackedWidth = Math.max(
-    0,
-    Math.min(stage.width, (stage.height - theme.spacing.md) / (9 / 16 + (0.58 * 16) / 9))
-  )
   const dismissFocus = (id: number) =>
     setFocusPoint((current) => (current?.id === id ? null : current))
   const previewProps = {
@@ -174,50 +325,50 @@ export function CameraStage({
     onDismissFocus: dismissFocus,
   }
   return (
-    <View style={styles.stage} onLayout={(event) => setStage(event.nativeEvent.layout)}>
+    <Animated.View
+      layout={CAMERA_CONTAINER_TRANSITION}
+      style={styles.stage}
+      onLayout={(event) => setStage(event.nativeEvent.layout)}>
       <Animated.View style={[styles.feed, feedStyle]}>
         {(recorder.ready || switching) && stage.width > 0 && stage.height > 0 ? (
-          layout === 'stacked' ? (
-            <View style={styles.stacked}>
+          <>
+            {/* Stable native surfaces: only their wrappers move and scale between layouts. */}
+            <Animated.View
+              style={[
+                styles.previewFrame,
+                { width: previewWidth, height: previewHeight },
+                portraitStyle,
+              ]}>
+              <CameraPreview
+                {...previewProps}
+                kind="portrait"
+                width={previewWidth}
+                height={previewHeight}
+                guideOpacity={guideOpacity}
+                embedded
+              />
+            </Animated.View>
+            <Animated.View
+              pointerEvents={layout === 'guide' ? 'none' : 'auto'}
+              style={[
+                styles.previewFrame,
+                styles.inset,
+                { width: previewWidth, height: landscapeHeight },
+                insetStyle,
+              ]}>
               <CameraPreview
                 {...previewProps}
                 kind="landscape"
-                width={stackedWidth}
-                height={(stackedWidth * 9) / 16}
+                width={previewWidth}
+                height={landscapeHeight}
+                embedded
+                pinchGesture={layout === 'pip' ? resize : undefined}
+                doubleTapGesture={layout === 'pip' ? doubleTap : undefined}
+                meteringEnabled={layout === 'stacked'}
+                drag={layout === 'pip' ? pan : undefined}
               />
-              <CameraPreview
-                {...previewProps}
-                kind="portrait"
-                width={stackedWidth * 0.58}
-                height={(stackedWidth * 0.58 * 16) / 9}
-              />
-            </View>
-          ) : (
-            <View style={{ width, height }}>
-              <CameraPreview
-                {...previewProps}
-                kind="portrait"
-                width={width}
-                height={height}
-                guide={layout === 'guide'}
-              />
-              {layout === 'pip' && (
-                <Animated.View style={[styles.inset, insetStyle]}>
-                  <CameraPreview
-                    {...previewProps}
-                    kind="landscape"
-                    width={insetWidth}
-                    height={insetHeight}
-                    pip
-                    pinchGesture={resize}
-                    doubleTapGesture={doubleTap}
-                    meteringEnabled={false}
-                    drag={pan}
-                  />
-                </Animated.View>
-              )}
-            </View>
-          )
+            </Animated.View>
+          </>
         ) : (
           <View style={styles.waiting}>
             <SpinArcLoader color={theme.colors.primary.main} />
@@ -243,20 +394,19 @@ export function CameraStage({
           </Text>
         </Pressable>
       )}
-    </View>
+    </Animated.View>
   )
 }
 const createStyles = createThemedStyles((theme) => ({
   stage: { flex: 1, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
   feed: { flex: 1, width: '100%', alignItems: 'center', justifyContent: 'center' },
-  stacked: { alignItems: 'center', gap: theme.spacing.md },
-  inset: {
+  previewFrame: {
     position: 'absolute',
-    bottom: theme.spacing.sm,
-    right: theme.spacing.sm,
-    borderRadius: theme.borderRadius.sm,
+    top: 0,
+    left: 0,
     overflow: 'hidden',
-    borderWidth: 1,
+  },
+  inset: {
     borderColor: theme.colors.border.strong,
   },
   waiting: { alignItems: 'center', gap: theme.spacing.md },
