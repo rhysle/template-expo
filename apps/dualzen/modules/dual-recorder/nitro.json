@@ -1,0 +1,12 @@
+{
+  "cxxNamespace": ["dualrecorder"],
+  "ios": { "iosModuleName": "DualRecorderCore" },
+  "android": { "androidNamespace": ["dualrecorder"], "androidCxxLibName": "DualRecorder" },
+  "autolinking": {
+    "DualOutputFactory": {
+      "ios": { "language": "swift", "implementationClassName": "DualOutputFactory" },
+      "android": { "language": "kotlin", "implementationClassName": "DualOutputFactory" }
+    }
+  },
+  "ignorePaths": ["**/node_modules"]
+}

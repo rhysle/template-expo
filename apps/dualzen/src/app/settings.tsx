@@ -26,16 +26,18 @@ import {
   StarIcon,
 } from 'phosphor-react-native'
 import { useTranslation } from 'react-i18next'
-import { ScrollView, View } from 'react-native'
+import { ScrollView, Switch, View } from 'react-native'
 
 import { AppConfig } from '@/configs'
 import { AdsConsent, isAnyAdFormatEnabled } from '@/services/ads'
 import { AnalyticsGeneralEvents, trackEvent } from '@/services/firebase/analytics'
+import { useCameraState } from '@/stores/features/camera'
 import { createThemedStyles, iconSizes, useCommonStyles, useTheme, useThemedStyles } from '@/theme'
 
 const SETTINGS_PAYWALL_SOURCE = 'settings' satisfies PaywallSource
 
 export default function SettingsScreen() {
+  const { autoExport, setAutoExport, phase } = useCameraState()
   const { t } = useTranslation()
   const theme = useTheme()
   const commonStyles = useCommonStyles()
@@ -105,8 +107,32 @@ export default function SettingsScreen() {
           {t('settings.preferences')}
         </Text>
         <Card padding="none">
-          {/* Example preference items - replace with your actual settings */}
-          <View />
+          <View style={styles.preference}>
+            <View style={styles.preferenceText}>
+              <Text weight="semibold">{t('camera.autoExport')}</Text>
+              <Text variant="caption" tone="muted">
+                {t('camera.autoExportBody')}
+              </Text>
+            </View>
+            <Switch
+              accessibilityLabel={t('camera.autoExport')}
+              disabled={phase !== 'idle'}
+              value={autoExport}
+              onValueChange={setAutoExport}
+              trackColor={{
+                true: theme.colors.primary.main,
+                false: theme.colors.background.subtle,
+              }}
+            />
+          </View>
+          <View style={styles.preference}>
+            <View style={styles.preferenceText}>
+              <Text weight="semibold">{t('camera.storageTitle')}</Text>
+              <Text variant="caption" tone="muted">
+                {t('camera.storageBody')}
+              </Text>
+            </View>
+          </View>
         </Card>
       </View>
 
@@ -208,6 +234,13 @@ export default function SettingsScreen() {
 }
 
 const createStyles = createThemedStyles((t) => ({
+  preference: {
+    flexDirection: 'row',
+    padding: t.spacing.lg,
+    gap: t.spacing.lg,
+    alignItems: 'center',
+  },
+  preferenceText: { flex: 1, gap: t.spacing.xs },
   container: {
     paddingHorizontal: t.spacing.lg,
     paddingTop: t.spacing.xl,

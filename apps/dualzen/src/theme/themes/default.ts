@@ -1,43 +1,34 @@
 import type { Theme } from '@shared/core/theme'
+import { withAlpha } from '@shared/core/utils/color'
 
 export const defaultTheme: Theme = {
-  appearance: 'light', // Drives system UI content and blur treatments
+  appearance: 'dark',
   colors: {
-    primary: {
-      main: '#2563EB',
-      strong: '#1D4ED8',
-      soft: '#EFF6FF',
-    },
+    primary: { main: '#B7EC76', strong: '#8CCC4F', soft: '#263420' },
     background: {
-      base: '#F8FAFC',
-      surface: '#FFFFFF',
-      card: '#FFFFFF',
-      subtle: '#F1F5F9',
-      overlay: 'rgba(15, 23, 42, 0.48)',
+      base: '#090B10',
+      surface: '#141820',
+      card: '#1B2029',
+      subtle: '#252B35',
+      overlay: withAlpha('#000000', 0.8),
     },
     text: {
-      primary: '#0F172A',
-      secondary: '#334155',
-      muted: '#64748B',
-      accent: '#2563EB',
-      inverse: '#FFFFFF',
-      inverseSecondary: '#F8FAFC',
-      inverseMuted: 'rgba(255, 255, 255, 0.72)',
+      primary: '#F4F6FA',
+      secondary: '#C2C8D2',
+      muted: '#818A99',
+      accent: '#B7EC76',
+      inverse: '#090B10',
+      inverseSecondary: '#141820',
+      inverseMuted: withAlpha('#090B10', 0.72),
     },
     status: {
-      success: '#22C55E',
-      error: '#EF4444',
-      warning: '#F59E0B',
-      info: '#3B82F6',
-      neutral: '#94A3B8',
+      success: '#B7EC76',
+      error: '#FF655E',
+      warning: '#FFC66D',
+      info: '#84B9FF',
+      neutral: '#818A99',
     },
-    border: {
-      subtle: '#E2E8F0',
-      default: '#CBD5E1',
-      strong: '#94A3B8',
-    },
-    shadow: {
-      base: '#0F172A',
-    },
+    border: { subtle: '#272D37', default: '#384150', strong: '#697587' },
+    shadow: { base: '#000000' },
   },
 }

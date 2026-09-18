@@ -3,20 +3,23 @@
     "name": "DualZen",
     "slug": "dualzen",
     "version": "1.0.0",
-    "orientation": "portrait",
+    "orientation": "default",
     "icon": "./assets/icons/ios-icon.png",
     "scheme": "dualzen",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "dark",
     "ios": {
       "icon": {
         "light": "./assets/icons/ios-icon.png",
         "dark": "./assets/icons/ios-icon.png",
         "tinted": "./assets/icons/ios-icon-tinted.png"
       },
-      "supportsTablet": true,
+      "supportsTablet": false,
       "bundleIdentifier": "com.rhysle.dualzen",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSCameraUsageDescription": "DualZen uses the camera to record portrait and landscape videos together.",
+        "NSMicrophoneUsageDescription": "DualZen records synchronized audio for your videos.",
+        "NSPhotoLibraryAddUsageDescription": "Save copies of your DualZen videos to Photos."
       }
     },
     "android": {
@@ -31,7 +34,8 @@
         "android.permission.SYSTEM_ALERT_WINDOW",
         "android.permission.READ_EXTERNAL_STORAGE",
         "android.permission.WRITE_EXTERNAL_STORAGE"
-      ]
+      ],
+      "permissions": ["android.permission.CAMERA", "android.permission.RECORD_AUDIO"]
     },
     "plugins": [
       "expo-router",
@@ -41,7 +45,7 @@
           "image": "./assets/icons/splash-icon.png",
           "imageWidth": 100,
           "resizeMode": "contain",
-          "backgroundColor": "#F7FBFF"
+          "backgroundColor": "#090B10"
         }
       ],
       [
@@ -144,14 +148,12 @@
         "expo-build-properties",
         {
           "android": {
-            "extraProguardRules": "-keep class com.google.android.gms.internal.consent_sdk.** { *; }"
+            "extraProguardRules": "-keep class com.google.android.gms.internal.consent_sdk.** { *; }",
+            "minSdkVersion": 29
           },
           "ios": {
             "useFrameworks": "static",
-            "forceStaticLinking": [
-              "RNFBApp",
-              "RNFBAnalytics"
-            ],
+            "forceStaticLinking": ["RNFBApp", "RNFBAnalytics"],
             "enableSceneSupport": true
           }
         }
@@ -161,7 +163,14 @@
       "expo-status-bar",
       "expo-web-browser",
       "@react-native-firebase/app",
-      "@shared/tooling/plugins/withRNFirebaseStaticFramework.js"
+      "@shared/tooling/plugins/withRNFirebaseStaticFramework.js",
+      "expo-video",
+      [
+        "expo-screen-orientation",
+        {
+          "initialOrientation": "DEFAULT"
+        }
+      ]
     ],
     "runtimeVersion": {
       "policy": "appVersion"
@@ -180,9 +189,6 @@
     "updates": {
       "url": "https://u.expo.dev/c1d6d208-8446-46ae-a625-1f9a8776d42c"
     },
-    "platforms": [
-      "ios",
-      "android"
-    ]
+    "platforms": ["ios", "android"]
   }
 }

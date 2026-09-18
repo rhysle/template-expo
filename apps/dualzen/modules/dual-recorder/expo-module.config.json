@@ -1,0 +1,11 @@
+{
+  "platforms": ["apple", "android"],
+  "apple": {
+    "podspecPath": ["DualRecorder.podspec", "DualRecorderCore.podspec"],
+    "swiftModuleName": "DualRecorder",
+    "modules": ["DualRecorderModule"]
+  },
+  "android": {
+    "modules": ["expo.modules.dualrecorder.DualRecorderModule"]
+  }
+}

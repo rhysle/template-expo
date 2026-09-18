@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.22.1)
+project(DualRecorder)
+set(CMAKE_CXX_STANDARD 20)
+add_library(DualRecorder SHARED src/main/cpp/adapter.cpp)
+include(${CMAKE_SOURCE_DIR}/../nitrogen/generated/android/DualRecorder+autolinking.cmake)
+find_package(react-native-vision-camera REQUIRED CONFIG)
+target_link_libraries(DualRecorder react-native-vision-camera::VisionCamera android log)
