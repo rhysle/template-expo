@@ -19,7 +19,7 @@ import { useCameraState } from '@/stores/features/camera'
 import { cameraColors, createThemedStyles, useTheme, useThemedStyles } from '@/theme'
 
 import { getLandscapeGuideFrame } from './cameraLayoutGeometry'
-import { CAMERA_CONTAINER_TRANSITION, CAMERA_LAYOUT_TIMING } from './cameraLayoutTransition'
+import { CAMERA_LAYOUT_TIMING } from './cameraLayoutTransition'
 import { CameraPreview, type FocusPoint } from './CameraPreview'
 import { CameraTransition } from './CameraTransition'
 
@@ -27,12 +27,16 @@ export type PreviewLayout = 'pip' | 'stacked' | 'guide'
 export function CameraStage({
   recorder,
   layout,
+  topInset,
+  bottomInset,
   switching,
   switchProgress,
   children,
 }: {
   recorder: RecorderController
   layout: PreviewLayout
+  topInset: number
+  bottomInset: number
   switching: boolean
   switchProgress: SharedValue<number>
   children?: ReactNode
@@ -43,13 +47,16 @@ export function CameraStage({
   const { settings } = useCameraState()
   const [stage, setStage] = useState({ width: 0, height: 0 })
   const stageHeight = useSharedValue(0)
+  const stageTop = useSharedValue(topInset)
   useEffect(() => {
     if (stage.height <= 0) return
-    // Single frame uses an immersive viewport; animate its change instead of resizing the surface.
+    // Animate the preview viewport, not the stage or the controls anchored above it.
+    const viewportHeight = Math.max(0, stage.height - topInset - bottomInset)
+    stageTop.set(stageHeight.get() === 0 ? topInset : withTiming(topInset, CAMERA_LAYOUT_TIMING))
     stageHeight.set(
-      stageHeight.get() === 0 ? stage.height : withTiming(stage.height, CAMERA_LAYOUT_TIMING)
+      stageHeight.get() === 0 ? viewportHeight : withTiming(viewportHeight, CAMERA_LAYOUT_TIMING)
     )
-  }, [stage.height, stageHeight])
+  }, [stage.height, topInset, bottomInset, stageHeight, stageTop])
   const [focusPoint, setFocusPoint] = useState<FocusPoint | null>(null)
   const insetX = useSharedValue(0)
   const insetY = useSharedValue(0)
@@ -75,13 +82,14 @@ export function CameraStage({
       cancelAnimation(guideProgress)
       cancelAnimation(landscapeOpacity)
       cancelAnimation(stageHeight)
+      cancelAnimation(stageTop)
     },
-    [stackedProgress, guideProgress, landscapeOpacity, stageHeight]
+    [stackedProgress, guideProgress, landscapeOpacity, stageHeight, stageTop]
   )
   useEffect(() => {
     if (!recorder.ready) setFocusPoint(null)
   }, [recorder.ready])
-  const width = Math.min(stage.width, (stage.height * 9) / 16)
+  const width = Math.min(stage.width, (Math.max(0, stage.height - topInset - bottomInset) * 9) / 16)
   const height = (width * 16) / 9
   const insetWidth = Math.min(theme.spacing['9xl'], width * 0.55)
   const insetHeight = (insetWidth * 9) / 16
@@ -228,14 +236,17 @@ export function CameraStage({
       settings.front
     )
     return {
+      viewportTop: stageTop.value,
       viewportHeight,
       portraitWidth,
       portraitHeight,
-      guideCenterY: (viewportHeight - portraitHeight) / 2 + guide.top + guide.height / 2,
+      guideCenterY:
+        stageTop.value + (viewportHeight - portraitHeight) / 2 + guide.top + guide.height / 2,
       stackedWidth,
       stackedLandscapeHeight,
       stackedPortraitHeight,
       stackedTop:
+        stageTop.value +
         (viewportHeight - stackedLandscapeHeight - theme.spacing.md - stackedPortraitHeight) / 2,
     }
   })
@@ -252,7 +263,7 @@ export function CameraStage({
       progress,
       [0, 1],
       [
-        frame.viewportHeight / 2,
+        frame.viewportTop + frame.viewportHeight / 2,
         frame.stackedTop +
           frame.stackedLandscapeHeight +
           theme.spacing.md +
@@ -283,6 +294,7 @@ export function CameraStage({
       pipWidth / 2 +
       Math.max(-maxX, Math.min(0, insetX.value))
     const pipCenterY =
+      frame.viewportTop +
       (frame.viewportHeight + frame.portraitHeight) / 2 -
       theme.spacing.sm -
       pipHeight / 2 +
@@ -325,10 +337,7 @@ export function CameraStage({
     onDismissFocus: dismissFocus,
   }
   return (
-    <Animated.View
-      layout={CAMERA_CONTAINER_TRANSITION}
-      style={styles.stage}
-      onLayout={(event) => setStage(event.nativeEvent.layout)}>
+    <View style={styles.stage} onLayout={(event) => setStage(event.nativeEvent.layout)}>
       <Animated.View style={[styles.feed, feedStyle]}>
         {(recorder.ready || switching) && stage.width > 0 && stage.height > 0 ? (
           <>
@@ -394,7 +403,7 @@ export function CameraStage({
           </Text>
         </Pressable>
       )}
-    </Animated.View>
+    </View>
   )
 }
 const createStyles = createThemedStyles((theme) => ({

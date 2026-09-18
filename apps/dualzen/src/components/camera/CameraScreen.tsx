@@ -1,10 +1,11 @@
 import { Button, IconButton, Text } from '@shared/core/components/base'
-import { withAlpha } from '@shared/core/utils/color'
+import { useSnackbarState } from '@shared/core/stores/features/snackbar'
 import {
   ArrowsClockwiseIcon,
   CropIcon,
-  FlashlightIcon,
   GearSixIcon,
+  LightningIcon,
+  LightningSlashIcon,
   RectangleIcon,
   SlidersHorizontalIcon,
   SquaresFourIcon,
@@ -13,20 +14,14 @@ import {
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Linking, Pressable, useWindowDimensions, View } from 'react-native'
-import Animated, {
-  cancelAnimation,
-  useSharedValue,
-  withDelay,
-  withTiming,
-} from 'react-native-reanimated'
+import { cancelAnimation, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
 import { scheduleOnRN } from 'react-native-worklets'
 
 import { formatDuration, RESOLUTION_LABELS } from '@/services/camera/types'
 import type { RecorderController } from '@/services/camera/useRecorder'
 import { useCameraState } from '@/stores/features/camera'
-import { createThemedStyles, useThemedStyles } from '@/theme'
+import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
 
-import { CAMERA_CONTAINER_TRANSITION } from './cameraLayoutTransition'
 import { CameraStage, type PreviewLayout } from './CameraStage'
 import { FramingControl } from './FramingControl'
 import { RecordingOptions } from './RecordingOptions'
@@ -44,11 +39,19 @@ export function CameraScreen({
   const landscape = width > height
   const { t } = useTranslation()
   const styles = useThemedStyles(createStyles)
+  const theme = useTheme()
+  const { showSnackbar } = useSnackbarState()
+  useEffect(() => {
+    if (recorder.notice === 'saved') {
+      showSnackbar({ title: t('camera.saved'), variant: 'success' })
+    }
+  }, [recorder.notice, showSnackbar, t])
   const { settings, phase, updateSettings } = useCameraState()
   const [layout, setLayout] = useState<PreviewLayout>('pip')
   const [options, setOptions] = useState(false)
   const [framing, setFraming] = useState(false)
   const [flipTarget, setFlipTarget] = useState<boolean | null>(null)
+  const [toolbarHeight, setToolbarHeight] = useState<number>(theme.spacing['5xl'])
   const switchProgress = useSharedValue(0)
   const switching = flipTarget !== null
   useEffect(() => {
@@ -115,7 +118,6 @@ export function CameraScreen({
     recording: '',
   }
   const notices: Record<string, string> = {
-    saved: t('camera.saved'),
     partialSave: t('camera.partialSave'),
     exportFailed: t('camera.exportFailed'),
     storage: t('camera.storage'),
@@ -149,86 +151,120 @@ export function CameraScreen({
     )
   return (
     <View style={styles.root}>
-      <View style={[styles.toolbar, immersive && styles.toolbarFloating]}>
-        <Pressable
-          disabled={!idle || switching}
-          onPress={() => setOptions(true)}
-          accessibilityRole="button"
-          accessibilityLabel={t('camera.cameraOptions')}
-          style={styles.profile}>
-          <Text variant="label" weight="semibold">
-            {RESOLUTION_LABELS[settings.longEdge]} · {settings.fps} ·{' '}
-            {settings.container.toUpperCase()}
-          </Text>
-        </Pressable>
-        <IconButton
-          icon={SlidersHorizontalIcon}
-          accessibilityLabel={t('camera.cameraOptions')}
-          disabled={!idle || switching}
-          onPress={() => setOptions(true)}
-        />
-        <IconButton
-          icon={GearSixIcon}
-          accessibilityLabel={t('camera.settings')}
-          disabled={!idle || switching}
-          onPress={onSettings}
-        />
+      <View
+        style={styles.toolbar}
+        onLayout={(event) => setToolbarHeight(event.nativeEvent.layout.height)}>
+        <View style={styles.toolbarSide}>
+          <Pressable
+            disabled={!idle || switching}
+            onPress={() => setOptions(true)}
+            accessibilityRole="button"
+            accessibilityLabel={t('camera.cameraOptions')}
+            style={styles.profile}>
+            <Text variant="label" weight="semibold" numberOfLines={1}>
+              {RESOLUTION_LABELS[settings.longEdge]} · {settings.fps} ·{' '}
+              {settings.container.toUpperCase()}
+            </Text>
+          </Pressable>
+        </View>
+        {recording && (
+          <View style={styles.timerPill}>
+            <View style={styles.recordingDot} />
+            <Text weight="semibold" style={styles.timer}>
+              {formatDuration(recorder.elapsed)}
+            </Text>
+          </View>
+        )}
+        <View style={[styles.toolbarSide, styles.toolbarActions]}>
+          <IconButton
+            icon={SlidersHorizontalIcon}
+            accessibilityLabel={t('camera.cameraOptions')}
+            disabled={!idle || switching}
+            onPress={() => setOptions(true)}
+          />
+          <IconButton
+            icon={GearSixIcon}
+            accessibilityLabel={t('camera.settings')}
+            disabled={!idle || switching}
+            onPress={onSettings}
+          />
+        </View>
       </View>
-      <Animated.View
-        layout={CAMERA_CONTAINER_TRANSITION}
-        style={[styles.body, landscape && styles.bodyLandscape]}>
+      <View style={[styles.body, landscape && styles.bodyLandscape]}>
         <CameraStage
           recorder={recorder}
           layout={layout}
+          topInset={immersive ? 0 : toolbarHeight + theme.spacing.sm * 2}
+          bottomInset={immersive || landscape ? 0 : theme.spacing['7xl'] + theme.spacing.sm * 2}
           switching={switching}
           switchProgress={switchProgress}>
-          {framing && <FramingControl immersive={immersive} onClose={() => setFraming(false)} />}
+          {framing && <FramingControl onClose={() => setFraming(false)} />}
         </CameraStage>
-        <View
-          style={[
-            styles.panel,
-            landscape && styles.panelLandscape,
-            immersive && styles.panelFloating,
-          ]}>
-          {recorder.stats.thermal >= 2 && (
-            <Text tone="warning" variant="caption" align="center">
-              {t('camera.heatWarning')}
-            </Text>
-          )}
-          {recorder.notice && (
-            <Text variant="caption" tone="secondary" align="center">
-              {notices[recorder.notice] ?? t('camera.failure')}
-            </Text>
-          )}
-          {recorder.error && (
-            <View style={styles.error}>
-              <Text variant="caption" tone="error">
-                {recorder.error === 'unsupportedSettings'
-                  ? t('camera.unsupportedSettings')
-                  : t('camera.failure')}
+        <View style={[styles.panel, landscape && styles.panelLandscape]}>
+          <View style={[styles.notices, landscape && styles.noticesLandscape]}>
+            {!!phaseLabels[phase] && (
+              <Text variant="caption" tone="muted" align="center">
+                {phaseLabels[phase]}
               </Text>
-              <Button
-                size="sm"
-                variant="ghost"
-                onPress={() => {
-                  recorder.clearError()
-                  setOptions(true)
-                }}
-                label={t('camera.retry')}
-              />
-            </View>
-          )}
+            )}
+            {recorder.stats.thermal >= 2 && (
+              <Text tone="warning" variant="caption" align="center">
+                {t('camera.heatWarning')}
+              </Text>
+            )}
+            {recorder.notice && recorder.notice !== 'saved' && (
+              <Text variant="caption" tone="secondary" align="center">
+                {notices[recorder.notice] ?? t('camera.failure')}
+              </Text>
+            )}
+            {recorder.error && (
+              <View style={styles.error}>
+                <Text variant="caption" tone="error">
+                  {recorder.error === 'unsupportedSettings'
+                    ? t('camera.unsupportedSettings')
+                    : t('camera.failure')}
+                </Text>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onPress={() => {
+                    recorder.clearError()
+                    setOptions(true)
+                  }}
+                  label={t('camera.retry')}
+                />
+              </View>
+            )}
+          </View>
           <View style={styles.controls}>
             <View style={styles.controlGroup}>
-              <IconButton
-                icon={FlashlightIcon}
+              <Pressable
+                style={[
+                  styles.controlButton,
+                  styles.torch,
+                  (switching || !recorder.ready || !recorder.device?.hasTorch) &&
+                    styles.torchUnavailable,
+                ]}
+                accessibilityRole="button"
                 accessibilityLabel={t('camera.torch')}
-                selected={recorder.torchEnabled}
+                accessibilityState={{
+                  selected: recorder.torchEnabled,
+                  disabled: switching || !recorder.ready || !recorder.device?.hasTorch,
+                }}
                 disabled={switching || !recorder.ready || !recorder.device?.hasTorch}
                 onPress={() => {
                   void recorder.torch(!recorder.torchEnabled)
-                }}
-              />
+                }}>
+                {recorder.torchEnabled ? (
+                  <LightningIcon
+                    size={iconSizes.md}
+                    weight="fill"
+                    color={theme.colors.primary.main}
+                  />
+                ) : (
+                  <LightningSlashIcon size={iconSizes.md} color={theme.colors.text.primary} />
+                )}
+              </Pressable>
               <Pressable
                 accessibilityRole="button"
                 accessibilityLabel={t('camera.toggleZoom', { zoom: nextZoom })}
@@ -242,10 +278,23 @@ export function CameraScreen({
                   {zoomLabel}
                 </Text>
               </Pressable>
+              <View style={styles.controlButton} pointerEvents="none" />
             </View>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={recording ? t('camera.stop') : t('camera.record')}
+              disabled={!recording && (switching || !idle || !recorder.ready || !!recorder.error)}
+              onPress={() => {
+                if (recording) void recorder.stop()
+                else void recorder.start()
+              }}
+              style={[styles.record, !idle && !recording && styles.dim]}>
+              <View style={[styles.recordInner, recording && styles.stop]} />
+            </Pressable>
             <View style={styles.controlGroup}>
               <IconButton
                 icon={CropIcon}
+                style={styles.controlButton}
                 accessibilityLabel={t('camera.framing')}
                 selected={framing}
                 disabled={!idle || switching}
@@ -253,6 +302,7 @@ export function CameraScreen({
               />
               <IconButton
                 icon={LAYOUT_ICONS[layout]}
+                style={styles.controlButton}
                 disabled={switching}
                 accessibilityLabel={t('camera.previewLayout', {
                   layout: layoutLabels[layout],
@@ -261,6 +311,7 @@ export function CameraScreen({
               />
               <IconButton
                 icon={ArrowsClockwiseIcon}
+                style={styles.controlButton}
                 accessibilityLabel={t('camera.flip')}
                 disabled={
                   !idle ||
@@ -274,61 +325,45 @@ export function CameraScreen({
               />
             </View>
           </View>
-          <View style={styles.bottom}>
-            <View style={styles.storage} />
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel={recording ? t('camera.stop') : t('camera.record')}
-              disabled={!recording && (switching || !idle || !recorder.ready || !!recorder.error)}
-              onPress={() => {
-                if (recording) void recorder.stop()
-                else void recorder.start()
-              }}
-              style={[styles.record, !idle && !recording && styles.dim]}>
-              <View style={[styles.recordInner, recording && styles.stop]} />
-            </Pressable>
-            <View style={styles.timer}>
-              <Text weight="semibold">{formatDuration(recorder.elapsed)}</Text>
-              {!!phaseLabels[phase] && (
-                <Text variant="caption" tone="muted">
-                  {phaseLabels[phase]}
-                </Text>
-              )}
-            </View>
-          </View>
         </View>
-      </Animated.View>
+      </View>
       <RecordingOptions recorder={recorder} visible={options} onClose={() => setOptions(false)} />
     </View>
   )
 }
 const createStyles = createThemedStyles((theme) => ({
-  root: { flex: 1, gap: theme.spacing.sm },
+  root: { flex: 1 },
   body: { flex: 1, gap: theme.spacing.md },
   bodyLandscape: { flexDirection: 'row' },
-  panel: { gap: theme.spacing.sm },
-  toolbarFloating: {
+  toolbar: {
     position: 'absolute',
     top: theme.spacing.sm,
     left: theme.spacing.sm,
     right: theme.spacing.sm,
     zIndex: 2,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing.xs,
   },
-  panelFloating: {
+  toolbarSide: { flex: 1, minWidth: 0, flexDirection: 'row' },
+  toolbarActions: { justifyContent: 'flex-end', gap: theme.spacing.xs },
+  panel: {
     position: 'absolute',
     bottom: theme.spacing.sm,
-    left: theme.spacing.sm,
-    right: theme.spacing.sm,
+    left: 0,
+    right: 0,
     zIndex: 2,
-    padding: theme.spacing.sm,
-    borderRadius: theme.borderRadius.xl,
-    backgroundColor: withAlpha(theme.colors.background.base, 0.6),
   },
-  panelLandscape: { width: theme.spacing['9xl'] * 2, justifyContent: 'center' },
-  toolbar: { flexDirection: 'row', alignItems: 'center', gap: theme.spacing.sm },
+  panelLandscape: {
+    position: 'relative',
+    bottom: 0,
+    width: theme.spacing['9xl'] * 2 + theme.spacing['8xl'],
+    justifyContent: 'center',
+    paddingTop: theme.spacing['5xl'],
+  },
   profile: {
-    flex: 1,
-    paddingHorizontal: theme.spacing.lg,
+    flexShrink: 1,
+    paddingHorizontal: theme.spacing.md,
     paddingVertical: theme.spacing.md,
     borderRadius: theme.borderRadius.full,
     backgroundColor: theme.colors.background.surface,
@@ -339,26 +374,55 @@ const createStyles = createThemedStyles((theme) => ({
     padding: theme.spacing.xl,
     gap: theme.spacing.xl,
   },
-  controls: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  controlGroup: { flexDirection: 'row', alignItems: 'center', gap: theme.spacing.sm },
+  notices: {
+    position: 'absolute',
+    bottom: theme.spacing['7xl'] + theme.spacing.sm,
+    left: theme.spacing.sm,
+    right: theme.spacing.sm,
+    gap: theme.spacing.sm,
+  },
+  noticesLandscape: { bottom: '50%', marginBottom: theme.spacing['3xl'] },
+  controls: { flexDirection: 'row', alignItems: 'center' },
+  controlGroup: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+    minWidth: 0,
+  },
+  controlButton: { width: theme.spacing['5xl'], flexShrink: 1 },
   zoom: {
+    flexShrink: 1,
     width: theme.spacing['5xl'],
     height: theme.spacing['5xl'],
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: theme.colors.background.surface,
-    borderRadius: theme.borderRadius.full,
   },
-  bottom: {
+  torch: {
+    height: theme.spacing['5xl'],
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  torchUnavailable: { opacity: 0.2 },
+  timerPill: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: theme.spacing.md,
+    gap: theme.spacing.sm,
+    paddingHorizontal: theme.spacing.md,
+    paddingVertical: theme.spacing.md,
+    borderRadius: theme.borderRadius.full,
+    backgroundColor: theme.colors.background.surface,
   },
-  storage: { flex: 1 },
-  timer: { flex: 1, alignItems: 'flex-end' },
+  recordingDot: {
+    width: theme.spacing.sm,
+    height: theme.spacing.sm,
+    borderRadius: theme.borderRadius.full,
+    backgroundColor: theme.colors.status.error,
+  },
+  timer: { flexShrink: 0, fontVariant: ['tabular-nums'] },
   record: {
     width: theme.spacing['7xl'],
+    flexShrink: 0,
     height: theme.spacing['7xl'],
     borderRadius: theme.borderRadius.full,
     borderWidth: theme.spacing.xs,

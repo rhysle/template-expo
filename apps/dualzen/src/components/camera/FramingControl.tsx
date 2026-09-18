@@ -8,13 +8,7 @@ import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useCameraState } from '@/stores/features/camera'
 import { createThemedStyles, useThemedStyles } from '@/theme'
 
-export function FramingControl({
-  immersive,
-  onClose,
-}: {
-  immersive: boolean
-  onClose: () => void
-}) {
+export function FramingControl({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation()
   const styles = useThemedStyles(createStyles)
   const { settings, phase, updateSettings } = useCameraState()
@@ -23,7 +17,7 @@ export function FramingControl({
     <Animated.View
       entering={FadeIn.duration(150)}
       exiting={FadeOut.duration(150)}
-      style={[styles.popover, immersive && styles.immersive]}>
+      style={styles.popover}>
       <View style={styles.header}>
         <Text variant="label" weight="semibold">
           {label}
@@ -42,7 +36,7 @@ export function FramingControl({
 const createStyles = createThemedStyles((theme) => ({
   popover: {
     position: 'absolute',
-    bottom: theme.spacing.sm,
+    bottom: theme.spacing['7xl'] + theme.spacing.sm * 2,
     left: theme.spacing.sm,
     right: theme.spacing.sm,
     zIndex: 3,
@@ -53,6 +47,5 @@ const createStyles = createThemedStyles((theme) => ({
     borderColor: theme.colors.border.subtle,
     backgroundColor: withAlpha(theme.colors.background.surface, 0.95),
   },
-  immersive: { bottom: theme.spacing['9xl'] + theme.spacing['6xl'] },
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
 }))
