@@ -1,6 +1,8 @@
+import { useSnackbarState } from '@shared/core/stores/features/snackbar'
 import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake'
 import * as ScreenOrientation from 'expo-screen-orientation'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { AppState, Platform } from 'react-native'
 import { NitroModules } from 'react-native-nitro-modules'
 import {
@@ -33,6 +35,8 @@ const factory = () => NitroModules.createHybridObject<DualOutputFactory>('DualOu
 type ControlKind = 'zoom' | 'exposure' | 'torch'
 type ControlQueue = { running: boolean; pending: (() => Promise<void>) | null }
 export function useRecorder(active: boolean) {
+  const { t } = useTranslation()
+  const { showSnackbar } = useSnackbarState()
   const { settings, phase } = useCameraState()
   const [devices, setDevices] = useState<CameraDevice[]>([])
   const [pairs, setPairs] = useState<CameraDevice[][]>([])
@@ -287,9 +291,9 @@ export function useRecorder(active: boolean) {
             const output = take.outputs.find((item) => item.ready)!
             const source = allocateExistingVideo(take, output.filename)
             await NativeRecorder.thumbnail(source, thumbnailFile(take.id).uri).catch(() => {})
-            setNotice(
-              take.outputs.every((item) => item.ready) && !take.error ? 'saved' : 'partialSave'
-            )
+            if (take.outputs.every((item) => item.ready) && !take.error) {
+              showSnackbar({ title: t('camera.saved'), variant: 'success' })
+            } else setNotice('partialSave')
             useAppStore.getState().camera.setPhase('idle')
             if (useAppStore.getState().camera.autoExport) {
               const exported = await exportTake(
@@ -317,7 +321,7 @@ export function useRecorder(active: boolean) {
       await task
       handling.current = null
     },
-    [releaseLocks]
+    [releaseLocks, showSnackbar, t]
   )
   const stop = useCallback(async () => {
     if (!metadata.current || useAppStore.getState().camera.phase !== 'recording') return

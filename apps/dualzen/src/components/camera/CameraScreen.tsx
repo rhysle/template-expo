@@ -1,5 +1,4 @@
 import { Button, IconButton, Text } from '@shared/core/components/base'
-import { useSnackbarState } from '@shared/core/stores/features/snackbar'
 import {
   ArrowsClockwiseIcon,
   CropIcon,
@@ -40,12 +39,6 @@ export function CameraScreen({
   const { t } = useTranslation()
   const styles = useThemedStyles(createStyles)
   const theme = useTheme()
-  const { showSnackbar } = useSnackbarState()
-  useEffect(() => {
-    if (recorder.notice === 'saved') {
-      showSnackbar({ title: t('camera.saved'), variant: 'success' })
-    }
-  }, [recorder.notice, showSnackbar, t])
   const { settings, phase, updateSettings } = useCameraState()
   const [layout, setLayout] = useState<PreviewLayout>('pip')
   const [options, setOptions] = useState(false)
@@ -212,7 +205,7 @@ export function CameraScreen({
                 {t('camera.heatWarning')}
               </Text>
             )}
-            {recorder.notice && recorder.notice !== 'saved' && (
+            {recorder.notice && (
               <Text variant="caption" tone="secondary" align="center">
                 {notices[recorder.notice] ?? t('camera.failure')}
               </Text>
