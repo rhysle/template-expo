@@ -208,10 +208,7 @@
     "grid": "Grid",
     "torch": "Torch",
     "flip": "Switch front/back camera",
-    "swap": "Switch main preview",
-    "zoom": "{{zoom}}× zoom",
     "digitalZoom": "Digital zoom",
-    "exposure": "Exposure",
     "crop": "Adjust {{kind}} framing",
     "cameraOptions": "Recording options",
     "done": "Done",
@@ -234,7 +231,19 @@
     "autoExportBody": "Save originals in Projects first, then export both videos to Photos or Gallery.",
     "storageTitle": "Recording storage",
     "storageBody": "Your originals stay in this app even if exported videos are deleted from Photos or Gallery. Uninstalling the app deletes originals.",
-    "cropFrozen": "Framing and recording settings are fixed during this take."
+    "focusLock": "AE/AF Lock",
+    "unlockFocus": "Unlock focus and exposure",
+    "focusUnavailable": "Focus and exposure lock is unavailable on this camera.",
+    "previewLayout": "Switch preview layout. Current: {{layout}}",
+    "layouts": {
+      "pip": "Picture in picture",
+      "stacked": "Stacked previews",
+      "guide": "Landscape framing guide"
+    },
+    "toggleZoom": "Zoom to {{zoom}}x",
+    "focusHint": "Tap to focus. Drag the sun to adjust exposure. Hold to lock focus and exposure, then tap to unlock.",
+    "exposure": "Exposure",
+    "framing": "Framing"
   },
   "projects": {
     "title": "Projects",

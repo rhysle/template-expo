@@ -49,6 +49,9 @@ export function useRecorder(active: boolean) {
   const [ready, setReady] = useState(false)
   const [authorized, setAuthorized] = useState(false)
   const [zoom, setZoomLabel] = useState(1)
+  const [focusLocked, setFocusLocked] = useState(false)
+  const [torchEnabled, setTorchEnabled] = useState(false)
+  const [exposureBias, setExposureBias] = useState({ portrait: 0, landscape: 0 })
   const [elapsed, setElapsed] = useState(0)
   const session = useRef<CameraSession | null>(null)
   const lifecycle = useRef<Promise<void>>(Promise.resolve())
@@ -363,10 +366,16 @@ export function useRecorder(active: boolean) {
       return
     }
     let cancelled = false
+    const invalidateFocus = () => {
+      focusSequence.current++
+    }
     let localSession: CameraSession | null = null
     const subscriptions: { remove: () => void }[] = []
     const orientation = VisionCamera.createOrientationManager('interface')
     setReady(false)
+    setFocusLocked(false)
+    setTorchEnabled(false)
+    setExposureBias({ portrait: 0, landscape: 0 })
     setError(null)
     const setup = lifecycle.current
       .then(async () => {
@@ -461,6 +470,8 @@ export function useRecorder(active: boolean) {
     lifecycle.current = setup
     return () => {
       cancelled = true
+      invalidateFocus()
+      setFocusLocked(false)
       setReady(false)
       orientation.stopOrientationUpdates()
       subscriptions.forEach((subscription) => subscription.remove())
@@ -556,64 +567,143 @@ export function useRecorder(active: boolean) {
       queue.running = false
     }
   }
-  const setZoom = (displayable: number) =>
+  const setZoom = (displayable: number, animated = false) =>
     updateControl('zoom', async () => {
-      for (const control of controllers.current) {
-        const factor = control.zoom / control.displayableZoomFactor
-        await control.setZoom(
-          Math.max(control.minZoom, Math.min(control.maxZoom, displayable * factor))
-        )
-      }
-      setZoomLabel(controllers.current[0]?.displayableZoomFactor ?? 1)
+      const controls = controllers.current
+      await Promise.all(
+        controls.map(async (control) => {
+          const factor = control.zoom / control.displayableZoomFactor
+          const target = Math.max(control.minZoom, Math.min(control.maxZoom, displayable * factor))
+          if (control === controls[0]) setZoomLabel(target / factor)
+          if (animated) {
+            // VisionCamera 5.2 uses milliseconds on Android and zoom units/sec on iOS.
+            await control.startZoomAnimation(target, Platform.OS === 'android' ? 350 : 3)
+          } else {
+            await control.cancelZoomAnimation()
+            await control.setZoom(target)
+          }
+        })
+      )
+      if (controllers.current === controls) setZoomLabel(controls[0]?.displayableZoomFactor ?? 1)
     })
-  const focus = async (x: number, y: number, kind: OutputKind = 'portrait') => {
+  const focus = async (x: number, y: number, kind: OutputKind = 'portrait', locked = false) => {
     const sequence = ++focusSequence.current
     const target = session.current
+    const controls = controllers.current
+    setFocusLocked(false)
     try {
+      await Promise.all(controls.map((control) => control.resetFocus()))
+      if (sequence !== focusSequence.current || session.current !== target) return false
       const index = settings.mode === 'dual' && kind === 'landscape' ? 1 : 0
-      const source =
-        settings.mode === 'dual' ? (index === 0 ? stats.source1 : stats.source2) : stats.source0
-      const rotation = Math.round(source?.rotation ?? 0) % 360
-      const coordinates =
-        rotation === 90
-          ? [y, 1 - x]
-          : rotation === 180
-            ? [1 - x, 1 - y]
-            : rotation === 270
-              ? [1 - y, x]
-              : [x, y]
-      const point = VisionCamera.createNormalizedMeteringPoint(
-        Math.max(0, Math.min(1, coordinates[0])),
-        Math.max(0, Math.min(1, coordinates[1]))
+      const selected = locked ? controls : controls.slice(index, index + 1)
+      if (
+        !selected.length ||
+        (locked &&
+          selected.some(
+            (control) =>
+              !control.device.supportsFocusMetering || !control.device.supportsExposureMetering
+          ))
+      ) {
+        setNotice('focusUnavailable')
+        return false
+      }
+      await Promise.all(
+        selected.map(async (control) => {
+          const sourceIndex = controls.indexOf(control)
+          const source =
+            settings.mode === 'dual'
+              ? sourceIndex === 0
+                ? stats.source1
+                : stats.source2
+              : stats.source0
+          const rotation = ((Math.round(source?.rotation ?? 0) % 360) + 360) % 360
+          const coordinates =
+            rotation === 90
+              ? [y, 1 - x]
+              : rotation === 180
+                ? [1 - x, 1 - y]
+                : rotation === 270
+                  ? [1 - y, x]
+                  : [x, y]
+          const point = VisionCamera.createNormalizedMeteringPoint(
+            Math.max(0, Math.min(1, coordinates[0])),
+            Math.max(0, Math.min(1, coordinates[1]))
+          )
+          const modes: ('AE' | 'AF')[] = []
+          if (control.device.supportsExposureMetering) modes.push('AE')
+          if (control.device.supportsFocusMetering) modes.push('AF')
+          if (!modes.length) return
+          await control.focusTo(point, {
+            modes,
+            responsiveness: phase === 'recording' ? 'steady' : 'snappy',
+            adaptiveness: locked ? 'locked' : 'continuous',
+            autoResetAfter: locked ? null : 5,
+          })
+        })
       )
-      const control = controllers.current[index]
-      if (control?.device.supportsFocusMetering)
-        await control.focusTo(point, { responsiveness: 'snappy' })
+      if (sequence !== focusSequence.current || session.current !== target) return false
+      setFocusLocked(locked)
+      return true
+    } catch (cause) {
+      if (sequence === focusSequence.current && session.current === target) {
+        // A partial multi-camera lock must not leave one lens silently locked.
+        await Promise.all(controls.map((control) => control.resetFocus().catch(() => {})))
+        if (sequence === focusSequence.current) setNotice(String(cause))
+      }
+      return false
+    }
+  }
+  const unlockFocus = async () => {
+    const sequence = ++focusSequence.current
+    const target = session.current
+    setFocusLocked(false)
+    try {
+      await Promise.all(controllers.current.map((control) => control.resetFocus()))
     } catch (cause) {
       if (sequence === focusSequence.current && session.current === target) setNotice(String(cause))
     }
   }
+  const exposureRange = (kind: OutputKind) => {
+    const input =
+      settings.mode === 'dual' ? pairs[settings.pairIndex]?.[kind === 'portrait' ? 0 : 1] : device
+    return {
+      supported: input?.supportsExposureBias ?? false,
+      min: input?.minExposureBias ?? 0,
+      max: input?.maxExposureBias ?? 0,
+    }
+  }
   const torch = (on: boolean) =>
     updateControl('torch', async () => {
+      const controls = controllers.current
       await Promise.all(
-        controllers.current
+        controls
           .filter((control) => control.device.hasTorch)
           .map((control) => control.setTorchMode(on ? 'on' : 'off'))
       )
+      if (controllers.current === controls) setTorchEnabled(on)
     })
-  const exposure = (value: number) =>
+  const exposure = (value: number, kind: OutputKind = 'portrait') =>
     updateControl('exposure', async () => {
+      const controls = controllers.current
+      const index = settings.mode === 'dual' && kind === 'landscape' ? 1 : 0
+      const selected = focusLocked ? controls : controls.slice(index, index + 1)
       await Promise.all(
-        controllers.current
+        selected
           .filter((control) => control.device.supportsExposureBias)
-          .map((control) =>
-            control.setExposureBias(
-              Math.max(
-                control.device.minExposureBias,
-                Math.min(control.device.maxExposureBias, value)
-              )
+          .map(async (control) => {
+            const bias = Math.max(
+              control.device.minExposureBias,
+              Math.min(control.device.maxExposureBias, value)
             )
-          )
+            await control.setExposureBias(bias)
+            if (controllers.current !== controls) return
+            const controlKind = controls.indexOf(control) === 1 ? 'landscape' : 'portrait'
+            setExposureBias((previous) =>
+              settings.mode === 'single'
+                ? { portrait: bias, landscape: bias }
+                : { ...previous, [controlKind]: bias }
+            )
+          })
       )
     })
   const sources =
@@ -655,7 +745,12 @@ export function useRecorder(active: boolean) {
     zoom,
     setZoom,
     focus,
+    focusLocked,
+    unlockFocus,
+    exposureBias,
+    exposureRange,
     torch,
+    torchEnabled,
     exposure,
     start,
     stop,

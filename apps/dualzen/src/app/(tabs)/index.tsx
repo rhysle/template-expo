@@ -25,6 +25,11 @@ export default function HomeScreen() {
   const recorder = useRecorder(focused && mode === 'camera')
   return (
     <SafeAreaView edges={['top', 'left', 'right', 'bottom']} style={styles.root}>
+      {mode === 'camera' ? (
+        <CameraScreen recorder={recorder} onSettings={() => router.push('/settings')} />
+      ) : (
+        <ProjectsScreen />
+      )}
       <View style={styles.selector}>
         <SegmentedControl
           value={mode}
@@ -36,11 +41,6 @@ export default function HomeScreen() {
           ]}
         />
       </View>
-      {mode === 'camera' ? (
-        <CameraScreen recorder={recorder} onSettings={() => router.push('/settings')} />
-      ) : (
-        <ProjectsScreen />
-      )}
     </SafeAreaView>
   )
 }

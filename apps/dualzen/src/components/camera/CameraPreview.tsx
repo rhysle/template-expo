@@ -1,0 +1,220 @@
+import { useEffect, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
+import { View } from 'react-native'
+import { Gesture, GestureDetector } from 'react-native-gesture-handler'
+import { useSharedValue } from 'react-native-reanimated'
+import { scheduleOnRN } from 'react-native-worklets'
+
+import type { OutputKind } from '@/services/camera/types'
+import type { RecorderController } from '@/services/camera/useRecorder'
+import { useCameraState } from '@/stores/features/camera'
+import { createThemedStyles, useThemedStyles } from '@/theme'
+
+import { DualRecorderPreview } from '../../../modules/dual-recorder/src/DualRecorderModule'
+import { FocusReticle } from './FocusReticle'
+
+export type FocusPoint = { id: number; kind: OutputKind; x: number; y: number }
+
+export function CameraPreview({
+  recorder,
+  kind,
+  width,
+  height,
+  focusPoint,
+  onFocusPoint,
+  onDismissFocus,
+  guide = false,
+  meteringEnabled = true,
+  drag,
+}: {
+  recorder: RecorderController
+  kind: OutputKind
+  width: number
+  height: number
+  focusPoint: FocusPoint | null
+  onFocusPoint: (point: FocusPoint | null) => void
+  onDismissFocus: (id: number) => void
+  guide?: boolean
+  meteringEnabled?: boolean
+  drag?: ReturnType<typeof Gesture.Pan>
+}) {
+  const { settings } = useCameraState()
+  const { t } = useTranslation()
+  const styles = useThemedStyles(createStyles)
+  const pinchStart = useSharedValue(1)
+  const lastZoom = useSharedValue(1)
+  const point = meteringEnabled && focusPoint?.kind === kind ? focusPoint : null
+  const meterHandler = useSharedValue({
+    callback: async (_x: number, _y: number, _locked: boolean) => {},
+  })
+  useEffect(() => {
+    meterHandler.value = {
+      callback: async (x: number, y: number, locked: boolean) => {
+        if (!meteringEnabled || width <= 0 || height <= 0) return
+        if (!locked && recorder.focusLocked) {
+          onFocusPoint(null)
+          await recorder.unlockFocus()
+          return
+        }
+        const normalized = {
+          id: Date.now(),
+          kind,
+          x: Math.max(0, Math.min(1, x / width)),
+          y: Math.max(0, Math.min(1, y / height)),
+        }
+        onFocusPoint(normalized)
+        const source =
+          settings.mode === 'dual'
+            ? kind === 'portrait'
+              ? recorder.stats.source1
+              : recorder.stats.source2
+            : recorder.stats.source0
+        if (!source) return
+        const ratio = kind === 'portrait' ? 9 / 16 : 16 / 9
+        const cropWidth = Math.min(source.width, source.height * ratio)
+        const cropHeight = Math.min(source.height, source.width / ratio)
+        const position =
+          kind === 'portrait' ? settings.portraitPosition : settings.landscapePosition
+        const nativePosition = settings.front ? 1 - position : position
+        await recorder.focus(
+          ((source.width - cropWidth) * nativePosition +
+            (settings.front ? 1 - normalized.x : normalized.x) * cropWidth) /
+            source.width,
+          ((source.height - cropHeight) * nativePosition + normalized.y * cropHeight) /
+            source.height,
+          kind,
+          locked
+        )
+      },
+    }
+  }, [meteringEnabled, width, height, recorder, settings, kind, onFocusPoint, meterHandler])
+  const zoomHandler = useSharedValue({ callback: recorder.setZoom })
+  const currentZoom = useSharedValue(recorder.zoom)
+  useEffect(() => {
+    zoomHandler.value = { callback: recorder.setZoom }
+    currentZoom.value = recorder.zoom
+  }, [recorder.setZoom, recorder.zoom, zoomHandler, currentZoom])
+  // Native exposure updates must not detach the active focus, zoom, or PiP handlers.
+  const { gestures, blockers } = useMemo(() => {
+    const tap = Gesture.Tap()
+      .enabled(meteringEnabled)
+      .maxDistance(10)
+      .onEnd((event, success) => {
+        if (success) scheduleOnRN(meterHandler.value.callback, event.x, event.y, false)
+      })
+    const hold = Gesture.LongPress()
+      .enabled(meteringEnabled)
+      .minDuration(650)
+      .maxDistance(10)
+      .onStart((event) => {
+        scheduleOnRN(meterHandler.value.callback, event.x, event.y, true)
+      })
+    const pinch = Gesture.Pinch()
+      .onStart(() => {
+        pinchStart.value = currentZoom.value
+        lastZoom.value = currentZoom.value
+      })
+      .onUpdate((event) => {
+        const value = pinchStart.value * event.scale
+        if (Math.abs(value - lastZoom.value) < 0.035) return
+        lastZoom.value = value
+        scheduleOnRN(zoomHandler.value.callback, value)
+      })
+    const metering = Gesture.Exclusive(hold, tap)
+    return {
+      gestures: drag ? Gesture.Race(pinch, drag, metering) : Gesture.Race(pinch, metering),
+      blockers: drag ? [tap, hold, pinch, drag] : [tap, hold, pinch],
+    }
+  }, [meteringEnabled, drag, meterHandler, pinchStart, currentZoom, lastZoom, zoomHandler])
+  // A reference rectangle must preserve 16:9, regardless of the negotiated source aspect ratio.
+  const guideHeight = (width * 9) / 16
+  const guidePosition = settings.front ? 1 - settings.landscapePosition : settings.landscapePosition
+  const guideTop = Math.max(0, height - guideHeight) * guidePosition
+  return (
+    <GestureDetector gesture={gestures}>
+      <View
+        collapsable={false}
+        accessibilityHint={meteringEnabled ? t('camera.focusHint') : undefined}
+        style={[styles.preview, { width, height }]}>
+        <DualRecorderPreview
+          style={styles.fill}
+          channel={settings.mode === 'single' ? 0 : kind === 'portrait' ? 1 : 2}
+          portrait={kind === 'portrait'}
+          cropPosition={
+            kind === 'portrait' ? settings.portraitPosition : settings.landscapePosition
+          }
+          mirrored={settings.front}
+        />
+        {settings.grid && (
+          <View pointerEvents="none" style={styles.fill}>
+            {[1, 2].map((line) => (
+              <View
+                key={`v${line}`}
+                style={[styles.verticalGrid, { left: `${(line * 100) / 3}%` }]}
+              />
+            ))}
+            {[1, 2].map((line) => (
+              <View
+                key={`h${line}`}
+                style={[styles.horizontalGrid, { top: `${(line * 100) / 3}%` }]}
+              />
+            ))}
+          </View>
+        )}
+        {guide && (
+          <View
+            pointerEvents="none"
+            style={[
+              styles.guide,
+              {
+                height: guideHeight,
+                top: guideTop,
+              },
+            ]}
+          />
+        )}
+        {point && (
+          <FocusReticle
+            key={point.id}
+            recorder={recorder}
+            kind={kind}
+            width={width}
+            height={height}
+            point={point}
+            blockers={blockers}
+            onDismiss={onDismissFocus}
+          />
+        )}
+      </View>
+    </GestureDetector>
+  )
+}
+const createStyles = createThemedStyles((theme) => ({
+  preview: {
+    borderRadius: theme.borderRadius.xl,
+    overflow: 'hidden',
+    backgroundColor: theme.colors.background.surface,
+  },
+  fill: { position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 },
+  verticalGrid: {
+    position: 'absolute',
+    width: 1,
+    top: 0,
+    bottom: 0,
+    backgroundColor: theme.colors.border.strong,
+  },
+  horizontalGrid: {
+    position: 'absolute',
+    height: 1,
+    left: 0,
+    right: 0,
+    backgroundColor: theme.colors.border.strong,
+  },
+  guide: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    borderWidth: 1,
+    borderColor: theme.colors.text.primary,
+  },
+}))

@@ -1,9 +1,10 @@
-import { Button, SegmentedControl, Text } from '@shared/core/components/base'
+import { Button, SegmentedControl, Slider, Text } from '@shared/core/components/base'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Modal, Platform, ScrollView, Switch, View } from 'react-native'
 
 import {
+  formatDuration,
   FPS_OPTIONS,
   type RecordingSettings,
   RESOLUTION_LABELS,
@@ -11,6 +12,7 @@ import {
 } from '@/services/camera/types'
 import type { RecorderController } from '@/services/camera/useRecorder'
 import { useCameraState } from '@/stores/features/camera'
+import { useProjectsState } from '@/stores/features/projects'
 import { createThemedStyles, useTheme, useThemedStyles } from '@/theme'
 
 export function RecordingOptions({
@@ -24,6 +26,7 @@ export function RecordingOptions({
 }) {
   const { t } = useTranslation()
   const { settings, updateSettings } = useCameraState()
+  const { projects, selectedProjectId, selectProject } = useProjectsState()
   const theme = useTheme()
   const styles = useThemedStyles(createStyles)
   const toggleLabels = {
@@ -205,6 +208,51 @@ export function RecordingOptions({
               {t('camera.hdrUnavailable')}
             </Text>
           )}
+          {(['portrait', 'landscape'] as const).map((kind, index) => (
+            <View key={kind} style={styles.framing}>
+              <View style={styles.row}>
+                <Text>{t('camera.crop', { kind: t(`camera.${kind}`) })}</Text>
+                <Text variant="caption" tone="muted">
+                  {recorder.sizes[index]
+                    ? `${recorder.sizes[index]!.width}×${recorder.sizes[index]!.height}`
+                    : '—'}
+                </Text>
+              </View>
+              <Slider
+                accessibilityLabel={t('camera.crop', { kind: t(`camera.${kind}`) })}
+                value={kind === 'portrait' ? settings.portraitPosition : settings.landscapePosition}
+                onValueChange={(value) =>
+                  updateSettings(
+                    kind === 'portrait' ? { portraitPosition: value } : { landscapePosition: value }
+                  )
+                }
+              />
+            </View>
+          ))}
+          {projects.length > 1 && (
+            <>
+              <Text tone="secondary">{t('projects.title')}</Text>
+              <ScrollView horizontal>
+                <SegmentedControl
+                  value={selectedProjectId}
+                  onValueChange={selectProject}
+                  options={projects.map((project) => ({
+                    value: project.id,
+                    label: project.name ?? t('projects.default'),
+                  }))}
+                />
+              </ScrollView>
+            </>
+          )}
+          <Text variant="caption" tone="muted">
+            {t('camera.remaining', { time: formatDuration(recorder.remaining) })}
+          </Text>
+          <Text variant="caption" tone="muted">
+            {t('camera.storageRate', {
+              amount: ((recorder.bytesPerSecond * 60) / 1e6).toFixed(0),
+              free: (recorder.stats.freeBytes / 1e9).toFixed(1),
+            })}
+          </Text>
           <Button onPress={onClose} label={t('camera.done')} />
         </ScrollView>
       </View>
@@ -224,5 +272,6 @@ const createStyles = createThemedStyles((theme) => ({
     borderRadius: theme.borderRadius['2xl'],
   },
   content: { padding: theme.spacing.xl, gap: theme.spacing.lg },
+  framing: { gap: theme.spacing.sm },
   row: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
 }))

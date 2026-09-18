@@ -1,34 +1,30 @@
-import { Button, IconButton, SegmentedControl, Slider, Text } from '@shared/core/components/base'
+import { Button, IconButton, Text } from '@shared/core/components/base'
+import { withAlpha } from '@shared/core/utils/color'
 import {
   ArrowsClockwiseIcon,
-  ArrowsLeftRightIcon,
+  CropIcon,
   FlashlightIcon,
   GearSixIcon,
-  GridFourIcon,
+  RectangleIcon,
   SlidersHorizontalIcon,
+  SquaresFourIcon,
+  StackIcon,
 } from 'phosphor-react-native'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  ActivityIndicator,
-  Linking,
-  Pressable,
-  ScrollView,
-  useWindowDimensions,
-  View,
-} from 'react-native'
-import { Gesture, GestureDetector } from 'react-native-gesture-handler'
-import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
+import { Linking, Pressable, useWindowDimensions, View } from 'react-native'
 
-import { formatDuration, type OutputKind, RESOLUTION_LABELS } from '@/services/camera/types'
+import { formatDuration, RESOLUTION_LABELS } from '@/services/camera/types'
 import type { RecorderController } from '@/services/camera/useRecorder'
 import { useCameraState } from '@/stores/features/camera'
-import { useProjectsState } from '@/stores/features/projects'
-import { createThemedStyles, useTheme, useThemedStyles } from '@/theme'
+import { createThemedStyles, useThemedStyles } from '@/theme'
 
-import { DualRecorderPreview } from '../../../modules/dual-recorder/src/DualRecorderModule'
+import { CameraStage, type PreviewLayout } from './CameraStage'
+import { FramingControl } from './FramingControl'
 import { RecordingOptions } from './RecordingOptions'
 
+const LAYOUTS: PreviewLayout[] = ['pip', 'stacked', 'guide']
+const LAYOUT_ICONS = { pip: SquaresFourIcon, stacked: StackIcon, guide: RectangleIcon }
 export function CameraScreen({
   recorder,
   onSettings,
@@ -36,123 +32,26 @@ export function CameraScreen({
   recorder: RecorderController
   onSettings: () => void
 }) {
-  const { width: screenWidth, height: screenHeight } = useWindowDimensions()
-  const landscape = screenWidth > screenHeight
+  const { width, height } = useWindowDimensions()
+  const landscape = width > height
   const { t } = useTranslation()
-  const theme = useTheme()
   const styles = useThemedStyles(createStyles)
   const { settings, phase, updateSettings } = useCameraState()
-  const { projects, selectedProjectId, selectProject } = useProjectsState()
-  const [main, setMain] = useState<OutputKind>('portrait')
+  const [layout, setLayout] = useState<PreviewLayout>('pip')
   const [options, setOptions] = useState(false)
-  const [torch, setTorch] = useState(false)
-  const [exposure, setExposure] = useState(0)
-  const [stage, setStage] = useState({ width: 0, height: 0 })
-  const insetX = useSharedValue(0)
-  const insetY = useSharedValue(0)
-  const insetStartX = useSharedValue(0)
-  const insetStartY = useSharedValue(0)
-  const pinchStart = useSharedValue(1)
-  const lastZoomUpdate = useSharedValue(1)
+  const [framing, setFraming] = useState(false)
+  useEffect(() => {
+    if (phase !== 'idle') setFraming(false)
+  }, [phase])
   const idle = phase === 'idle'
+  const immersive = layout === 'guide' && !landscape
   const recording = phase === 'recording'
-  const secondary = main === 'portrait' ? 'landscape' : 'portrait'
-  const mainRatio = main === 'portrait' ? 9 / 16 : 16 / 9
-  const width = Math.min(stage.width, stage.height * mainRatio)
-  const height = width / mainRatio
-  const insetWidth = Math.min(
-    theme.spacing['9xl'],
-    Math.max(theme.spacing['5xl'], stage.width / 3),
-    Math.max(
-      theme.spacing['5xl'],
-      stage.height * 0.65 * (secondary === 'portrait' ? 9 / 16 : 16 / 9)
-    )
-  )
-  const insetHeight = insetWidth / (secondary === 'portrait' ? 9 / 16 : 16 / 9)
-  const pan = Gesture.Pan()
-    .onStart(() => {
-      insetStartX.value = Math.min(
-        insetX.value,
-        Math.max(0, stage.width - insetWidth - theme.spacing.xl)
-      )
-      insetStartY.value = Math.min(
-        insetY.value,
-        Math.max(0, stage.height - insetHeight - theme.spacing.xl)
-      )
-    })
-    .onUpdate((event) => {
-      insetX.value = Math.max(
-        0,
-        Math.min(
-          Math.max(0, stage.width - insetWidth - theme.spacing.xl),
-          insetStartX.value + event.translationX
-        )
-      )
-      insetY.value = Math.max(
-        0,
-        Math.min(
-          Math.max(0, stage.height - insetHeight - theme.spacing.xl),
-          insetStartY.value + event.translationY
-        )
-      )
-    })
-  const insetStyle = useAnimatedStyle(() => ({
-    transform: [
-      {
-        translateX: Math.min(
-          insetX.value,
-          Math.max(0, stage.width - insetWidth - theme.spacing.xl)
-        ),
-      },
-      {
-        translateY: Math.min(
-          insetY.value,
-          Math.max(0, stage.height - insetHeight - theme.spacing.xl)
-        ),
-      },
-    ],
-  }))
-  const pinch = Gesture.Pinch()
-    .runOnJS(true)
-    .onStart(() => {
-      pinchStart.value = recorder.zoom
-      lastZoomUpdate.value = 1
-    })
-    .onUpdate((event) => {
-      if (Math.abs(event.scale - lastZoomUpdate.value) < 0.035) return
-      lastZoomUpdate.value = event.scale
-      void recorder.setZoom(pinchStart.value * event.scale)
-    })
-  const tap = Gesture.Tap()
-    .runOnJS(true)
-    .onEnd((event, success) => {
-      if (!success || width <= 0 || height <= 0) return
-      // Convert from the displayed crop to the full oriented source before metering.
-      const source =
-        settings.mode === 'dual'
-          ? main === 'portrait'
-            ? recorder.stats.source1
-            : recorder.stats.source2
-          : recorder.stats.source0
-      if (!source) return
-      const cropWidth = Math.min(source.width, source.height * mainRatio)
-      const cropHeight = Math.min(source.height, source.width / mainRatio)
-      const position = main === 'portrait' ? settings.portraitPosition : settings.landscapePosition
-      const x = settings.front ? 1 - event.x / width : event.x / width
-      void recorder.focus(
-        ((source.width - cropWidth) * (settings.front ? 1 - position : position) + x * cropWidth) /
-          source.width,
-        ((source.height - cropHeight) * (settings.front ? 1 - position : position) +
-          (event.y / height) * cropHeight) /
-          source.height,
-        main
-      )
-    })
-  const channel = (kind: OutputKind) =>
-    settings.mode === 'single' ? 0 : kind === 'portrait' ? 1 : 2
-  const position = (kind: OutputKind) =>
-    kind === 'portrait' ? settings.portraitPosition : settings.landscapePosition
-  const labels = { portrait: t('camera.portrait'), landscape: t('camera.landscape') }
+  const layoutLabels = {
+    pip: t('camera.layouts.pip'),
+    stacked: t('camera.layouts.stacked'),
+    guide: t('camera.layouts.guide'),
+  }
+  const zoomed = recorder.zoom >= 1.5
   const phaseLabels = {
     preparing: t('camera.preparing'),
     finalizing: t('camera.finalizing'),
@@ -167,6 +66,7 @@ export function CameraScreen({
     storage: t('camera.storage'),
     thermal: t('camera.thermal'),
     interruption: t('camera.interruption'),
+    focusUnavailable: t('camera.focusUnavailable'),
   }
   if (!recorder.authorized)
     return (
@@ -194,10 +94,11 @@ export function CameraScreen({
     )
   return (
     <View style={styles.root}>
-      <View style={styles.toolbar}>
+      <View style={[styles.toolbar, immersive && styles.toolbarFloating]}>
         <Pressable
           disabled={!idle}
           onPress={() => setOptions(true)}
+          accessibilityRole="button"
           accessibilityLabel={t('camera.cameraOptions')}
           style={styles.profile}>
           <Text variant="label" weight="semibold">
@@ -219,68 +120,15 @@ export function CameraScreen({
         />
       </View>
       <View style={[styles.body, landscape && styles.bodyLandscape]}>
-        <View style={styles.stage} onLayout={(event) => setStage(event.nativeEvent.layout)}>
-          {recorder.ready && (
-            <GestureDetector gesture={Gesture.Simultaneous(pinch, tap)}>
-              <View style={[styles.preview, { width, height }]}>
-                <DualRecorderPreview
-                  style={styles.fill}
-                  channel={channel(main)}
-                  portrait={main === 'portrait'}
-                  cropPosition={position(main)}
-                  mirrored={settings.front}
-                />
-                {settings.grid && (
-                  <View pointerEvents="none" style={styles.fill}>
-                    {[1, 2].map((line) => (
-                      <View
-                        key={`v${line}`}
-                        style={[styles.verticalGrid, { left: `${(line * 100) / 3}%` }]}
-                      />
-                    ))}
-                    {[1, 2].map((line) => (
-                      <View
-                        key={`h${line}`}
-                        style={[styles.horizontalGrid, { top: `${(line * 100) / 3}%` }]}
-                      />
-                    ))}
-                  </View>
-                )}
-                <View style={styles.badge}>
-                  <Text variant="caption">{labels[main]}</Text>
-                </View>
-              </View>
-            </GestureDetector>
-          )}
-          {recorder.ready && (
-            <GestureDetector gesture={pan}>
-              <Animated.View
-                style={[styles.inset, { width: insetWidth, height: insetHeight }, insetStyle]}>
-                <DualRecorderPreview
-                  style={styles.fill}
-                  channel={channel(secondary)}
-                  portrait={secondary === 'portrait'}
-                  cropPosition={position(secondary)}
-                  mirrored={settings.front}
-                />
-                <View style={styles.badge}>
-                  <Text variant="caption">{labels[secondary]}</Text>
-                </View>
-              </Animated.View>
-            </GestureDetector>
-          )}
-          {!recorder.ready && (
-            <View style={styles.permission}>
-              <ActivityIndicator color={theme.colors.primary.main} />
-              <Text tone="secondary">
-                {recorder.device ? t('camera.waiting') : t('camera.noCamera')}
-              </Text>
-            </View>
-          )}
-        </View>
-        <ScrollView
-          style={[styles.panel, landscape && styles.panelLandscape]}
-          contentContainerStyle={styles.panelContent}>
+        <CameraStage recorder={recorder} layout={layout}>
+          {framing && <FramingControl immersive={immersive} onClose={() => setFraming(false)} />}
+        </CameraStage>
+        <View
+          style={[
+            styles.panel,
+            landscape && styles.panelLandscape,
+            immersive && styles.panelFloating,
+          ]}>
           {recorder.stats.thermal >= 2 && (
             <Text tone="warning" variant="caption" align="center">
               {t('camera.heatWarning')}
@@ -309,114 +157,55 @@ export function CameraScreen({
               />
             </View>
           )}
-          <View style={styles.sizes}>
-            {recorder.sizes.map((size, index) => (
-              <Text key={index} variant="caption" tone="muted">
-                {t(index === 0 ? 'camera.portrait' : 'camera.landscape')}{' '}
-                {size ? `${size.width}×${size.height}` : '—'}
-              </Text>
-            ))}
-          </View>
           <View style={styles.controls}>
-            <IconButton
-              icon={FlashlightIcon}
-              accessibilityLabel={t('camera.torch')}
-              selected={torch}
-              disabled={!recorder.device?.hasTorch}
-              onPress={() => {
-                setTorch(!torch)
-                void recorder.torch(!torch)
-              }}
-            />
-            <Button
-              size="sm"
-              variant="ghost"
-              onPress={() => {
-                void recorder.setZoom(1)
-              }}
-              label="1×"
-            />
-            <Button
-              size="sm"
-              variant="ghost"
-              onPress={() => {
-                void recorder.setZoom(2)
-              }}
-              label="2×"
-            />
-            <Text variant="caption" tone="muted">
-              {t('camera.zoom', { zoom: recorder.zoom.toFixed(1) })}
-            </Text>
-            <IconButton
-              icon={GridFourIcon}
-              accessibilityLabel={t('camera.grid')}
-              selected={settings.grid}
-              disabled={!idle}
-              onPress={() => updateSettings({ grid: !settings.grid })}
-            />
-            <IconButton
-              icon={ArrowsLeftRightIcon}
-              accessibilityLabel={t('camera.swap')}
-              onPress={() => setMain(secondary)}
-            />
-            <IconButton
-              icon={ArrowsClockwiseIcon}
-              accessibilityLabel={t('camera.flip')}
-              disabled={!idle || settings.mode === 'dual'}
-              onPress={() => {
-                setTorch(false)
-                updateSettings({ front: !settings.front, deviceId: null })
-              }}
-            />
-          </View>
-          <View style={styles.adjustments}>
-            <Text variant="caption" tone="muted">
-              {idle ? t('camera.crop', { kind: labels[secondary] }) : t('camera.cropFrozen')}
-            </Text>
-            {idle && (
-              <Slider
-                accessibilityLabel={t('camera.crop', { kind: labels[secondary] })}
-                value={position(secondary)}
-                onValueChange={(value) =>
-                  updateSettings(
-                    secondary === 'portrait'
-                      ? { portraitPosition: value }
-                      : { landscapePosition: value }
-                  )
-                }
-              />
-            )}
-            <View style={styles.exposure}>
-              <Text variant="caption" tone="muted">
-                {t('camera.exposure')}
-              </Text>
-              <Slider
-                style={styles.exposureSlider}
-                min={-2}
-                max={2}
-                step={0.1}
-                disabled={!recorder.device?.supportsExposureBias}
-                accessibilityLabel={t('camera.exposure')}
-                value={exposure}
-                onValueChange={(value) => {
-                  setExposure(value)
-                  void recorder.exposure(value)
+            <View style={styles.controlGroup}>
+              <IconButton
+                icon={FlashlightIcon}
+                accessibilityLabel={t('camera.torch')}
+                selected={recorder.torchEnabled}
+                disabled={!recorder.ready || !recorder.device?.hasTorch}
+                onPress={() => {
+                  void recorder.torch(!recorder.torchEnabled)
                 }}
+              />
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel={t('camera.toggleZoom', { zoom: zoomed ? 1 : 2 })}
+                disabled={!recorder.ready}
+                onPress={() => {
+                  void recorder.setZoom(zoomed ? 1 : 2, true)
+                }}
+                style={styles.zoom}>
+                <Text variant="label" weight="semibold">
+                  {zoomed ? '2x' : '1x'}
+                </Text>
+              </Pressable>
+            </View>
+            <View style={styles.controlGroup}>
+              <IconButton
+                icon={CropIcon}
+                accessibilityLabel={t('camera.framing')}
+                selected={framing}
+                disabled={!idle}
+                onPress={() => setFraming(!framing)}
+              />
+              <IconButton
+                icon={LAYOUT_ICONS[layout]}
+                accessibilityLabel={t('camera.previewLayout', {
+                  layout: layoutLabels[layout],
+                })}
+                onPress={() => setLayout(LAYOUTS[(LAYOUTS.indexOf(layout) + 1) % LAYOUTS.length])}
+              />
+              <IconButton
+                icon={ArrowsClockwiseIcon}
+                accessibilityLabel={t('camera.flip')}
+                disabled={!idle || settings.mode === 'dual'}
+                onPress={() => updateSettings({ front: !settings.front, deviceId: null })}
               />
             </View>
           </View>
           <View style={styles.bottom}>
-            <View style={styles.storage}>
-              <Text variant="caption" tone="secondary">
-                {t('camera.remaining', { time: formatDuration(recorder.remaining) })}
-              </Text>
-              <Text variant="caption" tone="muted">
-                {t('camera.storageRate', {
-                  amount: ((recorder.bytesPerSecond * 60) / 1e6).toFixed(0),
-                  free: (recorder.stats.freeBytes / 1e9).toFixed(1),
-                })}
-              </Text>
-            </View>
+            <View style={styles.storage} />
             <Pressable
               accessibilityRole="button"
               accessibilityLabel={recording ? t('camera.stop') : t('camera.record')}
@@ -430,56 +219,42 @@ export function CameraScreen({
             </Pressable>
             <View style={styles.timer}>
               <Text weight="semibold">{formatDuration(recorder.elapsed)}</Text>
-              <Text variant="caption" tone="muted">
-                {phase === 'idle' || phase === 'recording' ? '' : phaseLabels[phase]}
-              </Text>
+              {!!phaseLabels[phase] && (
+                <Text variant="caption" tone="muted">
+                  {phaseLabels[phase]}
+                </Text>
+              )}
             </View>
           </View>
-          <ScrollProjects
-            projects={projects}
-            selected={selectedProjectId}
-            disabled={!idle}
-            select={selectProject}
-          />
-        </ScrollView>
+        </View>
       </View>
       <RecordingOptions recorder={recorder} visible={options} onClose={() => setOptions(false)} />
     </View>
   )
 }
-function ScrollProjects({
-  projects,
-  selected,
-  disabled,
-  select,
-}: {
-  projects: ReturnType<typeof useProjectsState>['projects']
-  selected: string
-  disabled: boolean
-  select: (id: string) => void
-}) {
-  const { t } = useTranslation()
-  return projects.length > 1 ? (
-    <ScrollView horizontal>
-      <SegmentedControl
-        value={selected}
-        disabled={disabled}
-        onValueChange={select}
-        options={projects.map((project) => ({
-          value: project.id,
-          label: project.name ?? t('projects.default'),
-        }))}
-      />
-    </ScrollView>
-  ) : null
-}
 const createStyles = createThemedStyles((theme) => ({
   root: { flex: 1, gap: theme.spacing.sm },
-  body: { flex: 1, gap: theme.spacing.sm },
+  body: { flex: 1, gap: theme.spacing.md },
   bodyLandscape: { flexDirection: 'row' },
-  panel: { flexGrow: 0, maxHeight: '55%' },
-  panelLandscape: { width: theme.spacing['9xl'] * 2.4, maxHeight: '100%' },
-  panelContent: { gap: theme.spacing.sm },
+  panel: { gap: theme.spacing.sm },
+  toolbarFloating: {
+    position: 'absolute',
+    top: theme.spacing.sm,
+    left: theme.spacing.sm,
+    right: theme.spacing.sm,
+    zIndex: 2,
+  },
+  panelFloating: {
+    position: 'absolute',
+    bottom: theme.spacing.sm,
+    left: theme.spacing.sm,
+    right: theme.spacing.sm,
+    zIndex: 2,
+    padding: theme.spacing.sm,
+    borderRadius: theme.borderRadius.xl,
+    backgroundColor: withAlpha(theme.colors.background.base, 0.6),
+  },
+  panelLandscape: { width: theme.spacing['9xl'] * 2, justifyContent: 'center' },
   toolbar: { flexDirection: 'row', alignItems: 'center', gap: theme.spacing.sm },
   profile: {
     flex: 1,
@@ -488,74 +263,29 @@ const createStyles = createThemedStyles((theme) => ({
     borderRadius: theme.borderRadius.full,
     backgroundColor: theme.colors.background.surface,
   },
-  stage: {
-    flex: 1,
-    minHeight: theme.spacing['9xl'],
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
-  },
-  preview: {
-    borderRadius: theme.borderRadius.xl,
-    overflow: 'hidden',
-    backgroundColor: theme.colors.background.surface,
-  },
-  fill: { position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 },
-  badge: {
-    position: 'absolute',
-    bottom: theme.spacing.sm,
-    left: theme.spacing.sm,
-    backgroundColor: theme.colors.background.overlay,
-    padding: theme.spacing.xs,
-    borderRadius: theme.borderRadius.sm,
-  },
-  inset: {
-    position: 'absolute',
-    top: theme.spacing.sm,
-    left: theme.spacing.sm,
-    borderWidth: 1,
-    borderColor: theme.colors.border.strong,
-    borderRadius: theme.borderRadius.md,
-    overflow: 'hidden',
-    backgroundColor: theme.colors.background.base,
-  },
-  verticalGrid: {
-    position: 'absolute',
-    width: 1,
-    top: 0,
-    bottom: 0,
-    backgroundColor: theme.colors.border.strong,
-  },
-  horizontalGrid: {
-    position: 'absolute',
-    height: 1,
-    left: 0,
-    right: 0,
-    backgroundColor: theme.colors.border.strong,
-  },
   permission: {
     flex: 1,
     justifyContent: 'center',
     padding: theme.spacing.xl,
     gap: theme.spacing.xl,
   },
-  sizes: { flexDirection: 'row', justifyContent: 'space-between' },
-  controls: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  controls: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  controlGroup: { flexDirection: 'row', alignItems: 'center', gap: theme.spacing.sm },
+  zoom: {
+    width: theme.spacing['5xl'],
+    height: theme.spacing['5xl'],
     alignItems: 'center',
-    flexWrap: 'wrap',
+    justifyContent: 'center',
+    backgroundColor: theme.colors.background.surface,
+    borderRadius: theme.borderRadius.full,
   },
-  adjustments: { gap: theme.spacing.xs },
-  exposure: { flexDirection: 'row', alignItems: 'center', gap: theme.spacing.md },
-  exposureSlider: { flex: 1 },
   bottom: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     gap: theme.spacing.md,
   },
-  storage: { flex: 1, gap: theme.spacing.xs },
+  storage: { flex: 1 },
   timer: { flex: 1, alignItems: 'flex-end' },
   record: {
     width: theme.spacing['7xl'],
