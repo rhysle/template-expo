@@ -13,6 +13,8 @@ import {
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Linking, Pressable, useWindowDimensions, View } from 'react-native'
+import { cancelAnimation, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
+import { scheduleOnRN } from 'react-native-worklets'
 
 import { formatDuration, RESOLUTION_LABELS } from '@/services/camera/types'
 import type { RecorderController } from '@/services/camera/useRecorder'
@@ -40,6 +42,35 @@ export function CameraScreen({
   const [layout, setLayout] = useState<PreviewLayout>('pip')
   const [options, setOptions] = useState(false)
   const [framing, setFraming] = useState(false)
+  const [flipTarget, setFlipTarget] = useState<boolean | null>(null)
+  const switchProgress = useSharedValue(0)
+  const switching = flipTarget !== null
+  useEffect(() => {
+    if (
+      flipTarget === null ||
+      settings.front !== flipTarget ||
+      (!recorder.error && (!recorder.ready || recorder.readyDeviceId !== recorder.device?.id))
+    )
+      return
+    // Allow the new preview to settle before revealing it; errors also release the transition.
+    switchProgress.set(
+      withDelay(
+        120,
+        withTiming(0, { duration: 220 }, (finished) => {
+          if (finished) scheduleOnRN(setFlipTarget, null)
+        })
+      )
+    )
+  }, [
+    flipTarget,
+    settings.front,
+    recorder.ready,
+    recorder.readyDeviceId,
+    recorder.device?.id,
+    recorder.error,
+    switchProgress,
+  ])
+  useEffect(() => () => cancelAnimation(switchProgress), [switchProgress])
   useEffect(() => {
     if (phase !== 'idle') setFraming(false)
   }, [phase])
@@ -51,7 +82,25 @@ export function CameraScreen({
     stacked: t('camera.layouts.stacked'),
     guide: t('camera.layouts.guide'),
   }
-  const zoomed = recorder.zoom >= 1.5
+  const zoomLabel = `${Number(recorder.zoom.toFixed(1))}x`
+  const nextZoom =
+    recorder.zoomPresets.find((value) => value > recorder.zoom + 0.05) ??
+    recorder.zoomPresets[0] ??
+    recorder.zoom
+  const canFlip = recorder.devices.some(
+    (device) => device.position === (settings.front ? 'back' : 'front')
+  )
+  const flipCamera = () => {
+    if (switching || !idle || !recorder.ready || !canFlip || settings.mode === 'dual') return
+    const front = !settings.front
+    setFraming(false)
+    setFlipTarget(front)
+    switchProgress.set(
+      withTiming(1, { duration: 160 }, (finished) => {
+        if (finished) scheduleOnRN(updateSettings, { front, deviceId: null })
+      })
+    )
+  }
   const phaseLabels = {
     preparing: t('camera.preparing'),
     finalizing: t('camera.finalizing'),
@@ -96,7 +145,7 @@ export function CameraScreen({
     <View style={styles.root}>
       <View style={[styles.toolbar, immersive && styles.toolbarFloating]}>
         <Pressable
-          disabled={!idle}
+          disabled={!idle || switching}
           onPress={() => setOptions(true)}
           accessibilityRole="button"
           accessibilityLabel={t('camera.cameraOptions')}
@@ -109,18 +158,22 @@ export function CameraScreen({
         <IconButton
           icon={SlidersHorizontalIcon}
           accessibilityLabel={t('camera.cameraOptions')}
-          disabled={!idle}
+          disabled={!idle || switching}
           onPress={() => setOptions(true)}
         />
         <IconButton
           icon={GearSixIcon}
           accessibilityLabel={t('camera.settings')}
-          disabled={!idle}
+          disabled={!idle || switching}
           onPress={onSettings}
         />
       </View>
       <View style={[styles.body, landscape && styles.bodyLandscape]}>
-        <CameraStage recorder={recorder} layout={layout}>
+        <CameraStage
+          recorder={recorder}
+          layout={layout}
+          switching={switching}
+          switchProgress={switchProgress}>
           {framing && <FramingControl immersive={immersive} onClose={() => setFraming(false)} />}
         </CameraStage>
         <View
@@ -163,21 +216,22 @@ export function CameraScreen({
                 icon={FlashlightIcon}
                 accessibilityLabel={t('camera.torch')}
                 selected={recorder.torchEnabled}
-                disabled={!recorder.ready || !recorder.device?.hasTorch}
+                disabled={switching || !recorder.ready || !recorder.device?.hasTorch}
                 onPress={() => {
                   void recorder.torch(!recorder.torchEnabled)
                 }}
               />
               <Pressable
                 accessibilityRole="button"
-                accessibilityLabel={t('camera.toggleZoom', { zoom: zoomed ? 1 : 2 })}
-                disabled={!recorder.ready}
+                accessibilityLabel={t('camera.toggleZoom', { zoom: nextZoom })}
+                accessibilityValue={{ text: zoomLabel }}
+                disabled={switching || !recorder.ready || !recorder.zoomPresets.length}
                 onPress={() => {
-                  void recorder.setZoom(zoomed ? 1 : 2, true)
+                  void recorder.setZoom(nextZoom, true)
                 }}
                 style={styles.zoom}>
                 <Text variant="label" weight="semibold">
-                  {zoomed ? '2x' : '1x'}
+                  {zoomLabel}
                 </Text>
               </Pressable>
             </View>
@@ -186,11 +240,12 @@ export function CameraScreen({
                 icon={CropIcon}
                 accessibilityLabel={t('camera.framing')}
                 selected={framing}
-                disabled={!idle}
+                disabled={!idle || switching}
                 onPress={() => setFraming(!framing)}
               />
               <IconButton
                 icon={LAYOUT_ICONS[layout]}
+                disabled={switching}
                 accessibilityLabel={t('camera.previewLayout', {
                   layout: layoutLabels[layout],
                 })}
@@ -199,8 +254,15 @@ export function CameraScreen({
               <IconButton
                 icon={ArrowsClockwiseIcon}
                 accessibilityLabel={t('camera.flip')}
-                disabled={!idle || settings.mode === 'dual'}
-                onPress={() => updateSettings({ front: !settings.front, deviceId: null })}
+                disabled={
+                  !idle ||
+                  switching ||
+                  !recorder.ready ||
+                  !canFlip ||
+                  !!recorder.error ||
+                  settings.mode === 'dual'
+                }
+                onPress={flipCamera}
               />
             </View>
           </View>
@@ -209,7 +271,7 @@ export function CameraScreen({
             <Pressable
               accessibilityRole="button"
               accessibilityLabel={recording ? t('camera.stop') : t('camera.record')}
-              disabled={!recording && (!idle || !recorder.ready || !!recorder.error)}
+              disabled={!recording && (switching || !idle || !recorder.ready || !!recorder.error)}
               onPress={() => {
                 if (recording) void recorder.stop()
                 else void recorder.start()

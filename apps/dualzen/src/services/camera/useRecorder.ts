@@ -47,8 +47,10 @@ export function useRecorder(active: boolean) {
   const [error, setError] = useState<string | null>(null)
   const [notice, setNotice] = useState<string | null>(null)
   const [ready, setReady] = useState(false)
+  const [readyDeviceId, setReadyDeviceId] = useState<string | null>(null)
   const [authorized, setAuthorized] = useState(false)
   const [zoom, setZoomLabel] = useState(1)
+  const [zoomRange, setZoomRange] = useState({ min: 1, max: 1 })
   const [focusLocked, setFocusLocked] = useState(false)
   const [torchEnabled, setTorchEnabled] = useState(false)
   const [exposureBias, setExposureBias] = useState({ portrait: 0, landscape: 0 })
@@ -98,6 +100,14 @@ export function useRecorder(active: boolean) {
   const handling = useRef<Promise<void> | null>(null)
   const handled = useRef(new Set<string>())
   const previousOrientation = useRef<ScreenOrientation.OrientationLock | null>(null)
+  const rearZoomDevice = devices
+    .filter(
+      (item) =>
+        item.position === 'back' &&
+        item.isVirtualDevice &&
+        item.physicalDevices.some((physical) => physical.type === 'ultra-wide-angle')
+    )
+    .sort((a, b) => b.physicalDevices.length - a.physicalDevices.length)[0]
   const device =
     settings.mode === 'dual'
       ? pairs[settings.pairIndex]?.[0]
@@ -105,6 +115,7 @@ export function useRecorder(active: boolean) {
           (item) =>
             item.id === settings.deviceId && item.position === (settings.front ? 'front' : 'back')
         ) ??
+        (!settings.front ? rearZoomDevice : undefined) ??
         devices.find(
           (item) =>
             item.position === (settings.front ? 'front' : 'back') &&
@@ -363,6 +374,7 @@ export function useRecorder(active: boolean) {
   useEffect(() => {
     if (!active || !authorized || !device) {
       setReady(false)
+      setReadyDeviceId(null)
       return
     }
     let cancelled = false
@@ -373,6 +385,7 @@ export function useRecorder(active: boolean) {
     const subscriptions: { remove: () => void }[] = []
     const orientation = VisionCamera.createOrientationManager('interface')
     setReady(false)
+    setReadyDeviceId(null)
     setFocusLocked(false)
     setTorchEnabled(false)
     setExposureBias({ portrait: 0, landscape: 0 })
@@ -451,6 +464,29 @@ export function useRecorder(active: boolean) {
           output.outputOrientation = orientation.currentOrientation ?? 'up'
         })
         controllers.current = controls
+        const ranges = controls.map((control) => {
+          const factor = control.zoom / control.displayableZoomFactor
+          return { min: control.minZoom / factor, max: control.maxZoom / factor }
+        })
+        const range = {
+          min: Math.max(...ranges.map((item) => item.min)),
+          max: Math.min(...ranges.map((item) => item.max)),
+        }
+        setZoomRange(range)
+        const initialZoom = Math.max(range.min, Math.min(range.max, 1))
+        await Promise.all(
+          controls.map((control) =>
+            control.setZoom(
+              Math.max(
+                control.minZoom,
+                Math.min(
+                  control.maxZoom,
+                  initialZoom * (control.zoom / control.displayableZoomFactor)
+                )
+              )
+            )
+          )
+        )
         session.current = localSession
         orientation.startOrientationUpdates((value) => {
           if (useAppStore.getState().camera.phase === 'idle')
@@ -461,6 +497,7 @@ export function useRecorder(active: boolean) {
         await localSession.start()
         if (!cancelled) {
           setReady(true)
+          setReadyDeviceId(device.id)
           setZoomLabel(controls[0]?.displayableZoomFactor ?? 1)
         }
       })
@@ -473,6 +510,7 @@ export function useRecorder(active: boolean) {
       invalidateFocus()
       setFocusLocked(false)
       setReady(false)
+      setReadyDeviceId(null)
       orientation.stopOrientationUpdates()
       subscriptions.forEach((subscription) => subscription.remove())
       if (session.current === localSession) {
@@ -570,10 +608,11 @@ export function useRecorder(active: boolean) {
   const setZoom = (displayable: number, animated = false) =>
     updateControl('zoom', async () => {
       const controls = controllers.current
+      const value = Math.max(zoomRange.min, Math.min(zoomRange.max, displayable))
       await Promise.all(
         controls.map(async (control) => {
           const factor = control.zoom / control.displayableZoomFactor
-          const target = Math.max(control.minZoom, Math.min(control.maxZoom, displayable * factor))
+          const target = Math.max(control.minZoom, Math.min(control.maxZoom, value * factor))
           if (control === controls[0]) setZoomLabel(target / factor)
           if (animated) {
             // VisionCamera 5.2 uses milliseconds on Android and zoom units/sec on iOS.
@@ -731,6 +770,7 @@ export function useRecorder(active: boolean) {
     settings,
     phase,
     ready,
+    readyDeviceId,
     authorized,
     permission,
     devices,
@@ -743,6 +783,10 @@ export function useRecorder(active: boolean) {
     notice,
     elapsed,
     zoom,
+    zoomRange,
+    zoomPresets: [0.5, 1, 2, 5].filter(
+      (value) => value >= zoomRange.min - 0.001 && value <= zoomRange.max + 0.001
+    ),
     setZoom,
     focus,
     focusLocked,

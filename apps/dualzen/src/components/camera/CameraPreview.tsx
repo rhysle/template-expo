@@ -25,6 +25,9 @@ export function CameraPreview({
   onDismissFocus,
   guide = false,
   meteringEnabled = true,
+  pip = false,
+  pinchGesture,
+  doubleTapGesture,
   drag,
 }: {
   recorder: RecorderController
@@ -36,6 +39,9 @@ export function CameraPreview({
   onDismissFocus: (id: number) => void
   guide?: boolean
   meteringEnabled?: boolean
+  pip?: boolean
+  pinchGesture?: ReturnType<typeof Gesture.Pinch>
+  doubleTapGesture?: ReturnType<typeof Gesture.Tap>
   drag?: ReturnType<typeof Gesture.Pan>
 }) {
   const { settings } = useCameraState()
@@ -43,6 +49,7 @@ export function CameraPreview({
   const styles = useThemedStyles(createStyles)
   const pinchStart = useSharedValue(1)
   const lastZoom = useSharedValue(1)
+  const { min: zoomMin, max: zoomMax } = recorder.zoomRange
   const point = meteringEnabled && focusPoint?.kind === kind ? focusPoint : null
   const meterHandler = useSharedValue({
     callback: async (_x: number, _y: number, _locked: boolean) => {},
@@ -109,23 +116,42 @@ export function CameraPreview({
       .onStart((event) => {
         scheduleOnRN(meterHandler.value.callback, event.x, event.y, true)
       })
-    const pinch = Gesture.Pinch()
+    const zoomPinch = Gesture.Pinch()
       .onStart(() => {
         pinchStart.value = currentZoom.value
         lastZoom.value = currentZoom.value
       })
       .onUpdate((event) => {
-        const value = pinchStart.value * event.scale
+        const value = Math.max(zoomMin, Math.min(zoomMax, pinchStart.value * event.scale))
         if (Math.abs(value - lastZoom.value) < 0.035) return
         lastZoom.value = value
         scheduleOnRN(zoomHandler.value.callback, value)
       })
-    const metering = Gesture.Exclusive(hold, tap)
+      .onEnd((event) => {
+        scheduleOnRN(
+          zoomHandler.value.callback,
+          Math.max(zoomMin, Math.min(zoomMax, pinchStart.value * event.scale))
+        )
+      })
+    const pinch = pinchGesture ?? zoomPinch
+    const metering = doubleTapGesture ?? Gesture.Exclusive(hold, tap)
     return {
       gestures: drag ? Gesture.Race(pinch, drag, metering) : Gesture.Race(pinch, metering),
       blockers: drag ? [tap, hold, pinch, drag] : [tap, hold, pinch],
     }
-  }, [meteringEnabled, drag, meterHandler, pinchStart, currentZoom, lastZoom, zoomHandler])
+  }, [
+    meteringEnabled,
+    pinchGesture,
+    doubleTapGesture,
+    drag,
+    meterHandler,
+    pinchStart,
+    currentZoom,
+    lastZoom,
+    zoomHandler,
+    zoomMin,
+    zoomMax,
+  ])
   // A reference rectangle must preserve 16:9, regardless of the negotiated source aspect ratio.
   const guideHeight = (width * 9) / 16
   const guidePosition = settings.front ? 1 - settings.landscapePosition : settings.landscapePosition
@@ -135,7 +161,7 @@ export function CameraPreview({
       <View
         collapsable={false}
         accessibilityHint={meteringEnabled ? t('camera.focusHint') : undefined}
-        style={[styles.preview, { width, height }]}>
+        style={[styles.preview, pip ? styles.pip : { width, height }]}>
         <DualRecorderPreview
           style={styles.fill}
           channel={settings.mode === 'single' ? 0 : kind === 'portrait' ? 1 : 2}
@@ -196,6 +222,7 @@ const createStyles = createThemedStyles((theme) => ({
     backgroundColor: theme.colors.background.surface,
   },
   fill: { position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 },
+  pip: { width: '100%', height: '100%', borderRadius: theme.borderRadius.sm },
   verticalGrid: {
     position: 'absolute',
     width: 1,
