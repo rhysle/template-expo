@@ -2,8 +2,12 @@ node_modules/
 **/node_modules/
 **/.expo/
 **/dist/
-**/ios/
-**/android/
+/ios/
+/android/
+/apps/*/ios/
+/apps/*/android/
+**/build/
+**/.cxx/
 **/fastlane/
 **/assets/screenshots/
 **/.env*
