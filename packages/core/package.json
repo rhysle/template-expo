@@ -209,7 +209,9 @@
     "./runtime": "./src/runtime/index.tsx",
     "./i18n/config": "./src/i18n/config.ts",
     "./services/ads/index": "./src/services/ads/index.tsx",
-    "./services/ads": "./src/services/ads/index.tsx"
+    "./services/ads": "./src/services/ads/index.tsx",
+    "./components/base/CapsuleTabNavigator": "./src/components/base/TabNavigator/CapsuleTabNavigator.tsx",
+    "./components/base/CapsuleTabBar": "./src/components/base/CapsuleTabBar/CapsuleTabBar.tsx"
   },
   "scripts": {
     "check:type": "tsc --noEmit"
@@ -254,6 +256,7 @@
     "react-native-screens": "4.26.2",
     "react-native-svg": "15.15.4",
     "react-native-worklets": "0.10.1",
-    "zustand": "^5.0.13"
+    "zustand": "^5.0.13",
+    "expo-glass-effect": "~57.0.3"
   }
 }

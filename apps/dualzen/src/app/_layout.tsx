@@ -16,8 +16,6 @@ import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { StatusBar } from 'expo-status-bar'
 import { useEffect, useRef } from 'react'
-import { useTranslation } from 'react-i18next'
-import { Platform } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
 import { I18nProvider } from '@/i18n'
@@ -34,7 +32,6 @@ SplashScreen.setOptions({ fade: true, duration: 250 })
 
 function RootLayoutContent() {
   const { hasCompletedOnboarding } = useOnboardingState()
-  const { t } = useTranslation()
   const { appearance, colors, typography } = useTheme()
   const baseNavigationTheme = appearance === 'dark' ? DarkTheme : DefaultTheme
   const navigationTheme = {
@@ -72,25 +69,7 @@ function RootLayoutContent() {
           },
         }}>
         <Stack.Protected guard={hasCompletedOnboarding}>
-          {/* iOS needs the back title enabled for headerBackButtonMenuEnabled to work.
-              Keep this hidden parent title empty so Settings stays icon-only without exposing "(tabs)". */}
-          <Stack.Screen name="(tabs)" options={{ headerShown: false, title: '' }} />
-          <Stack.Screen
-            name="settings"
-            options={{
-              title: t('settings.title'),
-              headerBackButtonMenuEnabled: false,
-              ...(Platform.OS === 'ios'
-                ? {
-                    headerTransparent: true,
-                    headerStyle: { backgroundColor: 'transparent' },
-                    headerBlurEffect: 'systemChromeMaterial',
-                    // Avoid layering the iOS 26 scroll-edge effect over the native header material.
-                    scrollEdgeEffects: { top: 'hidden' as const },
-                  }
-                : {}),
-            }}
-          />
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen
             name="paywall"
             options={{ headerShown: false, presentation: 'fullScreenModal' }}

@@ -1,5 +1,6 @@
 export * from './BottomSheet'
 export * from './Button'
+export * from './CapsuleTabBar/CapsuleTabBar'
 export * from './Card'
 export * from './ChoiceChip'
 export * from './CollapsingHeader'

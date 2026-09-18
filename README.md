@@ -115,3 +115,9 @@ Starter enables OTA checks by default, and generated apps inherit that setting. 
 `pnpm check` runs lint and TypeScript for both apps and shared packages, including tooling. `pnpm check:i18n` audits each app's English resource and shared references. No automated test files or suites belong in this repository.
 
 Migration provenance and verification results are recorded in `docs/monorepo-migration.md`. Water eject is the initial iOS native validation candidate. Android native builds/runtime, EAS cloud builds, submissions, OTA publication, and remote provisioning are outside migration validation.
+
+## Capsule tabs
+
+For a compact floating bar with icons only, import `CapsuleTabNavigator` from `@shared/core/components/base` in the app's tabs layout. Pass `tabs` with `name`, localized `label`, and Phosphor `icon`, plus `navigationDisabled` when product activity must block switching. The standalone `CapsuleTabBar` is also exported for an existing JavaScript Tabs navigator. Dedicated `@shared/core/components/base/CapsuleTabNavigator` and `@shared/core/components/base/CapsuleTabBar` entry points remain available. Keep at most five tabs.
+
+Every app includes `expo-glass-effect` as a required shared-core peer; future apps inherit it from the starter. The capsule uses native Liquid Glass on supported iOS builds, blur on older iOS, and the same solid rounded shape on Android. The whole capsule springs slightly larger while pressed or hovered and returns on release or cancellation. Each tab keeps one regular icon and smoothly transitions its focus color, with no pressed background. It respects Reduce Transparency/Reduce Motion, retains accessibility labels for hidden text, hides while the keyboard is open, and uses the existing measured tab inset and banner infrastructure. Wrap tab roots in `TabScreen`; scrolling content beneath the capsule should add `useTabBarContentInset()` to its bottom padding.

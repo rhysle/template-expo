@@ -123,7 +123,7 @@ Runtime code under `src/` must not use `process.env.APP_VARIANT` for product beh
 - Import `iconSizes` from `@/theme` for every icon `size` prop.
 - Use `withAlpha(hex, alpha)` from `@/utils/color` instead of literal `rgba(...)` strings.
 - Fonts are configured only in `src/configs/fonts.ts`. Set both `fontFamily` and `fontWeight` in typography styles.
-- Use `phosphor-react-native` icons with the `Icon`-suffixed exports. Tab icons use `fill` only when focused.
+- Use `phosphor-react-native` icons with the `Icon`-suffixed exports. Tab icons use `fill` only when focused; capsule tabs keep one `regular` icon and animate its color instead.
 
 Use `react-native-reanimated` v4 for animations, never React Native's legacy `Animated` API. If an animation needs hooks, give it a real component instead of calling hooks inside a render helper or list callback.
 
@@ -142,6 +142,8 @@ Place product-specific layouts and content under `src/components/` or the releva
 Onboarding page hero art uses local Lottie assets declared by the product-level page list. Product forks should replace the fixed animation slots in `assets/animations/onboarding/page-1.json` through `page-4.json` without changing filenames, imports, or generic page keys. Downloaded LottieFiles `.json` or `.lottie` files are supported, but onboarding must not load remote animation URLs.
 
 Tab metadata is shared by `NativeTabNavigator` and `CustomTabNavigator`; switch implementations only in `src/app/(tabs)/_layout.tsx` and import them from the shared base package. Native tabs are the mobile default, support at most five Android tabs, and require a nested `TabStack` for each tab because they do not render headers.
+
+`CapsuleTabNavigator` is a shared icon-only, centered capsule alternative, available with `CapsuleTabBar` from `@shared/core/components/base` or their dedicated entry points. Every app declares `expo-glass-effect`, which is a required shared-core peer and is inherited by generated apps from the starter. Capsule tabs accept name/label/icon metadata without requiring `nativeIcon`, support `navigationDisabled`, and publish their measured height through the existing tab inset provider. They use native Liquid Glass where available on iOS, iOS blur when unsupported, and a solid themed capsule on Android or with Reduce Transparency enabled. The whole capsule springs slightly larger while pressed or hovered; each tab retains one regular icon with an animated focus color and no pressed background. Use at most five tabs so touch targets fit compact mobile screens.
 
 Use `TabScreen` for tab-root content so non-scrolling content clears either navigator and the persistent banner. Scroll roots should set `contentUnderTabBar` on `TabScreen`, render beneath the bar, and add `useTabBarContentInset()` to their scroll content's bottom padding so the final content remains reachable. `TabNavigatorFrame` owns one compact fixed-size banner above the bottom bar; do not mount a banner per tab or reload it on tab focus. `FloatingTabBar` publishes its measured custom height, the banner publishes its accessory height, and native tabs use a conservative bar-height fallback because Expo Router does not expose their height. Change `TabBarBanner` when a product needs a different policy-appropriate placement. Consumers that float above navigation, such as Snackbar, should use `useTabBarHeight()` rather than `TAB_BAR_HEIGHT` directly.
 

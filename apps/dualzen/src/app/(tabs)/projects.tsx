@@ -1,21 +1,15 @@
 import { TabScreen } from '@shared/core/components/base'
-import { useIsFocused, useRouter } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
-import { CameraScreen } from '@/components/camera/CameraScreen'
-import { useRecorder } from '@/services/camera/useRecorder'
+import { ProjectsScreen } from '@/components/projects/ProjectsScreen'
 import { createThemedStyles, useThemedStyles } from '@/theme'
 
-export default function CameraTab() {
+export default function ProjectsTab() {
   const styles = useThemedStyles(createStyles)
-  const router = useRouter()
-  const focused = useIsFocused()
-  const recorder = useRecorder(focused)
-
   return (
     <TabScreen>
       <SafeAreaView edges={['top', 'left', 'right']} style={styles.root}>
-        <CameraScreen recorder={recorder} onSettings={() => router.navigate('/settings')} />
+        <ProjectsScreen />
       </SafeAreaView>
     </TabScreen>
   )

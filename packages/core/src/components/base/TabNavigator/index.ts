@@ -1,3 +1,4 @@
+export * from './CapsuleTabNavigator'
 export * from './CustomTabNavigator'
 export * from './NativeTabNavigator'
 export * from './TabDefinition'
