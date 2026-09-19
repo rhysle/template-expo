@@ -27,6 +27,7 @@ export type PreviewLayout = 'pip' | 'stacked' | 'guide'
 export function CameraStage({
   recorder,
   layout,
+  edgeToEdgePortrait,
   topInset,
   bottomInset,
   switching,
@@ -35,6 +36,7 @@ export function CameraStage({
 }: {
   recorder: CaptureController
   layout: PreviewLayout
+  edgeToEdgePortrait: boolean
   topInset: number
   bottomInset: number
   switching: boolean
@@ -89,7 +91,9 @@ export function CameraStage({
   useEffect(() => {
     if (!recorder.ready) setFocusPoint(null)
   }, [recorder.ready])
-  const width = Math.min(stage.width, (Math.max(0, stage.height - topInset - bottomInset) * 9) / 16)
+  const width = edgeToEdgePortrait
+    ? stage.width
+    : Math.min(stage.width, (Math.max(0, stage.height - topInset - bottomInset) * 9) / 16)
   const height = (width * 16) / 9
   const insetWidth = Math.min(theme.spacing['9xl'], width * 0.55)
   const insetHeight = (insetWidth * 9) / 16
@@ -221,7 +225,9 @@ export function CameraStage({
   const landscapeHeight = (previewWidth * 9) / 16
   const geometry = useDerivedValue(() => {
     const viewportHeight = stageHeight.value
-    const portraitWidth = Math.min(stage.width, (viewportHeight * 9) / 16)
+    const portraitWidth = edgeToEdgePortrait
+      ? stage.width
+      : Math.min(stage.width, (viewportHeight * 9) / 16)
     const stackedWidth = Math.max(
       0,
       Math.min(stage.width, (viewportHeight - theme.spacing.md) / (9 / 16 + (0.58 * 16) / 9))
@@ -229,6 +235,9 @@ export function CameraStage({
     const stackedLandscapeHeight = (stackedWidth * 9) / 16
     const stackedPortraitHeight = (stackedWidth * 0.58 * 16) / 9
     const portraitHeight = (portraitWidth * 16) / 9
+    const portraitTop = edgeToEdgePortrait
+      ? stageTop.value
+      : stageTop.value + (viewportHeight - portraitHeight) / 2
     const guide = getLandscapeGuideFrame(
       portraitWidth,
       portraitHeight,
@@ -240,8 +249,8 @@ export function CameraStage({
       viewportHeight,
       portraitWidth,
       portraitHeight,
-      guideCenterY:
-        stageTop.value + (viewportHeight - portraitHeight) / 2 + guide.top + guide.height / 2,
+      portraitTop,
+      guideCenterY: portraitTop + guide.top + guide.height / 2,
       stackedWidth,
       stackedLandscapeHeight,
       stackedPortraitHeight,
@@ -263,7 +272,7 @@ export function CameraStage({
       progress,
       [0, 1],
       [
-        frame.viewportTop + frame.viewportHeight / 2,
+        frame.portraitTop + frame.portraitHeight / 2,
         frame.stackedTop +
           frame.stackedLandscapeHeight +
           theme.spacing.md +
@@ -294,8 +303,8 @@ export function CameraStage({
       pipWidth / 2 +
       Math.max(-maxX, Math.min(0, insetX.value))
     const pipCenterY =
-      frame.viewportTop +
-      (frame.viewportHeight + frame.portraitHeight) / 2 -
+      frame.portraitTop +
+      frame.portraitHeight -
       theme.spacing.sm -
       pipHeight / 2 +
       Math.max(-maxY, Math.min(0, insetY.value))

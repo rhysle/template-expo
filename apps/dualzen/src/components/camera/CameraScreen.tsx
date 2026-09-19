@@ -200,7 +200,10 @@ export function CameraScreen({
         <CameraStage
           recorder={recorder}
           layout={layout}
-          topInset={immersive ? 0 : toolbarHeight + theme.spacing.sm * 2}
+          edgeToEdgePortrait={!landscape}
+          topInset={
+            !landscape && (layout === 'pip' || immersive) ? 0 : toolbarHeight + theme.spacing.sm * 2
+          }
           bottomInset={immersive || landscape ? 0 : theme.spacing['7xl'] + theme.spacing.sm * 2}
           switching={switching}
           switchProgress={switchProgress}>

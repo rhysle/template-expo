@@ -24,6 +24,6 @@ export default function CameraTab() {
   )
 }
 
-const createStyles = createThemedStyles((theme) => ({
-  root: { flex: 1, paddingHorizontal: theme.spacing.md },
+const createStyles = createThemedStyles(() => ({
+  root: { flex: 1 },
 }))
