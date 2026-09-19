@@ -8,40 +8,55 @@ import {
   DEFAULT_PROJECT_ID,
   type ExportResult,
   type OutputKind,
+  type PhotoCapture,
   type Project,
-  type Take,
+  type ProjectMedia,
+  type VideoCapture,
 } from './types'
 
-export const recordingsRoot = new Directory(Paths.document, 'DualZen')
-export const takeDirectory = (id: string) => new Directory(recordingsRoot, 'takes', id)
-export const videoFile = (take: Take, kind: OutputKind) => {
-  const output = take.outputs.find((item) => item.kind === kind && item.ready)
-  if (!output) throw new Error('Video is not available')
-  return new File(takeDirectory(take.id), output.filename)
+export const dualZenRoot = new Directory(Paths.document, 'DualZen')
+export const mediaRoot = new Directory(dualZenRoot, 'media')
+export const mediaDirectory = (id: string) => new Directory(mediaRoot, id)
+export const thumbnailFile = (id: string) => new File(mediaDirectory(id), 'thumbnail.jpg')
+
+function readyOutput(media: ProjectMedia, kind: OutputKind) {
+  const output = media.outputs.find((item) => item.kind === kind && item.ready)
+  if (!output) throw new Error('Media output is not available')
+  return output
 }
-export const thumbnailFile = (id: string) => new File(takeDirectory(id), 'thumbnail.jpg')
-export function allocateTake() {
+
+export const mediaFile = (media: ProjectMedia, kind: OutputKind) =>
+  new File(mediaDirectory(media.id), readyOutput(media, kind).filename)
+
+export const videoFile = (video: VideoCapture, kind: OutputKind) => mediaFile(video, kind)
+export const photoFile = (photo: PhotoCapture, kind: OutputKind) => mediaFile(photo, kind)
+
+export function allocateMedia() {
   const id = randomUUID()
-  const directory = takeDirectory(id)
+  const directory = mediaDirectory(id)
   directory.create({ intermediates: true, idempotent: true })
   return { id, directory }
 }
+
 async function writeJSON(file: File, value: unknown) {
   await NativeRecorder.writeManifest(file.uri, JSON.stringify(value))
 }
-export async function saveTake(take: Take) {
-  useAppStore.getState().projects.putTake(take)
-  await writeJSON(new File(takeDirectory(take.id), 'manifest.json'), take)
+
+export async function saveMedia(media: ProjectMedia) {
+  await writeJSON(new File(mediaDirectory(media.id), 'manifest.json'), media)
+  useAppStore.getState().projects.putMedia(media)
 }
+
 export async function saveProject(project: Project) {
-  const directory = new Directory(recordingsRoot, 'projects')
+  const directory = new Directory(dualZenRoot, 'projects')
   directory.create({ intermediates: true, idempotent: true })
   await writeJSON(new File(directory, project.id + '.json'), project)
   useAppStore.getState().projects.putProject(project)
 }
+
 export async function hydrateProjects() {
-  recordingsRoot.create({ intermediates: true, idempotent: true })
-  const projects = new Directory(recordingsRoot, 'projects')
+  dualZenRoot.create({ intermediates: true, idempotent: true })
+  const projects = new Directory(dualZenRoot, 'projects')
   if (projects.exists)
     for (const file of projects.list()) {
       if (!(file instanceof File) || !file.name.endsWith('.json')) continue
@@ -56,6 +71,7 @@ export async function hydrateProjects() {
         /* A corrupt manifest must not hide other saved projects. */
       }
     }
+
   const defaultProject = useAppStore
     .getState()
     .projects.projects.find((project) => project.id === DEFAULT_PROJECT_ID) ?? {
@@ -63,54 +79,57 @@ export async function hydrateProjects() {
     name: null,
     createdAt: 0,
   }
-  if (!new File(recordingsRoot, 'projects', DEFAULT_PROJECT_ID + '.json').exists)
+  if (!new File(dualZenRoot, 'projects', DEFAULT_PROJECT_ID + '.json').exists)
     await saveProject(defaultProject)
+
   const catalog = useAppStore.getState().projects
   if (!catalog.projects.some((project) => project.id === catalog.selectedProjectId))
     catalog.selectProject(DEFAULT_PROJECT_ID)
-  const takes = new Directory(recordingsRoot, 'takes')
-  if (takes.exists)
-    for (const directory of takes.list()) {
-      if (!(directory instanceof Directory)) continue
-      const manifest = new File(directory, 'manifest.json')
-      if (!manifest.exists) continue
-      try {
-        const take = JSON.parse(await manifest.text()) as Take
-        if (
-          typeof take.id !== 'string' ||
-          take.id !== directory.name ||
-          !Array.isArray(take.outputs)
-        )
-          continue
-        take.outputs = take.outputs.map((output) => ({
-          ...output,
-          ready: output.ready && new File(directory, output.filename).exists,
-        }))
-        if (
-          !useAppStore.getState().projects.projects.some((project) => project.id === take.projectId)
-        )
-          take.projectId = DEFAULT_PROJECT_ID
-        useAppStore.getState().projects.putTake(take)
-      } catch {
-        /* Never remove footage automatically because metadata cannot be read. */
-      }
+
+  if (!mediaRoot.exists) return
+  for (const directory of mediaRoot.list()) {
+    if (!(directory instanceof Directory)) continue
+    const manifest = new File(directory, 'manifest.json')
+    if (!manifest.exists) continue
+    try {
+      const media = JSON.parse(await manifest.text()) as ProjectMedia
+      if (
+        typeof media.id !== 'string' ||
+        media.id !== directory.name ||
+        !['video', 'photo'].includes(media.mediaType) ||
+        !Array.isArray(media.outputs)
+      )
+        continue
+      media.outputs = media.outputs.map((output) => ({
+        ...output,
+        ready: output.ready && new File(directory, output.filename).exists,
+      }))
+      if (!catalog.projects.some((project) => project.id === media.projectId))
+        media.projectId = DEFAULT_PROJECT_ID
+      catalog.putMedia(media)
+    } catch {
+      /* Never remove originals automatically because metadata cannot be read. */
     }
+  }
 }
-export async function deleteTake(take: Take) {
-  const directory = takeDirectory(take.id)
+
+export async function deleteMedia(media: ProjectMedia) {
+  const directory = mediaDirectory(media.id)
   if (directory.exists) directory.delete()
-  useAppStore.getState().projects.removeTake(take.id)
+  useAppStore.getState().projects.removeMedia(media.id)
 }
+
 export async function deleteProject(id: string) {
   if (id === DEFAULT_PROJECT_ID) return
-  for (const take of useAppStore.getState().projects.takes.filter((item) => item.projectId === id))
-    await deleteTake(take)
-  const manifest = new File(recordingsRoot, 'projects', id + '.json')
+  for (const media of useAppStore.getState().projects.media.filter((item) => item.projectId === id))
+    await deleteMedia(media)
+  const manifest = new File(dualZenRoot, 'projects', id + '.json')
   if (manifest.exists) manifest.delete()
   useAppStore.getState().projects.removeProject(id)
 }
+
 export async function mutateProjects(action: () => Promise<unknown>) {
-  if (useAppStore.getState().camera.phase !== 'idle') throw new Error('Recorder is busy')
+  if (useAppStore.getState().camera.phase !== 'idle') throw new Error('Camera is busy')
   useAppStore.getState().camera.setPhase('finalizing')
   try {
     return await action()
@@ -118,16 +137,20 @@ export async function mutateProjects(action: () => Promise<unknown>) {
     useAppStore.getState().camera.setPhase('idle')
   }
 }
-export async function exportTake(
-  take: Take,
+
+export async function exportMedia(
+  media: ProjectMedia,
   kinds: OutputKind[],
   anotherCopy = false
 ): Promise<ExportResult[]> {
-  if (useAppStore.getState().camera.phase !== 'idle') throw new Error('Recorder is busy')
+  if (useAppStore.getState().camera.phase !== 'idle') throw new Error('Camera is busy')
   useAppStore.getState().camera.setPhase('exporting')
   const results: ExportResult[] = []
-  let current = useAppStore.getState().projects.takes.find((item) => item.id === take.id) ?? take
-  const revision = current.trim ? `${current.trim.start}:${current.trim.end}` : 'original'
+  let current = useAppStore.getState().projects.media.find((item) => item.id === media.id) ?? media
+  const revision =
+    current.mediaType === 'video' && current.trim
+      ? `${current.trim.start}:${current.trim.end}`
+      : 'original'
   try {
     if (anotherCopy) {
       current = {
@@ -136,7 +159,7 @@ export async function exportTake(
           (receipt) => receipt.revision !== revision || !kinds.includes(receipt.kind)
         ),
       }
-      await saveTake(current)
+      await saveMedia(current)
     }
     for (const kind of kinds) {
       const existing = current.exports.find(
@@ -147,18 +170,19 @@ export async function exportTake(
         continue
       }
       try {
-        const file = videoFile(current, kind)
-        if (Paths.availableDiskSpace < file.size * (current.trim ? 2 : 1) + 32 * 1024 * 1024)
+        const file = mediaFile(current, kind)
+        const trim = current.mediaType === 'video' ? current.trim : null
+        if (Paths.availableDiskSpace < file.size * (trim ? 2 : 1) + 32 * 1024 * 1024)
           throw new Error('Not enough space to export; original is safe')
-        const assetId = await NativeRecorder.exportVideo(
+        const assetId = await NativeRecorder.exportMedia(
           file.uri,
-          current.trim?.start ?? -1,
-          current.trim?.end ?? -1
+          current.mediaType,
+          trim?.start ?? -1,
+          trim?.end ?? -1
         )
         current = { ...current, exports: [...current.exports, { kind, revision, assetId }] }
-        // Update MMKV immediately; still remember the saved asset if its disk receipt fails.
-        useAppStore.getState().projects.putTake(current)
-        await saveTake(current)
+        useAppStore.getState().projects.putMedia(current)
+        await saveMedia(current)
         results.push({ kind, assetId })
       } catch (error) {
         results.push({ kind, error: error instanceof Error ? error.message : String(error) })

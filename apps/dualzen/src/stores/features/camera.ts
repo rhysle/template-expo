@@ -2,8 +2,9 @@ import type { SliceConfig } from '@shared/core/stores/slices/types'
 import { useShallow } from 'zustand/react/shallow'
 
 import {
+  type CapturePhase,
   DEFAULT_SETTINGS,
-  type RecordingPhase,
+  type PhotoFlashMode,
   type RecordingSettings,
 } from '@/services/camera/types'
 
@@ -11,11 +12,13 @@ import { getUseAppStore } from '../slices/types'
 
 interface CameraSlice {
   settings: RecordingSettings
-  autoExport: boolean
-  phase: RecordingPhase
+  photoFlashMode: PhotoFlashMode
+  autoSaveToLibrary: boolean
+  phase: CapturePhase
   updateSettings: (settings: Partial<RecordingSettings>) => void
-  setAutoExport: (value: boolean) => void
-  setPhase: (phase: RecordingPhase) => void
+  setPhotoFlashMode: (value: PhotoFlashMode) => void
+  setAutoSaveToLibrary: (value: boolean) => void
+  setPhase: (phase: CapturePhase) => void
 }
 declare global {
   interface AppSlices {
@@ -25,15 +28,20 @@ declare global {
 export const sliceConfig = {
   create: (set: (updater: (state: CameraSlice) => void) => void): CameraSlice => ({
     settings: DEFAULT_SETTINGS,
-    autoExport: false,
+    photoFlashMode: 'off',
+    autoSaveToLibrary: false,
     phase: 'idle',
     updateSettings: (settings) =>
       set((state) => {
         state.settings = { ...state.settings, ...settings }
       }),
-    setAutoExport: (value) =>
+    setPhotoFlashMode: (value) =>
       set((state) => {
-        state.autoExport = value
+        state.photoFlashMode = value
+      }),
+    setAutoSaveToLibrary: (value) =>
+      set((state) => {
+        state.autoSaveToLibrary = value
       }),
     setPhase: (phase) =>
       set((state) => {

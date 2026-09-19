@@ -251,24 +251,24 @@ final class DualEngine: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
       // Save finalized originals natively before emitting the JS event. The JS
       // runtime may already be suspended when filming stops in the background.
       if let directory = self.config["directory"] as? String, let url = URL(string: directory) {
-        var take: [String: Any] = ["id": self.config["id"] as? String ?? "", "projectId": self.config["projectId"] as? String ?? "default",
+        var media: [String: Any] = ["id": self.config["id"] as? String ?? "", "projectId": self.config["projectId"] as? String ?? "default", "mediaType": "video",
           "createdAt": self.config["createdAt"] as? Double ?? 0, "settings": self.config["settings"] as? [String: Any] ?? [:], "duration": duration,
           "outputs": outputs, "trim": NSNull(), "exports": [], "reason": reason]
-        if let failure = self.failure { take["error"] = failure }
+        if let failure = self.failure { media["error"] = failure }
         do {
           // Foundation raises an Objective-C exception for invalid JSON objects;
           // Swift's do/catch cannot catch that exception in the Nitro engine.
-          guard JSONSerialization.isValidJSONObject(take) else {
+          guard JSONSerialization.isValidJSONObject(media) else {
             #if DEBUG
-            for (key, value) in take where !JSONSerialization.isValidJSONObject(["value": value]) {
-              print("[DualZen] Invalid take metadata field: \(key), type: \(type(of: value))")
+            for (key, value) in media where !JSONSerialization.isValidJSONObject(["value": value]) {
+              print("[DualZen] Invalid media metadata field: \(key), type: \(type(of: value))")
             }
             #endif
-            throw CaptureError(message: "Invalid take metadata")
+            throw CaptureError(message: "Invalid media metadata")
           }
-          try JSONSerialization.data(withJSONObject: take).write(to: url.appendingPathComponent("manifest.json"), options: .atomic)
+          try JSONSerialization.data(withJSONObject: media).write(to: url.appendingPathComponent("manifest.json"), options: .atomic)
         }
-        catch { result["error"] = "Take metadata could not be saved: " + error.localizedDescription }
+        catch { result["error"] = "Media metadata could not be saved: " + error.localizedDescription }
       }
       self.lastResult = Self.json(result); self.sinks.removeAll(); self.stopping = false; self.origin = nil; self.firstAudio = nil
       let callbacks = self.pending; self.pending.removeAll(); callbacks.forEach { $0(self.lastResult) }

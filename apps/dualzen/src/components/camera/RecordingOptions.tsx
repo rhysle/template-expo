@@ -6,21 +6,24 @@ import { Modal, Platform, ScrollView, Switch, View } from 'react-native'
 import {
   formatDuration,
   FPS_OPTIONS,
+  type MediaType,
   type RecordingSettings,
   RESOLUTION_LABELS,
   RESOLUTION_OPTIONS,
 } from '@/services/camera/types'
-import type { RecorderController } from '@/services/camera/useRecorder'
+import type { CaptureController } from '@/services/camera/useRecorder'
 import { useCameraState } from '@/stores/features/camera'
 import { useProjectsState } from '@/stores/features/projects'
 import { createThemedStyles, useTheme, useThemedStyles } from '@/theme'
 
 export function RecordingOptions({
+  mediaType,
   recorder,
   visible,
   onClose,
 }: {
-  recorder: RecorderController
+  mediaType: MediaType
+  recorder: CaptureController
   visible: boolean
   onClose: () => void
 }) {
@@ -37,7 +40,7 @@ export function RecordingOptions({
   const { checkSettings } = recorder
   const [supported, setSupported] = useState<Record<string, boolean>>({})
   useEffect(() => {
-    if (!visible) return
+    if (!visible || mediaType !== 'video') return
     let cancelled = false
     setSupported({})
     const variants = [
@@ -57,9 +60,9 @@ export function RecordingOptions({
     return () => {
       cancelled = true
     }
-  }, [visible, settings, checkSettings])
+  }, [visible, settings, checkSettings, mediaType])
   const changeMode = (mode: string) => {
-    const androidDual = Platform.OS === 'android' && mode === 'dual'
+    const androidDual = mediaType === 'video' && Platform.OS === 'android' && mode === 'dual'
     updateSettings({
       mode: mode as RecordingSettings['mode'],
       front: false,
@@ -104,7 +107,7 @@ export function RecordingOptions({
               }))}
             />
           )}
-          {settings.mode === 'dual' && Platform.OS === 'android' && (
+          {mediaType === 'video' && settings.mode === 'dual' && Platform.OS === 'android' && (
             <Text variant="caption" tone="muted">
               {t('camera.androidDualLimits')}
             </Text>
@@ -142,72 +145,92 @@ export function RecordingOptions({
               </Text>
             </>
           )}
-          <Text tone="secondary">{t('camera.resolution')}</Text>
-          <SegmentedControl
-            value={String(settings.longEdge)}
-            onValueChange={(value) =>
-              updateSettings({ longEdge: Number(value) as RecordingSettings['longEdge'] })
-            }
-            options={RESOLUTION_OPTIONS.map((edge) => ({
-              value: String(edge),
-              label: RESOLUTION_LABELS[edge],
-              disabled: !supported[`edge${edge}`],
-            }))}
-          />
-          <Text variant="caption" tone="muted">
-            {t('camera.resolutionNote')}
-          </Text>
-          <Text tone="secondary">{t('camera.fps')}</Text>
-          <SegmentedControl
-            value={String(settings.fps)}
-            onValueChange={(value) =>
-              updateSettings({ fps: Number(value) as RecordingSettings['fps'] })
-            }
-            options={FPS_OPTIONS.map((fps) => ({
-              value: String(fps),
-              label: String(fps),
-              disabled: !supported[`fps${fps}`],
-            }))}
-          />
-          <Text variant="caption" tone="muted">
-            {t('camera.unsupported')}
-          </Text>
-          <Text tone="secondary">{t('camera.format')}</Text>
-          <SegmentedControl
-            value={settings.container}
-            onValueChange={(container) =>
-              updateSettings({ container: container as RecordingSettings['container'] })
-            }
-            options={[
-              { value: 'mp4', label: 'MP4' },
-              { value: 'mov', label: 'MOV', disabled: !recorder.capabilities.mov },
-            ]}
-          />
-          {!recorder.capabilities.mov && (
-            <Text variant="caption" tone="muted">
-              {t('camera.movUnavailable')}
-            </Text>
-          )}
-          {(['hdr', 'stabilization', 'grid'] as const).map((key) => (
-            <View key={key} style={styles.row}>
-              <Text>{toggleLabels[key]}</Text>
-              <Switch
-                accessibilityLabel={toggleLabels[key]}
-                value={settings[key]}
-                disabled={key !== 'grid' && !settings[key] && !supported[key]}
-                onValueChange={(value) => updateSettings({ [key]: value })}
-                trackColor={{
-                  true: theme.colors.primary.main,
-                  false: theme.colors.background.subtle,
-                }}
+          {mediaType === 'video' ? (
+            <>
+              <Text tone="secondary">{t('camera.resolution')}</Text>
+              <SegmentedControl
+                value={String(settings.longEdge)}
+                onValueChange={(value) =>
+                  updateSettings({ longEdge: Number(value) as RecordingSettings['longEdge'] })
+                }
+                options={RESOLUTION_OPTIONS.map((edge) => ({
+                  value: String(edge),
+                  label: RESOLUTION_LABELS[edge],
+                  disabled: !supported[`edge${edge}`],
+                }))}
               />
-            </View>
-          ))}
-          {!recorder.capabilities.hdr && (
+              <Text variant="caption" tone="muted">
+                {t('camera.resolutionNote')}
+              </Text>
+              <Text tone="secondary">{t('camera.fps')}</Text>
+              <SegmentedControl
+                value={String(settings.fps)}
+                onValueChange={(value) =>
+                  updateSettings({ fps: Number(value) as RecordingSettings['fps'] })
+                }
+                options={FPS_OPTIONS.map((fps) => ({
+                  value: String(fps),
+                  label: String(fps),
+                  disabled: !supported[`fps${fps}`],
+                }))}
+              />
+              <Text variant="caption" tone="muted">
+                {t('camera.unsupported')}
+              </Text>
+              <Text tone="secondary">{t('camera.format')}</Text>
+              <SegmentedControl
+                value={settings.container}
+                onValueChange={(container) =>
+                  updateSettings({ container: container as RecordingSettings['container'] })
+                }
+                options={[
+                  { value: 'mp4', label: 'MP4' },
+                  { value: 'mov', label: 'MOV', disabled: !recorder.capabilities.mov },
+                ]}
+              />
+              {!recorder.capabilities.mov && (
+                <Text variant="caption" tone="muted">
+                  {t('camera.movUnavailable')}
+                </Text>
+              )}
+              {(['hdr', 'stabilization'] as const).map((key) => (
+                <View key={key} style={styles.row}>
+                  <Text>{toggleLabels[key]}</Text>
+                  <Switch
+                    accessibilityLabel={toggleLabels[key]}
+                    value={settings[key]}
+                    disabled={!settings[key] && !supported[key]}
+                    onValueChange={(value) => updateSettings({ [key]: value })}
+                    trackColor={{
+                      true: theme.colors.primary.main,
+                      false: theme.colors.background.subtle,
+                    }}
+                  />
+                </View>
+              ))}
+              {!recorder.capabilities.hdr && (
+                <Text variant="caption" tone="muted">
+                  {t('camera.hdrUnavailable')}
+                </Text>
+              )}
+            </>
+          ) : (
             <Text variant="caption" tone="muted">
-              {t('camera.hdrUnavailable')}
+              {t('camera.photoProfileBody')}
             </Text>
           )}
+          <View style={styles.row}>
+            <Text>{toggleLabels.grid}</Text>
+            <Switch
+              accessibilityLabel={toggleLabels.grid}
+              value={settings.grid}
+              onValueChange={(grid) => updateSettings({ grid })}
+              trackColor={{
+                true: theme.colors.primary.main,
+                false: theme.colors.background.subtle,
+              }}
+            />
+          </View>
           {(['portrait', 'landscape'] as const).map((kind, index) => (
             <View key={kind} style={styles.framing}>
               <View style={styles.row}>
@@ -244,15 +267,19 @@ export function RecordingOptions({
               </ScrollView>
             </>
           )}
-          <Text variant="caption" tone="muted">
-            {t('camera.remaining', { time: formatDuration(recorder.remaining) })}
-          </Text>
-          <Text variant="caption" tone="muted">
-            {t('camera.storageRate', {
-              amount: ((recorder.bytesPerSecond * 60) / 1e6).toFixed(0),
-              free: (recorder.stats.freeBytes / 1e9).toFixed(1),
-            })}
-          </Text>
+          {mediaType === 'video' && (
+            <>
+              <Text variant="caption" tone="muted">
+                {t('camera.remaining', { time: formatDuration(recorder.remaining) })}
+              </Text>
+              <Text variant="caption" tone="muted">
+                {t('camera.storageRate', {
+                  amount: ((recorder.bytesPerSecond * 60) / 1e6).toFixed(0),
+                  free: (recorder.stats.freeBytes / 1e9).toFixed(1),
+                })}
+              </Text>
+            </>
+          )}
           <Button onPress={onClose} label={t('camera.done')} />
         </ScrollView>
       </View>

@@ -17,9 +17,9 @@
       "bundleIdentifier": "com.rhysle.dualzen",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
-        "NSCameraUsageDescription": "DualZen uses the camera to record portrait and landscape videos together.",
+        "NSCameraUsageDescription": "DualZen uses the camera to take photos and record videos in portrait and landscape together.",
         "NSMicrophoneUsageDescription": "DualZen records synchronized audio for your videos.",
-        "NSPhotoLibraryAddUsageDescription": "Save copies of your DualZen videos to Photos."
+        "NSPhotoLibraryAddUsageDescription": "Save copies of your DualZen photos and videos to Photos."
       }
     },
     "android": {

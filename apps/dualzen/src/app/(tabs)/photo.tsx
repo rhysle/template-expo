@@ -6,7 +6,7 @@ import { CameraScreen } from '@/components/camera/CameraScreen'
 import { useCapture } from '@/services/camera/CaptureProvider'
 import { createThemedStyles, useThemedStyles } from '@/theme'
 
-export default function CameraTab() {
+export default function PhotoTab() {
   const styles = useThemedStyles(createStyles)
   const router = useRouter()
   const recorder = useCapture()
@@ -15,7 +15,7 @@ export default function CameraTab() {
     <TabScreen>
       <SafeAreaView edges={['top', 'left', 'right']} style={styles.root}>
         <CameraScreen
-          mediaType="video"
+          mediaType="photo"
           recorder={recorder}
           onSettings={() => router.navigate('/settings')}
         />

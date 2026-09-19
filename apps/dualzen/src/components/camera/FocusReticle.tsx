@@ -17,7 +17,7 @@ import Animated, {
 import { scheduleOnRN } from 'react-native-worklets'
 
 import type { OutputKind } from '@/services/camera/types'
-import type { RecorderController } from '@/services/camera/useRecorder'
+import type { CaptureController } from '@/services/camera/useRecorder'
 import { cameraColors, createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
 
 import type { FocusPoint } from './CameraPreview'
@@ -48,7 +48,7 @@ export function FocusReticle({
   blockers,
   onDismiss,
 }: {
-  recorder: RecorderController
+  recorder: CaptureController
   kind: OutputKind
   width: number
   height: number

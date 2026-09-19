@@ -45,7 +45,7 @@ import { createThemedStyles, iconSizes, useCommonStyles, useTheme, useThemedStyl
 const SETTINGS_PAYWALL_SOURCE = 'settings' satisfies PaywallSource
 
 export default function SettingsScreen() {
-  const { autoExport, setAutoExport, phase } = useCameraState()
+  const { autoSaveToLibrary, setAutoSaveToLibrary, phase } = useCameraState()
   const { t } = useTranslation()
   const bottomInset = useTabBarContentInset()
   const theme = useTheme()
@@ -134,16 +134,16 @@ export default function SettingsScreen() {
           <Card padding="none">
             <View style={styles.preference}>
               <View style={styles.preferenceText}>
-                <Text weight="semibold">{t('camera.autoExport')}</Text>
+                <Text weight="semibold">{t('camera.autoSaveToLibrary')}</Text>
                 <Text variant="caption" tone="muted">
-                  {t('camera.autoExportBody')}
+                  {t('camera.autoSaveToLibraryBody')}
                 </Text>
               </View>
               <Switch
-                accessibilityLabel={t('camera.autoExport')}
+                accessibilityLabel={t('camera.autoSaveToLibrary')}
                 disabled={phase !== 'idle'}
-                value={autoExport}
-                onValueChange={setAutoExport}
+                value={autoSaveToLibrary}
+                onValueChange={setAutoSaveToLibrary}
                 trackColor={{
                   true: theme.colors.primary.main,
                   false: theme.colors.background.subtle,

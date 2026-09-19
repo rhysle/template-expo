@@ -10,7 +10,7 @@ import Animated, {
 import { scheduleOnRN } from 'react-native-worklets'
 
 import type { OutputKind } from '@/services/camera/types'
-import type { RecorderController } from '@/services/camera/useRecorder'
+import type { CaptureController } from '@/services/camera/useRecorder'
 import { useCameraState } from '@/stores/features/camera'
 import { createThemedStyles, useThemedStyles } from '@/theme'
 
@@ -36,7 +36,7 @@ export function CameraPreview({
   doubleTapGesture,
   drag,
 }: {
-  recorder: RecorderController
+  recorder: CaptureController
   kind: OutputKind
   width: number
   height: number

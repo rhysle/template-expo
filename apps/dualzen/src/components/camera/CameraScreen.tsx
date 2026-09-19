@@ -16,10 +16,10 @@ import { Linking, Pressable, useWindowDimensions, View } from 'react-native'
 import { cancelAnimation, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
 import { scheduleOnRN } from 'react-native-worklets'
 
-import { formatDuration, RESOLUTION_LABELS } from '@/services/camera/types'
-import type { RecorderController } from '@/services/camera/useRecorder'
+import { formatDuration, type MediaType, RESOLUTION_LABELS } from '@/services/camera/types'
+import type { CaptureController } from '@/services/camera/useRecorder'
 import { useCameraState } from '@/stores/features/camera'
-import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
+import { cameraColors, createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
 
 import { CameraStage, type PreviewLayout } from './CameraStage'
 import { FramingControl } from './FramingControl'
@@ -28,10 +28,12 @@ import { RecordingOptions } from './RecordingOptions'
 const LAYOUTS: PreviewLayout[] = ['pip', 'stacked', 'guide']
 const LAYOUT_ICONS = { pip: SquaresFourIcon, stacked: StackIcon, guide: RectangleIcon }
 export function CameraScreen({
+  mediaType,
   recorder,
   onSettings,
 }: {
-  recorder: RecorderController
+  mediaType: MediaType
+  recorder: CaptureController
   onSettings: () => void
 }) {
   const { width, height } = useWindowDimensions()
@@ -39,7 +41,7 @@ export function CameraScreen({
   const { t } = useTranslation()
   const styles = useThemedStyles(createStyles)
   const theme = useTheme()
-  const { settings, phase, updateSettings } = useCameraState()
+  const { settings, phase, photoFlashMode, setPhotoFlashMode, updateSettings } = useCameraState()
   const [layout, setLayout] = useState<PreviewLayout>('pip')
   const [options, setOptions] = useState(false)
   const [framing, setFraming] = useState(false)
@@ -77,6 +79,7 @@ export function CameraScreen({
     if (phase !== 'idle') setFraming(false)
   }, [phase])
   const idle = phase === 'idle'
+  const photoMode = mediaType === 'photo'
   const immersive = layout === 'guide' && !landscape
   const recording = phase === 'recording'
   const layoutLabels = {
@@ -107,6 +110,7 @@ export function CameraScreen({
     preparing: t('camera.preparing'),
     finalizing: t('camera.finalizing'),
     exporting: t('camera.exporting'),
+    capturing: t('camera.capturing'),
     idle: '',
     recording: '',
   }
@@ -117,15 +121,23 @@ export function CameraScreen({
     thermal: t('camera.thermal'),
     interruption: t('camera.interruption'),
     focusUnavailable: t('camera.focusUnavailable'),
+    partialPhotoSave: t('camera.partialPhotoSave'),
+  }
+  const permissionTitle = photoMode ? t('camera.photoPermissionTitle') : t('camera.permissionTitle')
+  const permissionBody = photoMode ? t('camera.photoPermissionBody') : t('camera.permissionBody')
+  const flashLabels = {
+    off: t('camera.flash.off'),
+    auto: t('camera.flash.auto'),
+    on: t('camera.flash.on'),
   }
   if (!recorder.authorized)
     return (
       <View style={styles.permission}>
         <Text variant="title" weight="bold" align="center">
-          {t('camera.permissionTitle')}
+          {permissionTitle}
         </Text>
         <Text tone="secondary" align="center">
-          {t('camera.permissionBody')}
+          {permissionBody}
         </Text>
         <Button
           onPress={() => {
@@ -155,8 +167,9 @@ export function CameraScreen({
             accessibilityLabel={t('camera.cameraOptions')}
             style={styles.profile}>
             <Text variant="label" weight="semibold" numberOfLines={1}>
-              {RESOLUTION_LABELS[settings.longEdge]} · {settings.fps} ·{' '}
-              {settings.container.toUpperCase()}
+              {photoMode
+                ? t('camera.photoProfile')
+                : `${RESOLUTION_LABELS[settings.longEdge]} · ${settings.fps} · ${settings.container.toUpperCase()}`}
             </Text>
           </Pressable>
         </View>
@@ -231,33 +244,76 @@ export function CameraScreen({
           </View>
           <View style={styles.controls}>
             <View style={styles.controlGroup}>
-              <Pressable
-                style={[
-                  styles.controlButton,
-                  styles.torch,
-                  (switching || !recorder.ready || !recorder.device?.hasTorch) &&
-                    styles.torchUnavailable,
-                ]}
-                accessibilityRole="button"
-                accessibilityLabel={t('camera.torch')}
-                accessibilityState={{
-                  selected: recorder.torchEnabled,
-                  disabled: switching || !recorder.ready || !recorder.device?.hasTorch,
-                }}
-                disabled={switching || !recorder.ready || !recorder.device?.hasTorch}
-                onPress={() => {
-                  void recorder.torch(!recorder.torchEnabled)
-                }}>
-                {recorder.torchEnabled ? (
-                  <LightningIcon
-                    size={iconSizes.md}
-                    weight="fill"
-                    color={theme.colors.primary.main}
-                  />
-                ) : (
-                  <LightningSlashIcon size={iconSizes.md} color={theme.colors.text.primary} />
-                )}
-              </Pressable>
+              {photoMode ? (
+                <Pressable
+                  style={[
+                    styles.controlButton,
+                    styles.torch,
+                    (switching ||
+                      !recorder.ready ||
+                      settings.mode === 'dual' ||
+                      settings.front ||
+                      !recorder.device?.hasFlash) &&
+                      styles.torchUnavailable,
+                  ]}
+                  accessibilityRole="button"
+                  accessibilityLabel={t('camera.flashMode', {
+                    mode: flashLabels[photoFlashMode],
+                  })}
+                  disabled={
+                    switching ||
+                    !recorder.ready ||
+                    settings.mode === 'dual' ||
+                    settings.front ||
+                    !recorder.device?.hasFlash
+                  }
+                  onPress={() => {
+                    const modes = ['off', 'auto', 'on'] as const
+                    setPhotoFlashMode(modes[(modes.indexOf(photoFlashMode) + 1) % modes.length])
+                  }}>
+                  {photoFlashMode === 'off' ? (
+                    <LightningSlashIcon size={iconSizes.md} color={theme.colors.text.primary} />
+                  ) : (
+                    <LightningIcon
+                      size={iconSizes.md}
+                      weight={photoFlashMode === 'on' ? 'fill' : 'regular'}
+                      color={
+                        photoFlashMode === 'on'
+                          ? theme.colors.primary.main
+                          : theme.colors.text.primary
+                      }
+                    />
+                  )}
+                </Pressable>
+              ) : (
+                <Pressable
+                  style={[
+                    styles.controlButton,
+                    styles.torch,
+                    (switching || !recorder.ready || !recorder.device?.hasTorch) &&
+                      styles.torchUnavailable,
+                  ]}
+                  accessibilityRole="button"
+                  accessibilityLabel={t('camera.torch')}
+                  accessibilityState={{
+                    selected: recorder.torchEnabled,
+                    disabled: switching || !recorder.ready || !recorder.device?.hasTorch,
+                  }}
+                  disabled={switching || !recorder.ready || !recorder.device?.hasTorch}
+                  onPress={() => {
+                    void recorder.torch(!recorder.torchEnabled)
+                  }}>
+                  {recorder.torchEnabled ? (
+                    <LightningIcon
+                      size={iconSizes.md}
+                      weight="fill"
+                      color={theme.colors.primary.main}
+                    />
+                  ) : (
+                    <LightningSlashIcon size={iconSizes.md} color={theme.colors.text.primary} />
+                  )}
+                </Pressable>
+              )}
               <Pressable
                 accessibilityRole="button"
                 accessibilityLabel={t('camera.toggleZoom', { zoom: nextZoom })}
@@ -275,14 +331,34 @@ export function CameraScreen({
             </View>
             <Pressable
               accessibilityRole="button"
-              accessibilityLabel={recording ? t('camera.stop') : t('camera.record')}
-              disabled={!recording && (switching || !idle || !recorder.ready || !!recorder.error)}
+              accessibilityLabel={
+                photoMode
+                  ? t('camera.takePhoto')
+                  : recording
+                    ? t('camera.stop')
+                    : t('camera.record')
+              }
+              disabled={
+                !recording &&
+                (switching ||
+                  !idle ||
+                  !recorder.ready ||
+                  recorder.mediaType !== mediaType ||
+                  !!recorder.error)
+              }
               onPress={() => {
-                if (recording) void recorder.stop()
-                else void recorder.start()
+                if (photoMode) void recorder.takePhoto()
+                else if (recording) void recorder.stopVideo()
+                else void recorder.startVideo()
               }}
               style={[styles.record, !idle && !recording && styles.dim]}>
-              <View style={[styles.recordInner, recording && styles.stop]} />
+              <View
+                style={[
+                  styles.recordInner,
+                  photoMode && styles.photoShutter,
+                  recording && styles.stop,
+                ]}
+              />
             </Pressable>
             <View style={styles.controlGroup}>
               <IconButton
@@ -296,7 +372,7 @@ export function CameraScreen({
               <IconButton
                 icon={LAYOUT_ICONS[layout]}
                 style={styles.controlButton}
-                disabled={switching}
+                disabled={!idle || switching}
                 accessibilityLabel={t('camera.previewLayout', {
                   layout: layoutLabels[layout],
                 })}
@@ -320,7 +396,12 @@ export function CameraScreen({
           </View>
         </View>
       </View>
-      <RecordingOptions recorder={recorder} visible={options} onClose={() => setOptions(false)} />
+      <RecordingOptions
+        mediaType={mediaType}
+        recorder={recorder}
+        visible={options}
+        onClose={() => setOptions(false)}
+      />
     </View>
   )
 }
@@ -419,7 +500,7 @@ const createStyles = createThemedStyles((theme) => ({
     height: theme.spacing['7xl'],
     borderRadius: theme.borderRadius.full,
     borderWidth: theme.spacing.xs,
-    borderColor: theme.colors.text.primary,
+    borderColor: cameraColors.shutter,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -429,6 +510,7 @@ const createStyles = createThemedStyles((theme) => ({
     borderRadius: theme.borderRadius.full,
     backgroundColor: theme.colors.status.error,
   },
+  photoShutter: { backgroundColor: cameraColors.shutter },
   stop: {
     width: theme.spacing['3xl'],
     height: theme.spacing['3xl'],

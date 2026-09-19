@@ -1,15 +1,19 @@
 import { useSnackbarState } from '@shared/core/stores/features/snackbar'
+import { File } from 'expo-file-system'
 import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake'
 import * as ScreenOrientation from 'expo-screen-orientation'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AppState, Platform } from 'react-native'
+import type { Image as NitroImage } from 'react-native-nitro-image'
 import { NitroModules } from 'react-native-nitro-modules'
 import {
   type CameraController,
   type CameraDevice,
   type CameraOutput,
+  type CameraPhotoOutput,
   type CameraSession,
+  CommonResolutions,
   type Constraint,
   VisionCamera,
 } from 'react-native-vision-camera'
@@ -19,25 +23,29 @@ import { useCameraState } from '@/stores/features/camera'
 
 import type { DualOutputFactory } from '../../../modules/dual-recorder/src/DualOutputFactory.nitro'
 import NativeRecorder from '../../../modules/dual-recorder/src/DualRecorderModule'
-import { allocateTake, exportTake, hydrateProjects, saveTake, thumbnailFile } from './projects'
+import { allocateMedia, exportMedia, hydrateProjects, saveMedia, thumbnailFile } from './projects'
 import {
+  cropSize,
+  type MediaType,
   type NativeCapabilities,
   type NativeRecordingResult,
   type OutputKind,
   outputSize,
+  type PhotoCapture,
+  type PhotoOutput,
   type RecorderStats,
   type RecordingSettings,
-  type Take,
+  type VideoCapture,
 } from './types'
 
 const WAKE_TAG = 'dualzen-recording'
 const factory = () => NitroModules.createHybridObject<DualOutputFactory>('DualOutputFactory')
 type ControlKind = 'zoom' | 'exposure' | 'torch'
 type ControlQueue = { running: boolean; pending: (() => Promise<void>) | null }
-export function useRecorder(active: boolean) {
+export function useCaptureController(active: boolean, mediaType: MediaType) {
   const { t } = useTranslation()
   const { showSnackbar } = useSnackbarState()
-  const { settings, phase } = useCameraState()
+  const { settings, phase, photoFlashMode } = useCameraState()
   const [devices, setDevices] = useState<CameraDevice[]>([])
   const [pairs, setPairs] = useState<CameraDevice[][]>([])
   const [capabilities, setCapabilities] = useState<NativeCapabilities>({ hdr: false, mov: false })
@@ -52,7 +60,8 @@ export function useRecorder(active: boolean) {
   const [notice, setNotice] = useState<string | null>(null)
   const [ready, setReady] = useState(false)
   const [readyDeviceId, setReadyDeviceId] = useState<string | null>(null)
-  const [authorized, setAuthorized] = useState(false)
+  const [cameraAuthorized, setCameraAuthorized] = useState(false)
+  const [microphoneAuthorized, setMicrophoneAuthorized] = useState(false)
   const [zoom, setZoomLabel] = useState(1)
   const [zoomRange, setZoomRange] = useState({ min: 1, max: 1 })
   const [focusLocked, setFocusLocked] = useState(false)
@@ -95,6 +104,7 @@ export function useRecorder(active: boolean) {
   })
   const focusSequence = useRef(0)
   const outputs = useRef<CameraOutput[]>([])
+  const photoOutputs = useRef<CameraPhotoOutput[]>([])
   const metadata = useRef<{
     id: string
     settings: RecordingSettings
@@ -130,12 +140,15 @@ export function useRecorder(active: boolean) {
   const permission = useCallback(async () => {
     try {
       const camera = await VisionCamera.requestCameraPermission()
-      const microphone = camera && (await VisionCamera.requestMicrophonePermission())
-      setAuthorized(camera && microphone)
+      setCameraAuthorized(camera)
+      if (mediaType === 'video') {
+        const microphone = camera && (await VisionCamera.requestMicrophonePermission())
+        setMicrophoneAuthorized(microphone)
+      }
     } catch (cause) {
       setError(String(cause))
     }
-  }, [])
+  }, [mediaType])
   useEffect(() => {
     void hydrateProjects().catch((cause) => setError(String(cause)))
     void NativeRecorder.capabilities()
@@ -178,16 +191,15 @@ export function useRecorder(active: boolean) {
         listener = source.addOnCameraDevicesChangedListener(setDevices)
       })
       .catch((cause) => setError(String(cause)))
-    if (
-      VisionCamera.cameraPermissionStatus === 'authorized' &&
-      VisionCamera.microphonePermissionStatus === 'authorized'
-    )
-      setAuthorized(true)
+    setCameraAuthorized(VisionCamera.cameraPermissionStatus === 'authorized')
+    setMicrophoneAuthorized(VisionCamera.microphonePermissionStatus === 'authorized')
     return () => {
       cancelled = true
       listener?.remove()
     }
   }, [])
+
+  const authorized = cameraAuthorized && (mediaType === 'photo' || microphoneAuthorized)
 
   const configuration = useCallback(
     (output: CameraOutput, candidate: RecordingSettings): Constraint[] => {
@@ -277,8 +289,9 @@ export function useRecorder(active: boolean) {
       const task = (async () => {
         useAppStore.getState().camera.setPhase('finalizing')
         try {
-          const take: Take = {
+          const video: VideoCapture = {
             ...meta,
+            mediaType: 'video',
             duration: result.duration,
             outputs: result.outputs,
             trim: null,
@@ -286,19 +299,19 @@ export function useRecorder(active: boolean) {
             reason: result.reason,
             ...(result.error ? { error: result.error } : {}),
           }
-          if (take.outputs.some((output) => output.ready)) {
-            await saveTake(take)
-            const output = take.outputs.find((item) => item.ready)!
-            const source = allocateExistingVideo(take, output.filename)
-            await NativeRecorder.thumbnail(source, thumbnailFile(take.id).uri).catch(() => {})
-            if (take.outputs.every((item) => item.ready) && !take.error) {
+          if (video.outputs.some((output) => output.ready)) {
+            await saveMedia(video)
+            const output = video.outputs.find((item) => item.ready)!
+            const source = allocateExistingVideo(video, output.filename)
+            await NativeRecorder.thumbnail(source, thumbnailFile(video.id).uri).catch(() => {})
+            if (video.outputs.every((item) => item.ready) && !video.error) {
               showSnackbar({ title: t('camera.saved'), variant: 'success' })
             } else setNotice('partialSave')
             useAppStore.getState().camera.setPhase('idle')
-            if (useAppStore.getState().camera.autoExport) {
-              const exported = await exportTake(
-                take,
-                take.outputs.filter((item) => item.ready).map((item) => item.kind)
+            if (useAppStore.getState().camera.autoSaveToLibrary) {
+              const exported = await exportMedia(
+                video,
+                video.outputs.filter((item) => item.ready).map((item) => item.kind)
               )
               if (exported.some((item) => item.error)) setNotice('exportFailed')
             }
@@ -397,7 +410,7 @@ export function useRecorder(active: boolean) {
     const setup = lifecycle.current
       .then(async () => {
         if (cancelled) return
-        if (!(await checkSettings(captureSettings))) {
+        if (mediaType === 'video' && !(await checkSettings(captureSettings))) {
           // A default stabilization preference may be unavailable on the selected camera.
           if (
             captureSettings.stabilization &&
@@ -416,14 +429,26 @@ export function useRecorder(active: boolean) {
         const recordingOutputs = source.map((_, index) =>
           factory().createOutput(
             captureSettings.mode === 'dual' ? index + 1 : 0,
-            captureSettings.longEdge,
-            captureSettings.hdr
+            mediaType === 'video' ? captureSettings.longEdge : 1920,
+            mediaType === 'video' && captureSettings.hdr
           )
         )
-        recordingOutputs.forEach((output) => {
+        const stillOutputs =
+          mediaType === 'photo'
+            ? source.map(() =>
+                VisionCamera.createPhotoOutput({
+                  targetResolution: CommonResolutions.UHD_4_3,
+                  containerFormat: 'jpeg',
+                  quality: 0.9,
+                  qualityPrioritization: 'quality',
+                })
+              )
+            : []
+        ;[...recordingOutputs, ...stillOutputs].forEach((output) => {
           output.outputOrientation = orientation.currentOrientation ?? 'up'
         })
         outputs.current = recordingOutputs
+        photoOutputs.current = stillOutputs
         subscriptions.push(
           localSession.addOnErrorListener((cause) => {
             setError(cause.message)
@@ -439,9 +464,13 @@ export function useRecorder(active: boolean) {
         const controls = await localSession.configure(
           source.map((input, index) => ({
             input,
-            outputs: [{ output: recordingOutputs[index], mirrorMode: 'off' as const }],
-            constraints: configuration(recordingOutputs[index], captureSettings),
+            outputs: [recordingOutputs[index], stillOutputs[index]]
+              .filter((output): output is CameraOutput => output !== undefined)
+              .map((output) => ({ output, mirrorMode: 'off' as const })),
+            constraints:
+              mediaType === 'video' ? configuration(recordingOutputs[index], captureSettings) : [],
             onSessionConfigSelected: (selected) => {
+              if (mediaType !== 'video') return
               const stabilization =
                 Platform.OS === 'android'
                   ? selected.selectedPreviewStabilizationMode
@@ -464,7 +493,7 @@ export function useRecorder(active: boolean) {
           await localSession.stop()
           return
         }
-        recordingOutputs.forEach((output) => {
+        ;[...recordingOutputs, ...stillOutputs].forEach((output) => {
           output.outputOrientation = orientation.currentOrientation ?? 'up'
         })
         controllers.current = controls
@@ -493,10 +522,11 @@ export function useRecorder(active: boolean) {
         )
         session.current = localSession
         orientation.startOrientationUpdates((value) => {
-          if (useAppStore.getState().camera.phase === 'idle')
-            recordingOutputs.forEach((output) => {
+          if (useAppStore.getState().camera.phase === 'idle') {
+            ;[...recordingOutputs, ...stillOutputs].forEach((output) => {
               output.outputOrientation = value
             })
+          }
         })
         await localSession.start()
         if (!cancelled) {
@@ -520,6 +550,7 @@ export function useRecorder(active: boolean) {
       if (session.current === localSession) {
         session.current = null
         controllers.current = []
+        photoOutputs.current = []
       }
       lifecycle.current = setup
         .then(async () => {
@@ -532,10 +563,26 @@ export function useRecorder(active: boolean) {
         .catch(() => {})
     }
     // Settings are frozen throughout a take. Orientation and controls do not recreate this session.
-  }, [active, authorized, device, pairs, captureSettings, configuration, checkSettings, stop])
+  }, [
+    active,
+    authorized,
+    device,
+    pairs,
+    captureSettings,
+    configuration,
+    checkSettings,
+    stop,
+    mediaType,
+  ])
 
-  const start = async () => {
-    if (!ready || error || handling.current || useAppStore.getState().camera.phase !== 'idle')
+  const startVideo = async () => {
+    if (
+      mediaType !== 'video' ||
+      !ready ||
+      error ||
+      handling.current ||
+      useAppStore.getState().camera.phase !== 'idle'
+    )
       return
     useAppStore.getState().camera.setPhase('preparing')
     setNotice(null)
@@ -552,7 +599,7 @@ export function useRecorder(active: boolean) {
       await ScreenOrientation.lockAsync(lock)
       await activateKeepAwakeAsync(WAKE_TAG)
       if (AppState.currentState !== 'active') throw new Error('interruption')
-      const allocation = allocateTake()
+      const allocation = allocateMedia()
       metadata.current = {
         id: allocation.id,
         settings: { ...settings },
@@ -581,6 +628,143 @@ export function useRecorder(active: boolean) {
       setError(String(cause))
       useAppStore.getState().camera.setPhase('idle')
       await releaseLocks()
+    }
+  }
+  const takePhoto = async () => {
+    if (
+      mediaType !== 'photo' ||
+      !ready ||
+      error ||
+      handling.current ||
+      !photoOutputs.current.length ||
+      useAppStore.getState().camera.phase !== 'idle'
+    )
+      return
+    useAppStore.getState().camera.setPhase('capturing')
+    setNotice(null)
+    const allocation = allocateMedia()
+    try {
+      const selectedFlash =
+        settings.mode === 'single' && !settings.front && device?.hasFlash ? photoFlashMode : 'off'
+      const captures = await Promise.allSettled(
+        photoOutputs.current.map((output) =>
+          output.capturePhoto(
+            {
+              flashMode: selectedFlash,
+              enableShutterSound: true,
+              enableDistortionCorrection: false,
+            },
+            {}
+          )
+        )
+      )
+      useAppStore.getState().camera.setPhase('finalizing')
+      const positions = {
+        portrait: settings.front ? 1 - settings.portraitPosition : settings.portraitPosition,
+        landscape: settings.front ? 1 - settings.landscapePosition : settings.landscapePosition,
+      }
+      const photoResults: PhotoOutput[] = []
+      if (settings.mode === 'single') {
+        const capture = captures[0]
+        if (capture?.status === 'fulfilled') {
+          let image: NitroImage | null = null
+          try {
+            image = await capture.value.toImageAsync()
+            for (const kind of ['portrait', 'landscape'] as const) {
+              try {
+                photoResults.push(
+                  await savePhotoOutput(
+                    image,
+                    allocation.directory,
+                    kind,
+                    positions[kind],
+                    !thumbnailFile(allocation.id).exists
+                  )
+                )
+              } catch (cause) {
+                photoResults.push(failedPhotoOutput(kind, cause))
+              }
+            }
+          } finally {
+            image?.dispose()
+            capture.value.dispose()
+          }
+        } else {
+          photoResults.push(failedPhotoOutput('portrait', capture?.reason))
+          photoResults.push(failedPhotoOutput('landscape', capture?.reason))
+        }
+      } else {
+        for (const [index, kind] of (['portrait', 'landscape'] as const).entries()) {
+          const capture = captures[index]
+          if (capture?.status !== 'fulfilled') {
+            photoResults.push(failedPhotoOutput(kind, capture?.reason))
+            continue
+          }
+          let image: NitroImage | null = null
+          try {
+            image = await capture.value.toImageAsync()
+            photoResults.push(
+              await savePhotoOutput(
+                image,
+                allocation.directory,
+                kind,
+                positions[kind],
+                !thumbnailFile(allocation.id).exists
+              )
+            )
+          } catch (cause) {
+            photoResults.push(failedPhotoOutput(kind, cause))
+          } finally {
+            image?.dispose()
+            capture.value.dispose()
+          }
+        }
+      }
+      if (!photoResults.some((output) => output.ready)) {
+        if (allocation.directory.exists) allocation.directory.delete()
+        throw new Error(
+          photoResults.find((output) => output.error)?.error ?? 'Photo capture failed'
+        )
+      }
+      const photo: PhotoCapture = {
+        id: allocation.id,
+        projectId: useAppStore.getState().projects.selectedProjectId,
+        createdAt: Date.now(),
+        mediaType: 'photo',
+        settings: {
+          mode: settings.mode,
+          front: settings.front,
+          deviceId: settings.deviceId,
+          pairIndex: settings.pairIndex,
+          portraitPosition: settings.portraitPosition,
+          landscapePosition: settings.landscapePosition,
+          container: 'jpeg',
+          quality: 0.9,
+          targetResolution: CommonResolutions.UHD_4_3,
+          flashMode: selectedFlash,
+        },
+        outputs: photoResults,
+        exports: [],
+        ...(photoResults.some((output) => !output.ready)
+          ? { error: photoResults.find((output) => output.error)?.error ?? 'Partial photo capture' }
+          : {}),
+      }
+      await saveMedia(photo)
+      if (photo.outputs.every((output) => output.ready))
+        showSnackbar({ title: t('camera.photoSaved'), variant: 'success' })
+      else setNotice('partialPhotoSave')
+      useAppStore.getState().camera.setPhase('idle')
+      if (useAppStore.getState().camera.autoSaveToLibrary) {
+        const exported = await exportMedia(
+          photo,
+          photo.outputs.filter((output) => output.ready).map((output) => output.kind)
+        )
+        if (exported.some((item) => item.error)) setNotice('exportFailed')
+      }
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : String(cause))
+    } finally {
+      useAppStore.getState().camera.setPhase('idle')
     }
   }
   const updateControl = async (kind: ControlKind, work: () => Promise<void>) => {
@@ -751,9 +935,16 @@ export function useRecorder(active: boolean) {
     })
   const sources =
     settings.mode === 'dual' ? [stats.source1, stats.source2] : [stats.source0, stats.source0]
-  const sizes = sources.map((source, index) =>
-    source ? outputSize(source, index === 0 ? 'portrait' : 'landscape', settings.longEdge) : null
-  )
+  const sizes =
+    mediaType === 'photo'
+      ? (['portrait', 'landscape'] as const).map((kind) =>
+          cropSize(CommonResolutions.UHD_4_3, kind)
+        )
+      : sources.map((source, index) =>
+          source
+            ? outputSize(source, index === 0 ? 'portrait' : 'landscape', settings.longEdge)
+            : null
+        )
   const bytesPerSecond =
     ((sizes.reduce(
       (total, size) =>
@@ -772,6 +963,7 @@ export function useRecorder(active: boolean) {
   )
   return {
     settings,
+    mediaType,
     phase,
     ready,
     readyDeviceId,
@@ -800,15 +992,74 @@ export function useRecorder(active: boolean) {
     torch,
     torchEnabled,
     exposure,
-    start,
-    stop,
+    startVideo,
+    stopVideo: stop,
+    takePhoto,
     checkSettings,
     remaining,
     bytesPerSecond,
     clearError: () => setError(null),
   }
 }
-function allocateExistingVideo(take: Take, filename: string) {
-  return thumbnailFile(take.id).parentDirectory.uri + filename
+function allocateExistingVideo(video: VideoCapture, filename: string) {
+  return thumbnailFile(video.id).parentDirectory.uri + filename
 }
-export type RecorderController = ReturnType<typeof useRecorder>
+
+function failedPhotoOutput(kind: OutputKind, cause: unknown): PhotoOutput {
+  return {
+    kind,
+    filename: `${kind}.jpg`,
+    width: 0,
+    height: 0,
+    bytes: 0,
+    ready: false,
+    error: cause instanceof Error ? cause.message : String(cause ?? 'Photo capture failed'),
+  }
+}
+
+async function savePhotoOutput(
+  image: NitroImage,
+  directory: ReturnType<typeof allocateMedia>['directory'],
+  kind: OutputKind,
+  position: number,
+  createThumbnail: boolean
+): Promise<PhotoOutput> {
+  const { width, height } = cropSize(image, kind)
+  const p = Math.max(0, Math.min(1, position))
+  const x = (image.width - width) * p
+  const y = (image.height - height) * (1 - p)
+  const cropped = await image.cropAsync(x, y, x + width, y + height)
+  try {
+    const filename = `${kind}.jpg`
+    const destination = new File(directory, filename)
+    await cropped.saveToFileAsync(filePath(destination.uri), 'jpg', 90)
+    if (createThumbnail) {
+      const scale = Math.min(1, 480 / Math.max(cropped.width, cropped.height))
+      const thumbnail = await cropped.resizeAsync(
+        Math.max(1, Math.round(cropped.width * scale)),
+        Math.max(1, Math.round(cropped.height * scale))
+      )
+      try {
+        await thumbnail.saveToFileAsync(filePath(thumbnailFile(directory.name).uri), 'jpg', 80)
+      } finally {
+        thumbnail.dispose()
+      }
+    }
+    return {
+      kind,
+      filename,
+      width: cropped.width,
+      height: cropped.height,
+      bytes: destination.size,
+      ready: true,
+    }
+  } finally {
+    cropped.dispose()
+  }
+}
+
+function filePath(uri: string) {
+  return decodeURIComponent(uri.replace(/^file:\/\//, ''))
+}
+
+export type CaptureController = ReturnType<typeof useCaptureController>

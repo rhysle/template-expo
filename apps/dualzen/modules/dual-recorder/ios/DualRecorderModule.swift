@@ -54,12 +54,13 @@ public class DualRecorderModule: Module {
     AsyncFunction("writeManifest") { (uri: String, content: String) throws -> Void in
       try Data(content.utf8).write(to: Self.localURL(uri), options: .atomic)
     }
-    AsyncFunction("exportVideo") { (uri: String, start: Double, end: Double) async throws -> String in
+    AsyncFunction("exportMedia") { (uri: String, mediaType: String, start: Double, end: Double) async throws -> String in
+      guard mediaType == "video" || mediaType == "photo" else { throw CaptureError(message: "Unsupported media type") }
       let source = try Self.localURL(uri)
       var export = source
       let temporary = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + "." + source.pathExtension)
       defer { try? FileManager.default.removeItem(at: temporary) }
-      if start >= 0 {
+      if mediaType == "video" && start >= 0 {
         guard start.isFinite, end.isFinite, end > start else { throw CaptureError(message: "Invalid trim range") }
         let asset = AVURLAsset(url: source)
         guard let session = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetPassthrough) else { throw CaptureError(message: "Passthrough trimming unavailable") }
@@ -75,7 +76,9 @@ public class DualRecorderModule: Module {
       return try await withCheckedThrowingContinuation { continuation in
         var identifier = ""
         PHPhotoLibrary.shared().performChanges({
-          let request = PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: url)
+          let request = mediaType == "video"
+            ? PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: url)
+            : PHAssetChangeRequest.creationRequestForAssetFromImage(atFileURL: url)
           identifier = request?.placeholderForCreatedAsset?.localIdentifier ?? ""
         }, completionHandler: { success, error in
           if success, !identifier.isEmpty { continuation.resume(returning: identifier) }
@@ -99,7 +102,7 @@ public class DualRecorderModule: Module {
     }
   }
   private static func localURL(_ uri: String) throws -> URL {
-    guard let url = URL(string: uri), url.isFileURL else { throw CaptureError(message: "Invalid local video") }
+    guard let url = URL(string: uri), url.isFileURL else { throw CaptureError(message: "Invalid local media") }
     let root = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].standardizedFileURL.path
     guard url.standardizedFileURL.path.hasPrefix(root + "/DualZen/") else { throw CaptureError(message: "File is outside project storage") }
     return url

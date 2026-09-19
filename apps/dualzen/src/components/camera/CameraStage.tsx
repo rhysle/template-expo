@@ -14,7 +14,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 
-import type { RecorderController } from '@/services/camera/useRecorder'
+import type { CaptureController } from '@/services/camera/useRecorder'
 import { useCameraState } from '@/stores/features/camera'
 import { cameraColors, createThemedStyles, useTheme, useThemedStyles } from '@/theme'
 
@@ -33,7 +33,7 @@ export function CameraStage({
   switchProgress,
   children,
 }: {
-  recorder: RecorderController
+  recorder: CaptureController
   layout: PreviewLayout
   topInset: number
   bottomInset: number

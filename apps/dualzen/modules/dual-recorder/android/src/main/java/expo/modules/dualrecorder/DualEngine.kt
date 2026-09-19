@@ -310,15 +310,15 @@ gl_FragColor=texture2D(uTexture,(uMatrix*vec4(p,0.0,1.0)).xy); }"""
       // Persist finalized files before the JS runtime handles the completion event.
       val result=JSONObject(lastResult)
       try {
-        val take=JSONObject().put("id",config.getString("id")).put("projectId",config.optString("projectId","default"))
+        val media=JSONObject().put("id",config.getString("id")).put("projectId",config.optString("projectId","default")).put("mediaType","video")
           .put("createdAt",config.optLong("createdAt")).put("settings",config.getJSONObject("settings")).put("duration",duration)
           .put("outputs",outputs).put("trim",JSONObject.NULL).put("exports",JSONArray()).put("reason",reason)
           .apply { failure?.let { put("error",it) } }
         val manifest=android.util.AtomicFile(File(localFile(config.getString("directory")),"manifest.json"))
         val stream=manifest.startWrite()
-        try { stream.write(take.toString().toByteArray(Charsets.UTF_8));manifest.finishWrite(stream) }
+        try { stream.write(media.toString().toByteArray(Charsets.UTF_8));manifest.finishWrite(stream) }
         catch(t: Throwable){manifest.failWrite(stream);throw t}
-      }catch(t: Throwable){result.put("error","Take metadata could not be saved: ${t.message}")}
+      }catch(t: Throwable){result.put("error","Media metadata could not be saved: ${t.message}")}
       lastResult=result.toString()
       sinks.clear();stopping=false;startNs=0
       val callbacks=completions.toList();completions.clear();callbacks.forEach { it() };onStopped?.invoke(lastResult)

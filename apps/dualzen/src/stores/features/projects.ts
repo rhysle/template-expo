@@ -1,19 +1,19 @@
 import type { SliceConfig } from '@shared/core/stores/slices/types'
 import { useShallow } from 'zustand/react/shallow'
 
-import { DEFAULT_PROJECT_ID, type Project, type Take } from '@/services/camera/types'
+import { DEFAULT_PROJECT_ID, type Project, type ProjectMedia } from '@/services/camera/types'
 
 import { getUseAppStore } from '../slices/types'
 
 interface ProjectsSlice {
   projects: Project[]
-  takes: Take[]
+  media: ProjectMedia[]
   selectedProjectId: string
   selectProject: (id: string) => void
   putProject: (project: Project) => void
   removeProject: (id: string) => void
-  putTake: (take: Take) => void
-  removeTake: (id: string) => void
+  putMedia: (media: ProjectMedia) => void
+  removeMedia: (id: string) => void
 }
 declare global {
   interface AppSlices {
@@ -23,7 +23,7 @@ declare global {
 export const sliceConfig = {
   create: (set: (updater: (state: ProjectsSlice) => void) => void): ProjectsSlice => ({
     projects: [{ id: DEFAULT_PROJECT_ID, name: null, createdAt: 0 }],
-    takes: [],
+    media: [],
     selectedProjectId: DEFAULT_PROJECT_ID,
     selectProject: (id) =>
       set((state) => {
@@ -39,18 +39,18 @@ export const sliceConfig = {
       set((state) => {
         if (id === DEFAULT_PROJECT_ID) return
         state.projects = state.projects.filter((project) => project.id !== id)
-        state.takes = state.takes.filter((take) => take.projectId !== id)
+        state.media = state.media.filter((media) => media.projectId !== id)
         if (state.selectedProjectId === id) state.selectedProjectId = DEFAULT_PROJECT_ID
       }),
-    putTake: (take) =>
+    putMedia: (media) =>
       set((state) => {
-        const index = state.takes.findIndex((item) => item.id === take.id)
-        if (index < 0) state.takes.unshift(take)
-        else state.takes[index] = take
+        const index = state.media.findIndex((item) => item.id === media.id)
+        if (index < 0) state.media.unshift(media)
+        else state.media[index] = media
       }),
-    removeTake: (id) =>
+    removeMedia: (id) =>
       set((state) => {
-        state.takes = state.takes.filter((take) => take.id !== id)
+        state.media = state.media.filter((media) => media.id !== id)
       }),
   }),
   persistExcludeKeys: [],

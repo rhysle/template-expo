@@ -1,17 +1,19 @@
 import { Button, SegmentedControl, Slider, Text } from '@shared/core/components/base'
 import { randomUUID } from 'expo-crypto'
+import { Image } from 'expo-image'
 import { useVideoPlayer, VideoView } from 'expo-video'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Alert, Image, Modal, Pressable, ScrollView, TextInput, View } from 'react-native'
+import { Alert, Modal, Pressable, ScrollView, TextInput, View } from 'react-native'
 
 import {
+  deleteMedia,
   deleteProject,
-  deleteTake,
-  exportTake,
+  exportMedia,
+  mediaFile,
   mutateProjects,
+  saveMedia,
   saveProject,
-  saveTake,
   thumbnailFile,
   videoFile,
 } from '@/services/camera/projects'
@@ -19,28 +21,38 @@ import {
   DEFAULT_PROJECT_ID,
   type ExportResult,
   formatDuration,
+  type MediaType,
   type OutputKind,
+  type PhotoCapture,
+  type ProjectMedia,
   sharedCutPoints,
   snapTrim,
-  type Take,
+  type VideoCapture,
 } from '@/services/camera/types'
 import { useCameraState } from '@/stores/features/camera'
 import { useProjectsState } from '@/stores/features/projects'
 import { createThemedStyles, useThemedStyles } from '@/theme'
 
+type MediaFilter = 'all' | MediaType
+
 export function ProjectsScreen() {
   const { t } = useTranslation()
   const styles = useThemedStyles(createStyles)
-  const { projects, takes, selectedProjectId, selectProject } = useProjectsState()
+  const { projects, media, selectedProjectId, selectProject } = useProjectsState()
   const { phase } = useCameraState()
-  const [selectedTake, setSelectedTake] = useState<string | null>(null)
+  const [filter, setFilter] = useState<MediaFilter>('all')
+  const [selectedMedia, setSelectedMedia] = useState<string | null>(null)
   const [editor, setEditor] = useState<{ id: string; name: string; createdAt: number } | null>(null)
   const [failure, setFailure] = useState(false)
   const project = projects.find((item) => item.id === selectedProjectId)!
-  const selected = takes.find((item) => item.id === selectedTake)
-  const items = takes.filter((item) => item.projectId === selectedProjectId)
+  const selected = media.find((item) => item.id === selectedMedia)
+  const projectMedia = media
+    .filter((item) => item.projectId === selectedProjectId)
+    .sort((a, b) => b.createdAt - a.createdAt)
+  const items = projectMedia.filter((item) => filter === 'all' || item.mediaType === filter)
   const guard = async (action: () => Promise<unknown>) => {
     try {
+      setFailure(false)
       await mutateProjects(action)
     } catch {
       setFailure(true)
@@ -86,9 +98,20 @@ export function ProjectsScreen() {
           </Pressable>
         ))}
       </ScrollView>
+      <View style={styles.filter}>
+        <SegmentedControl
+          value={filter}
+          onValueChange={(value) => setFilter(value as MediaFilter)}
+          options={[
+            { value: 'all', label: t('projects.filters.all') },
+            { value: 'photo', label: t('projects.filters.photos') },
+            { value: 'video', label: t('projects.filters.videos') },
+          ]}
+        />
+      </View>
       <View style={styles.actions}>
         <Text tone="muted" style={styles.grow}>
-          {t('projects.videos', { count: items.length })}
+          {t('projects.items', { count: items.length })}
         </Text>
         <Button
           size="sm"
@@ -112,89 +135,125 @@ export function ProjectsScreen() {
         {!items.length && (
           <View style={styles.empty}>
             <Text variant="subtitle">{t('projects.emptyTitle')}</Text>
-            <Text tone="muted">{t('projects.emptyBody')}</Text>
+            <Text tone="muted">
+              {projectMedia.length ? t('projects.emptyFilterBody') : t('projects.emptyBody')}
+            </Text>
           </View>
         )}
-        {items.map((take) => (
-          <Pressable
-            accessibilityRole="button"
-            key={take.id}
-            onPress={() => setSelectedTake(take.id)}
-            style={styles.take}>
-            <Image source={{ uri: thumbnailFile(take.id).uri }} style={styles.thumbnail} />
-            <View style={styles.grow}>
-              <Text weight="semibold">
-                {t('projects.take', { date: new Date(take.createdAt).toLocaleString() })}
-              </Text>
-              <Text variant="caption" tone="muted">
-                {formatDuration(take.duration)} · {take.settings.fps} FPS ·{' '}
-                {take.settings.container.toUpperCase()}
-              </Text>
-              <Text variant="caption" tone="muted">
-                {t('projects.size', {
-                  amount: (
-                    take.outputs.reduce((sum, output) => sum + output.bytes, 0) / 1048576
-                  ).toFixed(1),
-                })}
-              </Text>
-              {(take.error || take.outputs.some((output) => !output.ready)) && (
-                <Text variant="caption" tone="accent">
-                  {t('projects.incomplete')}
-                </Text>
-              )}
-            </View>
-          </Pressable>
+        {items.map((item) => (
+          <MediaCard key={item.id} media={item} onPress={() => setSelectedMedia(item.id)} />
         ))}
       </ScrollView>
-      <Modal
-        visible={editor !== null}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setEditor(null)}
-        supportedOrientations={['portrait', 'landscape-left', 'landscape-right']}>
-        <View style={styles.backdrop}>
-          <View style={styles.sheet}>
-            <Text variant="subtitle">{t('projects.name')}</Text>
-            <TextInput
-              accessibilityLabel={t('projects.name')}
-              autoFocus
-              maxLength={80}
-              value={editor?.name ?? ''}
-              onChangeText={(name) =>
-                setEditor((current) => (current ? { ...current, name } : null))
-              }
-              style={styles.input}
-            />
-            <View style={styles.actions}>
-              <Button
-                variant="ghost"
-                onPress={() => setEditor(null)}
-                label={t('projects.cancel')}
-              />
-              <Button
-                disabled={!editor?.name.trim()}
-                onPress={() => {
-                  if (editor)
-                    void guard(async () => {
-                      await saveProject({ ...editor, name: editor.name.trim() })
-                      selectProject(editor.id)
-                      setEditor(null)
-                    })
-                }}
-                label={t('projects.save')}
-              />
-            </View>
-          </View>
-        </View>
-      </Modal>
-      {selected && <TakeDetails take={selected} onClose={() => setSelectedTake(null)} />}
+      <ProjectEditor
+        editor={editor}
+        setEditor={setEditor}
+        onSave={(value) =>
+          guard(async () => {
+            await saveProject({ ...value, name: value.name.trim() })
+            selectProject(value.id)
+            setEditor(null)
+          })
+        }
+      />
+      {selected && <MediaDetails media={selected} onClose={() => setSelectedMedia(null)} />}
     </View>
   )
 }
 
-function Playback({ take, kind }: { take: Take; kind: OutputKind }) {
+function MediaCard({ media, onPress }: { media: ProjectMedia; onPress: () => void }) {
+  const { t } = useTranslation()
   const styles = useThemedStyles(createStyles)
-  const player = useVideoPlayer(videoFile(take, kind).uri, (instance) => {
+  const ready = media.outputs.filter((output) => output.ready)
+  const output = ready[0]
+  return (
+    <Pressable accessibilityRole="button" onPress={onPress} style={styles.mediaCard}>
+      <Image
+        source={{ uri: thumbnailFile(media.id).uri }}
+        contentFit="cover"
+        style={styles.thumbnail}
+      />
+      <View style={styles.grow}>
+        <View style={styles.mediaTitle}>
+          <Text weight="semibold">
+            {media.mediaType === 'photo'
+              ? t('projects.photoCapture', { date: new Date(media.createdAt).toLocaleString() })
+              : t('projects.videoCapture', { date: new Date(media.createdAt).toLocaleString() })}
+          </Text>
+          <Text variant="caption" tone="accent">
+            {t(`projects.filters.${media.mediaType === 'photo' ? 'photos' : 'videos'}`)}
+          </Text>
+        </View>
+        {media.mediaType === 'video' ? (
+          <Text variant="caption" tone="muted">
+            {formatDuration(media.duration)} · {media.settings.fps} FPS ·{' '}
+            {media.settings.container.toUpperCase()}
+          </Text>
+        ) : (
+          <Text variant="caption" tone="muted">
+            JPEG{output ? ` · ${output.width} × ${output.height}` : ''}
+          </Text>
+        )}
+        <Text variant="caption" tone="muted">
+          {t('projects.size', {
+            amount: (media.outputs.reduce((sum, item) => sum + item.bytes, 0) / 1048576).toFixed(1),
+          })}
+        </Text>
+        {(media.error || media.outputs.some((item) => !item.ready)) && (
+          <Text variant="caption" tone="accent">
+            {t('projects.incomplete')}
+          </Text>
+        )}
+      </View>
+    </Pressable>
+  )
+}
+
+function ProjectEditor({
+  editor,
+  setEditor,
+  onSave,
+}: {
+  editor: { id: string; name: string; createdAt: number } | null
+  setEditor: (value: { id: string; name: string; createdAt: number } | null) => void
+  onSave: (value: { id: string; name: string; createdAt: number }) => void
+}) {
+  const { t } = useTranslation()
+  const styles = useThemedStyles(createStyles)
+  return (
+    <Modal
+      visible={editor !== null}
+      transparent
+      animationType="fade"
+      onRequestClose={() => setEditor(null)}
+      supportedOrientations={['portrait', 'landscape-left', 'landscape-right']}>
+      <View style={styles.backdrop}>
+        <View style={styles.sheet}>
+          <Text variant="subtitle">{t('projects.name')}</Text>
+          <TextInput
+            accessibilityLabel={t('projects.name')}
+            autoFocus
+            maxLength={80}
+            value={editor?.name ?? ''}
+            onChangeText={(name) => setEditor(editor ? { ...editor, name } : null)}
+            style={styles.input}
+          />
+          <View style={styles.actions}>
+            <Button variant="ghost" onPress={() => setEditor(null)} label={t('projects.cancel')} />
+            <Button
+              disabled={!editor?.name.trim()}
+              onPress={() => editor && onSave(editor)}
+              label={t('projects.save')}
+            />
+          </View>
+        </View>
+      </View>
+    </Modal>
+  )
+}
+
+function VideoPlayback({ video, kind }: { video: VideoCapture; kind: OutputKind }) {
+  const styles = useThemedStyles(createStyles)
+  const player = useVideoPlayer(videoFile(video, kind).uri, (instance) => {
     instance.loop = false
   })
   return (
@@ -202,81 +261,169 @@ function Playback({ take, kind }: { take: Take; kind: OutputKind }) {
       player={player}
       nativeControls
       contentFit="contain"
-      style={[styles.video, { aspectRatio: kind === 'portrait' ? 9 / 16 : 16 / 9 }]}
+      style={[styles.preview, { aspectRatio: kind === 'portrait' ? 9 / 16 : 16 / 9 }]}
     />
   )
 }
-function TakeDetails({ take, onClose }: { take: Take; onClose: () => void }) {
+
+function MediaDetails({ media, onClose }: { media: ProjectMedia; onClose: () => void }) {
+  return media.mediaType === 'video' ? (
+    <VideoDetails video={media} onClose={onClose} />
+  ) : (
+    <PhotoDetails photo={media} onClose={onClose} />
+  )
+}
+
+function VideoDetails({ video, onClose }: { video: VideoCapture; onClose: () => void }) {
   const { t } = useTranslation()
-  const labels = { portrait: t('camera.portrait'), landscape: t('camera.landscape') }
-  const messages = {
-    exported: t('projects.exported'),
-    exportFailure: t('projects.exportFailure'),
-    alreadyExported: t('projects.alreadyExported'),
-    trimUnavailable: t('projects.trimUnavailable'),
+  const [start, setStart] = useState(video.trim?.start ?? 0)
+  const [end, setEnd] = useState(video.trim?.end ?? video.duration)
+  const cuts = sharedCutPoints(video)
+  const range = snapTrim(video, start, end)
+  const [message, setMessage] = useState<string | null>(null)
+  const changeTrim = async (reset = false) => {
+    if (!reset && (!range || cuts.length < 3)) {
+      setMessage(t('projects.trimUnavailable'))
+      return
+    }
+    try {
+      await mutateProjects(() => saveMedia({ ...video, trim: reset ? null : range }))
+      if (reset) {
+        setStart(0)
+        setEnd(video.duration)
+      }
+    } catch {
+      setMessage(t('projects.trimUnavailable'))
+    }
   }
+  return (
+    <DetailsShell media={video} onClose={onClose} message={message} setMessage={setMessage}>
+      {({ kind, available }) => (
+        <>
+          {available.some((output) => output.kind === kind) && (
+            <VideoPlayback key={kind} video={video} kind={kind} />
+          )}
+          <Text tone="muted">
+            {formatDuration(video.duration)} · {video.settings.fps} FPS ·{' '}
+            {video.settings.container.toUpperCase()} · {video.settings.hdr ? 'HDR' : 'SDR'}
+          </Text>
+          <Text variant="subtitle">{t('projects.trim')}</Text>
+          <Text variant="caption" tone="muted">
+            {t('projects.trimBody')}
+          </Text>
+          {cuts.length >= 3 ? (
+            <>
+              <Text>{t('projects.trimStart')}</Text>
+              <Slider min={0} max={video.duration} value={start} onValueChange={setStart} />
+              <Text>{t('projects.trimEnd')}</Text>
+              <Slider min={0} max={video.duration} value={end} onValueChange={setEnd} />
+              {range && (
+                <Text tone="accent">
+                  {t('projects.trimRange', {
+                    start: range.start.toFixed(2),
+                    end: range.end.toFixed(2),
+                  })}
+                </Text>
+              )}
+              <Button
+                disabled={!range}
+                onPress={() => void changeTrim()}
+                label={t('projects.applyTrim')}
+              />
+            </>
+          ) : (
+            <Text tone="muted">{t('projects.trimUnavailable')}</Text>
+          )}
+          {video.trim && (
+            <Button
+              variant="ghost"
+              onPress={() => void changeTrim(true)}
+              label={t('projects.resetTrim')}
+            />
+          )}
+        </>
+      )}
+    </DetailsShell>
+  )
+}
+
+function PhotoDetails({ photo, onClose }: { photo: PhotoCapture; onClose: () => void }) {
+  const styles = useThemedStyles(createStyles)
+  return (
+    <DetailsShell media={photo} onClose={onClose}>
+      {({ kind, available }) =>
+        available.some((output) => output.kind === kind) ? (
+          <Image
+            source={{ uri: mediaFile(photo, kind).uri }}
+            contentFit="contain"
+            style={[styles.preview, { aspectRatio: kind === 'portrait' ? 9 / 16 : 16 / 9 }]}
+          />
+        ) : null
+      }
+    </DetailsShell>
+  )
+}
+
+function DetailsShell({
+  media,
+  onClose,
+  children,
+  message: externalMessage,
+  setMessage: setExternalMessage,
+}: {
+  media: ProjectMedia
+  onClose: () => void
+  children: (value: { kind: OutputKind; available: ProjectMedia['outputs'] }) => React.ReactNode
+  message?: string | null
+  setMessage?: (value: string | null) => void
+}) {
+  const { t } = useTranslation()
   const styles = useThemedStyles(createStyles)
   const { projects } = useProjectsState()
   const { phase } = useCameraState()
   const [kind, setKind] = useState<OutputKind>(
-    take.outputs.find((output) => output.ready)?.kind ?? 'portrait'
+    media.outputs.find((output) => output.ready)?.kind ?? 'portrait'
   )
-  const [start, setStart] = useState(take.trim?.start ?? 0)
-  const [end, setEnd] = useState(take.trim?.end ?? take.duration)
-  const [message, setMessage] = useState<
-    'exported' | 'exportFailure' | 'alreadyExported' | 'trimUnavailable' | null
-  >(null)
+  const [localMessage, setLocalMessage] = useState<string | null>(null)
   const [exportResults, setExportResults] = useState<ExportResult[]>([])
-  const available = take.outputs.filter((output) => output.ready)
-  const cuts = sharedCutPoints(take)
-  const range = snapTrim(take, start, end)
+  const available = media.outputs.filter((output) => output.ready)
   const busy = phase !== 'idle'
-  const revision = take.trim ? `${take.trim.start}:${take.trim.end}` : 'original'
+  const revision =
+    media.mediaType === 'video' && media.trim ? `${media.trim.start}:${media.trim.end}` : 'original'
+  const message = externalMessage ?? localMessage
+  const setMessage = setExternalMessage ?? setLocalMessage
+  const labels = { portrait: t('camera.portrait'), landscape: t('camera.landscape') }
   const exportOutputs = async (kinds: OutputKind[], again = false) => {
     if (busy) return
     try {
       if (
         !again &&
         kinds.every((item) =>
-          take.exports.some((receipt) => receipt.kind === item && receipt.revision === revision)
+          media.exports.some((receipt) => receipt.kind === item && receipt.revision === revision)
         )
       ) {
-        setMessage('alreadyExported')
+        setMessage(t('projects.alreadyExported'))
         return
       }
-      const result = await exportTake(take, kinds, again)
+      const result = await exportMedia(media, kinds, again)
       setExportResults(result)
-      setMessage(result.some((item) => item.error) ? 'exportFailure' : 'exported')
+      setMessage(
+        result.some((item) => item.error) ? t('projects.exportFailure') : t('projects.exported')
+      )
     } catch {
-      setMessage('exportFailure')
-    }
-  }
-  const changeTrim = async (reset = false) => {
-    if (busy) return
-    if (!reset && (!range || cuts.length < 3)) {
-      setMessage('trimUnavailable')
-      return
-    }
-    try {
-      await mutateProjects(() => saveTake({ ...take, trim: reset ? null : range }))
-      if (reset) {
-        setStart(0)
-        setEnd(take.duration)
-      }
-    } catch {
-      setMessage('trimUnavailable')
+      setMessage(t('projects.exportFailure'))
     }
   }
   const remove = () =>
-    Alert.alert(t('projects.deleteTakeTitle'), t('projects.deleteTakeBody'), [
+    Alert.alert(t('projects.deleteMediaTitle'), t('projects.deleteMediaBody'), [
       { text: t('projects.cancel'), style: 'cancel' },
       {
-        text: t('projects.deleteTake'),
+        text: t('projects.deleteMedia'),
         style: 'destructive',
         onPress: () => {
-          void mutateProjects(() => deleteTake(take))
+          void mutateProjects(() => deleteMedia(media))
             .then(onClose)
-            .catch(() => setMessage('exportFailure'))
+            .catch(() => setMessage(t('projects.exportFailure')))
         },
       },
     ])
@@ -284,16 +431,14 @@ function TakeDetails({ take, onClose }: { take: Take; onClose: () => void }) {
     <Modal
       visible
       animationType="slide"
-      onRequestClose={() => {
-        if (!busy) onClose()
-      }}
+      onRequestClose={() => !busy && onClose()}
       supportedOrientations={['portrait', 'landscape-left', 'landscape-right']}>
       <ScrollView
         style={styles.root}
         contentContainerStyle={styles.details}
         contentInsetAdjustmentBehavior="automatic">
         <View style={styles.header}>
-          <Text variant="subtitle">{t('projects.takeDetails')}</Text>
+          <Text variant="subtitle">{t('projects.mediaDetails')}</Text>
           <Button
             size="sm"
             variant="ghost"
@@ -311,71 +456,14 @@ function TakeDetails({ take, onClose }: { take: Take; onClose: () => void }) {
             disabled: !available.some((output) => output.kind === item),
           }))}
         />
-        {available.some((output) => output.kind === kind) && (
-          <Playback key={kind} take={take} kind={kind} />
-        )}
-        <Text tone="muted">
-          {formatDuration(take.duration)} · {take.settings.fps} FPS ·{' '}
-          {take.settings.container.toUpperCase()} · {take.settings.hdr ? 'HDR' : 'SDR'}
-        </Text>
-        {take.outputs.map((output) => (
+        {children({ kind, available })}
+        {media.outputs.map((output) => (
           <Text key={output.kind} variant="caption" tone="muted">
             {labels[output.kind]} · {output.width} × {output.height} ·{' '}
             {(output.bytes / 1048576).toFixed(1)} MB
             {!output.ready ? ` · ${t('projects.incomplete')}` : ''}
           </Text>
         ))}
-        <Text variant="subtitle">{t('projects.trim')}</Text>
-        <Text variant="caption" tone="muted">
-          {t('projects.trimBody')}
-        </Text>
-        {cuts.length >= 3 ? (
-          <>
-            <Text>{t('projects.trimStart')}</Text>
-            <Slider
-              min={0}
-              max={take.duration}
-              value={start}
-              onValueChange={setStart}
-              disabled={busy}
-            />
-            <Text>{t('projects.trimEnd')}</Text>
-            <Slider
-              min={0}
-              max={take.duration}
-              value={end}
-              onValueChange={setEnd}
-              disabled={busy}
-            />
-            {range && (
-              <Text tone="accent">
-                {t('projects.trimRange', {
-                  start: range.start.toFixed(2),
-                  end: range.end.toFixed(2),
-                })}
-              </Text>
-            )}
-            <Button
-              disabled={busy || !range}
-              onPress={() => {
-                void changeTrim()
-              }}
-              label={t('projects.applyTrim')}
-            />
-          </>
-        ) : (
-          <Text tone="muted">{t('projects.trimUnavailable')}</Text>
-        )}
-        {take.trim && (
-          <Button
-            variant="ghost"
-            disabled={busy}
-            onPress={() => {
-              void changeTrim(true)
-            }}
-            label={t('projects.resetTrim')}
-          />
-        )}
         <Text variant="subtitle">{t('projects.export')}</Text>
         <View style={styles.actions}>
           {available.map((output) => (
@@ -383,9 +471,7 @@ function TakeDetails({ take, onClose }: { take: Take; onClose: () => void }) {
               key={output.kind}
               size="sm"
               disabled={busy}
-              onPress={() => {
-                void exportOutputs([output.kind])
-              }}
+              onPress={() => void exportOutputs([output.kind])}
               label={labels[output.kind]}
             />
           ))}
@@ -393,9 +479,7 @@ function TakeDetails({ take, onClose }: { take: Take; onClose: () => void }) {
             <Button
               size="sm"
               disabled={busy}
-              onPress={() => {
-                void exportOutputs(['portrait', 'landscape'])
-              }}
+              onPress={() => void exportOutputs(['portrait', 'landscape'])}
               label={t('camera.both')}
             />
           )}
@@ -407,17 +491,17 @@ function TakeDetails({ take, onClose }: { take: Take; onClose: () => void }) {
           </Text>
         ))}
         {busy && <Text tone="accent">{t('camera.exporting')}</Text>}
-        {message && <Text tone="accent">{messages[message]}</Text>}
-        {take.exports.some((receipt) => receipt.revision === revision) && (
+        {message && <Text tone="accent">{message}</Text>}
+        {media.exports.some((receipt) => receipt.revision === revision) && (
           <Button
             variant="ghost"
             disabled={busy}
-            onPress={() => {
+            onPress={() =>
               void exportOutputs(
                 available.map((output) => output.kind),
                 true
               )
-            }}
+            }
             label={t('projects.exportAgain')}
           />
         )}
@@ -428,21 +512,27 @@ function TakeDetails({ take, onClose }: { take: Take; onClose: () => void }) {
               key={project.id}
               size="sm"
               variant="ghost"
-              disabled={busy || project.id === take.projectId}
-              onPress={() => {
-                void mutateProjects(() => saveTake({ ...take, projectId: project.id })).catch(() =>
-                  setMessage('exportFailure')
+              disabled={busy || project.id === media.projectId}
+              onPress={() =>
+                void mutateProjects(() => saveMedia({ ...media, projectId: project.id })).catch(
+                  () => setMessage(t('projects.exportFailure'))
                 )
-              }}
+              }
               label={project.name ?? t('projects.default')}
             />
           ))}
         </ScrollView>
-        <Button variant="ghost" disabled={busy} onPress={remove} label={t('projects.deleteTake')} />
+        <Button
+          variant="ghost"
+          disabled={busy}
+          onPress={remove}
+          label={t('projects.deleteMedia')}
+        />
       </ScrollView>
     </Modal>
   )
 }
+
 const createStyles = createThemedStyles((theme) => ({
   root: { flex: 1, backgroundColor: theme.colors.background.base },
   header: {
@@ -453,6 +543,7 @@ const createStyles = createThemedStyles((theme) => ({
     padding: theme.spacing.lg,
   },
   projectList: { flexGrow: 0 },
+  filter: { paddingHorizontal: theme.spacing.lg, paddingTop: theme.spacing.md },
   pills: { gap: theme.spacing.sm, paddingHorizontal: theme.spacing.lg },
   pill: {
     paddingHorizontal: theme.spacing.lg,
@@ -471,7 +562,7 @@ const createStyles = createThemedStyles((theme) => ({
   grow: { flex: 1 },
   list: { gap: theme.spacing.md, padding: theme.spacing.lg },
   empty: { paddingVertical: theme.spacing['5xl'], gap: theme.spacing.md },
-  take: {
+  mediaCard: {
     flexDirection: 'row',
     gap: theme.spacing.md,
     padding: theme.spacing.md,
@@ -479,6 +570,7 @@ const createStyles = createThemedStyles((theme) => ({
     backgroundColor: theme.colors.background.surface,
     alignItems: 'center',
   },
+  mediaTitle: { flexDirection: 'row', justifyContent: 'space-between', gap: theme.spacing.sm },
   thumbnail: {
     width: theme.spacing['7xl'],
     height: theme.spacing['7xl'],
@@ -507,7 +599,7 @@ const createStyles = createThemedStyles((theme) => ({
     padding: theme.spacing.lg,
     paddingBottom: theme.spacing['5xl'],
   },
-  video: {
+  preview: {
     width: '100%',
     maxHeight: theme.spacing['9xl'] * 3,
     backgroundColor: theme.colors.background.surface,

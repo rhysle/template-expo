@@ -1,6 +1,9 @@
 export type OutputKind = 'portrait' | 'landscape'
 export type CaptureMode = 'single' | 'dual'
-export type RecordingPhase = 'idle' | 'preparing' | 'recording' | 'finalizing' | 'exporting'
+export type CapturePhase =
+  'idle' | 'preparing' | 'recording' | 'capturing' | 'finalizing' | 'exporting'
+export type MediaType = 'video' | 'photo'
+export type PhotoFlashMode = 'off' | 'auto' | 'on'
 export interface RecordingSettings {
   longEdge: 1280 | 1920 | 2560 | 3840
   fps: 24 | 25 | 30 | 50 | 60 | 120
@@ -42,6 +45,13 @@ export interface VideoOutput extends PixelSize {
   keyframes: number[]
   error?: string
 }
+export interface PhotoOutput extends PixelSize {
+  kind: OutputKind
+  filename: string
+  bytes: number
+  ready: boolean
+  error?: string
+}
 export interface TrimRange {
   start: number
   end: number
@@ -56,18 +66,40 @@ export interface ExportReceipt {
   revision: string
   assetId: string
 }
-export interface Take {
+interface ProjectMediaBase {
   id: string
   projectId: string
   createdAt: number
+  mediaType: MediaType
+  exports: ExportReceipt[]
+  error?: string
+}
+export interface VideoCapture extends ProjectMediaBase {
+  mediaType: 'video'
   duration: number
   settings: RecordingSettings
   outputs: VideoOutput[]
   trim: TrimRange | null
-  exports: ExportReceipt[]
   reason: string
-  error?: string
 }
+export interface PhotoSettings {
+  mode: CaptureMode
+  front: boolean
+  deviceId: string | null
+  pairIndex: number
+  portraitPosition: number
+  landscapePosition: number
+  container: 'jpeg'
+  quality: number
+  targetResolution: PixelSize
+  flashMode: PhotoFlashMode
+}
+export interface PhotoCapture extends ProjectMediaBase {
+  mediaType: 'photo'
+  settings: PhotoSettings
+  outputs: PhotoOutput[]
+}
+export type ProjectMedia = VideoCapture | PhotoCapture
 export interface Project {
   id: string
   name: string | null
@@ -100,18 +132,24 @@ export interface NativeCapabilities {
 export const FPS_OPTIONS = [24, 25, 30, 50, 60, 120] as const
 export const RESOLUTION_OPTIONS = [1280, 1920, 2560, 3840] as const
 export const RESOLUTION_LABELS = { 1280: '720p', 1920: '1080p', 2560: '2K', 3840: '4K' } as const
-export function outputSize(source: PixelSize, kind: OutputKind, edge: number): PixelSize {
+export function cropSize(source: PixelSize, kind: OutputKind): PixelSize {
   const portrait = kind === 'portrait'
   const ratio = portrait ? 9 / 16 : 16 / 9
-  const width = Math.min(source.width, source.height * ratio)
-  const height = Math.min(source.height, source.width / ratio)
+  return {
+    width: Math.floor(Math.min(source.width, source.height * ratio)),
+    height: Math.floor(Math.min(source.height, source.width / ratio)),
+  }
+}
+export function outputSize(source: PixelSize, kind: OutputKind, edge: number): PixelSize {
+  const portrait = kind === 'portrait'
+  const { width, height } = cropSize(source, kind)
   const scale = Math.min(1, edge / Math.max(width, height))
   const unit = Math.floor(
     Math.min((width * scale) / (portrait ? 18 : 32), (height * scale) / (portrait ? 32 : 18))
   )
   return { width: unit * (portrait ? 18 : 32), height: unit * (portrait ? 32 : 18) }
 }
-export function sharedCutPoints(take: Take): number[] {
+export function sharedCutPoints(take: VideoCapture): number[] {
   const ready = take.outputs.filter((output) => output.ready)
   if (!ready.length) return []
   const tolerance = 0.25 / take.settings.fps
@@ -122,7 +160,7 @@ export function sharedCutPoints(take: Take): number[] {
     ...new Set([0, ...shared.filter((point) => point > 0 && point < take.duration), take.duration]),
   ].sort((a, b) => a - b)
 }
-export function snapTrim(take: Take, start: number, end: number): TrimRange | null {
+export function snapTrim(take: VideoCapture, start: number, end: number): TrimRange | null {
   const points = sharedCutPoints(take)
   if (points.length < 2) return null
   const nearest = (value: number) =>

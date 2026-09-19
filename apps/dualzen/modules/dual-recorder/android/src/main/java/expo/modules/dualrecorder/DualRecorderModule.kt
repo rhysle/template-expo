@@ -46,24 +46,27 @@ class DualRecorderModule : Module() {
       try { stream.write(content.toByteArray(Charsets.UTF_8));file.finishWrite(stream) }
       catch(t: Throwable){file.failWrite(stream);throw t}
     }
-    AsyncFunction("exportVideo") { uri: String,start: Double,end: Double ->
+    AsyncFunction("exportMedia") { uri: String,mediaType: String,start: Double,end: Double ->
       val ctx=appContext.reactContext?:error("React context unavailable")
       require(Build.VERSION.SDK_INT>=29){"Gallery export requires Android 10 or later"}
+      require(mediaType=="video"||mediaType=="photo"){"Unsupported media type"}
       val source=DualEngine.localFile(uri)
       val temporary=File(ctx.cacheDir,UUID.randomUUID().toString()+".mp4")
       try {
-        val export=if(start>=0){remux(source,temporary,start,end);temporary} else source
+        val export=if(mediaType=="video"&&start>=0){remux(source,temporary,start,end);temporary} else source
         check(StatFs(source.parentFile!!.path).availableBytes>export.length()+32L*1024*1024){"Not enough space to export; original is safe"}
+        val photo=mediaType=="photo"
         val values=ContentValues().apply {
-          put(MediaStore.Video.Media.DISPLAY_NAME,"DualZen_"+UUID.randomUUID().toString()+"_"+source.name)
-          put(MediaStore.Video.Media.MIME_TYPE,"video/mp4")
-          put(MediaStore.Video.Media.RELATIVE_PATH,"Movies/DualZen")
-          put(MediaStore.Video.Media.IS_PENDING,1)
+          put(MediaStore.MediaColumns.DISPLAY_NAME,"DualZen_"+UUID.randomUUID().toString()+"_"+source.name)
+          put(MediaStore.MediaColumns.MIME_TYPE,if(photo)"image/jpeg" else "video/mp4")
+          put(MediaStore.MediaColumns.RELATIVE_PATH,if(photo)"Pictures/DualZen" else "Movies/DualZen")
+          put(MediaStore.MediaColumns.IS_PENDING,1)
         }
-        val target=ctx.contentResolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI,values)?:error("Cannot create Gallery asset")
+        val collection=if(photo)MediaStore.Images.Media.EXTERNAL_CONTENT_URI else MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+        val target=ctx.contentResolver.insert(collection,values)?:error("Cannot create Gallery asset")
         try {
           ctx.contentResolver.openOutputStream(target)?.use { output -> export.inputStream().use { it.copyTo(output) } }?:error("Cannot write Gallery asset")
-          ctx.contentResolver.update(target,ContentValues().apply { put(MediaStore.Video.Media.IS_PENDING,0) },null,null)
+          ctx.contentResolver.update(target,ContentValues().apply { put(MediaStore.MediaColumns.IS_PENDING,0) },null,null)
           target.toString()
         }catch(t: Throwable){ctx.contentResolver.delete(target,null,null);throw t}
       }finally{temporary.delete()}
