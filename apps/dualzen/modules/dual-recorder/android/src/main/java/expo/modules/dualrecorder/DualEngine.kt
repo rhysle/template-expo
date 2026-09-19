@@ -78,9 +78,8 @@ object DualEngine {
     val fragment = """#extension GL_OES_EGL_image_external : require
 precision highp float;
 uniform samplerExternalOES uTexture; uniform mat4 uMatrix; uniform vec4 uCrop;
-uniform int uRotation; uniform bool uMirror; varying vec2 vUV;
+uniform bool uMirror; varying vec2 vUV;
 void main(){ vec2 p=vUV; if(uMirror)p.x=1.0-p.x; p=uCrop.xy+p*uCrop.zw;
-if(uRotation==90)p=vec2(p.y,1.0-p.x); else if(uRotation==180)p=vec2(1.0-p.x,1.0-p.y); else if(uRotation==270)p=vec2(1.0-p.y,p.x);
 gl_FragColor=texture2D(uTexture,(uMatrix*vec4(p,0.0,1.0)).xy); }"""
     fun shader(type: Int, source: String): Int {
       val id=GLES20.glCreateShader(type); GLES20.glShaderSource(id,source); GLES20.glCompileShader(id)
@@ -145,7 +144,6 @@ gl_FragColor=texture2D(uTexture,(uMatrix*vec4(p,0.0,1.0)).xy); }"""
     val cw=min(1.0,sh*ratio/sw);val ch=min(1.0,sw/ratio/sh);val p=position.coerceIn(0.0,1.0)
     GLES20.glUniform4f(GLES20.glGetUniformLocation(program,"uCrop"),((1-cw)*p).toFloat(),((1-ch)*(1-p)).toFloat(),cw.toFloat(),ch.toFloat())
     GLES20.glUniformMatrix4fv(GLES20.glGetUniformLocation(program,"uMatrix"),1,false,stream.matrix,0)
-    GLES20.glUniform1i(GLES20.glGetUniformLocation(program,"uRotation"),stream.rotation)
     GLES20.glUniform1i(GLES20.glGetUniformLocation(program,"uMirror"),if(mirror)1 else 0)
     GLES20.glActiveTexture(GLES20.GL_TEXTURE0);GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES,stream.texture)
     GLES20.glUniform1i(GLES20.glGetUniformLocation(program,"uTexture"),0)
