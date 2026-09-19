@@ -16,12 +16,17 @@ import { Linking, Pressable, useWindowDimensions, View } from 'react-native'
 import { cancelAnimation, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
 import { scheduleOnRN } from 'react-native-worklets'
 
-import { formatDuration, type MediaType, RESOLUTION_LABELS } from '@/services/camera/types'
+import {
+  formatDuration,
+  type MediaType,
+  type PreviewLayout,
+  RESOLUTION_LABELS,
+} from '@/services/camera/types'
 import type { CaptureController } from '@/services/camera/useRecorder'
 import { useCameraState } from '@/stores/features/camera'
 import { cameraColors, createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
 
-import { CameraStage, type PreviewLayout } from './CameraStage'
+import { CameraStage } from './CameraStage'
 import { FramingControl } from './FramingControl'
 import { RecordingOptions } from './RecordingOptions'
 
@@ -41,8 +46,16 @@ export function CameraScreen({
   const { t } = useTranslation()
   const styles = useThemedStyles(createStyles)
   const theme = useTheme()
-  const { settings, phase, photoFlashMode, setPhotoFlashMode, updateSettings } = useCameraState()
-  const [layout, setLayout] = useState<PreviewLayout>('pip')
+  const {
+    settings,
+    viewSettings,
+    phase,
+    photoFlashMode,
+    setPhotoFlashMode,
+    setPreviewLayout,
+    updateSettings,
+  } = useCameraState()
+  const layout = viewSettings.layout
   const [options, setOptions] = useState(false)
   const [framing, setFraming] = useState(false)
   const [flipTarget, setFlipTarget] = useState<boolean | null>(null)
@@ -365,7 +378,9 @@ export function CameraScreen({
                 accessibilityLabel={t('camera.previewLayout', {
                   layout: layoutLabels[layout],
                 })}
-                onPress={() => setLayout(LAYOUTS[(LAYOUTS.indexOf(layout) + 1) % LAYOUTS.length])}
+                onPress={() =>
+                  setPreviewLayout(LAYOUTS[(LAYOUTS.indexOf(layout) + 1) % LAYOUTS.length])
+                }
               />
               <IconButton
                 icon={ArrowsClockwiseIcon}

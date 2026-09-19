@@ -13,7 +13,9 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
+import { scheduleOnRN } from 'react-native-worklets'
 
+import type { PreviewLayout } from '@/services/camera/types'
 import type { CaptureController } from '@/services/camera/useRecorder'
 import { useCameraState } from '@/stores/features/camera'
 import { cameraColors, createThemedStyles, useTheme, useThemedStyles } from '@/theme'
@@ -23,7 +25,6 @@ import { CAMERA_LAYOUT_TIMING } from './cameraLayoutTransition'
 import { CameraPreview, type FocusPoint } from './CameraPreview'
 import { CameraTransition } from './CameraTransition'
 
-export type PreviewLayout = 'pip' | 'stacked' | 'guide'
 export function CameraStage({
   recorder,
   layout,
@@ -46,7 +47,7 @@ export function CameraStage({
   const { t } = useTranslation()
   const theme = useTheme()
   const styles = useThemedStyles(createStyles)
-  const { settings } = useCameraState()
+  const { settings, viewSettings, updatePipView } = useCameraState()
   const [stage, setStage] = useState({ width: 0, height: 0 })
   const stageHeight = useSharedValue(0)
   const stageTop = useSharedValue(topInset)
@@ -60,14 +61,18 @@ export function CameraStage({
     )
   }, [stage.height, topInset, bottomInset, stageHeight, stageTop])
   const [focusPoint, setFocusPoint] = useState<FocusPoint | null>(null)
-  const insetX = useSharedValue(0)
-  const insetY = useSharedValue(0)
+  const pipX = useSharedValue(viewSettings.pip.x)
+  const pipY = useSharedValue(viewSettings.pip.y)
   const startX = useSharedValue(0)
   const startY = useSharedValue(0)
-  const insetScale = useSharedValue(1)
-  const startScale = useSharedValue(1)
-  const restoreFraction = useSharedValue(0.55)
-  const expanded = useSharedValue(false)
+  const pipSize = useSharedValue(viewSettings.pip.size)
+  const startSize = useSharedValue(viewSettings.pip.size)
+  const restoreFraction = useSharedValue(0.4)
+  useEffect(() => {
+    pipX.set(viewSettings.pip.x)
+    pipY.set(viewSettings.pip.y)
+    pipSize.set(viewSettings.pip.size)
+  }, [viewSettings.pip.x, viewSettings.pip.y, viewSettings.pip.size, pipX, pipY, pipSize])
   const stackedProgress = useSharedValue(layout === 'stacked' ? 1 : 0)
   const guideProgress = useSharedValue(layout === 'guide' ? 1 : 0)
   const landscapeOpacity = useSharedValue(layout === 'guide' ? 0 : 1)
@@ -95,10 +100,8 @@ export function CameraStage({
     ? stage.width
     : Math.min(stage.width, (Math.max(0, stage.height - topInset - bottomInset) * 9) / 16)
   const height = (width * 16) / 9
-  const insetWidth = Math.min(theme.spacing['9xl'], width * 0.55)
-  const insetHeight = (insetWidth * 9) / 16
-  const minScale = insetWidth > 0 ? (width * 0.4) / insetWidth : 1
-  const maxScale = insetWidth > 0 ? (width * 0.75) / insetWidth : 1
+  const minSize = 0.4
+  const maxSize = 0.75
   const padding = theme.spacing.sm * 2
   const pan = useMemo(
     () =>
@@ -107,37 +110,44 @@ export function CameraStage({
         .minDistance(12)
         .maxPointers(1)
         .onStart(() => {
-          cancelAnimation(insetScale)
-          const scale = Math.max(minScale, Math.min(maxScale, insetScale.value))
-          const maxX = Math.max(0, width - insetWidth * scale - padding)
-          const maxY = Math.max(0, height - insetHeight * scale - padding)
-          startX.value = Math.max(-maxX, Math.min(0, insetX.value))
-          startY.value = Math.max(-maxY, Math.min(0, insetY.value))
+          cancelAnimation(pipSize)
+          startX.value = Math.max(0, Math.min(1, pipX.value))
+          startY.value = Math.max(0, Math.min(1, pipY.value))
         })
         .onUpdate((event) => {
           if (stackedProgress.value !== 0 || guideProgress.value !== 0) return
-          const scale = Math.max(minScale, Math.min(maxScale, insetScale.value))
-          const maxX = Math.max(0, width - insetWidth * scale - padding)
-          const maxY = Math.max(0, height - insetHeight * scale - padding)
-          insetX.value = Math.max(-maxX, Math.min(0, startX.value + event.translationX))
-          insetY.value = Math.max(-maxY, Math.min(0, startY.value + event.translationY))
+          const size = Math.max(minSize, Math.min(maxSize, pipSize.value))
+          const pipWidth = width * size
+          const pipHeight = (pipWidth * 9) / 16
+          const maxX = Math.max(0, width - pipWidth - padding)
+          const maxY = Math.max(0, height - pipHeight - padding)
+          pipX.value =
+            maxX > 0
+              ? Math.max(0, Math.min(1, startX.value + event.translationX / maxX))
+              : startX.value
+          pipY.value =
+            maxY > 0
+              ? Math.max(0, Math.min(1, startY.value + event.translationY / maxY))
+              : startY.value
+        })
+        .onFinalize(() => {
+          scheduleOnRN(updatePipView, { x: pipX.value, y: pipY.value })
         }),
     [
       startX,
       startY,
-      insetX,
-      insetY,
-      insetScale,
-      minScale,
-      maxScale,
+      pipX,
+      pipY,
+      pipSize,
+      minSize,
+      maxSize,
       width,
       height,
-      insetWidth,
-      insetHeight,
       padding,
       layout,
       stackedProgress,
       guideProgress,
+      updatePipView,
     ]
   )
   const resize = useMemo(
@@ -145,40 +155,17 @@ export function CameraStage({
       Gesture.Pinch()
         .enabled(layout === 'pip')
         .onStart(() => {
-          cancelAnimation(insetScale)
-          expanded.value = false
-          startScale.value = Math.max(minScale, Math.min(maxScale, insetScale.value))
+          cancelAnimation(pipSize)
+          startSize.value = Math.max(minSize, Math.min(maxSize, pipSize.value))
         })
         .onUpdate((event) => {
           if (stackedProgress.value !== 0 || guideProgress.value !== 0) return
-          const scale = Math.max(minScale, Math.min(maxScale, startScale.value * event.scale))
-          insetScale.value = scale
-          insetX.value = Math.max(
-            -Math.max(0, width - insetWidth * scale - padding),
-            Math.min(0, insetX.value)
-          )
-          insetY.value = Math.max(
-            -Math.max(0, height - insetHeight * scale - padding),
-            Math.min(0, insetY.value)
-          )
+          pipSize.value = Math.max(minSize, Math.min(maxSize, startSize.value * event.scale))
+        })
+        .onFinalize(() => {
+          scheduleOnRN(updatePipView, { size: pipSize.value })
         }),
-    [
-      startScale,
-      expanded,
-      insetScale,
-      minScale,
-      maxScale,
-      insetX,
-      insetY,
-      width,
-      height,
-      insetWidth,
-      insetHeight,
-      padding,
-      layout,
-      stackedProgress,
-      guideProgress,
-    ]
+    [startSize, pipSize, minSize, maxSize, layout, stackedProgress, guideProgress, updatePipView]
   )
   const doubleTap = useMemo(
     () =>
@@ -189,34 +176,27 @@ export function CameraStage({
         .maxDelay(280)
         .maxDistance(10)
         .onEnd((_event, success) => {
-          if (
-            !success ||
-            stackedProgress.value !== 0 ||
-            guideProgress.value !== 0 ||
-            width <= 0 ||
-            insetWidth <= 0
-          )
+          if (!success || stackedProgress.value !== 0 || guideProgress.value !== 0 || width <= 0)
             return
-          const current = Math.max(minScale, Math.min(maxScale, insetScale.value))
-          const restore = expanded.value || current >= maxScale - 0.001
-          if (!restore) restoreFraction.value = (current * insetWidth) / width
-          expanded.value = !restore
+          const current = Math.max(minSize, Math.min(maxSize, pipSize.value))
+          const restore = current >= maxSize - 0.001
+          if (!restore) restoreFraction.value = current
           const target = restore
-            ? Math.max(minScale, Math.min(maxScale, (restoreFraction.value * width) / insetWidth))
-            : maxScale
-          insetScale.value = withTiming(target, { duration: 180 })
+            ? Math.max(minSize, Math.min(maxSize, restoreFraction.value))
+            : maxSize
+          pipSize.value = withTiming(target, { duration: 180 })
+          scheduleOnRN(updatePipView, { size: target })
         }),
     [
       width,
-      insetWidth,
-      minScale,
-      maxScale,
-      insetScale,
+      minSize,
+      maxSize,
+      pipSize,
       restoreFraction,
-      expanded,
       layout,
       stackedProgress,
       guideProgress,
+      updatePipView,
     ]
   )
   // Native preview dimensions depend only on width, not on the toolbar/control layout.
@@ -289,11 +269,8 @@ export function CameraStage({
     const stackedWeight = stackedProgress.value
     const guideWeight = guideProgress.value
     const pipWeight = Math.max(0, 1 - stackedWeight - guideWeight)
-    const baseInsetWidth = Math.min(theme.spacing['9xl'], frame.portraitWidth * 0.55)
-    const minimumScale = baseInsetWidth > 0 ? (frame.portraitWidth * 0.4) / baseInsetWidth : 1
-    const maximumScale = baseInsetWidth > 0 ? (frame.portraitWidth * 0.75) / baseInsetWidth : 1
-    const pipScale = Math.max(minimumScale, Math.min(maximumScale, insetScale.value))
-    const pipWidth = baseInsetWidth * pipScale
+    const normalizedSize = Math.max(minSize, Math.min(maxSize, pipSize.value))
+    const pipWidth = frame.portraitWidth * normalizedSize
     const pipHeight = (pipWidth * 9) / 16
     const maxX = Math.max(0, frame.portraitWidth - pipWidth - padding)
     const maxY = Math.max(0, frame.portraitHeight - pipHeight - padding)
@@ -301,13 +278,13 @@ export function CameraStage({
       (stage.width + frame.portraitWidth) / 2 -
       theme.spacing.sm -
       pipWidth / 2 +
-      Math.max(-maxX, Math.min(0, insetX.value))
+      (Math.max(0, Math.min(1, pipX.value)) - 1) * maxX
     const pipCenterY =
       frame.portraitTop +
       frame.portraitHeight -
       theme.spacing.sm -
       pipHeight / 2 +
-      Math.max(-maxY, Math.min(0, insetY.value))
+      (Math.max(0, Math.min(1, pipY.value)) - 1) * maxY
     // Blend three exact endpoints, rather than routing the Single mode transition through PiP.
     const renderedWidth =
       pipWidth * pipWeight + frame.stackedWidth * stackedWeight + frame.portraitWidth * guideWeight

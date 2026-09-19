@@ -4,6 +4,23 @@ export type CapturePhase =
   'idle' | 'preparing' | 'recording' | 'capturing' | 'finalizing' | 'exporting'
 export type MediaType = 'video' | 'photo'
 export type PhotoFlashMode = 'off' | 'auto' | 'on'
+export type PreviewLayout = 'pip' | 'stacked' | 'guide'
+export interface PipViewSettings {
+  /** Normalized left-to-right position within the available preview area. */
+  x: number
+  /** Normalized top-to-bottom position within the available preview area. */
+  y: number
+  /** Width of the PiP preview as a fraction of the portrait preview width. */
+  size: number
+}
+export interface CameraViewSettings {
+  layout: PreviewLayout
+  pip: PipViewSettings
+}
+export const DEFAULT_CAMERA_VIEW_SETTINGS: CameraViewSettings = {
+  layout: 'pip',
+  pip: { x: 1, y: 1, size: 0.4 },
+}
 export interface RecordingSettings {
   longEdge: 1280 | 1920 | 2560 | 3840
   fps: 24 | 25 | 30 | 50 | 60 | 120
