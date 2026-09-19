@@ -507,6 +507,15 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
         }
         setZoomRange(range)
         const initialZoom = Math.max(range.min, Math.min(range.max, 1))
+        session.current = localSession
+        orientation.startOrientationUpdates((value) => {
+          if (useAppStore.getState().camera.phase === 'idle') {
+            ;[...recordingOutputs, ...stillOutputs].forEach((output) => {
+              output.outputOrientation = value
+            })
+          }
+        })
+        await localSession.start()
         await Promise.all(
           controls.map((control) =>
             control.setZoom(
@@ -520,15 +529,6 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
             )
           )
         )
-        session.current = localSession
-        orientation.startOrientationUpdates((value) => {
-          if (useAppStore.getState().camera.phase === 'idle') {
-            ;[...recordingOutputs, ...stillOutputs].forEach((output) => {
-              output.outputOrientation = value
-            })
-          }
-        })
-        await localSession.start()
         if (!cancelled) {
           setReady(true)
           setReadyDeviceId(device.id)
