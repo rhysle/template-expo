@@ -114,15 +114,6 @@ export function CameraScreen({
     idle: '',
     recording: '',
   }
-  const notices: Record<string, string> = {
-    partialSave: t('camera.partialSave'),
-    exportFailed: t('camera.exportFailed'),
-    storage: t('camera.storage'),
-    thermal: t('camera.thermal'),
-    interruption: t('camera.interruption'),
-    focusUnavailable: t('camera.focusUnavailable'),
-    partialPhotoSave: t('camera.partialPhotoSave'),
-  }
   const permissionTitle = photoMode ? t('camera.photoPermissionTitle') : t('camera.permissionTitle')
   const permissionBody = photoMode ? t('camera.photoPermissionBody') : t('camera.permissionBody')
   const flashLabels = {
@@ -219,11 +210,6 @@ export function CameraScreen({
             {recorder.stats.thermal >= 2 && (
               <Text tone="warning" variant="caption" align="center">
                 {t('camera.heatWarning')}
-              </Text>
-            )}
-            {recorder.notice && (
-              <Text variant="caption" tone="secondary" align="center">
-                {notices[recorder.notice] ?? t('camera.failure')}
               </Text>
             )}
             {recorder.error && (

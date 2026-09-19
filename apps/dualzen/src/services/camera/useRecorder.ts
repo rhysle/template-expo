@@ -44,7 +44,7 @@ type ControlKind = 'zoom' | 'exposure' | 'torch'
 type ControlQueue = { running: boolean; pending: (() => Promise<void>) | null }
 export function useCaptureController(active: boolean, mediaType: MediaType) {
   const { t } = useTranslation()
-  const { showSnackbar } = useSnackbarState()
+  const { showSnackbar, hideSnackbar } = useSnackbarState()
   const { settings, phase, photoFlashMode } = useCameraState()
   const [devices, setDevices] = useState<CameraDevice[]>([])
   const [pairs, setPairs] = useState<CameraDevice[][]>([])
@@ -57,7 +57,6 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
     recording: false,
   })
   const [error, setError] = useState<string | null>(null)
-  const [notice, setNotice] = useState<string | null>(null)
   const [ready, setReady] = useState(false)
   const [readyDeviceId, setReadyDeviceId] = useState<string | null>(null)
   const [cameraAuthorized, setCameraAuthorized] = useState(false)
@@ -114,6 +113,38 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
   const handling = useRef<Promise<void> | null>(null)
   const handled = useRef(new Set<string>())
   const previousOrientation = useRef<ScreenOrientation.OrientationLock | null>(null)
+  const showCaptureNotice = useCallback(
+    (notice: string) => {
+      let title: string
+      switch (notice) {
+        case 'partialSave':
+          title = t('camera.partialSave')
+          break
+        case 'exportFailed':
+          title = t('camera.exportFailed')
+          break
+        case 'storage':
+          title = t('camera.storage')
+          break
+        case 'thermal':
+          title = t('camera.thermal')
+          break
+        case 'interruption':
+          title = t('camera.interruption')
+          break
+        case 'focusUnavailable':
+          title = t('camera.focusUnavailable')
+          break
+        case 'partialPhotoSave':
+          title = t('camera.partialPhotoSave')
+          break
+        default:
+          title = t('camera.failure')
+      }
+      showSnackbar({ title, variant: 'warning' })
+    },
+    [showSnackbar, t]
+  )
   const rearZoomDevice = devices
     .filter(
       (item) =>
@@ -306,21 +337,21 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
             await NativeRecorder.thumbnail(source, thumbnailFile(video.id).uri).catch(() => {})
             if (video.outputs.every((item) => item.ready) && !video.error) {
               showSnackbar({ title: t('camera.saved'), variant: 'success' })
-            } else setNotice('partialSave')
+            } else showCaptureNotice('partialSave')
             useAppStore.getState().camera.setPhase('idle')
             if (useAppStore.getState().camera.autoSaveToLibrary) {
               const exported = await exportMedia(
                 video,
                 video.outputs.filter((item) => item.ready).map((item) => item.kind)
               )
-              if (exported.some((item) => item.error)) setNotice('exportFailed')
+              if (exported.some((item) => item.error)) showCaptureNotice('exportFailed')
             }
           } else
             setError(
               result.error ?? result.outputs.find((item) => item.error)?.error ?? 'saveFailed'
             )
           if (['storage', 'thermal', 'interruption'].includes(result.reason))
-            setNotice(result.reason)
+            showCaptureNotice(result.reason)
         } catch (cause) {
           setError(String(cause))
         } finally {
@@ -334,7 +365,7 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
       await task
       handling.current = null
     },
-    [releaseLocks, showSnackbar, t]
+    [releaseLocks, showCaptureNotice, showSnackbar, t]
   )
   const stop = useCallback(async () => {
     if (!metadata.current || useAppStore.getState().camera.phase !== 'recording') return
@@ -457,8 +488,10 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
         )
         subscriptions.push(
           localSession.addOnInterruptionStartedListener(() => {
-            setNotice('interruption')
-            void stop()
+            if (metadata.current && useAppStore.getState().camera.phase === 'recording') {
+              showCaptureNotice('interruption')
+              void stop()
+            }
           })
         )
         const controls = await localSession.configure(
@@ -571,6 +604,7 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
     captureSettings,
     configuration,
     checkSettings,
+    showCaptureNotice,
     stop,
     mediaType,
   ])
@@ -585,7 +619,7 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
     )
       return
     useAppStore.getState().camera.setPhase('preparing')
-    setNotice(null)
+    hideSnackbar()
     setElapsed(0)
     try {
       const orientation = await ScreenOrientation.getOrientationAsync()
@@ -641,7 +675,7 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
     )
       return
     useAppStore.getState().camera.setPhase('capturing')
-    setNotice(null)
+    hideSnackbar()
     const allocation = allocateMedia()
     try {
       const selectedFlash =
@@ -752,14 +786,14 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
       await saveMedia(photo)
       if (photo.outputs.every((output) => output.ready))
         showSnackbar({ title: t('camera.photoSaved'), variant: 'success' })
-      else setNotice('partialPhotoSave')
+      else showCaptureNotice('partialPhotoSave')
       useAppStore.getState().camera.setPhase('idle')
       if (useAppStore.getState().camera.autoSaveToLibrary) {
         const exported = await exportMedia(
           photo,
           photo.outputs.filter((output) => output.ready).map((output) => output.kind)
         )
-        if (exported.some((item) => item.error)) setNotice('exportFailed')
+        if (exported.some((item) => item.error)) showCaptureNotice('exportFailed')
       }
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : String(cause))
@@ -778,7 +812,7 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
       try {
         await work()
       } catch (cause) {
-        if (session.current === target) setNotice(String(cause))
+        if (session.current === target) showCaptureNotice(String(cause))
       }
     }
     if (queue.running) return
@@ -831,7 +865,7 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
               !control.device.supportsFocusMetering || !control.device.supportsExposureMetering
           ))
       ) {
-        setNotice('focusUnavailable')
+        showCaptureNotice('focusUnavailable')
         return false
       }
       await Promise.all(
@@ -875,7 +909,7 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
       if (sequence === focusSequence.current && session.current === target) {
         // A partial multi-camera lock must not leave one lens silently locked.
         await Promise.all(controls.map((control) => control.resetFocus().catch(() => {})))
-        if (sequence === focusSequence.current) setNotice(String(cause))
+        if (sequence === focusSequence.current) showCaptureNotice(String(cause))
       }
       return false
     }
@@ -887,7 +921,8 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
     try {
       await Promise.all(controllers.current.map((control) => control.resetFocus()))
     } catch (cause) {
-      if (sequence === focusSequence.current && session.current === target) setNotice(String(cause))
+      if (sequence === focusSequence.current && session.current === target)
+        showCaptureNotice(String(cause))
     }
   }
   const exposureRange = (kind: OutputKind) => {
@@ -976,7 +1011,6 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
     stats,
     sizes,
     error,
-    notice,
     elapsed,
     zoom,
     zoomRange,
