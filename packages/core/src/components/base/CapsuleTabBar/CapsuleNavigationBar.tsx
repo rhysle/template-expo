@@ -222,8 +222,8 @@ export function CapsuleNavigationBar({ items, hideOnKeyboard = true }: CapsuleNa
           <Svg width="100%" height="100%">
             <Defs>
               <RadialGradient id="capsuleAndroidGlow" cx="50%" cy="50%" r="50%">
-                <Stop offset="0%" stopColor={colors.text.primary} stopOpacity={0.2} />
-                <Stop offset="42%" stopColor={colors.text.primary} stopOpacity={0.1} />
+                <Stop offset="0%" stopColor={colors.text.primary} stopOpacity={0.12} />
+                <Stop offset="42%" stopColor={colors.text.primary} stopOpacity={0.06} />
                 <Stop offset="100%" stopColor={colors.text.primary} stopOpacity={0} />
               </RadialGradient>
             </Defs>
