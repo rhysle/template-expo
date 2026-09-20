@@ -273,7 +273,7 @@ export function CapsuleNavigationBar({ items, hideOnKeyboard = true }: CapsuleNa
           <GlassView
             colorScheme={appearance}
             glassEffectStyle="regular"
-            tintColor={withAlpha(colors.background.surface, appearance === 'dark' ? 0.7 : 0.35)}
+            tintColor={withAlpha(colors.background.surface, 0.3)}
             isInteractive
             style={styles.pill}>
             {content}
