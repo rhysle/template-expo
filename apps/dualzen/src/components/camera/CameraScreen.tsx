@@ -21,7 +21,16 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native'
-import { cancelAnimation, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
+import Animated, {
+  cancelAnimation,
+  Easing,
+  interpolate,
+  ReduceMotion,
+  useAnimatedStyle,
+  useSharedValue,
+  withDelay,
+  withTiming,
+} from 'react-native-reanimated'
 import { scheduleOnRN } from 'react-native-worklets'
 
 import type { CaptureContextController } from '@/services/camera/CaptureProvider'
@@ -36,6 +45,7 @@ import { type QuickSettingsAction, QuickSettingsSheet } from './QuickSettingsShe
 const LAYOUTS: PreviewLayout[] = ['pip', 'stacked', 'guide']
 const LAYOUT_ICONS = { pip: SquaresFourIcon, stacked: StackIcon, guide: RectangleIcon }
 const CAMERA_BLUR_INTENSITY = 20
+const RECORD_MORPH_DURATION = 240
 export function CameraScreen({
   recorder,
   onSettings,
@@ -114,6 +124,32 @@ export function CameraScreen({
   const photoMode = mediaType === 'photo'
   const immersive = layout === 'guide' && !landscape
   const recording = phase === 'recording'
+  const recordCircleSize = theme.spacing['6xl']
+  const recordStopSize = theme.spacing['3xl']
+  const recordMorphProgress = useSharedValue(recording ? 1 : 0)
+  useEffect(() => {
+    recordMorphProgress.set(
+      withTiming(recording ? 1 : 0, {
+        duration: RECORD_MORPH_DURATION,
+        easing: Easing.inOut(Easing.cubic),
+        reduceMotion: ReduceMotion.System,
+      })
+    )
+  }, [recording, recordMorphProgress])
+  useEffect(() => () => cancelAnimation(recordMorphProgress), [recordMorphProgress])
+  const recordShapeStyle = useAnimatedStyle(() => {
+    const size = interpolate(recordMorphProgress.value, [0, 1], [recordCircleSize, recordStopSize])
+
+    return {
+      width: size,
+      height: size,
+      borderRadius: interpolate(
+        recordMorphProgress.value,
+        [0, 1],
+        [recordCircleSize / 2, theme.borderRadius.sm]
+      ),
+    }
+  })
   const layoutLabels = {
     pip: t('camera.layouts.pip'),
     stacked: t('camera.layouts.stacked'),
@@ -133,7 +169,7 @@ export function CameraScreen({
   const recordInnerStyle = [
     styles.recordInner,
     { backgroundColor: withAlpha(recordColor, photoMode ? 0.88 : 0.78) },
-    recording && styles.stop,
+    recordShapeStyle,
   ]
   const recordSurface = liquidGlass ? (
     <GlassView
@@ -143,11 +179,11 @@ export function CameraScreen({
       isInteractive
       pointerEvents="none"
       style={styles.recordSurface}>
-      <View style={recordInnerStyle} />
+      <Animated.View style={recordInnerStyle} />
     </GlassView>
   ) : (
     <BlurView {...cameraBlurProps} pointerEvents="none" style={styles.recordSurface}>
-      <View style={recordInnerStyle} />
+      <Animated.View style={recordInnerStyle} />
     </BlurView>
   )
   const openQuickSettings = () => {
@@ -540,11 +576,6 @@ const createStyles = createThemedStyles((theme) => ({
     width: theme.spacing['6xl'],
     height: theme.spacing['6xl'],
     borderRadius: theme.borderRadius.full,
-  },
-  stop: {
-    width: theme.spacing['3xl'],
-    height: theme.spacing['3xl'],
-    borderRadius: theme.borderRadius.sm,
   },
   dim: { opacity: 0.4 },
   error: {
