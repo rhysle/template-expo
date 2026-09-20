@@ -1,6 +1,5 @@
 import {
   Card,
-  NativeBottomSheet,
   NativeMenu,
   type NativeMenuAction,
   NativeToggle,
@@ -14,7 +13,6 @@ import { Platform, View } from 'react-native'
 import {
   formatDuration,
   FPS_OPTIONS,
-  type MediaType,
   type RecordingSettings,
   RESOLUTION_LABELS,
   RESOLUTION_OPTIONS,
@@ -24,7 +22,7 @@ import { useCameraState } from '@/stores/features/camera'
 import { useProjectsState } from '@/stores/features/projects'
 import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
 
-import { CameraOptionSegmentedControl, CameraOptionSlider } from './CameraOptionControls'
+import { CameraOptionSegmentedControl } from './CameraOptionControls'
 
 interface OptionRowProps {
   label: string
@@ -95,12 +93,14 @@ function ControlRow({
 
 function ToggleRow({
   label,
+  subtitle,
   value,
   onValueChange,
   disabled,
   divider,
 }: {
   label: string
+  subtitle?: string
   value: boolean
   onValueChange: (value: boolean) => void
   disabled?: boolean
@@ -110,9 +110,31 @@ function ToggleRow({
 
   return (
     <View style={[styles.optionRow, divider && styles.divider]}>
-      <Text weight="medium">{label}</Text>
+      <View style={styles.optionText}>
+        <Text weight="medium">{label}</Text>
+        {subtitle && (
+          <Text variant="caption" tone="muted">
+            {subtitle}
+          </Text>
+        )}
+      </View>
       <View style={styles.toggleControl}>
         <NativeToggle value={value} onValueChange={onValueChange} disabled={disabled} />
+      </View>
+    </View>
+  )
+}
+
+function DescriptionRow({ label, body }: { label: string; body: string }) {
+  const styles = useThemedStyles(createStyles)
+
+  return (
+    <View style={styles.optionRow}>
+      <View style={styles.optionText}>
+        <Text weight="medium">{label}</Text>
+        <Text variant="caption" tone="muted">
+          {body}
+        </Text>
       </View>
     </View>
   )
@@ -123,7 +145,7 @@ function Section({ label, children }: { label: string; children: ReactNode }) {
 
   return (
     <View style={styles.section}>
-      <Text variant="caption" weight="semibold" tone="muted" style={styles.sectionLabel}>
+      <Text variant="subtitle" weight="semibold" tone="accent" style={styles.sectionLabel}>
         {label}
       </Text>
       {children}
@@ -131,20 +153,17 @@ function Section({ label, children }: { label: string; children: ReactNode }) {
   )
 }
 
-export function RecordingOptions({
-  mediaType,
-  recorder,
-  visible,
-  onClose,
-}: {
-  mediaType: MediaType
-  recorder: CaptureController
-  visible: boolean
-  onClose: () => void
-}) {
+export function CameraSettingsSections({ recorder }: { recorder: CaptureController }) {
   const { t } = useTranslation()
-  const { sharedSettings, videoSettings, updateSharedSettings, updateVideoSettings } =
-    useCameraState()
+  const {
+    sharedSettings,
+    videoSettings,
+    updateSharedSettings,
+    updateVideoSettings,
+    autoSaveToLibrary,
+    setAutoSaveToLibrary,
+    phase,
+  } = useCameraState()
   const settings = useMemo(
     () => ({ ...sharedSettings, ...videoSettings }),
     [sharedSettings, videoSettings]
@@ -155,7 +174,6 @@ export function RecordingOptions({
   const [supported, setSupported] = useState<Record<string, boolean>>({})
 
   useEffect(() => {
-    if (!visible) return
     let cancelled = false
     setSupported({})
     const variants = [
@@ -175,7 +193,7 @@ export function RecordingOptions({
     return () => {
       cancelled = true
     }
-  }, [visible, settings, checkSettings])
+  }, [settings, checkSettings])
 
   const changeMode = (mode: RecordingSettings['mode']) => {
     const androidDual = Platform.OS === 'android' && mode === 'dual'
@@ -203,16 +221,16 @@ export function RecordingOptions({
   const selectedLens = availableLenses.find((device) => device.id === recorder.device?.id)
   const selectedProject = projects.find((project) => project.id === selectedProjectId)
   const selectedPair = recorder.pairs[settings.pairIndex]
+  const selectedPhotoDevices =
+    settings.mode === 'dual' ? selectedPair : recorder.device ? [recorder.device] : []
+  const photoHdrSupported =
+    selectedPhotoDevices.length > 0 &&
+    selectedPhotoDevices.every((device) => device.supportsPhotoHDR)
   const hdrUnavailable = !settings.hdr && supported.hdr === false
   const stabilizationUnavailable = !settings.stabilization && supported.stabilization === false
 
   return (
-    <NativeBottomSheet
-      visible={visible}
-      onDismiss={onClose}
-      preset="resizable"
-      scrollable
-      contentContainerStyle={styles.content}>
+    <View style={styles.content}>
       <Section label={t('camera.sections.capture')}>
         <Card padding="none">
           {recorder.pairs.length ? (
@@ -242,10 +260,10 @@ export function RecordingOptions({
                   selected: device.id === recorder.device?.id,
                 }))}
                 onSelect={(deviceId) => updateSharedSettings({ deviceId })}
-                divider={projects.length > 1}
+                divider
               />
             ) : (
-              <ReadOnlyOptionRow label={t('camera.lens')} value="—" divider={projects.length > 1} />
+              <ReadOnlyOptionRow label={t('camera.lens')} value="—" divider />
             ))}
 
           {settings.mode === 'dual' && selectedPair && (
@@ -258,7 +276,7 @@ export function RecordingOptions({
                 selected: index === settings.pairIndex,
               }))}
               onSelect={(pairIndex) => updateSharedSettings({ pairIndex: Number(pairIndex) })}
-              divider={projects.length > 1}
+              divider
             />
           )}
 
@@ -272,8 +290,24 @@ export function RecordingOptions({
                 selected: project.id === selectedProjectId,
               }))}
               onSelect={selectProject}
+              divider
             />
           )}
+          <ToggleRow
+            label={t('camera.grid')}
+            value={settings.grid}
+            onValueChange={(grid) => updateSharedSettings({ grid })}
+            divider
+          />
+          <ToggleRow
+            label={t('camera.autoSaveToLibrary')}
+            subtitle={t('camera.autoSaveToLibraryBody')}
+            value={autoSaveToLibrary}
+            onValueChange={setAutoSaveToLibrary}
+            disabled={phase !== 'idle'}
+            divider
+          />
+          <DescriptionRow label={t('camera.storageTitle')} body={t('camera.storageBody')} />
         </Card>
         {settings.mode === 'dual' && Platform.OS === 'android' && (
           <Text variant="caption" tone="muted" style={styles.helperText}>
@@ -296,55 +330,7 @@ export function RecordingOptions({
             onSelect={(value) =>
               updateSharedSettings({ longEdge: Number(value) as RecordingSettings['longEdge'] })
             }
-            divider={mediaType === 'video'}
           />
-
-          {mediaType === 'video' && (
-            <>
-              <MenuOptionRow
-                label={t('camera.fps')}
-                value={String(settings.fps)}
-                actions={FPS_OPTIONS.map((fps) => ({
-                  id: String(fps),
-                  label: String(fps),
-                  disabled: supported[`fps${fps}`] !== true,
-                  selected: fps === settings.fps,
-                }))}
-                onSelect={(value) =>
-                  updateVideoSettings({ fps: Number(value) as RecordingSettings['fps'] })
-                }
-                divider
-              />
-
-              {recorder.capabilities.mov ? (
-                <ControlRow label={t('camera.format')} divider>
-                  <CameraOptionSegmentedControl
-                    value={settings.container}
-                    onValueChange={(container) => updateVideoSettings({ container })}
-                    options={[
-                      { value: 'mp4', label: 'MP4' },
-                      { value: 'mov', label: 'MOV' },
-                    ]}
-                    style={styles.segmentedControl}
-                  />
-                </ControlRow>
-              ) : (
-                <ReadOnlyOptionRow label={t('camera.format')} value="MP4" divider />
-              )}
-
-              <View style={styles.storageSummary}>
-                <Text variant="caption" tone="secondary">
-                  {t('camera.remaining', { time: formatDuration(recorder.remaining) })}
-                </Text>
-                <Text variant="caption" tone="muted">
-                  {t('camera.storageRate', {
-                    amount: ((recorder.bytesPerSecond * 60) / 1e6).toFixed(0),
-                    free: (recorder.stats.freeBytes / 1e9).toFixed(1),
-                  })}
-                </Text>
-              </View>
-            </>
-          )}
         </Card>
         {settings.longEdge === 2560 && (
           <Text variant="caption" tone="muted" style={styles.helperText}>
@@ -356,39 +342,61 @@ export function RecordingOptions({
         </Text>
       </Section>
 
-      <Section label={t('camera.sections.enhancements')}>
+      <Section label={t('camera.sections.video')}>
         <Card padding="none">
-          {mediaType === 'video' ? (
-            <>
-              <ToggleRow
-                label={t('camera.hdr')}
-                value={settings.hdr}
-                disabled={!settings.hdr && supported.hdr !== true}
-                onValueChange={(hdr) => updateVideoSettings({ hdr })}
-                divider
+          <MenuOptionRow
+            label={t('camera.fps')}
+            value={String(settings.fps)}
+            actions={FPS_OPTIONS.map((fps) => ({
+              id: String(fps),
+              label: String(fps),
+              disabled: supported[`fps${fps}`] !== true,
+              selected: fps === settings.fps,
+            }))}
+            onSelect={(value) =>
+              updateVideoSettings({ fps: Number(value) as RecordingSettings['fps'] })
+            }
+            divider
+          />
+          {recorder.capabilities.mov ? (
+            <ControlRow label={t('camera.format')} divider>
+              <CameraOptionSegmentedControl
+                value={settings.container}
+                onValueChange={(container) => updateVideoSettings({ container })}
+                options={[
+                  { value: 'mp4', label: 'MP4' },
+                  { value: 'mov', label: 'MOV' },
+                ]}
+                style={styles.segmentedControl}
               />
-              <ToggleRow
-                label={t('camera.stabilization')}
-                value={settings.stabilization}
-                disabled={!settings.stabilization && supported.stabilization !== true}
-                onValueChange={(stabilization) => updateVideoSettings({ stabilization })}
-                divider
-              />
-            </>
+            </ControlRow>
           ) : (
-            <View style={[styles.statusRow, styles.divider]}>
-              <Text variant="caption" tone="muted">
-                {recorder.photoHdrEnabled
-                  ? t('camera.photoHdrActive')
-                  : t('camera.photoHdrUnavailable')}
-              </Text>
-            </View>
+            <ReadOnlyOptionRow label={t('camera.format')} value="MP4" divider />
           )}
           <ToggleRow
-            label={t('camera.grid')}
-            value={settings.grid}
-            onValueChange={(grid) => updateSharedSettings({ grid })}
+            label={t('camera.hdr')}
+            value={settings.hdr}
+            disabled={!settings.hdr && supported.hdr !== true}
+            onValueChange={(hdr) => updateVideoSettings({ hdr })}
+            divider
           />
+          <ToggleRow
+            label={t('camera.stabilization')}
+            value={settings.stabilization}
+            disabled={!settings.stabilization && supported.stabilization !== true}
+            onValueChange={(stabilization) => updateVideoSettings({ stabilization })}
+          />
+          <View style={[styles.storageSummary, styles.dividerTop]}>
+            <Text variant="caption" tone="secondary">
+              {t('camera.remaining', { time: formatDuration(recorder.remaining) })}
+            </Text>
+            <Text variant="caption" tone="muted">
+              {t('camera.storageRate', {
+                amount: ((recorder.bytesPerSecond * 60) / 1e6).toFixed(0),
+                free: (recorder.stats.freeBytes / 1e9).toFixed(1),
+              })}
+            </Text>
+          </View>
         </Card>
         {hdrUnavailable && (
           <Text variant="caption" tone="muted" style={styles.helperText}>
@@ -402,53 +410,25 @@ export function RecordingOptions({
         )}
       </Section>
 
-      <Section label={t('camera.framing')}>
+      <Section label={t('camera.sections.photo')}>
         <Card padding="none">
-          {(['portrait', 'landscape'] as const).map((kind, index) => {
-            const label = t(`camera.${kind}`)
-            const accessibilityLabel = t('camera.crop', { kind: label })
-            const size = recorder.sizes[index]
-
-            return (
-              <View key={kind} style={[styles.framingRow, index === 0 && styles.divider]}>
-                <View style={styles.framingHeader}>
-                  <Text weight="medium">{label}</Text>
-                  <Text variant="caption" tone="muted">
-                    {size ? `${size.width}×${size.height}` : '—'}
-                  </Text>
-                </View>
-                <CameraOptionSlider
-                  accessibilityLabel={accessibilityLabel}
-                  value={
-                    kind === 'portrait' ? settings.portraitPosition : settings.landscapePosition
-                  }
-                  onValueChange={(value) =>
-                    updateSharedSettings(
-                      kind === 'portrait'
-                        ? { portraitPosition: value }
-                        : { landscapePosition: value }
-                    )
-                  }
-                />
-              </View>
-            )
-          })}
+          <View style={styles.statusRow}>
+            <Text weight="medium">{t('camera.photoHdr')}</Text>
+            <Text variant="caption" tone="muted">
+              {photoHdrSupported ? t('camera.photoHdrAutomatic') : t('camera.photoHdrUnavailable')}
+            </Text>
+          </View>
         </Card>
       </Section>
-    </NativeBottomSheet>
+    </View>
   )
 }
 
 const createStyles = createThemedStyles((theme) => ({
-  content: {
-    paddingHorizontal: theme.spacing.lg,
-    paddingTop: theme.spacing.sm,
-    paddingBottom: theme.spacing['3xl'],
-    gap: theme.spacing['2xl'],
-  },
-  section: { gap: theme.spacing.sm },
+  content: {},
+  section: { marginVertical: theme.spacing.xl },
   sectionLabel: {
-    paddingHorizontal: theme.spacing.sm,
+    marginBottom: theme.spacing.xl,
     textTransform: 'uppercase',
   },
   menu: {
@@ -473,6 +453,7 @@ const createStyles = createThemedStyles((theme) => ({
     gap: theme.spacing.xs,
   },
   optionValueText: { flexShrink: 1 },
+  optionText: { flex: 1, gap: theme.spacing.xs },
   controlRow: {
     paddingHorizontal: theme.spacing.xl,
     paddingVertical: theme.spacing.lg,
@@ -484,6 +465,10 @@ const createStyles = createThemedStyles((theme) => ({
     borderBottomWidth: 1,
     borderBottomColor: theme.colors.border.subtle,
   },
+  dividerTop: {
+    borderTopWidth: 1,
+    borderTopColor: theme.colors.border.subtle,
+  },
   helperText: { paddingHorizontal: theme.spacing.sm },
   storageSummary: {
     paddingHorizontal: theme.spacing.xl,
@@ -493,15 +478,6 @@ const createStyles = createThemedStyles((theme) => ({
   statusRow: {
     paddingHorizontal: theme.spacing.xl,
     paddingVertical: theme.spacing.lg,
-  },
-  framingRow: {
-    paddingHorizontal: theme.spacing.xl,
-    paddingVertical: theme.spacing.lg,
     gap: theme.spacing.sm,
-  },
-  framingHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
   },
 }))

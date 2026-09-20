@@ -34,18 +34,19 @@ import {
   StarIcon,
 } from 'phosphor-react-native'
 import { useTranslation } from 'react-i18next'
-import { Platform, ScrollView, Switch, View } from 'react-native'
+import { Platform, ScrollView, View } from 'react-native'
 
+import { CameraSettingsSections } from '@/components/camera/CameraSettingsSections'
 import { AppConfig } from '@/configs'
 import { AdsConsent, isAnyAdFormatEnabled } from '@/services/ads'
+import { useCapture } from '@/services/camera/CaptureProvider'
 import { AnalyticsGeneralEvents, trackEvent } from '@/services/firebase/analytics'
-import { useCameraState } from '@/stores/features/camera'
 import { createThemedStyles, iconSizes, useCommonStyles, useTheme, useThemedStyles } from '@/theme'
 
 const SETTINGS_PAYWALL_SOURCE = 'settings' satisfies PaywallSource
 
 export default function SettingsScreen() {
-  const { autoSaveToLibrary, setAutoSaveToLibrary, phase } = useCameraState()
+  const recorder = useCapture()
   const { t } = useTranslation()
   const bottomInset = useTabBarContentInset()
   const theme = useTheme()
@@ -127,39 +128,7 @@ export default function SettingsScreen() {
           />
         )}
 
-        <View style={styles.section}>
-          <Text variant="subtitle" weight="semibold" tone="accent" style={styles.sectionTitle}>
-            {t('settings.preferences')}
-          </Text>
-          <Card padding="none">
-            <View style={styles.preference}>
-              <View style={styles.preferenceText}>
-                <Text weight="semibold">{t('camera.autoSaveToLibrary')}</Text>
-                <Text variant="caption" tone="muted">
-                  {t('camera.autoSaveToLibraryBody')}
-                </Text>
-              </View>
-              <Switch
-                accessibilityLabel={t('camera.autoSaveToLibrary')}
-                disabled={phase !== 'idle'}
-                value={autoSaveToLibrary}
-                onValueChange={setAutoSaveToLibrary}
-                trackColor={{
-                  true: theme.colors.primary.main,
-                  false: theme.colors.background.subtle,
-                }}
-              />
-            </View>
-            <View style={styles.preference}>
-              <View style={styles.preferenceText}>
-                <Text weight="semibold">{t('camera.storageTitle')}</Text>
-                <Text variant="caption" tone="muted">
-                  {t('camera.storageBody')}
-                </Text>
-              </View>
-            </View>
-          </Card>
-        </View>
+        <CameraSettingsSections recorder={recorder} />
 
         <View style={styles.section}>
           <Text variant="subtitle" weight="semibold" tone="accent" style={styles.sectionTitle}>
@@ -260,13 +229,6 @@ export default function SettingsScreen() {
 }
 
 const createStyles = createThemedStyles((t) => ({
-  preference: {
-    flexDirection: 'row',
-    padding: t.spacing.lg,
-    gap: t.spacing.lg,
-    alignItems: 'center',
-  },
-  preferenceText: { flex: 1, gap: t.spacing.xs },
   container: {
     paddingHorizontal: t.spacing.lg,
     paddingTop: t.spacing.xl,

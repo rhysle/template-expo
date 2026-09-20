@@ -9,7 +9,7 @@ import {
   SquaresFourIcon,
   StackIcon,
 } from 'phosphor-react-native'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Linking, Pressable, useWindowDimensions, View } from 'react-native'
 import { cancelAnimation, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
@@ -21,7 +21,8 @@ import { useCameraState } from '@/stores/features/camera'
 import { cameraColors, createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
 
 import { CameraStage } from './CameraStage'
-import { RecordingOptions } from './RecordingOptions'
+import { FramingControl } from './FramingControl'
+import { type QuickSettingsAction, QuickSettingsSheet } from './QuickSettingsSheet'
 
 const LAYOUTS: PreviewLayout[] = ['pip', 'stacked', 'guide']
 const LAYOUT_ICONS = { pip: SquaresFourIcon, stacked: StackIcon, guide: RectangleIcon }
@@ -53,7 +54,9 @@ export function CameraScreen({
     [sharedSettings, videoSettings]
   )
   const layout = viewSettings.layout
-  const [options, setOptions] = useState(false)
+  const [quickSettingsVisible, setQuickSettingsVisible] = useState(false)
+  const [framingVisible, setFramingVisible] = useState(false)
+  const pendingQuickAction = useRef<QuickSettingsAction | null>(null)
   const [flipTarget, setFlipTarget] = useState<boolean | null>(null)
   const [sessionTransitionVisible, setSessionTransitionVisible] = useState(false)
   const [toolbarHeight, setToolbarHeight] = useState<number>(theme.spacing['5xl'])
@@ -132,6 +135,21 @@ export function CameraScreen({
       })
     )
   }
+  const openQuickSettings = () => {
+    pendingQuickAction.current = null
+    setFramingVisible(false)
+    setQuickSettingsVisible(true)
+  }
+  const selectQuickAction = (action: QuickSettingsAction) => {
+    pendingQuickAction.current = action
+    setQuickSettingsVisible(false)
+  }
+  const finishQuickSettingsDismiss = () => {
+    setQuickSettingsVisible(false)
+    if (pendingQuickAction.current === 'framing') setFramingVisible(true)
+    else if (pendingQuickAction.current === 'settings') onSettings()
+    pendingQuickAction.current = null
+  }
   const phaseLabels = {
     switching: t('camera.switchingMode'),
     preparing: t('camera.preparing'),
@@ -173,18 +191,13 @@ export function CameraScreen({
         style={styles.toolbar}
         onLayout={(event) => setToolbarHeight(event.nativeEvent.layout.height)}>
         <View style={styles.toolbarSide}>
-          <Pressable
-            disabled={!idle || switching}
-            onPress={() => setOptions(true)}
-            accessibilityRole="button"
-            accessibilityLabel={t('camera.cameraOptions')}
-            style={styles.profile}>
+          <View style={styles.profile}>
             <Text variant="label" weight="semibold" numberOfLines={1}>
               {photoMode
                 ? `${RESOLUTION_LABELS[settings.longEdge]} · JPEG · ${recorder.photoHdrEnabled ? 'HDR' : 'SDR'}`
                 : `${RESOLUTION_LABELS[settings.longEdge]} · ${settings.fps} · ${settings.container.toUpperCase()}`}
             </Text>
-          </Pressable>
+          </View>
         </View>
         {recording && (
           <View style={styles.timerPill}>
@@ -195,12 +208,6 @@ export function CameraScreen({
           </View>
         )}
         <View style={[styles.toolbarSide, styles.toolbarActions]}>
-          <IconButton
-            icon={SlidersHorizontalIcon}
-            accessibilityLabel={t('camera.cameraOptions')}
-            disabled={!idle || switching}
-            onPress={() => setOptions(true)}
-          />
           <IconButton
             icon={GearSixIcon}
             accessibilityLabel={t('camera.settings')}
@@ -245,7 +252,7 @@ export function CameraScreen({
                   variant="ghost"
                   onPress={() => {
                     recorder.clearError()
-                    setOptions(true)
+                    openQuickSettings()
                   }}
                   label={t('camera.retry')}
                 />
@@ -339,7 +346,13 @@ export function CameraScreen({
               />
             </Pressable>
             <View style={styles.controlGroup}>
-              <View style={styles.controlButton} pointerEvents="none" />
+              <IconButton
+                icon={SlidersHorizontalIcon}
+                style={styles.controlButton}
+                disabled={!idle || switching}
+                accessibilityLabel={t('camera.quickSettings')}
+                onPress={openQuickSettings}
+              />
               <IconButton
                 icon={LAYOUT_ICONS[layout]}
                 style={styles.controlButton}
@@ -369,11 +382,21 @@ export function CameraScreen({
           </View>
         </View>
       </View>
-      <RecordingOptions
-        mediaType={mediaType}
-        recorder={recorder}
-        visible={options}
-        onClose={() => setOptions(false)}
+      {framingVisible && (
+        <>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={t('camera.closeFraming')}
+            onPress={() => setFramingVisible(false)}
+            style={styles.framingDismiss}
+          />
+          <FramingControl landscape={landscape} />
+        </>
+      )}
+      <QuickSettingsSheet
+        visible={quickSettingsVisible}
+        onAction={selectQuickAction}
+        onDismiss={finishQuickSettingsDismiss}
       />
     </View>
   )
@@ -407,6 +430,14 @@ const createStyles = createThemedStyles((theme) => ({
     width: theme.spacing['9xl'] * 2 + theme.spacing['8xl'],
     justifyContent: 'center',
     paddingTop: theme.spacing['5xl'],
+  },
+  framingDismiss: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    zIndex: 5,
   },
   profile: {
     flexShrink: 1,

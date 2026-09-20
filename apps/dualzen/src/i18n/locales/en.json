@@ -44,8 +44,7 @@
     "upgradeBanner": {
       "title": "Upgrade to Premium",
       "subtitle": "Unlock longer Turbo cleaning, advanced audio controls, and an ad-free experience"
-    },
-    "preferences": "Preferences"
+    }
   },
   "paywall": {
     "title": "Unlock Your Complete Audio Toolkit",
@@ -223,8 +222,9 @@
     },
     "flip": "Switch front/back camera",
     "crop": "Adjust {{kind}} framing",
-    "cameraOptions": "Camera options",
-    "done": "Done",
+    "quickSettings": "Quick settings",
+    "moreSettings": "More settings",
+    "closeFraming": "Close framing controls",
     "singleLens": "Single lens",
     "dualLens": "Dual lens",
     "mode": "Capture mode",
@@ -233,7 +233,8 @@
     "hdrUnavailable": "HDR is unavailable for this camera or encoding pipeline.",
     "resolution2KNote": "2K is QHD (2560×1440).",
     "resolutionOutputNote": "Actual output sizes depend on each crop; photos and videos are never upscaled.",
-    "photoHdrActive": "Photo HDR is active for this camera configuration.",
+    "photoHdr": "Photo HDR",
+    "photoHdrAutomatic": "Applied automatically when supported by the selected camera configuration.",
     "photoHdrUnavailable": "Photo HDR is unavailable for this camera configuration.",
     "lens": "Lens",
     "wide": "Wide",
@@ -246,7 +247,8 @@
     "sections": {
       "capture": "Capture",
       "quality": "Quality",
-      "enhancements": "Enhancements"
+      "video": "Video",
+      "photo": "Photo"
     },
     "autoSaveToLibrary": "Auto-save to photo library",
     "autoSaveToLibraryBody": "Save originals in Projects first, then save both photo or video outputs to Photos or Gallery.",
