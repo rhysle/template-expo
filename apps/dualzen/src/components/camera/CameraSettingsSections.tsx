@@ -33,15 +33,25 @@ interface OptionRowProps {
 interface MenuOptionRowProps extends OptionRowProps {
   actions: readonly NativeMenuAction[]
   onSelect: (id: string) => void
+  subtitle?: string
 }
 
-function MenuOptionRow({ label, value, actions, onSelect, divider }: MenuOptionRowProps) {
+function MenuOptionRow({ label, value, actions, onSelect, divider, subtitle }: MenuOptionRowProps) {
   const theme = useTheme()
   const styles = useThemedStyles(createStyles)
 
   return (
-    <View style={[styles.optionRow, divider && styles.divider]}>
-      <Text weight="medium">{label}</Text>
+    <View style={styles.optionRow}>
+      <View style={styles.optionText}>
+        <Text variant="subtitle" weight="medium">
+          {label}
+        </Text>
+        {subtitle && (
+          <Text variant="caption" tone="muted">
+            {subtitle}
+          </Text>
+        )}
+      </View>
       <NativeMenu actions={actions} onSelect={onSelect} title={label} style={styles.menu}>
         <View style={styles.optionValue}>
           <Text
@@ -56,6 +66,7 @@ function MenuOptionRow({ label, value, actions, onSelect, divider }: MenuOptionR
           <CaretDownIcon size={iconSizes.sm} color={theme.colors.text.muted} />
         </View>
       </NativeMenu>
+      {divider && <View pointerEvents="none" style={styles.divider} />}
     </View>
   )
 }
@@ -64,14 +75,14 @@ function ReadOnlyOptionRow({ label, value, divider }: OptionRowProps) {
   const styles = useThemedStyles(createStyles)
 
   return (
-    <View
-      accessible
-      accessibilityLabel={`${label}: ${value}`}
-      style={[styles.optionRow, divider && styles.divider]}>
-      <Text weight="medium">{label}</Text>
+    <View accessible accessibilityLabel={`${label}: ${value}`} style={styles.optionRow}>
+      <Text variant="subtitle" weight="medium">
+        {label}
+      </Text>
       <Text tone="secondary" numberOfLines={1} style={styles.optionValueText}>
         {value}
       </Text>
+      {divider && <View pointerEvents="none" style={styles.divider} />}
     </View>
   )
 }
@@ -84,9 +95,12 @@ function ControlRow({
   const styles = useThemedStyles(createStyles)
 
   return (
-    <View style={[styles.controlRow, divider && styles.divider]}>
-      <Text weight="medium">{label}</Text>
+    <View style={styles.controlRow}>
+      <Text variant="subtitle" weight="medium">
+        {label}
+      </Text>
       {children}
+      {divider && <View pointerEvents="none" style={styles.divider} />}
     </View>
   )
 }
@@ -109,9 +123,11 @@ function ToggleRow({
   const styles = useThemedStyles(createStyles)
 
   return (
-    <View style={[styles.optionRow, divider && styles.divider]}>
+    <View style={styles.optionRow}>
       <View style={styles.optionText}>
-        <Text weight="medium">{label}</Text>
+        <Text variant="subtitle" weight="medium">
+          {label}
+        </Text>
         {subtitle && (
           <Text variant="caption" tone="muted">
             {subtitle}
@@ -121,6 +137,7 @@ function ToggleRow({
       <View style={styles.toggleControl}>
         <NativeToggle value={value} onValueChange={onValueChange} disabled={disabled} />
       </View>
+      {divider && <View pointerEvents="none" style={styles.divider} />}
     </View>
   )
 }
@@ -131,7 +148,9 @@ function DescriptionRow({ label, body }: { label: string; body: string }) {
   return (
     <View style={styles.optionRow}>
       <View style={styles.optionText}>
-        <Text weight="medium">{label}</Text>
+        <Text variant="subtitle" weight="medium">
+          {label}
+        </Text>
         <Text variant="caption" tone="muted">
           {body}
         </Text>
@@ -330,6 +349,7 @@ export function CameraSettingsSections({ recorder }: { recorder: CaptureControll
             onSelect={(value) =>
               updateSharedSettings({ longEdge: Number(value) as RecordingSettings['longEdge'] })
             }
+            subtitle={t('camera.resolutionOutputNote')}
           />
         </Card>
         {settings.longEdge === 2560 && (
@@ -337,9 +357,6 @@ export function CameraSettingsSections({ recorder }: { recorder: CaptureControll
             {t('camera.resolution2KNote')}
           </Text>
         )}
-        <Text variant="caption" tone="muted" style={styles.helperText}>
-          {t('camera.resolutionOutputNote')}
-        </Text>
       </Section>
 
       <Section label={t('camera.sections.video')}>
@@ -375,6 +392,7 @@ export function CameraSettingsSections({ recorder }: { recorder: CaptureControll
           )}
           <ToggleRow
             label={t('camera.hdr')}
+            subtitle={hdrUnavailable ? t('camera.hdrUnavailable') : undefined}
             value={settings.hdr}
             disabled={!settings.hdr && supported.hdr !== true}
             onValueChange={(hdr) => updateVideoSettings({ hdr })}
@@ -386,7 +404,8 @@ export function CameraSettingsSections({ recorder }: { recorder: CaptureControll
             disabled={!settings.stabilization && supported.stabilization !== true}
             onValueChange={(stabilization) => updateVideoSettings({ stabilization })}
           />
-          <View style={[styles.storageSummary, styles.dividerTop]}>
+          <View style={styles.storageSummary}>
+            <View pointerEvents="none" style={styles.dividerTop} />
             <Text variant="caption" tone="secondary">
               {t('camera.remaining', { time: formatDuration(recorder.remaining) })}
             </Text>
@@ -398,11 +417,6 @@ export function CameraSettingsSections({ recorder }: { recorder: CaptureControll
             </Text>
           </View>
         </Card>
-        {hdrUnavailable && (
-          <Text variant="caption" tone="muted" style={styles.helperText}>
-            {t('camera.hdrUnavailable')}
-          </Text>
-        )}
         {stabilizationUnavailable && (
           <Text variant="caption" tone="muted" style={styles.helperText}>
             {t('camera.stabilizationUnavailable')}
@@ -413,7 +427,9 @@ export function CameraSettingsSections({ recorder }: { recorder: CaptureControll
       <Section label={t('camera.sections.photo')}>
         <Card padding="none">
           <View style={styles.statusRow}>
-            <Text weight="medium">{t('camera.photoHdr')}</Text>
+            <Text variant="subtitle" weight="medium">
+              {t('camera.photoHdr')}
+            </Text>
             <Text variant="caption" tone="muted">
               {photoHdrSupported ? t('camera.photoHdrAutomatic') : t('camera.photoHdrUnavailable')}
             </Text>
@@ -436,9 +452,10 @@ const createStyles = createThemedStyles((theme) => ({
     marginStart: 'auto',
   },
   optionRow: {
+    position: 'relative',
     minHeight: theme.spacing['5xl'],
     paddingHorizontal: theme.spacing.xl,
-    paddingVertical: theme.spacing.lg,
+    paddingVertical: theme.spacing.xl,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -455,29 +472,39 @@ const createStyles = createThemedStyles((theme) => ({
   optionValueText: { flexShrink: 1 },
   optionText: { flex: 1, gap: theme.spacing.xs },
   controlRow: {
+    position: 'relative',
     paddingHorizontal: theme.spacing.xl,
-    paddingVertical: theme.spacing.lg,
+    paddingVertical: theme.spacing.xl,
     gap: theme.spacing.md,
   },
   toggleControl: { marginStart: 'auto' },
   segmentedControl: { width: '100%' },
   divider: {
-    borderBottomWidth: 1,
-    borderBottomColor: theme.colors.border.subtle,
+    position: 'absolute',
+    right: theme.spacing.xl,
+    bottom: 0,
+    left: theme.spacing.xl,
+    height: 1,
+    backgroundColor: theme.colors.border.subtle,
   },
   dividerTop: {
-    borderTopWidth: 1,
-    borderTopColor: theme.colors.border.subtle,
+    position: 'absolute',
+    top: 0,
+    right: theme.spacing.xl,
+    left: theme.spacing.xl,
+    height: 1,
+    backgroundColor: theme.colors.border.subtle,
   },
   helperText: { paddingHorizontal: theme.spacing.sm },
   storageSummary: {
+    position: 'relative',
     paddingHorizontal: theme.spacing.xl,
-    paddingVertical: theme.spacing.lg,
+    paddingVertical: theme.spacing.xl,
     gap: theme.spacing.xs,
   },
   statusRow: {
     paddingHorizontal: theme.spacing.xl,
-    paddingVertical: theme.spacing.lg,
+    paddingVertical: theme.spacing.xl,
     gap: theme.spacing.sm,
   },
 }))

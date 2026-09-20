@@ -140,12 +140,14 @@ export default function SettingsScreen() {
               icon={EnvelopeIcon}
               title={t('settings.contactSupport')}
               subtitle={t('settings.contactSupportSubtitle')}
+              withDivider
             />
             <ActionListItem
               onPress={onRateAppPress}
               icon={StarIcon}
               title={t('settings.rateApp')}
               subtitle={t('settings.rateAppSubtitle')}
+              withDivider
             />
             <ActionListItem
               onPress={onSharePress}
@@ -166,12 +168,14 @@ export default function SettingsScreen() {
               icon={FileTextIcon}
               title={t('paywall.terms')}
               trailingIcon={ArrowSquareOutIcon}
+              withDivider
             />
             <ActionListItem
               onPress={handleOpenPrivacyPress}
               icon={LockIcon}
               title={t('paywall.privacy')}
               trailingIcon={ArrowSquareOutIcon}
+              withDivider={showPrivacyConsentItem}
             />
             {showPrivacyConsentItem && (
               <ActionListItem

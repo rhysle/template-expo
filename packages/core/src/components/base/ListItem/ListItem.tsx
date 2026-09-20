@@ -32,6 +32,7 @@ export const ListItem = ({
       {right ? <View style={styles.right}>{right}</View> : null}
     </>
   )
+  const divider = withDivider ? <View pointerEvents="none" style={styles.divider} /> : null
 
   if (onPress) {
     return (
@@ -39,22 +40,25 @@ export const ListItem = ({
         onPress={onPress}
         haptic={haptic}
         variant="default"
-        style={[styles.row, withDivider && styles.divider, style]}
+        style={[styles.row, style]}
         {...props}>
         {content}
+        {divider}
       </Pressable>
     )
   }
 
   return (
-    <View style={[styles.row, withDivider && styles.divider, style]} {...props}>
+    <View style={[styles.row, style]} {...props}>
       {content}
+      {divider}
     </View>
   )
 }
 
 const createStyles = createThemedStyles((t) => ({
   row: {
+    position: 'relative',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -62,8 +66,12 @@ const createStyles = createThemedStyles((t) => ({
     paddingHorizontal: t.spacing.xl,
   },
   divider: {
-    borderBottomWidth: 1,
-    borderBottomColor: t.colors.border.subtle,
+    position: 'absolute',
+    right: t.spacing.xl,
+    bottom: 0,
+    left: t.spacing.xl,
+    height: 1,
+    backgroundColor: t.colors.border.subtle,
   },
   right: {
     flexDirection: 'row',
