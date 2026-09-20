@@ -874,13 +874,20 @@ export function useCaptureController(active: boolean) {
         const capture = captures[0]
         if (capture?.status === 'fulfilled') {
           let image: NitroImage | null = null
+          let orientedImage: NitroImage | null = null
           try {
             image = await capture.value.toImageAsync()
+            // iOS keeps the capture orientation on UIImage metadata, while Nitro Image's crop
+            // operates on raw CGImage pixels. Flatten the orientation before cropping.
+            orientedImage =
+              Platform.OS === 'ios' && capture.value.orientation !== 'up'
+                ? await image.rotateAsync(0, false)
+                : image
             for (const kind of ['portrait', 'landscape'] as const) {
               try {
                 photoResults.push(
                   await savePhotoOutput(
-                    image,
+                    orientedImage,
                     allocation.directory,
                     kind,
                     positions[kind],
@@ -893,6 +900,7 @@ export function useCaptureController(active: boolean) {
               }
             }
           } finally {
+            if (orientedImage && orientedImage !== image) orientedImage.dispose()
             image?.dispose()
             capture.value.dispose()
           }
@@ -908,11 +916,18 @@ export function useCaptureController(active: boolean) {
             continue
           }
           let image: NitroImage | null = null
+          let orientedImage: NitroImage | null = null
           try {
             image = await capture.value.toImageAsync()
+            // iOS keeps the capture orientation on UIImage metadata, while Nitro Image's crop
+            // operates on raw CGImage pixels. Flatten the orientation before cropping.
+            orientedImage =
+              Platform.OS === 'ios' && capture.value.orientation !== 'up'
+                ? await image.rotateAsync(0, false)
+                : image
             photoResults.push(
               await savePhotoOutput(
-                image,
+                orientedImage,
                 allocation.directory,
                 kind,
                 positions[kind],
@@ -923,6 +938,7 @@ export function useCaptureController(active: boolean) {
           } catch (cause) {
             photoResults.push(failedPhotoOutput(kind, cause))
           } finally {
+            if (orientedImage && orientedImage !== image) orientedImage.dispose()
             image?.dispose()
             capture.value.dispose()
           }
