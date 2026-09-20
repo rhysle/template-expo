@@ -4,7 +4,7 @@ import { withAlpha } from '@shared/core/utils/color'
 export const defaultTheme: Theme = {
   appearance: 'dark',
   colors: {
-    primary: { main: '#D9A441', strong: '#B8832E', soft: '#e8d3a7' },
+    primary: { main: '#D9A441', strong: '#B8832E', soft: '#3A2E19' },
     background: {
       base: '#131313',
       surface: '#171717',
