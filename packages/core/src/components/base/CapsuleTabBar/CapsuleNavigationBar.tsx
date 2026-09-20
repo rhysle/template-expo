@@ -3,8 +3,9 @@ import { withAlpha } from '@shared/core/utils/color'
 import { BlurView } from 'expo-blur'
 import { GlassView, isGlassEffectAPIAvailable, isLiquidGlassAvailable } from 'expo-glass-effect'
 import type { ReactNode } from 'react'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { AccessibilityInfo, Keyboard, Platform, View } from 'react-native'
+import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
   interpolateColor,
   ReduceMotion,
@@ -15,6 +16,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import Svg, { Defs, RadialGradient, Rect, Stop } from 'react-native-svg'
 import { scheduleOnRN } from 'react-native-worklets'
 
 import { useSetTabBarHeight } from '../FloatingTabBar/tabBarHeight'
@@ -87,7 +89,12 @@ export function CapsuleNavigationBar({ items, hideOnKeyboard = true }: CapsuleNa
   const [measuredHeight, setMeasuredHeight] = useState(0)
   const pressed = useSharedValue(false)
   const hovered = useSharedValue(false)
+  const androidGlowX = useSharedValue(0)
+  const androidGlowY = useSharedValue(0)
+  const androidGlowOpacity = useSharedValue(0)
+  const androidPillWidth = useSharedValue(0)
   const hidden = hideOnKeyboard && keyboardVisible
+  const androidGlowSize = spacing['8xl']
   const capsuleAnimatedStyle = useAnimatedStyle(() => ({
     transform: [
       {
@@ -100,6 +107,56 @@ export function CapsuleNavigationBar({ items, hideOnKeyboard = true }: CapsuleNa
       },
     ],
   }))
+  const androidGlowAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: androidGlowOpacity.value,
+    transform: [
+      { translateX: androidGlowX.value - androidGlowSize / 2 },
+      { translateY: androidGlowY.value - androidGlowSize / 2 },
+    ],
+  }))
+  const androidTouchGesture = useMemo(
+    () =>
+      Gesture.Manual()
+        .shouldCancelWhenOutside(false)
+        .onTouchesDown((event) => {
+          const touch = event.allTouches[0]
+          if (!touch) return
+
+          pressed.value = true
+          androidGlowX.value = Math.max(0, Math.min(touch.x, androidPillWidth.value))
+          androidGlowY.value = touch.y
+          androidGlowOpacity.value = withTiming(1, {
+            duration: 120,
+            reduceMotion: ReduceMotion.System,
+          })
+        })
+        .onTouchesMove((event) => {
+          const touch = event.allTouches[0]
+          if (!touch) return
+
+          androidGlowX.value = Math.max(0, Math.min(touch.x, androidPillWidth.value))
+          androidGlowY.value = touch.y
+        })
+        .onTouchesUp((event, stateManager) => {
+          if (event.numberOfTouches > 0) return
+
+          pressed.value = false
+          androidGlowOpacity.value = withTiming(0, {
+            duration: 180,
+            reduceMotion: ReduceMotion.System,
+          })
+          stateManager.fail()
+        })
+        .onTouchesCancelled((_event, stateManager) => {
+          pressed.value = false
+          androidGlowOpacity.value = withTiming(0, {
+            duration: 180,
+            reduceMotion: ReduceMotion.System,
+          })
+          stateManager.fail()
+        }),
+    [androidGlowOpacity, androidGlowX, androidGlowY, androidPillWidth, pressed]
+  )
 
   useEffect(() => {
     if (Platform.OS !== 'ios') return
@@ -133,9 +190,10 @@ export function CapsuleNavigationBar({ items, hideOnKeyboard = true }: CapsuleNa
     if (hidden) {
       pressed.value = false
       hovered.value = false
+      androidGlowOpacity.value = 0
     }
     setHeight(hidden ? 0 : measuredHeight)
-  }, [hidden, measuredHeight, setHeight, pressed, hovered])
+  }, [hidden, measuredHeight, setHeight, pressed, hovered, androidGlowOpacity])
 
   useEffect(() => () => setHeight(0), [setHeight])
 
@@ -147,6 +205,35 @@ export function CapsuleNavigationBar({ items, hideOnKeyboard = true }: CapsuleNa
     !reduceTransparency &&
     isGlassEffectAPIAvailable() &&
     isLiquidGlassAvailable()
+  const solidPill = (
+    <View
+      style={[styles.pill, styles.solid, Platform.OS === 'android' && styles.androidPill]}
+      onLayout={(event) => {
+        androidPillWidth.value = event.nativeEvent.layout.width
+      }}>
+      {Platform.OS === 'android' ? (
+        <Animated.View
+          pointerEvents="none"
+          style={[
+            styles.androidGlow,
+            { width: androidGlowSize, height: androidGlowSize },
+            androidGlowAnimatedStyle,
+          ]}>
+          <Svg width="100%" height="100%">
+            <Defs>
+              <RadialGradient id="capsuleAndroidGlow" cx="50%" cy="50%" r="50%">
+                <Stop offset="0%" stopColor={colors.text.primary} stopOpacity={0.2} />
+                <Stop offset="42%" stopColor={colors.text.primary} stopOpacity={0.1} />
+                <Stop offset="100%" stopColor={colors.text.primary} stopOpacity={0} />
+              </RadialGradient>
+            </Defs>
+            <Rect width="100%" height="100%" fill="url(#capsuleAndroidGlow)" />
+          </Svg>
+        </Animated.View>
+      ) : null}
+      {content}
+    </View>
+  )
 
   return (
     <View
@@ -155,15 +242,27 @@ export function CapsuleNavigationBar({ items, hideOnKeyboard = true }: CapsuleNa
       onLayout={(event) => setMeasuredHeight(event.nativeEvent.layout.height)}>
       <Animated.View
         style={[styles.shadow, capsuleAnimatedStyle]}
-        onTouchStart={() => {
-          pressed.value = true
-        }}
-        onTouchEnd={() => {
-          pressed.value = false
-        }}
-        onTouchCancel={() => {
-          pressed.value = false
-        }}
+        onTouchStart={
+          Platform.OS === 'android'
+            ? undefined
+            : () => {
+                pressed.value = true
+              }
+        }
+        onTouchEnd={
+          Platform.OS === 'android'
+            ? undefined
+            : () => {
+                pressed.value = false
+              }
+        }
+        onTouchCancel={
+          Platform.OS === 'android'
+            ? undefined
+            : () => {
+                pressed.value = false
+              }
+        }
         onPointerEnter={(event) => {
           if (event.nativeEvent.pointerType !== 'touch') hovered.value = true
         }}
@@ -183,8 +282,10 @@ export function CapsuleNavigationBar({ items, hideOnKeyboard = true }: CapsuleNa
           <BlurView tint={appearance} intensity={60} style={[styles.pill, styles.frosted]}>
             {content}
           </BlurView>
+        ) : Platform.OS === 'android' ? (
+          <GestureDetector gesture={androidTouchGesture}>{solidPill}</GestureDetector>
         ) : (
-          <View style={[styles.pill, styles.solid]}>{content}</View>
+          solidPill
         )}
       </Animated.View>
     </View>
@@ -210,6 +311,8 @@ const createStyles = createThemedStyles((t) => ({
   },
   frosted: { backgroundColor: withAlpha(t.colors.background.surface, 0.8) },
   solid: { backgroundColor: t.colors.background.surface },
+  androidPill: { overflow: 'hidden' },
+  androidGlow: { position: 'absolute', left: 0, top: 0 },
   item: {
     width: t.spacing['6xl'],
     height: t.spacing['5xl'],
