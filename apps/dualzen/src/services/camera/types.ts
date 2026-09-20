@@ -32,7 +32,7 @@ export interface SharedCaptureSettings {
   grid: boolean
 }
 export interface VideoSettings {
-  fps: 24 | 25 | 30 | 50 | 60 | 120
+  fps: 24 | 30 | 60 | 120
   container: 'mp4' | 'mov'
   hdr: boolean
   stabilization: boolean
@@ -167,7 +167,7 @@ export interface NativeCapabilities {
   hdr: boolean
   mov: boolean
 }
-export const FPS_OPTIONS = [24, 25, 30, 50, 60, 120] as const
+export const FPS_OPTIONS = [24, 30, 60, 120] as const
 export const RESOLUTION_OPTIONS = [1280, 1920, 2560, 3840] as const
 export const RESOLUTION_LABELS = { 1280: '720p', 1920: '1080p', 2560: '2K', 3840: '4K' } as const
 export function cropSize(source: PixelSize, kind: OutputKind): PixelSize {
