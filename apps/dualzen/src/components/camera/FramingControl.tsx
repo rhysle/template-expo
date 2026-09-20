@@ -11,7 +11,7 @@ import { createThemedStyles, useThemedStyles } from '@/theme'
 export function FramingControl({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation()
   const styles = useThemedStyles(createStyles)
-  const { settings, phase, updateSettings } = useCameraState()
+  const { sharedSettings: settings, phase, updateSharedSettings } = useCameraState()
   const label = t('camera.crop', { kind: t('camera.landscape') })
   return (
     <Animated.View
@@ -28,7 +28,7 @@ export function FramingControl({ onClose }: { onClose: () => void }) {
         accessibilityLabel={label}
         disabled={phase !== 'idle'}
         value={settings.landscapePosition}
-        onValueChange={(value) => updateSettings({ landscapePosition: value })}
+        onValueChange={(value) => updateSharedSettings({ landscapePosition: value })}
       />
     </Animated.View>
   )

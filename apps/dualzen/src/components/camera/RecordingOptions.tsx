@@ -1,5 +1,5 @@
 import { Button, SegmentedControl, Slider, Text } from '@shared/core/components/base'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Modal, Platform, ScrollView, Switch, View } from 'react-native'
 
@@ -28,7 +28,12 @@ export function RecordingOptions({
   onClose: () => void
 }) {
   const { t } = useTranslation()
-  const { settings, updateSettings } = useCameraState()
+  const { sharedSettings, videoSettings, updateSharedSettings, updateVideoSettings } =
+    useCameraState()
+  const settings = useMemo(
+    () => ({ ...sharedSettings, ...videoSettings }),
+    [sharedSettings, videoSettings]
+  )
   const { projects, selectedProjectId, selectProject } = useProjectsState()
   const theme = useTheme()
   const styles = useThemedStyles(createStyles)
@@ -40,7 +45,7 @@ export function RecordingOptions({
   const { checkSettings } = recorder
   const [supported, setSupported] = useState<Record<string, boolean>>({})
   useEffect(() => {
-    if (!visible || mediaType !== 'video') return
+    if (!visible) return
     let cancelled = false
     setSupported({})
     const variants = [
@@ -60,16 +65,16 @@ export function RecordingOptions({
     return () => {
       cancelled = true
     }
-  }, [visible, settings, checkSettings, mediaType])
+  }, [visible, settings, checkSettings])
   const changeMode = (mode: string) => {
-    const androidDual = mediaType === 'video' && Platform.OS === 'android' && mode === 'dual'
-    updateSettings({
+    const androidDual = Platform.OS === 'android' && mode === 'dual'
+    updateSharedSettings({
       mode: mode as RecordingSettings['mode'],
       front: false,
       deviceId: null,
       pairIndex: 0,
-      ...(androidDual ? { fps: 30, hdr: false, stabilization: false } : {}),
     })
+    if (androidDual) updateVideoSettings({ fps: 30, hdr: false, stabilization: false })
   }
   return (
     <Modal
@@ -100,14 +105,14 @@ export function RecordingOptions({
           {settings.mode === 'dual' && recorder.pairs.length > 0 && (
             <SegmentedControl
               value={String(settings.pairIndex)}
-              onValueChange={(value) => updateSettings({ pairIndex: Number(value) })}
+              onValueChange={(value) => updateSharedSettings({ pairIndex: Number(value) })}
               options={recorder.pairs.map((pair, index) => ({
                 value: String(index),
                 label: `${t('camera.pair', { number: index + 1 })} · ${pair.map((item) => (item.type === 'ultra-wide-angle' ? t('camera.ultraWide') : item.type === 'telephoto' ? t('camera.telephoto') : t('camera.wide'))).join(' / ')}`,
               }))}
             />
           )}
-          {mediaType === 'video' && settings.mode === 'dual' && Platform.OS === 'android' && (
+          {settings.mode === 'dual' && Platform.OS === 'android' && (
             <Text variant="caption" tone="muted">
               {t('camera.androidDualLimits')}
             </Text>
@@ -118,7 +123,7 @@ export function RecordingOptions({
               <ScrollView horizontal>
                 <SegmentedControl
                   value={recorder.device?.id ?? ''}
-                  onValueChange={(deviceId) => updateSettings({ deviceId })}
+                  onValueChange={(deviceId) => updateSharedSettings({ deviceId })}
                   options={recorder.devices
                     .filter(
                       (item) =>
@@ -145,28 +150,28 @@ export function RecordingOptions({
               </Text>
             </>
           )}
+          <Text tone="secondary">{t('camera.resolution')}</Text>
+          <SegmentedControl
+            value={String(settings.longEdge)}
+            onValueChange={(value) =>
+              updateSharedSettings({ longEdge: Number(value) as RecordingSettings['longEdge'] })
+            }
+            options={RESOLUTION_OPTIONS.map((edge) => ({
+              value: String(edge),
+              label: RESOLUTION_LABELS[edge],
+              disabled: !supported[`edge${edge}`],
+            }))}
+          />
+          <Text variant="caption" tone="muted">
+            {t('camera.resolutionNote')}
+          </Text>
           {mediaType === 'video' ? (
             <>
-              <Text tone="secondary">{t('camera.resolution')}</Text>
-              <SegmentedControl
-                value={String(settings.longEdge)}
-                onValueChange={(value) =>
-                  updateSettings({ longEdge: Number(value) as RecordingSettings['longEdge'] })
-                }
-                options={RESOLUTION_OPTIONS.map((edge) => ({
-                  value: String(edge),
-                  label: RESOLUTION_LABELS[edge],
-                  disabled: !supported[`edge${edge}`],
-                }))}
-              />
-              <Text variant="caption" tone="muted">
-                {t('camera.resolutionNote')}
-              </Text>
               <Text tone="secondary">{t('camera.fps')}</Text>
               <SegmentedControl
                 value={String(settings.fps)}
                 onValueChange={(value) =>
-                  updateSettings({ fps: Number(value) as RecordingSettings['fps'] })
+                  updateVideoSettings({ fps: Number(value) as RecordingSettings['fps'] })
                 }
                 options={FPS_OPTIONS.map((fps) => ({
                   value: String(fps),
@@ -181,7 +186,7 @@ export function RecordingOptions({
               <SegmentedControl
                 value={settings.container}
                 onValueChange={(container) =>
-                  updateSettings({ container: container as RecordingSettings['container'] })
+                  updateVideoSettings({ container: container as RecordingSettings['container'] })
                 }
                 options={[
                   { value: 'mp4', label: 'MP4' },
@@ -200,7 +205,7 @@ export function RecordingOptions({
                     accessibilityLabel={toggleLabels[key]}
                     value={settings[key]}
                     disabled={!settings[key] && !supported[key]}
-                    onValueChange={(value) => updateSettings({ [key]: value })}
+                    onValueChange={(value) => updateVideoSettings({ [key]: value })}
                     trackColor={{
                       true: theme.colors.primary.main,
                       false: theme.colors.background.subtle,
@@ -216,7 +221,9 @@ export function RecordingOptions({
             </>
           ) : (
             <Text variant="caption" tone="muted">
-              {t('camera.photoProfileBody')}
+              {recorder.photoHdrEnabled
+                ? t('camera.photoHdrActive')
+                : t('camera.photoHdrUnavailable')}
             </Text>
           )}
           <View style={styles.row}>
@@ -224,7 +231,7 @@ export function RecordingOptions({
             <Switch
               accessibilityLabel={toggleLabels.grid}
               value={settings.grid}
-              onValueChange={(grid) => updateSettings({ grid })}
+              onValueChange={(grid) => updateSharedSettings({ grid })}
               trackColor={{
                 true: theme.colors.primary.main,
                 false: theme.colors.background.subtle,
@@ -245,7 +252,7 @@ export function RecordingOptions({
                 accessibilityLabel={t('camera.crop', { kind: t(`camera.${kind}`) })}
                 value={kind === 'portrait' ? settings.portraitPosition : settings.landscapePosition}
                 onValueChange={(value) =>
-                  updateSettings(
+                  updateSharedSettings(
                     kind === 'portrait' ? { portraitPosition: value } : { landscapePosition: value }
                   )
                 }

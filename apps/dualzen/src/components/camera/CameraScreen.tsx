@@ -10,18 +10,13 @@ import {
   SquaresFourIcon,
   StackIcon,
 } from 'phosphor-react-native'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Linking, Pressable, useWindowDimensions, View } from 'react-native'
 import { cancelAnimation, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
 import { scheduleOnRN } from 'react-native-worklets'
 
-import {
-  formatDuration,
-  type MediaType,
-  type PreviewLayout,
-  RESOLUTION_LABELS,
-} from '@/services/camera/types'
+import { formatDuration, type PreviewLayout, RESOLUTION_LABELS } from '@/services/camera/types'
 import type { CaptureController } from '@/services/camera/useRecorder'
 import { useCameraState } from '@/stores/features/camera'
 import { cameraColors, createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
@@ -33,11 +28,9 @@ import { RecordingOptions } from './RecordingOptions'
 const LAYOUTS: PreviewLayout[] = ['pip', 'stacked', 'guide']
 const LAYOUT_ICONS = { pip: SquaresFourIcon, stacked: StackIcon, guide: RectangleIcon }
 export function CameraScreen({
-  mediaType,
   recorder,
   onSettings,
 }: {
-  mediaType: MediaType
   recorder: CaptureController
   onSettings: () => void
 }) {
@@ -47,21 +40,31 @@ export function CameraScreen({
   const styles = useThemedStyles(createStyles)
   const theme = useTheme()
   const {
-    settings,
+    sharedSettings,
+    videoSettings,
     viewSettings,
+    mediaType,
+    lightEnabled,
     phase,
-    photoFlashMode,
-    setPhotoFlashMode,
+    setLightEnabled,
     setPreviewLayout,
-    updateSettings,
+    updateSharedSettings,
   } = useCameraState()
+  const settings = useMemo(
+    () => ({ ...sharedSettings, ...videoSettings }),
+    [sharedSettings, videoSettings]
+  )
   const layout = viewSettings.layout
   const [options, setOptions] = useState(false)
   const [framing, setFraming] = useState(false)
   const [flipTarget, setFlipTarget] = useState<boolean | null>(null)
+  const [sessionTransitionVisible, setSessionTransitionVisible] = useState(false)
   const [toolbarHeight, setToolbarHeight] = useState<number>(theme.spacing['5xl'])
   const switchProgress = useSharedValue(0)
+  const sessionSwitchProgress = useSharedValue(0)
   const switching = flipTarget !== null
+  const transitionSwitching = switching || sessionTransitionVisible
+  const transitionProgress = sessionTransitionVisible ? sessionSwitchProgress : switchProgress
   useEffect(() => {
     if (
       flipTarget === null ||
@@ -89,6 +92,23 @@ export function CameraScreen({
   ])
   useEffect(() => () => cancelAnimation(switchProgress), [switchProgress])
   useEffect(() => {
+    if (phase === 'switching') {
+      setSessionTransitionVisible(true)
+      sessionSwitchProgress.set(withTiming(1, { duration: 160 }))
+      return
+    }
+    if (!sessionTransitionVisible) return
+    sessionSwitchProgress.set(
+      withDelay(
+        120,
+        withTiming(0, { duration: 220 }, (finished) => {
+          if (finished) scheduleOnRN(setSessionTransitionVisible, false)
+        })
+      )
+    )
+  }, [phase, sessionTransitionVisible, sessionSwitchProgress])
+  useEffect(() => () => cancelAnimation(sessionSwitchProgress), [sessionSwitchProgress])
+  useEffect(() => {
     if (phase !== 'idle') setFraming(false)
   }, [phase])
   const idle = phase === 'idle'
@@ -115,11 +135,12 @@ export function CameraScreen({
     setFlipTarget(front)
     switchProgress.set(
       withTiming(1, { duration: 160 }, (finished) => {
-        if (finished) scheduleOnRN(updateSettings, { front, deviceId: null })
+        if (finished) scheduleOnRN(updateSharedSettings, { front, deviceId: null })
       })
     )
   }
   const phaseLabels = {
+    switching: t('camera.switchingMode'),
     preparing: t('camera.preparing'),
     finalizing: t('camera.finalizing'),
     exporting: t('camera.exporting'),
@@ -129,11 +150,6 @@ export function CameraScreen({
   }
   const permissionTitle = photoMode ? t('camera.photoPermissionTitle') : t('camera.permissionTitle')
   const permissionBody = photoMode ? t('camera.photoPermissionBody') : t('camera.permissionBody')
-  const flashLabels = {
-    off: t('camera.flash.off'),
-    auto: t('camera.flash.auto'),
-    on: t('camera.flash.on'),
-  }
   if (!recorder.authorized)
     return (
       <View style={styles.permission}>
@@ -172,7 +188,7 @@ export function CameraScreen({
             style={styles.profile}>
             <Text variant="label" weight="semibold" numberOfLines={1}>
               {photoMode
-                ? t('camera.photoProfile')
+                ? `${RESOLUTION_LABELS[settings.longEdge]} · JPEG · ${recorder.photoHdrEnabled ? 'HDR' : 'SDR'}`
                 : `${RESOLUTION_LABELS[settings.longEdge]} · ${settings.fps} · ${settings.container.toUpperCase()}`}
             </Text>
           </Pressable>
@@ -209,8 +225,8 @@ export function CameraScreen({
             !landscape && (layout === 'pip' || immersive) ? 0 : toolbarHeight + theme.spacing.sm * 2
           }
           bottomInset={immersive || landscape ? 0 : theme.spacing['7xl'] + theme.spacing.sm * 2}
-          switching={switching}
-          switchProgress={switchProgress}>
+          switching={transitionSwitching}
+          switchProgress={transitionProgress}>
           {framing && <FramingControl onClose={() => setFraming(false)} />}
         </CameraStage>
         <View style={[styles.panel, landscape && styles.panelLandscape]}>
@@ -246,76 +262,44 @@ export function CameraScreen({
           </View>
           <View style={styles.controls}>
             <View style={styles.controlGroup}>
-              {photoMode ? (
-                <Pressable
-                  style={[
-                    styles.controlButton,
-                    styles.torch,
-                    (switching ||
-                      !recorder.ready ||
-                      settings.mode === 'dual' ||
-                      settings.front ||
-                      !recorder.device?.hasFlash) &&
-                      styles.torchUnavailable,
-                  ]}
-                  accessibilityRole="button"
-                  accessibilityLabel={t('camera.flashMode', {
-                    mode: flashLabels[photoFlashMode],
-                  })}
-                  disabled={
-                    switching ||
+              <Pressable
+                style={[
+                  styles.controlButton,
+                  styles.torch,
+                  (switching ||
                     !recorder.ready ||
                     settings.mode === 'dual' ||
                     settings.front ||
-                    !recorder.device?.hasFlash
-                  }
-                  onPress={() => {
-                    const modes = ['off', 'auto', 'on'] as const
-                    setPhotoFlashMode(modes[(modes.indexOf(photoFlashMode) + 1) % modes.length])
-                  }}>
-                  {photoFlashMode === 'off' ? (
-                    <LightningSlashIcon size={iconSizes.md} color={theme.colors.text.primary} />
-                  ) : (
-                    <LightningIcon
-                      size={iconSizes.md}
-                      weight={photoFlashMode === 'on' ? 'fill' : 'regular'}
-                      color={
-                        photoFlashMode === 'on'
-                          ? theme.colors.primary.main
-                          : theme.colors.text.primary
-                      }
-                    />
-                  )}
-                </Pressable>
-              ) : (
-                <Pressable
-                  style={[
-                    styles.controlButton,
-                    styles.torch,
-                    (switching || !recorder.ready || !recorder.device?.hasTorch) &&
-                      styles.torchUnavailable,
-                  ]}
-                  accessibilityRole="button"
-                  accessibilityLabel={t('camera.torch')}
-                  accessibilityState={{
-                    selected: recorder.torchEnabled,
-                    disabled: switching || !recorder.ready || !recorder.device?.hasTorch,
-                  }}
-                  disabled={switching || !recorder.ready || !recorder.device?.hasTorch}
-                  onPress={() => {
-                    void recorder.torch(!recorder.torchEnabled)
-                  }}>
-                  {recorder.torchEnabled ? (
-                    <LightningIcon
-                      size={iconSizes.md}
-                      weight="fill"
-                      color={theme.colors.primary.main}
-                    />
-                  ) : (
-                    <LightningSlashIcon size={iconSizes.md} color={theme.colors.text.primary} />
-                  )}
-                </Pressable>
-              )}
+                    !(photoMode ? recorder.device?.hasFlash : recorder.device?.hasTorch)) &&
+                    styles.torchUnavailable,
+                ]}
+                accessibilityRole="button"
+                accessibilityLabel={
+                  photoMode
+                    ? t('camera.flashMode', {
+                        mode: lightEnabled ? t('camera.flash.on') : t('camera.flash.off'),
+                      })
+                    : t('camera.torch')
+                }
+                accessibilityState={{ selected: lightEnabled }}
+                disabled={
+                  switching ||
+                  !recorder.ready ||
+                  settings.mode === 'dual' ||
+                  settings.front ||
+                  !(photoMode ? recorder.device?.hasFlash : recorder.device?.hasTorch)
+                }
+                onPress={() => setLightEnabled(!lightEnabled)}>
+                {lightEnabled ? (
+                  <LightningIcon
+                    size={iconSizes.md}
+                    weight="fill"
+                    color={theme.colors.primary.main}
+                  />
+                ) : (
+                  <LightningSlashIcon size={iconSizes.md} color={theme.colors.text.primary} />
+                )}
+              </Pressable>
               <Pressable
                 accessibilityRole="button"
                 accessibilityLabel={t('camera.toggleZoom', { zoom: nextZoom })}

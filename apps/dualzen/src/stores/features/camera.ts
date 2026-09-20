@@ -5,25 +5,38 @@ import {
   type CameraViewSettings,
   type CapturePhase,
   DEFAULT_CAMERA_VIEW_SETTINGS,
-  DEFAULT_SETTINGS,
-  type PhotoFlashMode,
+  DEFAULT_LIVE_CAMERA_SETTINGS,
+  DEFAULT_SHARED_CAPTURE_SETTINGS,
+  DEFAULT_VIDEO_SETTINGS,
+  type LiveCameraSettings,
+  type MediaType,
   type PipViewSettings,
   type PreviewLayout,
-  type RecordingSettings,
+  type SessionStrategy,
+  type SharedCaptureSettings,
+  type VideoSettings,
 } from '@/services/camera/types'
 
 import { getUseAppStore } from '../slices/types'
 
 interface CameraSlice {
-  settings: RecordingSettings
+  sharedSettings: SharedCaptureSettings
+  videoSettings: VideoSettings
   viewSettings: CameraViewSettings
-  photoFlashMode: PhotoFlashMode
+  mediaType: MediaType
+  lightEnabled: boolean
+  liveSettings: LiveCameraSettings
+  sessionStrategy: SessionStrategy
   autoSaveToLibrary: boolean
   phase: CapturePhase
-  updateSettings: (settings: Partial<RecordingSettings>) => void
+  updateSharedSettings: (settings: Partial<SharedCaptureSettings>) => void
+  updateVideoSettings: (settings: Partial<VideoSettings>) => void
   setPreviewLayout: (layout: PreviewLayout) => void
   updatePipView: (settings: Partial<PipViewSettings>) => void
-  setPhotoFlashMode: (value: PhotoFlashMode) => void
+  setMediaType: (value: MediaType) => void
+  setLightEnabled: (value: boolean) => void
+  updateLiveSettings: (settings: Partial<LiveCameraSettings>) => void
+  setSessionStrategy: (value: SessionStrategy) => void
   setAutoSaveToLibrary: (value: boolean) => void
   setPhase: (phase: CapturePhase) => void
 }
@@ -34,14 +47,26 @@ declare global {
 }
 export const sliceConfig = {
   create: (set: (updater: (state: CameraSlice) => void) => void): CameraSlice => ({
-    settings: DEFAULT_SETTINGS,
+    sharedSettings: DEFAULT_SHARED_CAPTURE_SETTINGS,
+    videoSettings: DEFAULT_VIDEO_SETTINGS,
     viewSettings: DEFAULT_CAMERA_VIEW_SETTINGS,
-    photoFlashMode: 'off',
+    mediaType: 'video',
+    lightEnabled: false,
+    liveSettings: DEFAULT_LIVE_CAMERA_SETTINGS,
+    sessionStrategy: 'combined',
     autoSaveToLibrary: false,
     phase: 'idle',
-    updateSettings: (settings) =>
+    updateSharedSettings: (settings) =>
       set((state) => {
-        state.settings = { ...state.settings, ...settings }
+        state.sharedSettings = { ...state.sharedSettings, ...settings }
+        if (['longEdge', 'mode', 'front', 'deviceId', 'pairIndex'].some((key) => key in settings))
+          state.sessionStrategy = 'combined'
+      }),
+    updateVideoSettings: (settings) =>
+      set((state) => {
+        state.videoSettings = { ...state.videoSettings, ...settings }
+        if (['fps', 'hdr', 'stabilization'].some((key) => key in settings))
+          state.sessionStrategy = 'combined'
       }),
     setPreviewLayout: (layout) =>
       set((state) => {
@@ -51,9 +76,21 @@ export const sliceConfig = {
       set((state) => {
         state.viewSettings.pip = { ...state.viewSettings.pip, ...settings }
       }),
-    setPhotoFlashMode: (value) =>
+    setMediaType: (value) =>
       set((state) => {
-        state.photoFlashMode = value
+        state.mediaType = value
+      }),
+    setLightEnabled: (value) =>
+      set((state) => {
+        state.lightEnabled = value
+      }),
+    updateLiveSettings: (settings) =>
+      set((state) => {
+        state.liveSettings = { ...state.liveSettings, ...settings }
+      }),
+    setSessionStrategy: (value) =>
+      set((state) => {
+        state.sessionStrategy = value
       }),
     setAutoSaveToLibrary: (value) =>
       set((state) => {
@@ -64,6 +101,6 @@ export const sliceConfig = {
         state.phase = phase
       }),
   }),
-  persistExcludeKeys: ['phase'],
+  persistExcludeKeys: ['mediaType', 'lightEnabled', 'liveSettings', 'sessionStrategy', 'phase'],
 } satisfies SliceConfig<CameraSlice>
 export const useCameraState = () => getUseAppStore()(useShallow((state) => ({ ...state.camera })))

@@ -1,20 +1,11 @@
 import { createContext, type ReactNode, use } from 'react'
 
-import { type MediaType } from './types'
 import { type CaptureController, useCaptureController } from './useRecorder'
 
 const CaptureContext = createContext<CaptureController | null>(null)
 
-export function CaptureProvider({
-  active,
-  mediaType,
-  children,
-}: {
-  active: boolean
-  mediaType: MediaType
-  children: ReactNode
-}) {
-  const controller = useCaptureController(active, mediaType)
+export function CaptureProvider({ active, children }: { active: boolean; children: ReactNode }) {
+  const controller = useCaptureController(active)
   return <CaptureContext value={controller}>{children}</CaptureContext>
 }
 

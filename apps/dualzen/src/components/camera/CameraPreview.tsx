@@ -51,7 +51,7 @@ export function CameraPreview({
   doubleTapGesture?: ReturnType<typeof Gesture.Tap>
   drag?: ReturnType<typeof Gesture.Pan>
 }) {
-  const { settings } = useCameraState()
+  const { sharedSettings: settings } = useCameraState()
   const { t } = useTranslation()
   const styles = useThemedStyles(createStyles)
   const pinchStart = useSharedValue(1)

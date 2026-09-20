@@ -26,7 +26,6 @@ import NativeRecorder from '../../../modules/dual-recorder/src/DualRecorderModul
 import { allocateMedia, exportMedia, hydrateProjects, saveMedia, thumbnailFile } from './projects'
 import {
   cropSize,
-  type MediaType,
   type NativeCapabilities,
   type NativeRecordingResult,
   type OutputKind,
@@ -42,10 +41,24 @@ const WAKE_TAG = 'dualzen-recording'
 const factory = () => NitroModules.createHybridObject<DualOutputFactory>('DualOutputFactory')
 type ControlKind = 'zoom' | 'exposure' | 'torch'
 type ControlQueue = { running: boolean; pending: (() => Promise<void>) | null }
-export function useCaptureController(active: boolean, mediaType: MediaType) {
+export function useCaptureController(active: boolean) {
   const { t } = useTranslation()
   const { showSnackbar, hideSnackbar } = useSnackbarState()
-  const { settings, phase, photoFlashMode } = useCameraState()
+  const {
+    sharedSettings,
+    videoSettings,
+    mediaType,
+    phase,
+    lightEnabled,
+    liveSettings,
+    sessionStrategy,
+    updateLiveSettings,
+    setSessionStrategy,
+  } = useCameraState()
+  const settings = useMemo(
+    () => ({ ...sharedSettings, ...videoSettings }),
+    [sharedSettings, videoSettings]
+  )
   const [devices, setDevices] = useState<CameraDevice[]>([])
   const [pairs, setPairs] = useState<CameraDevice[][]>([])
   const [capabilities, setCapabilities] = useState<NativeCapabilities>({ hdr: false, mov: false })
@@ -56,20 +69,26 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
     dropped: 0,
     recording: false,
   })
+  const statsRef = useRef(stats)
+  useEffect(() => {
+    statsRef.current = stats
+  }, [stats])
   const [error, setError] = useState<string | null>(null)
   const [ready, setReady] = useState(false)
   const [readyDeviceId, setReadyDeviceId] = useState<string | null>(null)
   const [cameraAuthorized, setCameraAuthorized] = useState(false)
   const [microphoneAuthorized, setMicrophoneAuthorized] = useState(false)
-  const [zoom, setZoomLabel] = useState(1)
   const [zoomRange, setZoomRange] = useState({ min: 1, max: 1 })
-  const [focusLocked, setFocusLocked] = useState(false)
   const [torchEnabled, setTorchEnabled] = useState(false)
-  const [exposureBias, setExposureBias] = useState({ portrait: 0, landscape: 0 })
+  const [photoHdrEnabled, setPhotoHdrEnabled] = useState(false)
   const [elapsed, setElapsed] = useState(0)
+  const liveSettingsRef = useRef(liveSettings)
+  useEffect(() => {
+    liveSettingsRef.current = liveSettings
+  }, [liveSettings])
   const session = useRef<CameraSession | null>(null)
   const lifecycle = useRef<Promise<void>>(Promise.resolve())
-  const captureSettings = useMemo(
+  const captureSettings = useMemo<RecordingSettings>(
     () => ({
       longEdge: settings.longEdge,
       fps: settings.fps,
@@ -138,6 +157,9 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
         case 'partialPhotoSave':
           title = t('camera.partialPhotoSave')
           break
+        case 'microphoneRequired':
+          title = t('camera.microphoneRequired')
+          break
         default:
           title = t('camera.failure')
       }
@@ -172,14 +194,21 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
     try {
       const camera = await VisionCamera.requestCameraPermission()
       setCameraAuthorized(camera)
-      if (mediaType === 'video') {
-        const microphone = camera && (await VisionCamera.requestMicrophonePermission())
-        setMicrophoneAuthorized(microphone)
-      }
     } catch (cause) {
       setError(String(cause))
     }
-  }, [mediaType])
+  }, [])
+  const requestMicrophone = useCallback(async () => {
+    try {
+      const microphone = await VisionCamera.requestMicrophonePermission()
+      setMicrophoneAuthorized(microphone)
+      if (!microphone) showCaptureNotice('microphoneRequired')
+      return microphone
+    } catch (cause) {
+      setError(String(cause))
+      return false
+    }
+  }, [showCaptureNotice])
   useEffect(() => {
     void hydrateProjects().catch((cause) => setError(String(cause)))
     void NativeRecorder.capabilities()
@@ -230,10 +259,14 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
     }
   }, [])
 
-  const authorized = cameraAuthorized && (mediaType === 'photo' || microphoneAuthorized)
+  const authorized = cameraAuthorized
 
   const configuration = useCallback(
-    (output: CameraOutput, candidate: RecordingSettings): Constraint[] => {
+    (
+      output: CameraOutput,
+      photoOutput: CameraPhotoOutput | undefined,
+      candidate: RecordingSettings
+    ): Constraint[] => {
       if (Platform.OS === 'android' && candidate.mode === 'dual') return []
       const stabilization = candidate.stabilization ? 'standard' : 'off'
       return [
@@ -249,12 +282,15 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
         Platform.OS === 'android'
           ? { previewStabilizationMode: stabilization }
           : { videoStabilizationMode: stabilization },
+        ...(photoOutput
+          ? ([{ resolutionBias: photoOutput }, { photoHDR: true }] satisfies Constraint[])
+          : []),
       ]
     },
     []
   )
-  const checkSettings = useCallback(
-    async (candidate: RecordingSettings): Promise<boolean> => {
+  const checkSettingsForStrategy = useCallback(
+    async (candidate: RecordingSettings, combined: boolean): Promise<boolean> => {
       try {
         if (
           (candidate.hdr && !capabilities.hdr) ||
@@ -278,11 +314,23 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
           return candidate.fps === 30 && !candidate.hdr && !candidate.stabilization
         for (const input of inputs) {
           const output = factory().createOutput(0, candidate.longEdge, candidate.hdr)
+          const photoOutput = combined
+            ? VisionCamera.createPhotoOutput({
+                targetResolution: photoTargetResolution(candidate.longEdge),
+                containerFormat: 'jpeg',
+                quality: 0.9,
+                qualityPrioritization: 'quality',
+              })
+            : undefined
+          const outputConfigurations = [output, photoOutput]
+            .filter((item): item is CameraOutput => item !== undefined)
+            .map((item) => ({ output: item, mirrorMode: 'off' as const }))
           const resolved = await VisionCamera.resolveConstraints(
             input,
-            [{ output, mirrorMode: 'off' }],
-            configuration(output, candidate)
+            outputConfigurations,
+            configuration(output, photoOutput, candidate)
           )
+          if (combined && !input.isSessionConfigSupported(resolved)) return false
           if (resolved.selectedFPS !== candidate.fps) return false
           if (
             candidate.hdr &&
@@ -303,6 +351,11 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
       }
     },
     [capabilities, configuration, device, devices, pairs]
+  )
+  const checkSettings = useCallback(
+    (candidate: RecordingSettings) =>
+      checkSettingsForStrategy(candidate, sessionStrategy === 'combined'),
+    [checkSettingsForStrategy, sessionStrategy]
   )
 
   const releaseLocks = useCallback(async () => {
@@ -419,6 +472,7 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
     })
     return () => subscription.remove()
   }, [stop])
+  const sessionMediaType = sessionStrategy === 'mode-specific' ? mediaType : null
   useEffect(() => {
     if (!active || !authorized || !device) {
       setReady(false)
@@ -434,23 +488,34 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
     const orientation = VisionCamera.createOrientationManager('interface')
     setReady(false)
     setReadyDeviceId(null)
-    setFocusLocked(false)
     setTorchEnabled(false)
-    setExposureBias({ portrait: 0, landscape: 0 })
+    setPhotoHdrEnabled(false)
     setError(null)
+    const combined = sessionStrategy === 'combined'
+    const activeSessionMediaType = sessionMediaType ?? 'video'
+    const retainedLiveSettings = liveSettingsRef.current
     const setup = lifecycle.current
       .then(async () => {
         if (cancelled) return
-        if (mediaType === 'video' && !(await checkSettings(captureSettings))) {
+        const preflightSupported =
+          activeSessionMediaType !== 'video' ||
+          (await checkSettingsForStrategy(captureSettings, combined))
+        if (combined && !preflightSupported) {
+          useAppStore.getState().camera.setPhase('switching')
+          setSessionStrategy('mode-specific')
+          return
+        }
+        if (!combined && activeSessionMediaType === 'video' && !preflightSupported) {
           // A default stabilization preference may be unavailable on the selected camera.
           if (
             captureSettings.stabilization &&
-            (await checkSettings({ ...captureSettings, stabilization: false }))
+            (await checkSettingsForStrategy({ ...captureSettings, stabilization: false }, false))
           ) {
-            useAppStore.getState().camera.updateSettings({ stabilization: false })
+            useAppStore.getState().camera.updateVideoSettings({ stabilization: false })
             return
           }
-          throw new Error('unsupportedSettings')
+          // Some devices report a false negative while resolving custom output constraints.
+          // Configure the mode-specific graph and validate the values it actually selects.
         }
         const source = captureSettings.mode === 'dual' ? pairs[captureSettings.pairIndex] : [device]
         localSession = await VisionCamera.createCameraSession(captureSettings.mode === 'dual')
@@ -460,26 +525,28 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
         const recordingOutputs = source.map((_, index) =>
           factory().createOutput(
             captureSettings.mode === 'dual' ? index + 1 : 0,
-            mediaType === 'video' ? captureSettings.longEdge : 1920,
-            mediaType === 'video' && captureSettings.hdr
+            captureSettings.longEdge,
+            (combined || activeSessionMediaType === 'video') && captureSettings.hdr
           )
         )
-        const stillOutputs =
-          mediaType === 'photo'
-            ? source.map(() =>
-                VisionCamera.createPhotoOutput({
-                  targetResolution: CommonResolutions.UHD_4_3,
-                  containerFormat: 'jpeg',
-                  quality: 0.9,
-                  qualityPrioritization: 'quality',
-                })
-              )
-            : []
+        const includePhotoOutput = combined || activeSessionMediaType === 'photo'
+        const stillOutputs = includePhotoOutput
+          ? source.map(() =>
+              VisionCamera.createPhotoOutput({
+                targetResolution: photoTargetResolution(captureSettings.longEdge),
+                containerFormat: 'jpeg',
+                quality: 0.9,
+                qualityPrioritization: 'quality',
+              })
+            )
+          : []
         ;[...recordingOutputs, ...stillOutputs].forEach((output) => {
           output.outputOrientation = orientation.currentOrientation ?? 'up'
         })
         outputs.current = recordingOutputs
         photoOutputs.current = stillOutputs
+        const selectedPhotoHdr = source.map(() => false)
+        let selectedVideoSupported = true
         subscriptions.push(
           localSession.addOnErrorListener((cause) => {
             setError(cause.message)
@@ -500,10 +567,16 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
             outputs: [recordingOutputs[index], stillOutputs[index]]
               .filter((output): output is CameraOutput => output !== undefined)
               .map((output) => ({ output, mirrorMode: 'off' as const })),
-            constraints:
-              mediaType === 'video' ? configuration(recordingOutputs[index], captureSettings) : [],
+            constraints: combined
+              ? configuration(recordingOutputs[index], stillOutputs[index], captureSettings)
+              : activeSessionMediaType === 'video'
+                ? configuration(recordingOutputs[index], undefined, captureSettings)
+                : stillOutputs[index]
+                  ? [{ resolutionBias: stillOutputs[index] }, { photoHDR: true }]
+                  : [],
             onSessionConfigSelected: (selected) => {
-              if (mediaType !== 'video') return
+              selectedPhotoHdr[index] = selected.isPhotoHDREnabled
+              if (!combined && activeSessionMediaType !== 'video') return
               const stabilization =
                 Platform.OS === 'android'
                   ? selected.selectedPreviewStabilizationMode
@@ -517,11 +590,12 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
                       selected.selectedVideoDynamicRange.colorSpace !== 'hlg-bt2020' ||
                       selected.selectedVideoDynamicRange.colorRange !== 'video')))
               )
-                setError('unsupportedSettings')
+                selectedVideoSupported = false
             },
           })),
           {}
         )
+        if (!selectedVideoSupported) throw new Error('unsupportedSettings')
         if (cancelled) {
           await localSession.stop()
           return
@@ -530,6 +604,9 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
           output.outputOrientation = orientation.currentOrientation ?? 'up'
         })
         controllers.current = controls
+        setPhotoHdrEnabled(
+          includePhotoOutput && selectedPhotoHdr.length > 0 && selectedPhotoHdr.every(Boolean)
+        )
         const ranges = controls.map((control) => {
           const factor = control.zoom / control.displayableZoomFactor
           return { min: control.minZoom / factor, max: control.maxZoom / factor }
@@ -539,7 +616,7 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
           max: Math.min(...ranges.map((item) => item.max)),
         }
         setZoomRange(range)
-        const initialZoom = Math.max(range.min, Math.min(range.max, 1))
+        const initialZoom = Math.max(range.min, Math.min(range.max, retainedLiveSettings.zoom))
         session.current = localSession
         orientation.startOrientationUpdates((value) => {
           if (useAppStore.getState().camera.phase === 'idle') {
@@ -549,33 +626,122 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
           }
         })
         await localSession.start()
+        let zoomRestoreFailed = false
+        const exposureRestoreFailed = new Set<OutputKind>()
         await Promise.all(
-          controls.map((control) =>
-            control.setZoom(
-              Math.max(
-                control.minZoom,
-                Math.min(
-                  control.maxZoom,
-                  initialZoom * (control.zoom / control.displayableZoomFactor)
+          controls.map(async (control, index) => {
+            try {
+              await control.setZoom(
+                Math.max(
+                  control.minZoom,
+                  Math.min(
+                    control.maxZoom,
+                    initialZoom * (control.zoom / control.displayableZoomFactor)
+                  )
                 )
               )
+            } catch {
+              zoomRestoreFailed = true
+            }
+            const kind: OutputKind = index === 1 ? 'landscape' : 'portrait'
+            const bias = Math.max(
+              control.device.minExposureBias,
+              Math.min(control.device.maxExposureBias, retainedLiveSettings.exposure[kind])
             )
-          )
+            if (control.device.supportsExposureBias) {
+              try {
+                await control.setExposureBias(bias)
+              } catch {
+                exposureRestoreFailed.add(kind)
+              }
+            }
+          })
         )
+        if (zoomRestoreFailed) {
+          updateLiveSettings({ zoom: Math.max(range.min, Math.min(range.max, 1)) })
+          showCaptureNotice('restoreControlFailed')
+        }
+        if (exposureRestoreFailed.size) {
+          updateLiveSettings({
+            exposure: {
+              portrait: exposureRestoreFailed.has('portrait')
+                ? 0
+                : retainedLiveSettings.exposure.portrait,
+              landscape: exposureRestoreFailed.has('landscape')
+                ? 0
+                : retainedLiveSettings.exposure.landscape,
+            },
+          })
+          showCaptureNotice('restoreControlFailed')
+        }
+        const retainedFocus = retainedLiveSettings.focus
+        if (retainedFocus) {
+          const focusIndex =
+            captureSettings.mode === 'dual' && retainedFocus.kind === 'landscape' ? 1 : 0
+          const focusControls = retainedFocus.locked
+            ? controls
+            : controls.slice(focusIndex, focusIndex + 1)
+          await Promise.all(
+            focusControls.map(async (control) => {
+              const modes: ('AE' | 'AF')[] = []
+              if (control.device.supportsExposureMetering) modes.push('AE')
+              if (control.device.supportsFocusMetering) modes.push('AF')
+              if (!modes.length) return
+              const sourceIndex = controls.indexOf(control)
+              const source =
+                captureSettings.mode === 'dual'
+                  ? sourceIndex === 0
+                    ? statsRef.current.source1
+                    : statsRef.current.source2
+                  : statsRef.current.source0
+              const rotation = ((Math.round(source?.rotation ?? 0) % 360) + 360) % 360
+              const coordinates =
+                rotation === 90
+                  ? [retainedFocus.y, 1 - retainedFocus.x]
+                  : rotation === 180
+                    ? [1 - retainedFocus.x, 1 - retainedFocus.y]
+                    : rotation === 270
+                      ? [1 - retainedFocus.y, retainedFocus.x]
+                      : [retainedFocus.x, retainedFocus.y]
+              const point = VisionCamera.createNormalizedMeteringPoint(
+                Math.max(0, Math.min(1, coordinates[0])),
+                Math.max(0, Math.min(1, coordinates[1]))
+              )
+              await control.focusTo(point, {
+                modes,
+                responsiveness: 'snappy',
+                adaptiveness: retainedFocus.locked ? 'locked' : 'continuous',
+                autoResetAfter: retainedFocus.locked ? null : 5,
+              })
+            })
+          ).catch(() => {
+            updateLiveSettings({ focus: null })
+            showCaptureNotice('restoreControlFailed')
+          })
+        }
         if (!cancelled) {
           setReady(true)
           setReadyDeviceId(device.id)
-          setZoomLabel(controls[0]?.displayableZoomFactor ?? 1)
+          if (!zoomRestoreFailed) updateLiveSettings({ zoom: initialZoom })
+          if (useAppStore.getState().camera.phase === 'switching')
+            useAppStore.getState().camera.setPhase('idle')
         }
       })
       .catch((cause) => {
-        if (!cancelled) setError(cause instanceof Error ? cause.message : String(cause))
+        if (cancelled) return
+        if (combined) {
+          useAppStore.getState().camera.setPhase('switching')
+          setSessionStrategy('mode-specific')
+          return
+        }
+        setError(cause instanceof Error ? cause.message : String(cause))
+        if (useAppStore.getState().camera.phase === 'switching')
+          useAppStore.getState().camera.setPhase('idle')
       })
     lifecycle.current = setup
     return () => {
       cancelled = true
       invalidateFocus()
-      setFocusLocked(false)
       setReady(false)
       setReadyDeviceId(null)
       orientation.stopOrientationUpdates()
@@ -603,10 +769,13 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
     pairs,
     captureSettings,
     configuration,
-    checkSettings,
+    checkSettingsForStrategy,
     showCaptureNotice,
     stop,
-    mediaType,
+    sessionStrategy,
+    sessionMediaType,
+    setSessionStrategy,
+    updateLiveSettings,
   ])
 
   const startVideo = async () => {
@@ -618,6 +787,7 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
       useAppStore.getState().camera.phase !== 'idle'
     )
       return
+    if (!microphoneAuthorized && !(await requestMicrophone())) return
     useAppStore.getState().camera.setPhase('preparing')
     hideSnackbar()
     setElapsed(0)
@@ -679,7 +849,9 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
     const allocation = allocateMedia()
     try {
       const selectedFlash =
-        settings.mode === 'single' && !settings.front && device?.hasFlash ? photoFlashMode : 'off'
+        settings.mode === 'single' && !settings.front && device?.hasFlash && lightEnabled
+          ? 'on'
+          : 'off'
       const captures = await Promise.allSettled(
         photoOutputs.current.map((output) =>
           output.capturePhoto(
@@ -712,6 +884,7 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
                     allocation.directory,
                     kind,
                     positions[kind],
+                    settings.longEdge,
                     !thumbnailFile(allocation.id).exists
                   )
                 )
@@ -743,6 +916,7 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
                 allocation.directory,
                 kind,
                 positions[kind],
+                settings.longEdge,
                 !thumbnailFile(allocation.id).exists
               )
             )
@@ -772,9 +946,11 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
           pairIndex: settings.pairIndex,
           portraitPosition: settings.portraitPosition,
           landscapePosition: settings.landscapePosition,
+          longEdge: settings.longEdge,
           container: 'jpeg',
           quality: 0.9,
-          targetResolution: CommonResolutions.UHD_4_3,
+          targetResolution: photoTargetResolution(settings.longEdge),
+          hdr: photoHdrEnabled,
           flashMode: selectedFlash,
         },
         outputs: photoResults,
@@ -835,7 +1011,6 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
         controls.map(async (control) => {
           const factor = control.zoom / control.displayableZoomFactor
           const target = Math.max(control.minZoom, Math.min(control.maxZoom, value * factor))
-          if (control === controls[0]) setZoomLabel(target / factor)
           if (animated) {
             // VisionCamera 5.2 uses milliseconds on Android and zoom units/sec on iOS.
             await control.startZoomAnimation(target, Platform.OS === 'android' ? 350 : 3)
@@ -845,13 +1020,13 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
           }
         })
       )
-      if (controllers.current === controls) setZoomLabel(controls[0]?.displayableZoomFactor ?? 1)
+      if (controllers.current === controls) updateLiveSettings({ zoom: value })
     })
   const focus = async (x: number, y: number, kind: OutputKind = 'portrait', locked = false) => {
     const sequence = ++focusSequence.current
     const target = session.current
     const controls = controllers.current
-    setFocusLocked(false)
+    updateLiveSettings({ focus: null })
     try {
       await Promise.all(controls.map((control) => control.resetFocus()))
       if (sequence !== focusSequence.current || session.current !== target) return false
@@ -903,7 +1078,7 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
         })
       )
       if (sequence !== focusSequence.current || session.current !== target) return false
-      setFocusLocked(locked)
+      updateLiveSettings({ focus: { x, y, kind, locked } })
       return true
     } catch (cause) {
       if (sequence === focusSequence.current && session.current === target) {
@@ -917,7 +1092,7 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
   const unlockFocus = async () => {
     const sequence = ++focusSequence.current
     const target = session.current
-    setFocusLocked(false)
+    updateLiveSettings({ focus: null })
     try {
       await Promise.all(controllers.current.map((control) => control.resetFocus()))
     } catch (cause) {
@@ -937,18 +1112,36 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
   const torch = (on: boolean) =>
     updateControl('torch', async () => {
       const controls = controllers.current
+      const available = controls.some((control) => control.device.hasTorch)
       await Promise.all(
         controls
           .filter((control) => control.device.hasTorch)
           .map((control) => control.setTorchMode(on ? 'on' : 'off'))
       )
-      if (controllers.current === controls) setTorchEnabled(on)
+      if (controllers.current === controls) setTorchEnabled(on && available)
     })
+  useEffect(() => {
+    if (!ready) return
+    const controls = controllers.current
+    const on =
+      mediaType === 'video' && lightEnabled && controls.some((control) => control.device.hasTorch)
+    void Promise.all(
+      controls
+        .filter((control) => control.device.hasTorch)
+        .map((control) => control.setTorchMode(on ? 'on' : 'off'))
+    )
+      .then(() => {
+        if (controllers.current === controls) setTorchEnabled(on)
+      })
+      .catch((cause) => {
+        if (controllers.current === controls) showCaptureNotice(String(cause))
+      })
+  }, [ready, mediaType, lightEnabled, showCaptureNotice])
   const exposure = (value: number, kind: OutputKind = 'portrait') =>
     updateControl('exposure', async () => {
       const controls = controllers.current
       const index = settings.mode === 'dual' && kind === 'landscape' ? 1 : 0
-      const selected = focusLocked ? controls : controls.slice(index, index + 1)
+      const selected = liveSettings.focus?.locked ? controls : controls.slice(index, index + 1)
       await Promise.all(
         selected
           .filter((control) => control.device.supportsExposureBias)
@@ -960,11 +1153,12 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
             await control.setExposureBias(bias)
             if (controllers.current !== controls) return
             const controlKind = controls.indexOf(control) === 1 ? 'landscape' : 'portrait'
-            setExposureBias((previous) =>
-              settings.mode === 'single'
-                ? { portrait: bias, landscape: bias }
-                : { ...previous, [controlKind]: bias }
-            )
+            updateLiveSettings({
+              exposure:
+                settings.mode === 'single'
+                  ? { portrait: bias, landscape: bias }
+                  : { ...liveSettings.exposure, [controlKind]: bias },
+            })
           })
       )
     })
@@ -973,7 +1167,7 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
   const sizes =
     mediaType === 'photo'
       ? (['portrait', 'landscape'] as const).map((kind) =>
-          cropSize(CommonResolutions.UHD_4_3, kind)
+          outputSize(photoTargetResolution(settings.longEdge), kind, settings.longEdge)
         )
       : sources.map((source, index) =>
           source
@@ -1012,19 +1206,20 @@ export function useCaptureController(active: boolean, mediaType: MediaType) {
     sizes,
     error,
     elapsed,
-    zoom,
+    zoom: liveSettings.zoom,
     zoomRange,
     zoomPresets: [0.5, 1, 2, 5].filter(
       (value) => value >= zoomRange.min - 0.001 && value <= zoomRange.max + 0.001
     ),
     setZoom,
     focus,
-    focusLocked,
+    focusLocked: liveSettings.focus?.locked ?? false,
     unlockFocus,
-    exposureBias,
+    exposureBias: liveSettings.exposure,
     exposureRange,
     torch,
     torchEnabled,
+    photoHdrEnabled,
     exposure,
     startVideo,
     stopVideo: stop,
@@ -1056,6 +1251,7 @@ async function savePhotoOutput(
   directory: ReturnType<typeof allocateMedia>['directory'],
   kind: OutputKind,
   position: number,
+  longEdge: RecordingSettings['longEdge'],
   createThumbnail: boolean
 ): Promise<PhotoOutput> {
   const { width, height } = cropSize(image, kind)
@@ -1064,31 +1260,53 @@ async function savePhotoOutput(
   const y = (image.height - height) * (1 - p)
   const cropped = await image.cropAsync(x, y, x + width, y + height)
   try {
+    const target = outputSize(cropped, kind, longEdge)
+    const output =
+      target.width === cropped.width && target.height === cropped.height
+        ? cropped
+        : await cropped.resizeAsync(target.width, target.height)
     const filename = `${kind}.jpg`
     const destination = new File(directory, filename)
-    await cropped.saveToFileAsync(filePath(destination.uri), 'jpg', 90)
-    if (createThumbnail) {
-      const scale = Math.min(1, 480 / Math.max(cropped.width, cropped.height))
-      const thumbnail = await cropped.resizeAsync(
-        Math.max(1, Math.round(cropped.width * scale)),
-        Math.max(1, Math.round(cropped.height * scale))
-      )
-      try {
-        await thumbnail.saveToFileAsync(filePath(thumbnailFile(directory.name).uri), 'jpg', 80)
-      } finally {
-        thumbnail.dispose()
+    try {
+      await output.saveToFileAsync(filePath(destination.uri), 'jpg', 90)
+      if (createThumbnail) {
+        const scale = Math.min(1, 480 / Math.max(output.width, output.height))
+        const thumbnail = await output.resizeAsync(
+          Math.max(1, Math.round(output.width * scale)),
+          Math.max(1, Math.round(output.height * scale))
+        )
+        try {
+          await thumbnail.saveToFileAsync(filePath(thumbnailFile(directory.name).uri), 'jpg', 80)
+        } finally {
+          thumbnail.dispose()
+        }
       }
-    }
-    return {
-      kind,
-      filename,
-      width: cropped.width,
-      height: cropped.height,
-      bytes: destination.size,
-      ready: true,
+      return {
+        kind,
+        filename,
+        width: output.width,
+        height: output.height,
+        bytes: destination.size,
+        ready: true,
+      }
+    } finally {
+      if (output !== cropped) output.dispose()
     }
   } finally {
     cropped.dispose()
+  }
+}
+
+function photoTargetResolution(longEdge: RecordingSettings['longEdge']) {
+  switch (longEdge) {
+    case 1280:
+      return CommonResolutions.HD_4_3
+    case 1920:
+      return CommonResolutions.FHD_4_3
+    case 2560:
+      return CommonResolutions.QHD_4_3
+    case 3840:
+      return CommonResolutions.UHD_4_3
   }
 }
 

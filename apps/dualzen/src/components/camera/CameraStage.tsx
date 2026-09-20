@@ -47,7 +47,7 @@ export function CameraStage({
   const { t } = useTranslation()
   const theme = useTheme()
   const styles = useThemedStyles(createStyles)
-  const { settings, viewSettings, updatePipView } = useCameraState()
+  const { sharedSettings: settings, viewSettings, updatePipView } = useCameraState()
   const [stage, setStage] = useState({ width: 0, height: 0 })
   const stageHeight = useSharedValue(0)
   const stageTop = useSharedValue(topInset)
@@ -94,8 +94,8 @@ export function CameraStage({
     [stackedProgress, guideProgress, landscapeOpacity, stageHeight, stageTop]
   )
   useEffect(() => {
-    if (!recorder.ready) setFocusPoint(null)
-  }, [recorder.ready])
+    if (!recorder.ready && recorder.phase !== 'switching') setFocusPoint(null)
+  }, [recorder.ready, recorder.phase])
   const width = edgeToEdgePortrait
     ? stage.width
     : Math.min(stage.width, (Math.max(0, stage.height - topInset - bottomInset) * 9) / 16)

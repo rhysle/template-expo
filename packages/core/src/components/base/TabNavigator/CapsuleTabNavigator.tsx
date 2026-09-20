@@ -1,6 +1,8 @@
 import { iconSizes } from '@shared/core/theme'
 import { Tabs } from 'expo-router'
+import type { BottomTabBarProps } from 'expo-router/js-tabs'
 import type { IconProps } from 'phosphor-react-native'
+import type { ReactNode } from 'react'
 
 import { CapsuleTabBar } from '../CapsuleTabBar/CapsuleTabBar'
 import { useRegisterTabNavigator } from '../FloatingTabBar/tabBarHeight'
@@ -10,12 +12,14 @@ import { TabNavigatorFrame } from './TabNavigatorFrame'
 export interface CapsuleTabNavigatorProps {
   tabs: readonly Omit<TabDefinition, 'nativeIcon'>[]
   navigationDisabled?: boolean
+  tabBar?: (props: BottomTabBarProps) => ReactNode
 }
 
 /** Optional alternative to the native and full-width custom tab navigators. */
 export const CapsuleTabNavigator = ({
   tabs,
   navigationDisabled = false,
+  tabBar,
 }: CapsuleTabNavigatorProps) => {
   useRegisterTabNavigator('custom')
 
@@ -28,7 +32,9 @@ export const CapsuleTabNavigator = ({
       <Tabs
         initialRouteName={tabs[0]?.name}
         backBehavior="initialRoute"
-        tabBar={(props) => <CapsuleTabBar {...props} disabled={navigationDisabled} />}
+        tabBar={(props) =>
+          tabBar?.(props) ?? <CapsuleTabBar {...props} disabled={navigationDisabled} />
+        }
         screenListeners={{
           tabPress: (event) => {
             if (navigationDisabled) event.preventDefault()

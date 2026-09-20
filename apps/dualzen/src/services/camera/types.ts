@@ -1,9 +1,9 @@
 export type OutputKind = 'portrait' | 'landscape'
 export type CaptureMode = 'single' | 'dual'
 export type CapturePhase =
-  'idle' | 'preparing' | 'recording' | 'capturing' | 'finalizing' | 'exporting'
+  'idle' | 'switching' | 'preparing' | 'recording' | 'capturing' | 'finalizing' | 'exporting'
 export type MediaType = 'video' | 'photo'
-export type PhotoFlashMode = 'off' | 'auto' | 'on'
+export type SessionStrategy = 'combined' | 'mode-specific'
 export type PreviewLayout = 'pip' | 'stacked' | 'guide'
 export interface PipViewSettings {
   /** Normalized left-to-right position within the available preview area. */
@@ -21,12 +21,8 @@ export const DEFAULT_CAMERA_VIEW_SETTINGS: CameraViewSettings = {
   layout: 'pip',
   pip: { x: 1, y: 1, size: 0.4 },
 }
-export interface RecordingSettings {
+export interface SharedCaptureSettings {
   longEdge: 1280 | 1920 | 2560 | 3840
-  fps: 24 | 25 | 30 | 50 | 60 | 120
-  container: 'mp4' | 'mov'
-  hdr: boolean
-  stabilization: boolean
   mode: CaptureMode
   front: boolean
   deviceId: string | null
@@ -35,12 +31,20 @@ export interface RecordingSettings {
   landscapePosition: number
   grid: boolean
 }
-export const DEFAULT_SETTINGS: RecordingSettings = {
+export interface VideoSettings {
+  fps: 24 | 25 | 30 | 50 | 60 | 120
+  container: 'mp4' | 'mov'
+  hdr: boolean
+  stabilization: boolean
+}
+export type RecordingSettings = SharedCaptureSettings & VideoSettings
+export interface LiveCameraSettings {
+  zoom: number
+  focus: { x: number; y: number; kind: OutputKind; locked: boolean } | null
+  exposure: Record<OutputKind, number>
+}
+export const DEFAULT_SHARED_CAPTURE_SETTINGS: SharedCaptureSettings = {
   longEdge: 1920,
-  fps: 30,
-  container: 'mp4',
-  hdr: false,
-  stabilization: true,
   mode: 'single',
   front: false,
   deviceId: null,
@@ -48,6 +52,21 @@ export const DEFAULT_SETTINGS: RecordingSettings = {
   portraitPosition: 0.5,
   landscapePosition: 0.5,
   grid: false,
+}
+export const DEFAULT_VIDEO_SETTINGS: VideoSettings = {
+  fps: 30,
+  container: 'mp4',
+  hdr: false,
+  stabilization: true,
+}
+export const DEFAULT_LIVE_CAMERA_SETTINGS: LiveCameraSettings = {
+  zoom: 1,
+  focus: null,
+  exposure: { portrait: 0, landscape: 0 },
+}
+export const DEFAULT_SETTINGS: RecordingSettings = {
+  ...DEFAULT_SHARED_CAPTURE_SETTINGS,
+  ...DEFAULT_VIDEO_SETTINGS,
 }
 export interface PixelSize {
   width: number
@@ -106,10 +125,12 @@ export interface PhotoSettings {
   pairIndex: number
   portraitPosition: number
   landscapePosition: number
+  longEdge: SharedCaptureSettings['longEdge']
   container: 'jpeg'
   quality: number
   targetResolution: PixelSize
-  flashMode: PhotoFlashMode
+  hdr: boolean
+  flashMode: 'off' | 'on'
 }
 export interface PhotoCapture extends ProjectMediaBase {
   mediaType: 'photo'
