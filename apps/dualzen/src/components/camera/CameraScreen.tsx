@@ -1,5 +1,7 @@
 import { Button, IconButton, Text } from '@shared/core/components/base'
+import { withAlpha } from '@shared/core/utils/color'
 import { BlurView } from 'expo-blur'
+import { GlassView, isGlassEffectAPIAvailable, isLiquidGlassAvailable } from 'expo-glass-effect'
 import {
   CameraRotateIcon,
   GearSixIcon,
@@ -12,7 +14,14 @@ import {
 } from 'phosphor-react-native'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Linking, Pressable, useWindowDimensions, View } from 'react-native'
+import {
+  AccessibilityInfo,
+  Linking,
+  Platform,
+  Pressable,
+  useWindowDimensions,
+  View,
+} from 'react-native'
 import { cancelAnimation, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
 import { scheduleOnRN } from 'react-native-worklets'
 
@@ -41,6 +50,7 @@ export function CameraScreen({
   const styles = useThemedStyles(createStyles)
   const theme = useTheme()
   const cameraBlurProps = { tint: theme.appearance, intensity: CAMERA_BLUR_INTENSITY }
+  const [reduceTransparency, setReduceTransparency] = useState(true)
   const {
     sharedSettings,
     videoSettings,
@@ -68,6 +78,23 @@ export function CameraScreen({
   const switching = flipTarget !== null
   const transitionSwitching = switching || sessionTransitionVisible
   const transitionProgress = sessionTransitionVisible ? sessionSwitchProgress : switchProgress
+  useEffect(() => {
+    if (Platform.OS !== 'ios') return
+    let active = true
+    void AccessibilityInfo.isReduceTransparencyEnabled()
+      .then((value) => {
+        if (active) setReduceTransparency(value)
+      })
+      .catch(() => {})
+    const subscription = AccessibilityInfo.addEventListener(
+      'reduceTransparencyChanged',
+      setReduceTransparency
+    )
+    return () => {
+      active = false
+      subscription.remove()
+    }
+  }, [])
   useEffect(() => {
     if (
       flipTarget === null ||
@@ -127,6 +154,32 @@ export function CameraScreen({
     recorder.zoom
   const canFlip = recorder.devices.some(
     (device) => device.position === (settings.front ? 'back' : 'front')
+  )
+  const liquidGlass =
+    Platform.OS === 'ios' &&
+    !reduceTransparency &&
+    isGlassEffectAPIAvailable() &&
+    isLiquidGlassAvailable()
+  const recordColor = photoMode ? cameraColors.shutter : theme.colors.status.error
+  const recordInnerStyle = [
+    styles.recordInner,
+    { backgroundColor: withAlpha(recordColor, photoMode ? 0.88 : 0.78) },
+    recording && styles.stop,
+  ]
+  const recordSurface = liquidGlass ? (
+    <GlassView
+      colorScheme={theme.appearance}
+      glassEffectStyle="regular"
+      tintColor={withAlpha(theme.colors.background.surface, 0.2)}
+      isInteractive
+      pointerEvents="none"
+      style={styles.recordSurface}>
+      <View style={recordInnerStyle} />
+    </GlassView>
+  ) : (
+    <BlurView {...cameraBlurProps} pointerEvents="none" style={styles.recordSurface}>
+      <View style={recordInnerStyle} />
+    </BlurView>
   )
   const flipCamera = () => {
     if (switching || !idle || !recorder.ready || !canFlip || settings.mode === 'dual') return
@@ -347,13 +400,7 @@ export function CameraScreen({
                 else void recorder.startVideo()
               }}
               style={[styles.record, !idle && !recording && styles.dim]}>
-              <View
-                style={[
-                  styles.recordInner,
-                  photoMode && styles.photoShutter,
-                  recording && styles.stop,
-                ]}
-              />
+              {recordSurface}
             </Pressable>
             <View style={styles.controlGroup}>
               <BlurView {...cameraBlurProps} style={styles.controlBlur}>
@@ -526,12 +573,18 @@ const createStyles = createThemedStyles((theme) => ({
   },
   timer: { flexShrink: 0, fontVariant: ['tabular-nums'] },
   record: {
-    width: theme.spacing['7xl'],
+    width: theme.spacing['6xl'] + theme.spacing.md,
     flexShrink: 0,
-    height: theme.spacing['7xl'],
+    height: theme.spacing['6xl'] + theme.spacing.md,
     borderRadius: theme.borderRadius.full,
-    borderWidth: theme.spacing.xs,
-    borderColor: cameraColors.shutter,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  recordSurface: {
+    width: theme.spacing['6xl'] + theme.spacing.md,
+    height: theme.spacing['6xl'] + theme.spacing.md,
+    borderRadius: theme.borderRadius.full,
+    overflow: 'hidden',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -539,9 +592,7 @@ const createStyles = createThemedStyles((theme) => ({
     width: theme.spacing['6xl'],
     height: theme.spacing['6xl'],
     borderRadius: theme.borderRadius.full,
-    backgroundColor: theme.colors.status.error,
   },
-  photoShutter: { backgroundColor: cameraColors.shutter },
   stop: {
     width: theme.spacing['3xl'],
     height: theme.spacing['3xl'],
