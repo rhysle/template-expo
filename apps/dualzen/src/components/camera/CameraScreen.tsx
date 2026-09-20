@@ -1,7 +1,6 @@
 import { Button, IconButton, Text } from '@shared/core/components/base'
 import {
-  ArrowsClockwiseIcon,
-  CropIcon,
+  CameraRotateIcon,
   GearSixIcon,
   LightningIcon,
   LightningSlashIcon,
@@ -22,7 +21,6 @@ import { useCameraState } from '@/stores/features/camera'
 import { cameraColors, createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
 
 import { CameraStage } from './CameraStage'
-import { FramingControl } from './FramingControl'
 import { RecordingOptions } from './RecordingOptions'
 
 const LAYOUTS: PreviewLayout[] = ['pip', 'stacked', 'guide']
@@ -56,7 +54,6 @@ export function CameraScreen({
   )
   const layout = viewSettings.layout
   const [options, setOptions] = useState(false)
-  const [framing, setFraming] = useState(false)
   const [flipTarget, setFlipTarget] = useState<boolean | null>(null)
   const [sessionTransitionVisible, setSessionTransitionVisible] = useState(false)
   const [toolbarHeight, setToolbarHeight] = useState<number>(theme.spacing['5xl'])
@@ -108,9 +105,6 @@ export function CameraScreen({
     )
   }, [phase, sessionTransitionVisible, sessionSwitchProgress])
   useEffect(() => () => cancelAnimation(sessionSwitchProgress), [sessionSwitchProgress])
-  useEffect(() => {
-    if (phase !== 'idle') setFraming(false)
-  }, [phase])
   const idle = phase === 'idle'
   const photoMode = mediaType === 'photo'
   const immersive = layout === 'guide' && !landscape
@@ -131,7 +125,6 @@ export function CameraScreen({
   const flipCamera = () => {
     if (switching || !idle || !recorder.ready || !canFlip || settings.mode === 'dual') return
     const front = !settings.front
-    setFraming(false)
     setFlipTarget(front)
     switchProgress.set(
       withTiming(1, { duration: 160 }, (finished) => {
@@ -226,9 +219,8 @@ export function CameraScreen({
           }
           bottomInset={immersive || landscape ? 0 : theme.spacing['7xl'] + theme.spacing.sm * 2}
           switching={transitionSwitching}
-          switchProgress={transitionProgress}>
-          {framing && <FramingControl onClose={() => setFraming(false)} />}
-        </CameraStage>
+          switchProgress={transitionProgress}
+        />
         <View style={[styles.panel, landscape && styles.panelLandscape]}>
           <View style={[styles.notices, landscape && styles.noticesLandscape]}>
             {!!phaseLabels[phase] && (
@@ -347,14 +339,7 @@ export function CameraScreen({
               />
             </Pressable>
             <View style={styles.controlGroup}>
-              <IconButton
-                icon={CropIcon}
-                style={styles.controlButton}
-                accessibilityLabel={t('camera.framing')}
-                selected={framing}
-                disabled={!idle || switching}
-                onPress={() => setFraming(!framing)}
-              />
+              <View style={styles.controlButton} pointerEvents="none" />
               <IconButton
                 icon={LAYOUT_ICONS[layout]}
                 style={styles.controlButton}
@@ -367,7 +352,7 @@ export function CameraScreen({
                 }
               />
               <IconButton
-                icon={ArrowsClockwiseIcon}
+                icon={CameraRotateIcon}
                 style={styles.controlButton}
                 accessibilityLabel={t('camera.flip')}
                 disabled={
