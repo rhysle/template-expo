@@ -1,7 +1,15 @@
-import { Button, SegmentedControl, Slider, Text } from '@shared/core/components/base'
-import { useEffect, useMemo, useState } from 'react'
+import {
+  Card,
+  NativeBottomSheet,
+  NativeMenu,
+  type NativeMenuAction,
+  NativeToggle,
+  Text,
+} from '@shared/core/components/base'
+import { CaretDownIcon } from 'phosphor-react-native'
+import { type ReactNode, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Modal, Platform, ScrollView, Switch, View } from 'react-native'
+import { Platform, View } from 'react-native'
 
 import {
   formatDuration,
@@ -14,7 +22,114 @@ import {
 import type { CaptureController } from '@/services/camera/useRecorder'
 import { useCameraState } from '@/stores/features/camera'
 import { useProjectsState } from '@/stores/features/projects'
-import { createThemedStyles, useTheme, useThemedStyles } from '@/theme'
+import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
+
+import { CameraOptionSegmentedControl, CameraOptionSlider } from './CameraOptionControls'
+
+interface OptionRowProps {
+  label: string
+  value: string
+  divider?: boolean
+}
+
+interface MenuOptionRowProps extends OptionRowProps {
+  actions: readonly NativeMenuAction[]
+  onSelect: (id: string) => void
+}
+
+function MenuOptionRow({ label, value, actions, onSelect, divider }: MenuOptionRowProps) {
+  const theme = useTheme()
+  const styles = useThemedStyles(createStyles)
+
+  return (
+    <View style={[styles.optionRow, divider && styles.divider]}>
+      <Text weight="medium">{label}</Text>
+      <NativeMenu actions={actions} onSelect={onSelect} title={label} style={styles.menu}>
+        <View style={styles.optionValue}>
+          <Text
+            accessible
+            accessibilityRole="button"
+            accessibilityLabel={`${label}: ${value}`}
+            tone="secondary"
+            numberOfLines={1}
+            style={styles.optionValueText}>
+            {value}
+          </Text>
+          <CaretDownIcon size={iconSizes.sm} color={theme.colors.text.muted} />
+        </View>
+      </NativeMenu>
+    </View>
+  )
+}
+
+function ReadOnlyOptionRow({ label, value, divider }: OptionRowProps) {
+  const styles = useThemedStyles(createStyles)
+
+  return (
+    <View
+      accessible
+      accessibilityLabel={`${label}: ${value}`}
+      style={[styles.optionRow, divider && styles.divider]}>
+      <Text weight="medium">{label}</Text>
+      <Text tone="secondary" numberOfLines={1} style={styles.optionValueText}>
+        {value}
+      </Text>
+    </View>
+  )
+}
+
+function ControlRow({
+  label,
+  children,
+  divider,
+}: Pick<OptionRowProps, 'label' | 'divider'> & { children: ReactNode }) {
+  const styles = useThemedStyles(createStyles)
+
+  return (
+    <View style={[styles.controlRow, divider && styles.divider]}>
+      <Text weight="medium">{label}</Text>
+      {children}
+    </View>
+  )
+}
+
+function ToggleRow({
+  label,
+  value,
+  onValueChange,
+  disabled,
+  divider,
+}: {
+  label: string
+  value: boolean
+  onValueChange: (value: boolean) => void
+  disabled?: boolean
+  divider?: boolean
+}) {
+  const styles = useThemedStyles(createStyles)
+
+  return (
+    <View style={[styles.optionRow, divider && styles.divider]}>
+      <Text weight="medium">{label}</Text>
+      <View style={styles.toggleControl}>
+        <NativeToggle value={value} onValueChange={onValueChange} disabled={disabled} />
+      </View>
+    </View>
+  )
+}
+
+function Section({ label, children }: { label: string; children: ReactNode }) {
+  const styles = useThemedStyles(createStyles)
+
+  return (
+    <View style={styles.section}>
+      <Text variant="caption" weight="semibold" tone="muted" style={styles.sectionLabel}>
+        {label}
+      </Text>
+      {children}
+    </View>
+  )
+}
 
 export function RecordingOptions({
   mediaType,
@@ -35,15 +150,10 @@ export function RecordingOptions({
     [sharedSettings, videoSettings]
   )
   const { projects, selectedProjectId, selectProject } = useProjectsState()
-  const theme = useTheme()
   const styles = useThemedStyles(createStyles)
-  const toggleLabels = {
-    hdr: t('camera.hdr'),
-    stabilization: t('camera.stabilization'),
-    grid: t('camera.grid'),
-  }
   const { checkSettings } = recorder
   const [supported, setSupported] = useState<Record<string, boolean>>({})
+
   useEffect(() => {
     if (!visible) return
     let cancelled = false
@@ -66,246 +176,332 @@ export function RecordingOptions({
       cancelled = true
     }
   }, [visible, settings, checkSettings])
-  const changeMode = (mode: string) => {
+
+  const changeMode = (mode: RecordingSettings['mode']) => {
     const androidDual = Platform.OS === 'android' && mode === 'dual'
-    updateSharedSettings({
-      mode: mode as RecordingSettings['mode'],
-      front: false,
-      deviceId: null,
-      pairIndex: 0,
-    })
+    updateSharedSettings({ mode, front: false, deviceId: null, pairIndex: 0 })
     if (androidDual) updateVideoSettings({ fps: 30, hdr: false, stabilization: false })
   }
+
+  const lensLabel = (device: (typeof recorder.devices)[number]) =>
+    device.type === 'ultra-wide-angle'
+      ? t('camera.ultraWide')
+      : device.type === 'telephoto'
+        ? t('camera.telephoto')
+        : device.position === 'front'
+          ? t('camera.selfie')
+          : t('camera.wide')
+
+  const pairLabel = (pair: (typeof recorder.pairs)[number], index: number) =>
+    `${t('camera.pair', { number: index + 1 })} · ${pair.map(lensLabel).join(' / ')}`
+
+  const availableLenses = recorder.devices.filter(
+    (device) =>
+      device.position === (settings.front ? 'front' : 'back') &&
+      ['wide-angle', 'ultra-wide-angle', 'telephoto', 'true-depth'].includes(device.type)
+  )
+  const selectedLens = availableLenses.find((device) => device.id === recorder.device?.id)
+  const selectedProject = projects.find((project) => project.id === selectedProjectId)
+  const selectedPair = recorder.pairs[settings.pairIndex]
+  const hdrUnavailable = !settings.hdr && supported.hdr === false
+  const stabilizationUnavailable = !settings.stabilization && supported.stabilization === false
+
   return (
-    <Modal
+    <NativeBottomSheet
       visible={visible}
-      transparent
-      animationType="fade"
-      onRequestClose={onClose}
-      supportedOrientations={['portrait', 'landscape-left', 'landscape-right']}>
-      <View style={styles.backdrop}>
-        <ScrollView style={styles.sheet} contentContainerStyle={styles.content}>
-          <Text variant="subtitle" weight="bold">
-            {t('camera.cameraOptions')}
-          </Text>
-          <Text tone="secondary">{t('camera.mode')}</Text>
-          <SegmentedControl
-            value={settings.mode}
-            onValueChange={changeMode}
-            options={[
-              { value: 'single', label: t('camera.singleLens') },
-              { value: 'dual', label: t('camera.dualLens'), disabled: !recorder.pairs.length },
-            ]}
-          />
-          {!recorder.pairs.length && (
-            <Text variant="caption" tone="muted">
-              {t('camera.unsupported')}
-            </Text>
+      onDismiss={onClose}
+      preset="resizable"
+      scrollable
+      contentContainerStyle={styles.content}>
+      <Section label={t('camera.sections.capture')}>
+        <Card padding="none">
+          {recorder.pairs.length ? (
+            <ControlRow label={t('camera.mode')} divider>
+              <CameraOptionSegmentedControl
+                value={settings.mode}
+                onValueChange={changeMode}
+                options={[
+                  { value: 'single', label: t('camera.singleLens') },
+                  { value: 'dual', label: t('camera.dualLens') },
+                ]}
+                style={styles.segmentedControl}
+              />
+            </ControlRow>
+          ) : (
+            <ReadOnlyOptionRow label={t('camera.mode')} value={t('camera.singleLens')} divider />
           )}
-          {settings.mode === 'dual' && recorder.pairs.length > 0 && (
-            <SegmentedControl
-              value={String(settings.pairIndex)}
-              onValueChange={(value) => updateSharedSettings({ pairIndex: Number(value) })}
-              options={recorder.pairs.map((pair, index) => ({
-                value: String(index),
-                label: `${t('camera.pair', { number: index + 1 })} · ${pair.map((item) => (item.type === 'ultra-wide-angle' ? t('camera.ultraWide') : item.type === 'telephoto' ? t('camera.telephoto') : t('camera.wide'))).join(' / ')}`,
+
+          {settings.mode === 'single' &&
+            (availableLenses.length ? (
+              <MenuOptionRow
+                label={t('camera.lens')}
+                value={selectedLens ? lensLabel(selectedLens) : '—'}
+                actions={availableLenses.map((device) => ({
+                  id: device.id,
+                  label: lensLabel(device),
+                  selected: device.id === recorder.device?.id,
+                }))}
+                onSelect={(deviceId) => updateSharedSettings({ deviceId })}
+                divider={projects.length > 1}
+              />
+            ) : (
+              <ReadOnlyOptionRow label={t('camera.lens')} value="—" divider={projects.length > 1} />
+            ))}
+
+          {settings.mode === 'dual' && selectedPair && (
+            <MenuOptionRow
+              label={t('camera.cameraPair')}
+              value={pairLabel(selectedPair, settings.pairIndex)}
+              actions={recorder.pairs.map((pair, index) => ({
+                id: String(index),
+                label: pairLabel(pair, index),
+                selected: index === settings.pairIndex,
               }))}
+              onSelect={(pairIndex) => updateSharedSettings({ pairIndex: Number(pairIndex) })}
+              divider={projects.length > 1}
             />
           )}
-          {settings.mode === 'dual' && Platform.OS === 'android' && (
-            <Text variant="caption" tone="muted">
-              {t('camera.androidDualLimits')}
-            </Text>
+
+          {projects.length > 1 && (
+            <MenuOptionRow
+              label={t('projects.title')}
+              value={selectedProject?.name ?? t('projects.default')}
+              actions={projects.map((project) => ({
+                id: project.id,
+                label: project.name ?? t('projects.default'),
+                selected: project.id === selectedProjectId,
+              }))}
+              onSelect={selectProject}
+            />
           )}
-          {settings.mode === 'single' && (
-            <>
-              <Text tone="secondary">{t('camera.lens')}</Text>
-              <ScrollView horizontal>
-                <SegmentedControl
-                  value={recorder.device?.id ?? ''}
-                  onValueChange={(deviceId) => updateSharedSettings({ deviceId })}
-                  options={recorder.devices
-                    .filter(
-                      (item) =>
-                        item.position === (settings.front ? 'front' : 'back') &&
-                        ['wide-angle', 'ultra-wide-angle', 'telephoto', 'true-depth'].includes(
-                          item.type
-                        )
-                    )
-                    .map((item) => ({
-                      value: item.id,
-                      label:
-                        item.type === 'ultra-wide-angle'
-                          ? t('camera.ultraWide')
-                          : item.type === 'telephoto'
-                            ? t('camera.telephoto')
-                            : item.position === 'front'
-                              ? t('camera.selfie')
-                              : t('camera.wide'),
-                    }))}
-                />
-              </ScrollView>
-              <Text variant="caption" tone="muted">
-                {t('camera.digitalZoom')}
-              </Text>
-            </>
-          )}
-          <Text tone="secondary">{t('camera.resolution')}</Text>
-          <SegmentedControl
-            value={String(settings.longEdge)}
-            onValueChange={(value) =>
+        </Card>
+        {settings.mode === 'dual' && Platform.OS === 'android' && (
+          <Text variant="caption" tone="muted" style={styles.helperText}>
+            {t('camera.androidDualLimits')}
+          </Text>
+        )}
+      </Section>
+
+      <Section label={t('camera.sections.quality')}>
+        <Card padding="none">
+          <MenuOptionRow
+            label={t('camera.resolution')}
+            value={RESOLUTION_LABELS[settings.longEdge]}
+            actions={RESOLUTION_OPTIONS.map((edge) => ({
+              id: String(edge),
+              label: RESOLUTION_LABELS[edge],
+              disabled: supported[`edge${edge}`] !== true,
+              selected: edge === settings.longEdge,
+            }))}
+            onSelect={(value) =>
               updateSharedSettings({ longEdge: Number(value) as RecordingSettings['longEdge'] })
             }
-            options={RESOLUTION_OPTIONS.map((edge) => ({
-              value: String(edge),
-              label: RESOLUTION_LABELS[edge],
-              disabled: !supported[`edge${edge}`],
-            }))}
+            divider={mediaType === 'video'}
           />
-          <Text variant="caption" tone="muted">
-            {t('camera.resolutionNote')}
-          </Text>
-          {mediaType === 'video' ? (
-            <>
-              <Text tone="secondary">{t('camera.fps')}</Text>
-              <SegmentedControl
-                value={String(settings.fps)}
-                onValueChange={(value) =>
-                  updateVideoSettings({ fps: Number(value) as RecordingSettings['fps'] })
-                }
-                options={FPS_OPTIONS.map((fps) => ({
-                  value: String(fps),
-                  label: String(fps),
-                  disabled: !supported[`fps${fps}`],
-                }))}
-              />
-              <Text variant="caption" tone="muted">
-                {t('camera.unsupported')}
-              </Text>
-              <Text tone="secondary">{t('camera.format')}</Text>
-              <SegmentedControl
-                value={settings.container}
-                onValueChange={(container) =>
-                  updateVideoSettings({ container: container as RecordingSettings['container'] })
-                }
-                options={[
-                  { value: 'mp4', label: 'MP4' },
-                  { value: 'mov', label: 'MOV', disabled: !recorder.capabilities.mov },
-                ]}
-              />
-              {!recorder.capabilities.mov && (
-                <Text variant="caption" tone="muted">
-                  {t('camera.movUnavailable')}
-                </Text>
-              )}
-              {(['hdr', 'stabilization'] as const).map((key) => (
-                <View key={key} style={styles.row}>
-                  <Text>{toggleLabels[key]}</Text>
-                  <Switch
-                    accessibilityLabel={toggleLabels[key]}
-                    value={settings[key]}
-                    disabled={!settings[key] && !supported[key]}
-                    onValueChange={(value) => updateVideoSettings({ [key]: value })}
-                    trackColor={{
-                      true: theme.colors.primary.main,
-                      false: theme.colors.background.subtle,
-                    }}
-                  />
-                </View>
-              ))}
-              {!recorder.capabilities.hdr && (
-                <Text variant="caption" tone="muted">
-                  {t('camera.hdrUnavailable')}
-                </Text>
-              )}
-            </>
-          ) : (
-            <Text variant="caption" tone="muted">
-              {recorder.photoHdrEnabled
-                ? t('camera.photoHdrActive')
-                : t('camera.photoHdrUnavailable')}
-            </Text>
-          )}
-          <View style={styles.row}>
-            <Text>{toggleLabels.grid}</Text>
-            <Switch
-              accessibilityLabel={toggleLabels.grid}
-              value={settings.grid}
-              onValueChange={(grid) => updateSharedSettings({ grid })}
-              trackColor={{
-                true: theme.colors.primary.main,
-                false: theme.colors.background.subtle,
-              }}
-            />
-          </View>
-          {(['portrait', 'landscape'] as const).map((kind, index) => (
-            <View key={kind} style={styles.framing}>
-              <View style={styles.row}>
-                <Text>{t('camera.crop', { kind: t(`camera.${kind}`) })}</Text>
-                <Text variant="caption" tone="muted">
-                  {recorder.sizes[index]
-                    ? `${recorder.sizes[index]!.width}×${recorder.sizes[index]!.height}`
-                    : '—'}
-                </Text>
-              </View>
-              <Slider
-                accessibilityLabel={t('camera.crop', { kind: t(`camera.${kind}`) })}
-                value={kind === 'portrait' ? settings.portraitPosition : settings.landscapePosition}
-                onValueChange={(value) =>
-                  updateSharedSettings(
-                    kind === 'portrait' ? { portraitPosition: value } : { landscapePosition: value }
-                  )
-                }
-              />
-            </View>
-          ))}
-          {projects.length > 1 && (
-            <>
-              <Text tone="secondary">{t('projects.title')}</Text>
-              <ScrollView horizontal>
-                <SegmentedControl
-                  value={selectedProjectId}
-                  onValueChange={selectProject}
-                  options={projects.map((project) => ({
-                    value: project.id,
-                    label: project.name ?? t('projects.default'),
-                  }))}
-                />
-              </ScrollView>
-            </>
-          )}
+
           {mediaType === 'video' && (
             <>
-              <Text variant="caption" tone="muted">
-                {t('camera.remaining', { time: formatDuration(recorder.remaining) })}
-              </Text>
-              <Text variant="caption" tone="muted">
-                {t('camera.storageRate', {
-                  amount: ((recorder.bytesPerSecond * 60) / 1e6).toFixed(0),
-                  free: (recorder.stats.freeBytes / 1e9).toFixed(1),
-                })}
-              </Text>
+              <MenuOptionRow
+                label={t('camera.fps')}
+                value={String(settings.fps)}
+                actions={FPS_OPTIONS.map((fps) => ({
+                  id: String(fps),
+                  label: String(fps),
+                  disabled: supported[`fps${fps}`] !== true,
+                  selected: fps === settings.fps,
+                }))}
+                onSelect={(value) =>
+                  updateVideoSettings({ fps: Number(value) as RecordingSettings['fps'] })
+                }
+                divider
+              />
+
+              {recorder.capabilities.mov ? (
+                <ControlRow label={t('camera.format')} divider>
+                  <CameraOptionSegmentedControl
+                    value={settings.container}
+                    onValueChange={(container) => updateVideoSettings({ container })}
+                    options={[
+                      { value: 'mp4', label: 'MP4' },
+                      { value: 'mov', label: 'MOV' },
+                    ]}
+                    style={styles.segmentedControl}
+                  />
+                </ControlRow>
+              ) : (
+                <ReadOnlyOptionRow label={t('camera.format')} value="MP4" divider />
+              )}
+
+              <View style={styles.storageSummary}>
+                <Text variant="caption" tone="secondary">
+                  {t('camera.remaining', { time: formatDuration(recorder.remaining) })}
+                </Text>
+                <Text variant="caption" tone="muted">
+                  {t('camera.storageRate', {
+                    amount: ((recorder.bytesPerSecond * 60) / 1e6).toFixed(0),
+                    free: (recorder.stats.freeBytes / 1e9).toFixed(1),
+                  })}
+                </Text>
+              </View>
             </>
           )}
-          <Button onPress={onClose} label={t('camera.done')} />
-        </ScrollView>
-      </View>
-    </Modal>
+        </Card>
+        {settings.longEdge === 2560 && (
+          <Text variant="caption" tone="muted" style={styles.helperText}>
+            {t('camera.resolution2KNote')}
+          </Text>
+        )}
+        <Text variant="caption" tone="muted" style={styles.helperText}>
+          {t('camera.resolutionOutputNote')}
+        </Text>
+      </Section>
+
+      <Section label={t('camera.sections.enhancements')}>
+        <Card padding="none">
+          {mediaType === 'video' ? (
+            <>
+              <ToggleRow
+                label={t('camera.hdr')}
+                value={settings.hdr}
+                disabled={!settings.hdr && supported.hdr !== true}
+                onValueChange={(hdr) => updateVideoSettings({ hdr })}
+                divider
+              />
+              <ToggleRow
+                label={t('camera.stabilization')}
+                value={settings.stabilization}
+                disabled={!settings.stabilization && supported.stabilization !== true}
+                onValueChange={(stabilization) => updateVideoSettings({ stabilization })}
+                divider
+              />
+            </>
+          ) : (
+            <View style={[styles.statusRow, styles.divider]}>
+              <Text variant="caption" tone="muted">
+                {recorder.photoHdrEnabled
+                  ? t('camera.photoHdrActive')
+                  : t('camera.photoHdrUnavailable')}
+              </Text>
+            </View>
+          )}
+          <ToggleRow
+            label={t('camera.grid')}
+            value={settings.grid}
+            onValueChange={(grid) => updateSharedSettings({ grid })}
+          />
+        </Card>
+        {hdrUnavailable && (
+          <Text variant="caption" tone="muted" style={styles.helperText}>
+            {t('camera.hdrUnavailable')}
+          </Text>
+        )}
+        {stabilizationUnavailable && (
+          <Text variant="caption" tone="muted" style={styles.helperText}>
+            {t('camera.stabilizationUnavailable')}
+          </Text>
+        )}
+      </Section>
+
+      <Section label={t('camera.framing')}>
+        <Card padding="none">
+          {(['portrait', 'landscape'] as const).map((kind, index) => {
+            const label = t(`camera.${kind}`)
+            const accessibilityLabel = t('camera.crop', { kind: label })
+            const size = recorder.sizes[index]
+
+            return (
+              <View key={kind} style={[styles.framingRow, index === 0 && styles.divider]}>
+                <View style={styles.framingHeader}>
+                  <Text weight="medium">{label}</Text>
+                  <Text variant="caption" tone="muted">
+                    {size ? `${size.width}×${size.height}` : '—'}
+                  </Text>
+                </View>
+                <CameraOptionSlider
+                  accessibilityLabel={accessibilityLabel}
+                  value={
+                    kind === 'portrait' ? settings.portraitPosition : settings.landscapePosition
+                  }
+                  onValueChange={(value) =>
+                    updateSharedSettings(
+                      kind === 'portrait'
+                        ? { portraitPosition: value }
+                        : { landscapePosition: value }
+                    )
+                  }
+                />
+              </View>
+            )
+          })}
+        </Card>
+      </Section>
+    </NativeBottomSheet>
   )
 }
+
 const createStyles = createThemedStyles((theme) => ({
-  backdrop: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: theme.spacing.xl,
-    backgroundColor: theme.colors.background.overlay,
+  content: {
+    paddingHorizontal: theme.spacing.lg,
+    paddingTop: theme.spacing.sm,
+    paddingBottom: theme.spacing['3xl'],
+    gap: theme.spacing['2xl'],
   },
-  sheet: {
-    maxHeight: '90%',
-    backgroundColor: theme.colors.background.surface,
-    borderRadius: theme.borderRadius['2xl'],
+  section: { gap: theme.spacing.sm },
+  sectionLabel: {
+    paddingHorizontal: theme.spacing.sm,
+    textTransform: 'uppercase',
   },
-  content: { padding: theme.spacing.xl, gap: theme.spacing.lg },
-  framing: { gap: theme.spacing.sm },
-  row: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  menu: {
+    flexShrink: 1,
+    marginStart: 'auto',
+  },
+  optionRow: {
+    minHeight: theme.spacing['5xl'],
+    paddingHorizontal: theme.spacing.xl,
+    paddingVertical: theme.spacing.lg,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: theme.spacing.lg,
+  },
+  optionValue: {
+    minWidth: 0,
+    flexShrink: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    gap: theme.spacing.xs,
+  },
+  optionValueText: { flexShrink: 1 },
+  controlRow: {
+    paddingHorizontal: theme.spacing.xl,
+    paddingVertical: theme.spacing.lg,
+    gap: theme.spacing.md,
+  },
+  toggleControl: { marginStart: 'auto' },
+  segmentedControl: { width: '100%' },
+  divider: {
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.border.subtle,
+  },
+  helperText: { paddingHorizontal: theme.spacing.sm },
+  storageSummary: {
+    paddingHorizontal: theme.spacing.xl,
+    paddingVertical: theme.spacing.lg,
+    gap: theme.spacing.xs,
+  },
+  statusRow: {
+    paddingHorizontal: theme.spacing.xl,
+    paddingVertical: theme.spacing.lg,
+  },
+  framingRow: {
+    paddingHorizontal: theme.spacing.xl,
+    paddingVertical: theme.spacing.lg,
+    gap: theme.spacing.sm,
+  },
+  framingHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
 }))
