@@ -3,7 +3,6 @@ import { withAlpha } from '@shared/core/utils/color'
 import { BlurView } from 'expo-blur'
 import { GlassView, isGlassEffectAPIAvailable, isLiquidGlassAvailable } from 'expo-glass-effect'
 import {
-  CameraRotateIcon,
   GearSixIcon,
   LightningIcon,
   LightningSlashIcon,
@@ -25,8 +24,8 @@ import {
 import { cancelAnimation, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
 import { scheduleOnRN } from 'react-native-worklets'
 
+import type { CaptureContextController } from '@/services/camera/CaptureProvider'
 import { formatDuration, type PreviewLayout, RESOLUTION_LABELS } from '@/services/camera/types'
-import type { CaptureController } from '@/services/camera/useRecorder'
 import { useCameraState } from '@/stores/features/camera'
 import { cameraColors, createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
 
@@ -41,7 +40,7 @@ export function CameraScreen({
   recorder,
   onSettings,
 }: {
-  recorder: CaptureController
+  recorder: CaptureContextController
   onSettings: () => void
 }) {
   const { width, height } = useWindowDimensions()
@@ -60,7 +59,6 @@ export function CameraScreen({
     phase,
     setLightEnabled,
     setPreviewLayout,
-    updateSharedSettings,
   } = useCameraState()
   const settings = useMemo(
     () => ({ ...sharedSettings, ...videoSettings }),
@@ -70,14 +68,14 @@ export function CameraScreen({
   const [quickSettingsVisible, setQuickSettingsVisible] = useState(false)
   const [framingVisible, setFramingVisible] = useState(false)
   const pendingQuickAction = useRef<QuickSettingsAction | null>(null)
-  const [flipTarget, setFlipTarget] = useState<boolean | null>(null)
   const [sessionTransitionVisible, setSessionTransitionVisible] = useState(false)
   const [toolbarHeight, setToolbarHeight] = useState<number>(theme.spacing['5xl'])
-  const switchProgress = useSharedValue(0)
   const sessionSwitchProgress = useSharedValue(0)
-  const switching = flipTarget !== null
+  const switching = recorder.flipping
   const transitionSwitching = switching || sessionTransitionVisible
-  const transitionProgress = sessionTransitionVisible ? sessionSwitchProgress : switchProgress
+  const transitionProgress = sessionTransitionVisible
+    ? sessionSwitchProgress
+    : recorder.flipProgress
   useEffect(() => {
     if (Platform.OS !== 'ios') return
     let active = true
@@ -95,32 +93,6 @@ export function CameraScreen({
       subscription.remove()
     }
   }, [])
-  useEffect(() => {
-    if (
-      flipTarget === null ||
-      settings.front !== flipTarget ||
-      (!recorder.error && (!recorder.ready || recorder.readyDeviceId !== recorder.device?.id))
-    )
-      return
-    // Allow the new preview to settle before revealing it; errors also release the transition.
-    switchProgress.set(
-      withDelay(
-        120,
-        withTiming(0, { duration: 220 }, (finished) => {
-          if (finished) scheduleOnRN(setFlipTarget, null)
-        })
-      )
-    )
-  }, [
-    flipTarget,
-    settings.front,
-    recorder.ready,
-    recorder.readyDeviceId,
-    recorder.device?.id,
-    recorder.error,
-    switchProgress,
-  ])
-  useEffect(() => () => cancelAnimation(switchProgress), [switchProgress])
   useEffect(() => {
     if (phase === 'switching') {
       setSessionTransitionVisible(true)
@@ -152,9 +124,6 @@ export function CameraScreen({
     recorder.zoomPresets.find((value) => value > recorder.zoom + 0.05) ??
     recorder.zoomPresets[0] ??
     recorder.zoom
-  const canFlip = recorder.devices.some(
-    (device) => device.position === (settings.front ? 'back' : 'front')
-  )
   const liquidGlass =
     Platform.OS === 'ios' &&
     !reduceTransparency &&
@@ -181,16 +150,6 @@ export function CameraScreen({
       <View style={recordInnerStyle} />
     </BlurView>
   )
-  const flipCamera = () => {
-    if (switching || !idle || !recorder.ready || !canFlip || settings.mode === 'dual') return
-    const front = !settings.front
-    setFlipTarget(front)
-    switchProgress.set(
-      withTiming(1, { duration: 160 }, (finished) => {
-        if (finished) scheduleOnRN(updateSharedSettings, { front, deviceId: null })
-      })
-    )
-  }
   const openQuickSettings = () => {
     pendingQuickAction.current = null
     setFramingVisible(false)
@@ -402,16 +361,7 @@ export function CameraScreen({
               style={[styles.record, !idle && !recording && styles.dim]}>
               {recordSurface}
             </Pressable>
-            <View style={styles.controlGroup}>
-              <BlurView {...cameraBlurProps} style={styles.controlBlur}>
-                <IconButton
-                  icon={SlidersHorizontalIcon}
-                  style={styles.controlButton}
-                  disabled={!idle || switching}
-                  accessibilityLabel={t('camera.quickSettings')}
-                  onPress={openQuickSettings}
-                />
-              </BlurView>
+            <View style={[styles.controlGroup, styles.trailingControlGroup]}>
               <BlurView {...cameraBlurProps} style={styles.controlBlur}>
                 <IconButton
                   icon={LAYOUT_ICONS[layout]}
@@ -427,18 +377,11 @@ export function CameraScreen({
               </BlurView>
               <BlurView {...cameraBlurProps} style={styles.controlBlur}>
                 <IconButton
-                  icon={CameraRotateIcon}
+                  icon={SlidersHorizontalIcon}
                   style={styles.controlButton}
-                  accessibilityLabel={t('camera.flip')}
-                  disabled={
-                    !idle ||
-                    switching ||
-                    !recorder.ready ||
-                    !canFlip ||
-                    !!recorder.error ||
-                    settings.mode === 'dual'
-                  }
-                  onPress={flipCamera}
+                  disabled={!idle || switching}
+                  accessibilityLabel={t('camera.quickSettings')}
+                  onPress={openQuickSettings}
                 />
               </BlurView>
             </View>
@@ -530,6 +473,11 @@ const createStyles = createThemedStyles((theme) => ({
     alignItems: 'center',
     justifyContent: 'space-evenly',
     minWidth: 0,
+  },
+  trailingControlGroup: {
+    justifyContent: 'flex-end',
+    gap: theme.spacing.sm,
+    paddingRight: theme.spacing.sm,
   },
   controlBlur: {
     width: theme.spacing['4xl'],

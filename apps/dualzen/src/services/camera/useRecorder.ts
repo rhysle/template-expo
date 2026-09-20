@@ -385,7 +385,9 @@ export function useCaptureController(active: boolean) {
           }
           if (video.outputs.some((output) => output.ready)) {
             await saveMedia(video)
-            const output = video.outputs.find((item) => item.ready)!
+            const output =
+              video.outputs.find((item) => item.kind === 'portrait' && item.ready) ??
+              video.outputs.find((item) => item.ready)!
             const source = allocateExistingVideo(video, output.filename)
             await NativeRecorder.thumbnail(source, thumbnailFile(video.id).uri).catch(() => {})
             if (video.outputs.every((item) => item.ready) && !video.error) {

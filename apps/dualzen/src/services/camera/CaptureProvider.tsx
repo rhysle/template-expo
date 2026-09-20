@@ -1,12 +1,16 @@
 import { createContext, type ReactNode, use } from 'react'
 
+import { type CameraFlipController, useCameraFlip } from './useCameraFlip'
 import { type CaptureController, useCaptureController } from './useRecorder'
 
-const CaptureContext = createContext<CaptureController | null>(null)
+export type CaptureContextController = CaptureController & CameraFlipController
+
+const CaptureContext = createContext<CaptureContextController | null>(null)
 
 export function CaptureProvider({ active, children }: { active: boolean; children: ReactNode }) {
   const controller = useCaptureController(active)
-  return <CaptureContext value={controller}>{children}</CaptureContext>
+  const cameraFlip = useCameraFlip(controller)
+  return <CaptureContext value={{ ...controller, ...cameraFlip }}>{children}</CaptureContext>
 }
 
 export function useCapture() {

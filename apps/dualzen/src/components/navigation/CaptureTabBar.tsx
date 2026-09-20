@@ -1,13 +1,24 @@
-import { CapsuleNavigationBar } from '@shared/core/components/base'
+import { CapsuleNavigationAccessory, CapsuleNavigationBar } from '@shared/core/components/base'
 import type { BottomTabBarProps } from 'expo-router/js-tabs'
-import { CameraIcon, SquaresFourIcon, VideoCameraIcon } from 'phosphor-react-native'
+import {
+  CameraIcon,
+  CameraRotateIcon,
+  SquaresFourIcon,
+  VideoCameraIcon,
+} from 'phosphor-react-native'
 import { useTranslation } from 'react-i18next'
 
+import { useCapture } from '@/services/camera/CaptureProvider'
 import type { MediaType } from '@/services/camera/types'
 import { useCameraState } from '@/stores/features/camera'
+import { iconSizes, useTheme } from '@/theme'
+
+import { LatestLibraryPreviewButton } from './LatestLibraryPreviewButton'
 
 export function CaptureTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const { t } = useTranslation()
+  const { colors } = useTheme()
+  const recorder = useCapture()
   const { mediaType, phase, sessionStrategy, setMediaType, setPhase } = useCameraState()
   const focusedRoute = state.routes[state.index]
   const captureFocused = focusedRoute?.name === 'index'
@@ -46,6 +57,28 @@ export function CaptureTabBar({ state, descriptors, navigation }: BottomTabBarPr
 
   return (
     <CapsuleNavigationBar
+      leadingAccessory={
+        captureFocused ? (
+          <LatestLibraryPreviewButton onOpenFailure={() => navigation.navigate('projects')} />
+        ) : undefined
+      }
+      trailingAccessory={
+        captureFocused ? (
+          <CapsuleNavigationAccessory
+            accessibilityLabel={t('camera.flip')}
+            disabled={
+              disabled ||
+              recorder.flipping ||
+              !recorder.ready ||
+              !recorder.canFlip ||
+              !!recorder.error ||
+              recorder.settings.mode === 'dual'
+            }
+            onPress={recorder.flipCamera}>
+            <CameraRotateIcon size={iconSizes.lg} color={colors.text.primary} />
+          </CapsuleNavigationAccessory>
+        ) : undefined
+      }
       items={[
         {
           key: 'capture-video',

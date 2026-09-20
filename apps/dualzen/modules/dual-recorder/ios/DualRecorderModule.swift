@@ -86,6 +86,13 @@ public class DualRecorderModule: Module {
         })
       }
     }
+    AsyncFunction("openPhotoLibrary") { (_: String, _: String) async throws -> Void in
+      // Photos has no public URL for selecting a PHAsset. Match the system Camera behavior as
+      // closely as possible by opening the Photos library and let JS fall back if unavailable.
+      guard let url = URL(string: "photos-redirect://") else { throw CaptureError(message: "Photos is unavailable") }
+      let opened = await UIApplication.shared.open(url)
+      guard opened else { throw CaptureError(message: "Photos is unavailable") }
+    }
     AsyncFunction("thumbnail") { (uri: String, destination: String) throws -> Void in
       let asset = AVURLAsset(url: try Self.localURL(uri))
       let generator = AVAssetImageGenerator(asset: asset)

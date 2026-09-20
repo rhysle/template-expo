@@ -221,6 +221,8 @@
       "on": "On"
     },
     "flip": "Switch front/back camera",
+    "openLatestPhoto": "Open latest photo in the photo library",
+    "openLatestVideo": "Open latest video in the photo library",
     "crop": "Adjust {{kind}} framing",
     "quickSettings": "Quick settings",
     "moreSettings": "More settings",

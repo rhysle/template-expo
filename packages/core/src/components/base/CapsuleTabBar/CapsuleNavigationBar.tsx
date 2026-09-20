@@ -36,6 +36,92 @@ export interface CapsuleNavigationItem {
 export interface CapsuleNavigationBarProps {
   items: readonly CapsuleNavigationItem[]
   hideOnKeyboard?: boolean
+  leadingAccessory?: ReactNode
+  trailingAccessory?: ReactNode
+}
+
+export interface CapsuleNavigationAccessoryProps {
+  accessibilityLabel: string
+  children: ReactNode
+  disabled?: boolean
+  onPress: () => void
+  testID?: string
+}
+
+/** Circular companion control designed to sit beside a capsule navigation bar. */
+export function CapsuleNavigationAccessory({
+  accessibilityLabel,
+  children,
+  disabled,
+  onPress,
+  testID,
+}: CapsuleNavigationAccessoryProps) {
+  const styles = useThemedStyles(createStyles)
+  const { appearance, colors } = useTheme()
+  const [reduceTransparency, setReduceTransparency] = useState(true)
+
+  useEffect(() => {
+    if (Platform.OS !== 'ios') return
+    let active = true
+    void AccessibilityInfo.isReduceTransparencyEnabled()
+      .then((value) => {
+        if (active) setReduceTransparency(value)
+      })
+      .catch(() => {})
+    const subscription = AccessibilityInfo.addEventListener(
+      'reduceTransparencyChanged',
+      setReduceTransparency
+    )
+    return () => {
+      active = false
+      subscription.remove()
+    }
+  }, [])
+
+  const liquidGlass =
+    Platform.OS === 'ios' &&
+    !reduceTransparency &&
+    isGlassEffectAPIAvailable() &&
+    isLiquidGlassAvailable()
+  const content = <View style={styles.accessoryContent}>{children}</View>
+  const surface = liquidGlass ? (
+    <GlassView
+      colorScheme={appearance}
+      glassEffectStyle="regular"
+      tintColor={withAlpha(colors.background.surface, 0.3)}
+      isInteractive
+      pointerEvents="none"
+      style={styles.accessorySurface}>
+      {content}
+    </GlassView>
+  ) : Platform.OS === 'ios' && !reduceTransparency ? (
+    <BlurView
+      tint={appearance}
+      intensity={60}
+      pointerEvents="none"
+      style={[styles.accessorySurface, styles.frosted]}>
+      {content}
+    </BlurView>
+  ) : (
+    <View pointerEvents="none" style={[styles.accessorySurface, styles.solid]}>
+      {content}
+    </View>
+  )
+
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel}
+      accessibilityState={{ disabled }}
+      disabled={disabled}
+      onPress={onPress}
+      testID={testID}
+      haptic
+      hapticType="selection"
+      style={[styles.accessoryShadow, disabled && styles.accessoryDisabled]}>
+      {surface}
+    </Pressable>
+  )
 }
 
 function CapsuleNavigationBarItem({ item }: { item: CapsuleNavigationItem }) {
@@ -79,7 +165,12 @@ function CapsuleNavigationBarItem({ item }: { item: CapsuleNavigationItem }) {
 }
 
 /** Controlled capsule navigation surface for route tabs and virtual navigation actions. */
-export function CapsuleNavigationBar({ items, hideOnKeyboard = true }: CapsuleNavigationBarProps) {
+export function CapsuleNavigationBar({
+  items,
+  hideOnKeyboard = true,
+  leadingAccessory,
+  trailingAccessory,
+}: CapsuleNavigationBarProps) {
   const styles = useThemedStyles(createStyles)
   const { appearance, colors, spacing } = useTheme()
   const insets = useSafeAreaInsets()
@@ -240,54 +331,66 @@ export function CapsuleNavigationBar({ items, hideOnKeyboard = true }: CapsuleNa
       pointerEvents="box-none"
       style={[styles.container, { paddingBottom: insets.bottom + spacing.sm }]}
       onLayout={(event) => setMeasuredHeight(event.nativeEvent.layout.height)}>
-      <Animated.View
-        style={[styles.shadow, capsuleAnimatedStyle]}
-        onTouchStart={
-          Platform.OS === 'android'
-            ? undefined
-            : () => {
-                pressed.value = true
-              }
-        }
-        onTouchEnd={
-          Platform.OS === 'android'
-            ? undefined
-            : () => {
-                pressed.value = false
-              }
-        }
-        onTouchCancel={
-          Platform.OS === 'android'
-            ? undefined
-            : () => {
-                pressed.value = false
-              }
-        }
-        onPointerEnter={(event) => {
-          if (event.nativeEvent.pointerType !== 'touch') hovered.value = true
-        }}
-        onPointerLeave={() => {
-          hovered.value = false
-        }}>
-        {liquidGlass ? (
-          <GlassView
-            colorScheme={appearance}
-            glassEffectStyle="regular"
-            tintColor={withAlpha(colors.background.surface, 0.3)}
-            isInteractive
-            style={styles.pill}>
-            {content}
-          </GlassView>
-        ) : Platform.OS === 'ios' && !reduceTransparency ? (
-          <BlurView tint={appearance} intensity={60} style={[styles.pill, styles.frosted]}>
-            {content}
-          </BlurView>
-        ) : Platform.OS === 'android' ? (
-          <GestureDetector gesture={androidTouchGesture}>{solidPill}</GestureDetector>
-        ) : (
-          solidPill
-        )}
-      </Animated.View>
+      <View pointerEvents="box-none" style={styles.barRow}>
+        <View pointerEvents="box-none" style={styles.leadingAccessory}>
+          {leadingAccessory}
+        </View>
+        <Animated.View
+          style={[
+            styles.shadow,
+            Boolean(leadingAccessory || trailingAccessory) && styles.shadowWithAccessories,
+            capsuleAnimatedStyle,
+          ]}
+          onTouchStart={
+            Platform.OS === 'android'
+              ? undefined
+              : () => {
+                  pressed.value = true
+                }
+          }
+          onTouchEnd={
+            Platform.OS === 'android'
+              ? undefined
+              : () => {
+                  pressed.value = false
+                }
+          }
+          onTouchCancel={
+            Platform.OS === 'android'
+              ? undefined
+              : () => {
+                  pressed.value = false
+                }
+          }
+          onPointerEnter={(event) => {
+            if (event.nativeEvent.pointerType !== 'touch') hovered.value = true
+          }}
+          onPointerLeave={() => {
+            hovered.value = false
+          }}>
+          {liquidGlass ? (
+            <GlassView
+              colorScheme={appearance}
+              glassEffectStyle="regular"
+              tintColor={withAlpha(colors.background.surface, 0.3)}
+              isInteractive
+              style={styles.pill}>
+              {content}
+            </GlassView>
+          ) : Platform.OS === 'ios' && !reduceTransparency ? (
+            <BlurView tint={appearance} intensity={60} style={[styles.pill, styles.frosted]}>
+              {content}
+            </BlurView>
+          ) : Platform.OS === 'android' ? (
+            <GestureDetector gesture={androidTouchGesture}>{solidPill}</GestureDetector>
+          ) : (
+            solidPill
+          )}
+        </Animated.View>
+        <View pointerEvents="box-none" style={styles.trailingAccessory}>
+          {trailingAccessory}
+        </View>
+      </View>
     </View>
   )
 }
@@ -302,7 +405,16 @@ const createStyles = createThemedStyles((t) => ({
     paddingTop: t.spacing.sm,
     paddingHorizontal: t.spacing.lg,
   },
+  barRow: {
+    width: '100%',
+    minHeight: t.spacing['5xl'],
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  leadingAccessory: { position: 'absolute', left: 0 },
+  trailingAccessory: { position: 'absolute', right: 0 },
   shadow: { maxWidth: '100%', borderRadius: t.borderRadius.full, ...t.shadows.md },
+  shadowWithAccessories: { maxWidth: '60%' },
   pill: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -322,4 +434,18 @@ const createStyles = createThemedStyles((t) => ({
     alignItems: 'center',
     borderRadius: t.borderRadius.full,
   },
+  accessoryShadow: {
+    width: t.spacing['5xl'],
+    height: t.spacing['5xl'],
+    borderRadius: t.borderRadius.full,
+    ...t.shadows.md,
+  },
+  accessorySurface: {
+    width: '100%',
+    height: '100%',
+    borderRadius: t.borderRadius.full,
+    overflow: 'hidden',
+  },
+  accessoryContent: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  accessoryDisabled: { opacity: 0.4 },
 }))
