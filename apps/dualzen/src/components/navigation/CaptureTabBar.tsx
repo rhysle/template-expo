@@ -1,6 +1,6 @@
 import { CapsuleNavigationBar } from '@shared/core/components/base'
 import type { BottomTabBarProps } from 'expo-router/js-tabs'
-import { CameraIcon, GearIcon, SquaresFourIcon, VideoCameraIcon } from 'phosphor-react-native'
+import { CameraIcon, SquaresFourIcon, VideoCameraIcon } from 'phosphor-react-native'
 import { useTranslation } from 'react-i18next'
 
 import type { MediaType } from '@/services/camera/types'
@@ -18,7 +18,7 @@ export function CaptureTabBar({ state, descriptors, navigation }: BottomTabBarPr
     setMediaType(nextMediaType)
     if (!captureFocused) navigation.navigate('index')
   }
-  const routeItem = (name: 'projects' | 'settings', icon: typeof SquaresFourIcon) => {
+  const routeItem = (name: 'projects', icon: typeof SquaresFourIcon) => {
     const route = state.routes.find((item) => item.name === name)
     if (!route) throw new Error(`Missing tab route: ${name}`)
     const selected = focusedRoute?.key === route.key
@@ -66,7 +66,6 @@ export function CaptureTabBar({ state, descriptors, navigation }: BottomTabBarPr
           onPress: () => navigateToCapture('photo'),
         },
         routeItem('projects', SquaresFourIcon),
-        routeItem('settings', GearIcon),
       ]}
     />
   )
