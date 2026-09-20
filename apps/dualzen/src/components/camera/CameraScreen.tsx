@@ -27,6 +27,7 @@ import { type QuickSettingsAction, QuickSettingsSheet } from './QuickSettingsShe
 
 const LAYOUTS: PreviewLayout[] = ['pip', 'stacked', 'guide']
 const LAYOUT_ICONS = { pip: SquaresFourIcon, stacked: StackIcon, guide: RectangleIcon }
+const CAMERA_BLUR_INTENSITY = 20
 export function CameraScreen({
   recorder,
   onSettings,
@@ -39,6 +40,7 @@ export function CameraScreen({
   const { t } = useTranslation()
   const styles = useThemedStyles(createStyles)
   const theme = useTheme()
+  const cameraBlurProps = { tint: theme.appearance, intensity: CAMERA_BLUR_INTENSITY }
   const {
     sharedSettings,
     videoSettings,
@@ -192,7 +194,7 @@ export function CameraScreen({
         style={styles.toolbar}
         onLayout={(event) => setToolbarHeight(event.nativeEvent.layout.height)}>
         <View style={styles.toolbarSide}>
-          <BlurView tint={theme.appearance} intensity={20} style={styles.profile}>
+          <BlurView {...cameraBlurProps} style={styles.profile}>
             <Text variant="label" weight="semibold" numberOfLines={1}>
               {photoMode
                 ? `${RESOLUTION_LABELS[settings.longEdge]} · JPEG · ${recorder.photoHdrEnabled ? 'HDR' : 'SDR'}`
@@ -209,12 +211,15 @@ export function CameraScreen({
           </View>
         )}
         <View style={[styles.toolbarSide, styles.toolbarActions]}>
-          <IconButton
-            icon={GearSixIcon}
-            accessibilityLabel={t('camera.settings')}
-            disabled={!idle || switching}
-            onPress={onSettings}
-          />
+          <BlurView {...cameraBlurProps} style={styles.controlBlur}>
+            <IconButton
+              icon={GearSixIcon}
+              style={styles.controlButton}
+              accessibilityLabel={t('camera.settings')}
+              disabled={!idle || switching}
+              onPress={onSettings}
+            />
+          </BlurView>
         </View>
       </View>
       <View style={[styles.body, landscape && styles.bodyLandscape]}>
@@ -262,57 +267,61 @@ export function CameraScreen({
           </View>
           <View style={styles.controls}>
             <View style={styles.controlGroup}>
-              <Pressable
-                style={[
-                  styles.controlButton,
-                  styles.torch,
-                  (switching ||
+              <BlurView {...cameraBlurProps} style={styles.controlBlur}>
+                <Pressable
+                  style={[
+                    styles.controlButton,
+                    styles.torch,
+                    (switching ||
+                      !recorder.ready ||
+                      settings.mode === 'dual' ||
+                      settings.front ||
+                      !(photoMode ? recorder.device?.hasFlash : recorder.device?.hasTorch)) &&
+                      styles.torchUnavailable,
+                  ]}
+                  accessibilityRole="button"
+                  accessibilityLabel={
+                    photoMode
+                      ? t('camera.flashMode', {
+                          mode: lightEnabled ? t('camera.flash.on') : t('camera.flash.off'),
+                        })
+                      : t('camera.torch')
+                  }
+                  accessibilityState={{ selected: lightEnabled }}
+                  disabled={
+                    switching ||
                     !recorder.ready ||
                     settings.mode === 'dual' ||
                     settings.front ||
-                    !(photoMode ? recorder.device?.hasFlash : recorder.device?.hasTorch)) &&
-                    styles.torchUnavailable,
-                ]}
-                accessibilityRole="button"
-                accessibilityLabel={
-                  photoMode
-                    ? t('camera.flashMode', {
-                        mode: lightEnabled ? t('camera.flash.on') : t('camera.flash.off'),
-                      })
-                    : t('camera.torch')
-                }
-                accessibilityState={{ selected: lightEnabled }}
-                disabled={
-                  switching ||
-                  !recorder.ready ||
-                  settings.mode === 'dual' ||
-                  settings.front ||
-                  !(photoMode ? recorder.device?.hasFlash : recorder.device?.hasTorch)
-                }
-                onPress={() => setLightEnabled(!lightEnabled)}>
-                {lightEnabled ? (
-                  <LightningIcon
-                    size={iconSizes.md}
-                    weight="fill"
-                    color={theme.colors.primary.main}
-                  />
-                ) : (
-                  <LightningSlashIcon size={iconSizes.md} color={theme.colors.text.primary} />
-                )}
-              </Pressable>
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel={t('camera.toggleZoom', { zoom: nextZoom })}
-                accessibilityValue={{ text: zoomLabel }}
-                disabled={switching || !recorder.ready || !recorder.zoomPresets.length}
-                onPress={() => {
-                  void recorder.setZoom(nextZoom, true)
-                }}
-                style={styles.zoom}>
-                <Text variant="label" weight="semibold">
-                  {zoomLabel}
-                </Text>
-              </Pressable>
+                    !(photoMode ? recorder.device?.hasFlash : recorder.device?.hasTorch)
+                  }
+                  onPress={() => setLightEnabled(!lightEnabled)}>
+                  {lightEnabled ? (
+                    <LightningIcon
+                      size={iconSizes.md}
+                      weight="fill"
+                      color={theme.colors.primary.main}
+                    />
+                  ) : (
+                    <LightningSlashIcon size={iconSizes.md} color={theme.colors.text.primary} />
+                  )}
+                </Pressable>
+              </BlurView>
+              <BlurView {...cameraBlurProps} style={styles.controlBlur}>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel={t('camera.toggleZoom', { zoom: nextZoom })}
+                  accessibilityValue={{ text: zoomLabel }}
+                  disabled={switching || !recorder.ready || !recorder.zoomPresets.length}
+                  onPress={() => {
+                    void recorder.setZoom(nextZoom, true)
+                  }}
+                  style={styles.zoom}>
+                  <Text variant="label" weight="semibold">
+                    {zoomLabel}
+                  </Text>
+                </Pressable>
+              </BlurView>
               <View style={styles.controlButton} pointerEvents="none" />
             </View>
             <Pressable
@@ -347,38 +356,44 @@ export function CameraScreen({
               />
             </Pressable>
             <View style={styles.controlGroup}>
-              <IconButton
-                icon={SlidersHorizontalIcon}
-                style={styles.controlButton}
-                disabled={!idle || switching}
-                accessibilityLabel={t('camera.quickSettings')}
-                onPress={openQuickSettings}
-              />
-              <IconButton
-                icon={LAYOUT_ICONS[layout]}
-                style={styles.controlButton}
-                disabled={!idle || switching}
-                accessibilityLabel={t('camera.previewLayout', {
-                  layout: layoutLabels[layout],
-                })}
-                onPress={() =>
-                  setPreviewLayout(LAYOUTS[(LAYOUTS.indexOf(layout) + 1) % LAYOUTS.length])
-                }
-              />
-              <IconButton
-                icon={CameraRotateIcon}
-                style={styles.controlButton}
-                accessibilityLabel={t('camera.flip')}
-                disabled={
-                  !idle ||
-                  switching ||
-                  !recorder.ready ||
-                  !canFlip ||
-                  !!recorder.error ||
-                  settings.mode === 'dual'
-                }
-                onPress={flipCamera}
-              />
+              <BlurView {...cameraBlurProps} style={styles.controlBlur}>
+                <IconButton
+                  icon={SlidersHorizontalIcon}
+                  style={styles.controlButton}
+                  disabled={!idle || switching}
+                  accessibilityLabel={t('camera.quickSettings')}
+                  onPress={openQuickSettings}
+                />
+              </BlurView>
+              <BlurView {...cameraBlurProps} style={styles.controlBlur}>
+                <IconButton
+                  icon={LAYOUT_ICONS[layout]}
+                  style={styles.controlButton}
+                  disabled={!idle || switching}
+                  accessibilityLabel={t('camera.previewLayout', {
+                    layout: layoutLabels[layout],
+                  })}
+                  onPress={() =>
+                    setPreviewLayout(LAYOUTS[(LAYOUTS.indexOf(layout) + 1) % LAYOUTS.length])
+                  }
+                />
+              </BlurView>
+              <BlurView {...cameraBlurProps} style={styles.controlBlur}>
+                <IconButton
+                  icon={CameraRotateIcon}
+                  style={styles.controlButton}
+                  accessibilityLabel={t('camera.flip')}
+                  disabled={
+                    !idle ||
+                    switching ||
+                    !recorder.ready ||
+                    !canFlip ||
+                    !!recorder.error ||
+                    settings.mode === 'dual'
+                  }
+                  onPress={flipCamera}
+                />
+              </BlurView>
             </View>
           </View>
         </View>
@@ -469,16 +484,27 @@ const createStyles = createThemedStyles((theme) => ({
     justifyContent: 'space-evenly',
     minWidth: 0,
   },
-  controlButton: { width: theme.spacing['5xl'], flexShrink: 1 },
+  controlBlur: {
+    width: theme.spacing['4xl'],
+    height: theme.spacing['4xl'],
+    flexShrink: 1,
+    borderRadius: theme.borderRadius.full,
+    overflow: 'hidden',
+  },
+  controlButton: {
+    width: theme.spacing['4xl'],
+    height: theme.spacing['4xl'],
+    flexShrink: 1,
+  },
   zoom: {
     flexShrink: 1,
-    width: theme.spacing['5xl'],
-    height: theme.spacing['5xl'],
+    width: theme.spacing['4xl'],
+    height: theme.spacing['4xl'],
     alignItems: 'center',
     justifyContent: 'center',
   },
   torch: {
-    height: theme.spacing['5xl'],
+    height: theme.spacing['4xl'],
     alignItems: 'center',
     justifyContent: 'center',
   },
