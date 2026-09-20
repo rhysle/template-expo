@@ -251,12 +251,12 @@ export function CameraScreen({
           </BlurView>
         </View>
         {recording && (
-          <View style={styles.timerPill}>
+          <BlurView {...cameraBlurProps} style={styles.timerPill}>
             <View style={styles.recordingDot} />
             <Text weight="semibold" style={styles.timer}>
               {formatDuration(recorder.elapsed)}
             </Text>
-          </View>
+          </BlurView>
         )}
         <View style={[styles.toolbarSide, styles.toolbarActions]}>
           <BlurView {...cameraBlurProps} style={styles.controlBlur}>
@@ -547,7 +547,7 @@ const createStyles = createThemedStyles((theme) => ({
     paddingHorizontal: theme.spacing.md,
     paddingVertical: theme.spacing.md,
     borderRadius: theme.borderRadius.full,
-    backgroundColor: theme.colors.background.surface,
+    overflow: 'hidden',
   },
   recordingDot: {
     width: theme.spacing.sm,
