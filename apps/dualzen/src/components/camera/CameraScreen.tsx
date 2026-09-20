@@ -1,4 +1,5 @@
 import { Button, IconButton, Text } from '@shared/core/components/base'
+import { BlurView } from 'expo-blur'
 import {
   CameraRotateIcon,
   GearSixIcon,
@@ -191,13 +192,13 @@ export function CameraScreen({
         style={styles.toolbar}
         onLayout={(event) => setToolbarHeight(event.nativeEvent.layout.height)}>
         <View style={styles.toolbarSide}>
-          <View style={styles.profile}>
+          <BlurView tint={theme.appearance} intensity={20} style={styles.profile}>
             <Text variant="label" weight="semibold" numberOfLines={1}>
               {photoMode
                 ? `${RESOLUTION_LABELS[settings.longEdge]} · JPEG · ${recorder.photoHdrEnabled ? 'HDR' : 'SDR'}`
-                : `${RESOLUTION_LABELS[settings.longEdge]} · ${settings.fps} · ${settings.container.toUpperCase()}`}
+                : `${RESOLUTION_LABELS[settings.longEdge]} · ${settings.fps}`}
             </Text>
-          </View>
+          </BlurView>
         </View>
         {recording && (
           <View style={styles.timerPill}>
@@ -444,7 +445,7 @@ const createStyles = createThemedStyles((theme) => ({
     paddingHorizontal: theme.spacing.md,
     paddingVertical: theme.spacing.md,
     borderRadius: theme.borderRadius.full,
-    backgroundColor: theme.colors.background.surface,
+    overflow: 'hidden',
   },
   permission: {
     flex: 1,
