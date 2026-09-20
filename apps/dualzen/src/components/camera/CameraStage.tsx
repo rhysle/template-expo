@@ -184,8 +184,9 @@ export function CameraStage({
           const target = restore
             ? Math.max(minSize, Math.min(maxSize, restoreFraction.value))
             : maxSize
-          pipSize.value = withTiming(target, { duration: 180 })
-          scheduleOnRN(updatePipView, { size: target })
+          pipSize.value = withTiming(target, { duration: 180 }, (finished) => {
+            if (finished) scheduleOnRN(updatePipView, { size: target })
+          })
         }),
     [
       width,
