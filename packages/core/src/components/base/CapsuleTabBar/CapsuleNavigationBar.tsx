@@ -155,8 +155,6 @@ function CapsuleNavigationBarItem({ item }: { item: CapsuleNavigationItem }) {
       onPress={item.onPress}
       onLongPress={item.onLongPress}
       testID={item.testID}
-      haptic={!item.selected}
-      hapticType="selection"
       allowRapidPress
       style={styles.item}>
       {item.renderIcon(iconColor, iconSizes.lg)}

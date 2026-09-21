@@ -15,6 +15,7 @@ import {
   presentationSizing,
 } from '@expo/ui/swift-ui/modifiers'
 import { useTheme } from '@shared/core/theme'
+import { withAlpha } from '@shared/core/utils/color'
 import { useImperativeHandle, useRef } from 'react'
 import { useWindowDimensions, View } from 'react-native'
 
@@ -29,6 +30,7 @@ export const NativeBottomSheet = ({
   onDismiss,
   children,
   preset = 'content',
+  backgroundVariant = 'solid',
   showDragIndicator = true,
   scrollable = false,
   contentContainerStyle,
@@ -53,8 +55,13 @@ export const NativeBottomSheet = ({
     padding({ top: showDragIndicator ? 16 : 0 }),
     presentationDragIndicator(showDragIndicator ? 'visible' : 'hidden'),
     interactiveDismissDisabled(false),
-    presentationBackground(colors.background.surface),
   ]
+
+  if (backgroundVariant === 'solid') {
+    modifiers.push(presentationBackground(colors.background.surface))
+  } else if (backgroundVariant === 'translucent') {
+    modifiers.push(presentationBackground(withAlpha(colors.background.surface, 0.5)))
+  }
 
   if (fitsContent) {
     modifiers.push(presentationSizing('fitted'))
