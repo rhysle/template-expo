@@ -3,6 +3,9 @@
 
 @implementation DZRecorder
 + (NSString *)start:(NSString *)request { return [DZRecorderCore start:request]; }
++ (NSString *)capturePhoto:(NSString *)request error:(NSError **)error {
+  return [DZRecorderCore capturePhoto:request error:error];
+}
 + (void)stop:(void (^)(NSString *))completion { [DZRecorderCore stop:completion]; }
 + (NSString *)stats { return [DZRecorderCore stats]; }
 + (void)finish:(NSString *)reason { [DZRecorderCore finish:reason]; }

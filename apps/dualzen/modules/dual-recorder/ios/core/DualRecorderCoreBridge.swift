@@ -6,6 +6,9 @@ import UIKit
     do { try DualEngine.shared.start(request); return nil }
     catch { return error.localizedDescription }
   }
+  @objc(capturePhoto:error:) public static func capturePhoto(_ request: String) throws -> String {
+    try DualEngine.shared.capturePhoto(request)
+  }
   @objc(stop:) public static func stop(_ completion: @escaping (String) -> Void) { DualEngine.shared.stop(completion) }
   @objc(stats) public static func stats() -> String { DualEngine.shared.stats() }
   @objc(finish:) public static func finish(_ reason: String) {

@@ -72,6 +72,10 @@ export interface PixelSize {
   width: number
   height: number
 }
+export interface PixelRect extends PixelSize {
+  x: number
+  y: number
+}
 export interface VideoOutput extends PixelSize {
   kind: OutputKind
   filename: string
@@ -153,6 +157,9 @@ export interface NativeRecordingResult {
   frames: number
   dropped: number
 }
+export interface NativePhotoResult {
+  outputs: PhotoOutput[]
+}
 export interface RecorderStats {
   thermal: number
   freeBytes: number
@@ -182,11 +189,22 @@ export const RESOLUTION_SHORT_LABELS = {
   3840: '4K',
 } as const
 export function cropSize(source: PixelSize, kind: OutputKind): PixelSize {
+  const { width, height } = cropRect(source, kind, 0.5)
+  return { width, height }
+}
+export function cropRect(source: PixelSize, kind: OutputKind, position: number): PixelRect {
   const portrait = kind === 'portrait'
   const ratio = portrait ? 9 / 16 : 16 / 9
+  const width = Math.floor(Math.min(source.width, source.height * ratio))
+  const height = Math.floor(Math.min(source.height, source.width / ratio))
+  const p = Math.max(0, Math.min(1, position))
   return {
-    width: Math.floor(Math.min(source.width, source.height * ratio)),
-    height: Math.floor(Math.min(source.height, source.width / ratio)),
+    x: (source.width - width) * p,
+    // Nitro Image uses top-left image coordinates. Native video crops use Core Image's
+    // bottom-left coordinates and convert the vertical position in native code.
+    y: (source.height - height) * p,
+    width,
+    height,
   }
 }
 export function outputSize(source: PixelSize, kind: OutputKind, edge: number): PixelSize {

@@ -26,8 +26,9 @@ import NativeRecorder from '../../../modules/dual-recorder/src/DualRecorderModul
 import { getNativeCropPosition } from './cropPosition'
 import { allocateMedia, exportMedia, hydrateProjects, saveMedia, thumbnailFile } from './projects'
 import {
-  cropSize,
+  cropRect,
   type NativeCapabilities,
+  type NativePhotoResult,
   type NativeRecordingResult,
   type OutputKind,
   outputSize,
@@ -888,6 +889,89 @@ export function useCaptureController(active: boolean, retained: boolean) {
         settings.mode === 'single' && !settings.front && device?.hasFlash && lightEnabled
           ? 'on'
           : 'off'
+      const persistPhoto = async (photoResults: PhotoOutput[]) => {
+        if (!photoResults.some((output) => output.ready)) {
+          if (allocation.directory.exists) allocation.directory.delete()
+          throw new Error(
+            photoResults.find((output) => output.error)?.error ?? 'Photo capture failed'
+          )
+        }
+        const photo: PhotoCapture = {
+          id: allocation.id,
+          projectId: useAppStore.getState().projects.selectedProjectId,
+          createdAt: Date.now(),
+          mediaType: 'photo',
+          settings: {
+            mode: settings.mode,
+            front: settings.front,
+            deviceId: settings.deviceId,
+            pairIndex: settings.pairIndex,
+            portraitPosition: settings.portraitPosition,
+            landscapePosition: settings.landscapePosition,
+            longEdge: settings.longEdge,
+            container: 'jpeg',
+            quality: 0.9,
+            targetResolution: photoTargetResolution(settings.longEdge),
+            hdr: Platform.OS === 'ios' ? false : photoHdrEnabled,
+            flashMode: selectedFlash,
+          },
+          outputs: photoResults,
+          exports: [],
+          ...(photoResults.some((output) => !output.ready)
+            ? {
+                error:
+                  photoResults.find((output) => output.error)?.error ?? 'Partial photo capture',
+              }
+            : {}),
+        }
+        await saveMedia(photo)
+        if (photo.outputs.every((output) => output.ready))
+          showSnackbar({ title: t('camera.photoSaved'), variant: 'success' })
+        else showCaptureNotice('partialPhotoSave')
+        useAppStore.getState().camera.setPhase('idle')
+        if (useAppStore.getState().camera.autoSaveToLibrary) {
+          const exported = await exportMedia(
+            photo,
+            photo.outputs.filter((output) => output.ready).map((output) => output.kind)
+          )
+          if (exported.some((item) => item.error)) showCaptureNotice('exportFailed')
+        }
+      }
+      if (usesPreviewFramePhotos()) {
+        const controls = controllers.current
+        const illuminate = selectedFlash === 'on' && controls[0]?.device.hasTorch
+        if (illuminate) {
+          await controls[0].setTorchMode('on')
+          await new Promise((resolve) => setTimeout(resolve, 120))
+        }
+        let result: NativePhotoResult
+        try {
+          result = JSON.parse(
+            await NativeRecorder.capturePhoto(
+              JSON.stringify({
+                directory: allocation.directory.uri,
+                mode: settings.mode,
+                longEdge: settings.longEdge,
+                portraitPosition: getNativeCropPosition(
+                  'portrait',
+                  settings.portraitPosition,
+                  settings.front
+                ),
+                landscapePosition: getNativeCropPosition(
+                  'landscape',
+                  settings.landscapePosition,
+                  settings.front
+                ),
+              })
+            )
+          ) as NativePhotoResult
+        } finally {
+          if (illuminate) await controls[0].setTorchMode('off').catch(() => {})
+        }
+        useAppStore.getState().camera.setPhase('finalizing')
+        await persistPhoto(result.outputs)
+        return
+      }
       const captures = await Promise.allSettled(
         photoOutputs.current.map((output) =>
           output.capturePhoto(
@@ -895,6 +979,7 @@ export function useCaptureController(active: boolean, retained: boolean) {
               flashMode: selectedFlash,
               enableShutterSound: true,
               enableDistortionCorrection: false,
+              enableVirtualDeviceFusion: false,
             },
             {}
           )
@@ -980,49 +1065,7 @@ export function useCaptureController(active: boolean, retained: boolean) {
           }
         }
       }
-      if (!photoResults.some((output) => output.ready)) {
-        if (allocation.directory.exists) allocation.directory.delete()
-        throw new Error(
-          photoResults.find((output) => output.error)?.error ?? 'Photo capture failed'
-        )
-      }
-      const photo: PhotoCapture = {
-        id: allocation.id,
-        projectId: useAppStore.getState().projects.selectedProjectId,
-        createdAt: Date.now(),
-        mediaType: 'photo',
-        settings: {
-          mode: settings.mode,
-          front: settings.front,
-          deviceId: settings.deviceId,
-          pairIndex: settings.pairIndex,
-          portraitPosition: settings.portraitPosition,
-          landscapePosition: settings.landscapePosition,
-          longEdge: settings.longEdge,
-          container: 'jpeg',
-          quality: 0.9,
-          targetResolution: photoTargetResolution(settings.longEdge),
-          hdr: photoHdrEnabled,
-          flashMode: selectedFlash,
-        },
-        outputs: photoResults,
-        exports: [],
-        ...(photoResults.some((output) => !output.ready)
-          ? { error: photoResults.find((output) => output.error)?.error ?? 'Partial photo capture' }
-          : {}),
-      }
-      await saveMedia(photo)
-      if (photo.outputs.every((output) => output.ready))
-        showSnackbar({ title: t('camera.photoSaved'), variant: 'success' })
-      else showCaptureNotice('partialPhotoSave')
-      useAppStore.getState().camera.setPhase('idle')
-      if (useAppStore.getState().camera.autoSaveToLibrary) {
-        const exported = await exportMedia(
-          photo,
-          photo.outputs.filter((output) => output.ready).map((output) => output.kind)
-        )
-        if (exported.some((item) => item.error)) showCaptureNotice('exportFailed')
-      }
+      await persistPhoto(photoResults)
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : String(cause))
     } finally {
@@ -1297,10 +1340,7 @@ async function savePhotoOutput(
   longEdge: RecordingSettings['longEdge'],
   createThumbnail: boolean
 ): Promise<PhotoOutput> {
-  const { width, height } = cropSize(image, kind)
-  const p = Math.max(0, Math.min(1, position))
-  const x = (image.width - width) * p
-  const y = (image.height - height) * (1 - p)
+  const { x, y, width, height } = cropRect(image, kind, position)
   const cropped = await image.cropAsync(x, y, x + width, y + height)
   try {
     const target = outputSize(cropped, kind, longEdge)
@@ -1351,6 +1391,10 @@ function photoTargetResolution(longEdge: RecordingSettings['longEdge']) {
     case 3840:
       return CommonResolutions.UHD_4_3
   }
+}
+
+function usesPreviewFramePhotos() {
+  return Platform.OS === 'ios'
 }
 
 function filePath(uri: string) {

@@ -4,6 +4,7 @@ import type { ViewProps } from 'react-native'
 type RecorderEvents = { onStopped: (event: { result: string }) => void }
 declare class RecorderModule extends NativeModule<RecorderEvents> {
   start(request: string): Promise<void>
+  capturePhoto(request: string): Promise<string>
   stop(): Promise<string>
   stats(): Promise<string>
   canEncode(longEdge: number, fps: number, hdr: boolean): Promise<boolean>

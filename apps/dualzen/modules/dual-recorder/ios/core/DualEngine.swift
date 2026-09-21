@@ -159,6 +159,64 @@ final class DualEngine: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
       timer = poll; poll.resume()
     }
   }
+
+  func capturePhoto(_ text: String) throws -> String {
+    guard let data = text.data(using: .utf8),
+      let request = try JSONSerialization.jsonObject(with: data) as? [String: Any]
+    else { throw CaptureError(message: "Invalid photo configuration") }
+    return try queue.sync {
+      guard sinks.isEmpty, !stopping else { throw CaptureError(message: "Recorder is busy") }
+      guard let path = request["directory"] as? String,
+        let directory = URL(string: path), directory.isFileURL
+      else { throw CaptureError(message: "Invalid take directory") }
+      let root = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        .standardizedFileURL.path
+      guard directory.standardizedFileURL.path.hasPrefix(root + "/DualZen/")
+      else { throw CaptureError(message: "Directory is outside recording storage") }
+      try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+
+      let channels = request["mode"] as? String == "dual" ? [1, 2] : [0, 0]
+      let edge = request["longEdge"] as? Double ?? 1920
+      var outputs: [[String: Any]] = []
+      for index in 0..<2 {
+        guard let source = sources[channels[index]]?.0 else {
+          throw CaptureError(message: "Waiting for camera frames")
+        }
+        let portrait = index == 0
+        let position = request[portrait ? "portraitPosition" : "landscapePosition"] as? Double ?? 0.5
+        let rect = Self.crop(source.extent.size, portrait: portrait, position: position)
+        let size = Self.outputSize(source.extent.size, portrait: portrait, edge: edge)
+        let rendered = source.cropped(to: rect)
+          .transformed(by: CGAffineTransform(translationX: -rect.minX, y: -rect.minY))
+          .transformed(by: CGAffineTransform(scaleX: size.width / rect.width,
+            y: size.height / rect.height))
+        guard let cgImage = context.createCGImage(rendered, from: CGRect(origin: .zero, size: size)),
+          let jpeg = UIImage(cgImage: cgImage).jpegData(compressionQuality: 0.9)
+        else { throw CaptureError(message: "Photo rendering failed") }
+        let name = portrait ? "portrait.jpg" : "landscape.jpg"
+        let url = directory.appendingPathComponent(name)
+        try jpeg.write(to: url, options: .atomic)
+        if portrait {
+          let thumbnailScale = min(1, 480 / max(size.width, size.height))
+          let thumbnailSize = CGSize(width: max(1, round(size.width * thumbnailScale)),
+            height: max(1, round(size.height * thumbnailScale)))
+          let format = UIGraphicsImageRendererFormat()
+          format.scale = 1
+          let image = UIImage(cgImage: cgImage)
+          let thumbnail = UIGraphicsImageRenderer(size: thumbnailSize, format: format).image { _ in
+            image.draw(in: CGRect(origin: .zero, size: thumbnailSize))
+          }
+          if let thumbnailData = thumbnail.jpegData(compressionQuality: 0.8) {
+            try thumbnailData.write(to: directory.appendingPathComponent("thumbnail.jpg"), options: .atomic)
+          }
+        }
+        outputs.append(["kind": portrait ? "portrait" : "landscape", "filename": name,
+          "width": Int(size.width), "height": Int(size.height), "bytes": jpeg.count, "ready": true])
+      }
+      return Self.json(["outputs": outputs])
+    }
+  }
+
   private func append(_ frames: [(CIImage, CMTime)]) {
     let pts = frames[0].1
     if origin == nil {

@@ -26,6 +26,9 @@ public class DualRecorderModule: Module {
     AsyncFunction("start") { (request: String) in
       if let failure = DZRecorder.start(request) { throw CaptureError(message: failure) }
     }
+    AsyncFunction("capturePhoto") { (request: String) throws -> String in
+      try DZRecorder.capturePhoto(request)
+    }
     AsyncFunction("stop") { () async -> String in
       await withCheckedContinuation { continuation in DZRecorder.stop { continuation.resume(returning: $0) } }
     }

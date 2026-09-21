@@ -49,7 +49,7 @@ export function CameraStage({
   const { t } = useTranslation()
   const theme = useTheme()
   const styles = useThemedStyles(createStyles)
-  const { viewSettings, updatePipView } = useCameraState()
+  const { sharedSettings: settings, viewSettings, updatePipView } = useCameraState()
   const [stage, setStage] = useState({ width: 0, height: 0 })
   const stageHeight = useSharedValue(0)
   const stageTop = useSharedValue(topInset)
@@ -206,6 +206,7 @@ export function CameraStage({
   const previewWidth = stage.width
   const previewHeight = (previewWidth * 16) / 9
   const landscapeHeight = (previewWidth * 9) / 16
+  const guideSource = settings.mode === 'single' ? recorder.stats.source0 : recorder.stats.source1
   const geometry = useDerivedValue(() => {
     const viewportHeight = stageHeight.value
     const portraitWidth = edgeToEdgePortrait
@@ -224,7 +225,8 @@ export function CameraStage({
     const guide = getLandscapeGuideFrame(
       portraitWidth,
       portraitHeight,
-      landscapeGuidePosition.value
+      landscapeGuidePosition.value,
+      guideSource
     )
     return {
       viewportTop: stageTop.value,

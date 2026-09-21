@@ -165,8 +165,10 @@ export function CameraPreview({
     zoomMin,
     zoomMax,
   ])
-  // A reference rectangle must preserve 16:9, regardless of the negotiated source aspect ratio.
-  const guideFrame = getLandscapeGuideFrame(width, height, settings.landscapePosition)
+  // Project the full-sensor landscape crop onto the narrower portrait preview. The horizontal
+  // output extends beyond this view, but these vertical bounds match what capture will save.
+  const guideSource = settings.mode === 'single' ? recorder.stats.source0 : recorder.stats.source1
+  const guideFrame = getLandscapeGuideFrame(width, height, settings.landscapePosition, guideSource)
   const guideStyle = useAnimatedStyle(() => ({
     opacity: guideOpacity?.value ?? 1,
     top: guidePosition
