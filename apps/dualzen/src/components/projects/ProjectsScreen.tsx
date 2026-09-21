@@ -12,12 +12,7 @@ import { withAlpha } from '@shared/core/utils/color'
 import { randomUUID } from 'expo-crypto'
 import { Image } from 'expo-image'
 import { useVideoPlayer, VideoView } from 'expo-video'
-import {
-  CaretDownIcon,
-  CheckCircleIcon,
-  CircleIcon,
-  WarningCircleIcon,
-} from 'phosphor-react-native'
+import { CaretDownIcon, CheckCircleIcon, WarningCircleIcon } from 'phosphor-react-native'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
@@ -446,7 +441,17 @@ function MediaTile({
           </Text>
         </View>
       )}
-      {selectionMode && (
+      {selectionMode && selected && (
+        <View pointerEvents="none" style={styles.selectionIndicator}>
+          <CheckCircleIcon
+            aria-hidden
+            size={iconSizes.lg}
+            color={colors.primary.main}
+            weight="fill"
+          />
+        </View>
+      )}
+      {/* {selectionMode && (
         <View pointerEvents="none" style={styles.selectionIndicator}>
           {selected ? (
             <CheckCircleIcon
@@ -455,11 +460,9 @@ function MediaTile({
               color={colors.primary.main}
               weight="fill"
             />
-          ) : (
-            <CircleIcon aria-hidden size={iconSizes.lg} color={colors.text.inverse} weight="bold" />
-          )}
+          ) : null}
         </View>
-      )}
+      )} */}
     </Pressable>
   )
 }
@@ -863,10 +866,10 @@ const createStyles = createThemedStyles((theme) => ({
   },
   selectionIndicator: {
     position: 'absolute',
-    right: theme.spacing.xs,
-    bottom: theme.spacing.xs,
-    width: theme.spacing['3xl'],
-    height: theme.spacing['3xl'],
+    right: theme.spacing.sm,
+    bottom: theme.spacing.sm,
+    width: theme.spacing['2xl'],
+    height: theme.spacing['2xl'],
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: theme.borderRadius.full,
