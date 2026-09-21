@@ -13,6 +13,8 @@ import type { MediaType } from '@/services/camera/types'
 import { useCameraState } from '@/stores/features/camera'
 import { iconSizes, useTheme } from '@/theme'
 
+import { useProjectsSelection } from '../projects/ProjectsSelectionContext'
+import { ProjectsSelectionTabBar } from '../projects/ProjectsSelectionTabBar'
 import { LatestLibraryPreviewButton } from './LatestLibraryPreviewButton'
 
 export function CaptureTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
@@ -20,8 +22,10 @@ export function CaptureTabBar({ state, descriptors, navigation }: BottomTabBarPr
   const { colors } = useTheme()
   const recorder = useCapture()
   const { mediaType, phase, sessionStrategy, setMediaType, setPhase } = useCameraState()
+  const { requestDelete, selectedMediaIds, selectionMode } = useProjectsSelection()
   const focusedRoute = state.routes[state.index]
   const captureFocused = focusedRoute?.name === 'index'
+  const projectsFocused = focusedRoute?.name === 'projects'
   const disabled = phase !== 'idle'
   const navigateToCapture = (nextMediaType: MediaType) => {
     if (disabled) return
@@ -54,6 +58,15 @@ export function CaptureTabBar({ state, descriptors, navigation }: BottomTabBarPr
       onLongPress: () => navigation.emit({ type: 'tabLongPress', target: route.key }),
     }
   }
+
+  if (projectsFocused && selectionMode)
+    return (
+      <ProjectsSelectionTabBar
+        disabled={disabled}
+        onDelete={requestDelete}
+        selectedCount={selectedMediaIds.size}
+      />
+    )
 
   return (
     <CapsuleNavigationBar

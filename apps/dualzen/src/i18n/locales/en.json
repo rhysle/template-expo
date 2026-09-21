@@ -275,6 +275,8 @@
     "default": "Default Project",
     "new": "New project",
     "name": "Project name",
+    "nameRequired": "Enter a project name.",
+    "changeProject": "Change project. Current project: {{name}}",
     "rename": "Rename project",
     "delete": "Delete project",
     "select": "Select",
@@ -298,7 +300,6 @@
     "emptyFilterBody": "No media matches this filter.",
     "videoCapture": "Video · {{date}}",
     "photoCapture": "Photo · {{date}}",
-    "items": "{{count}} items",
     "filters": {
       "all": "All",
       "photos": "Photos",
