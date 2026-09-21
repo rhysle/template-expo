@@ -2,12 +2,14 @@ import { Button, SegmentedControl, Slider, Text } from '@shared/core/components/
 import { randomUUID } from 'expo-crypto'
 import { Image } from 'expo-image'
 import { useVideoPlayer, VideoView } from 'expo-video'
+import { CheckCircleIcon, CircleIcon } from 'phosphor-react-native'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, Modal, Pressable, ScrollView, TextInput, View } from 'react-native'
 
 import {
   deleteMedia,
+  deleteMediaBatch,
   deleteProject,
   exportMedia,
   mediaFile,
@@ -31,7 +33,7 @@ import {
 } from '@/services/camera/types'
 import { useCameraState } from '@/stores/features/camera'
 import { useProjectsState } from '@/stores/features/projects'
-import { createThemedStyles, useThemedStyles } from '@/theme'
+import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
 
 type MediaFilter = 'all' | MediaType
 
@@ -42,21 +44,73 @@ export function ProjectsScreen() {
   const { phase } = useCameraState()
   const [filter, setFilter] = useState<MediaFilter>('all')
   const [selectedMedia, setSelectedMedia] = useState<string | null>(null)
+  const [selectionMode, setSelectionMode] = useState(false)
+  const [selectedMediaIds, setSelectedMediaIds] = useState<Set<string>>(() => new Set())
   const [editor, setEditor] = useState<{ id: string; name: string; createdAt: number } | null>(null)
-  const [failure, setFailure] = useState(false)
+  const [failure, setFailure] = useState<'generic' | 'bulkDelete' | null>(null)
   const project = projects.find((item) => item.id === selectedProjectId)!
   const selected = media.find((item) => item.id === selectedMedia)
   const projectMedia = media
     .filter((item) => item.projectId === selectedProjectId)
     .sort((a, b) => b.createdAt - a.createdAt)
   const items = projectMedia.filter((item) => filter === 'all' || item.mediaType === filter)
-  const guard = async (action: () => Promise<unknown>) => {
+  const selectedItems = projectMedia.filter((item) => selectedMediaIds.has(item.id))
+  const allVisibleSelected =
+    items.length > 0 && items.every((item) => selectedMediaIds.has(item.id))
+  const guard = async (
+    action: () => Promise<unknown>,
+    failureKind: 'generic' | 'bulkDelete' = 'generic'
+  ) => {
     try {
-      setFailure(false)
+      setFailure(null)
       await mutateProjects(action)
+      return true
     } catch {
-      setFailure(true)
+      setFailure(failureKind)
+      return false
     }
+  }
+  const exitSelectionMode = () => {
+    setSelectionMode(false)
+    setSelectedMediaIds(new Set())
+    setFailure(null)
+  }
+  const selectVisibleItems = () => {
+    setSelectedMediaIds((current) => {
+      const next = new Set(current)
+      for (const item of items) {
+        if (allVisibleSelected) next.delete(item.id)
+        else next.add(item.id)
+      }
+      return next
+    })
+  }
+  const toggleMediaSelection = (id: string) => {
+    setSelectedMediaIds((current) => {
+      const next = new Set(current)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+  }
+  const confirmDeleteSelected = () => {
+    if (!selectedItems.length) return
+    Alert.alert(
+      t('projects.deleteSelectedTitle', { count: selectedItems.length }),
+      t('projects.deleteSelectedBody'),
+      [
+        { text: t('projects.cancel'), style: 'cancel' },
+        {
+          text: t('projects.deleteSelected'),
+          style: 'destructive',
+          onPress: () => {
+            void guard(() => deleteMediaBatch(selectedItems), 'bulkDelete').then((succeeded) => {
+              if (succeeded) exitSelectionMode()
+            })
+          },
+        },
+      ]
+    )
   }
   const confirmDeleteProject = () =>
     Alert.alert(t('projects.deleteTitle'), t('projects.deleteBody'), [
@@ -92,7 +146,10 @@ export function ProjectsScreen() {
             key={item.id}
             accessibilityRole="button"
             accessibilityState={{ selected: item.id === selectedProjectId }}
-            onPress={() => selectProject(item.id)}
+            onPress={() => {
+              if (item.id !== selectedProjectId) exitSelectionMode()
+              selectProject(item.id)
+            }}
             style={[styles.pill, item.id === selectedProjectId && styles.selectedPill]}>
             <Text>{item.name ?? t('projects.default')}</Text>
           </Pressable>
@@ -110,27 +167,69 @@ export function ProjectsScreen() {
         />
       </View>
       <View style={styles.actions}>
-        <Text tone="muted" style={styles.grow}>
-          {t('projects.items', { count: items.length })}
-        </Text>
-        <Button
-          size="sm"
-          variant="ghost"
-          disabled={phase !== 'idle'}
-          onPress={() => setEditor({ ...project, name: project.name ?? t('projects.default') })}
-          label={t('projects.rename')}
-        />
-        {project.id !== DEFAULT_PROJECT_ID && (
-          <Button
-            size="sm"
-            variant="ghost"
-            disabled={phase !== 'idle'}
-            onPress={confirmDeleteProject}
-            label={t('projects.delete')}
-          />
+        {selectionMode ? (
+          <>
+            <Text tone="muted" style={styles.grow}>
+              {t('projects.selected', { count: selectedItems.length })}
+            </Text>
+            <Button
+              size="sm"
+              variant="ghost"
+              disabled={phase !== 'idle' || !items.length}
+              onPress={selectVisibleItems}
+              label={allVisibleSelected ? t('projects.deselectAll') : t('projects.selectAll')}
+            />
+            <Button
+              size="sm"
+              variant="ghost"
+              disabled={phase !== 'idle'}
+              onPress={exitSelectionMode}
+              label={t('projects.cancel')}
+            />
+            <Button
+              size="sm"
+              variant="danger"
+              disabled={phase !== 'idle' || !selectedItems.length}
+              onPress={confirmDeleteSelected}
+              label={t('projects.deleteSelected')}
+            />
+          </>
+        ) : (
+          <>
+            <Text tone="muted" style={styles.grow}>
+              {t('projects.items', { count: items.length })}
+            </Text>
+            <Button
+              size="sm"
+              variant="ghost"
+              disabled={phase !== 'idle' || !projectMedia.length}
+              onPress={() => setSelectionMode(true)}
+              label={t('projects.select')}
+            />
+            <Button
+              size="sm"
+              variant="ghost"
+              disabled={phase !== 'idle'}
+              onPress={() => setEditor({ ...project, name: project.name ?? t('projects.default') })}
+              label={t('projects.rename')}
+            />
+            {project.id !== DEFAULT_PROJECT_ID && (
+              <Button
+                size="sm"
+                variant="ghost"
+                disabled={phase !== 'idle'}
+                onPress={confirmDeleteProject}
+                label={t('projects.delete')}
+              />
+            )}
+          </>
         )}
       </View>
-      {failure && <Text tone="secondary">{t('camera.failure')}</Text>}
+      {failure && (
+        <Text tone="secondary">
+          {failure === 'bulkDelete' ? t('projects.bulkDeleteFailure') : t('camera.failure')}
+        </Text>
+      )}
       <ScrollView contentContainerStyle={styles.list}>
         {!items.length && (
           <View style={styles.empty}>
@@ -141,7 +240,16 @@ export function ProjectsScreen() {
           </View>
         )}
         {items.map((item) => (
-          <MediaCard key={item.id} media={item} onPress={() => setSelectedMedia(item.id)} />
+          <MediaCard
+            key={item.id}
+            media={item}
+            selectionMode={selectionMode}
+            selected={selectedMediaIds.has(item.id)}
+            disabled={selectionMode && phase !== 'idle'}
+            onPress={() =>
+              selectionMode ? toggleMediaSelection(item.id) : setSelectedMedia(item.id)
+            }
+          />
         ))}
       </ScrollView>
       <ProjectEditor
@@ -150,6 +258,7 @@ export function ProjectsScreen() {
         onSave={(value) =>
           guard(async () => {
             await saveProject({ ...value, name: value.name.trim() })
+            exitSelectionMode()
             selectProject(value.id)
             setEditor(null)
           })
@@ -160,13 +269,42 @@ export function ProjectsScreen() {
   )
 }
 
-function MediaCard({ media, onPress }: { media: ProjectMedia; onPress: () => void }) {
+function MediaCard({
+  media,
+  selectionMode,
+  selected,
+  disabled,
+  onPress,
+}: {
+  media: ProjectMedia
+  selectionMode: boolean
+  selected: boolean
+  disabled: boolean
+  onPress: () => void
+}) {
   const { t } = useTranslation()
   const styles = useThemedStyles(createStyles)
+  const { colors } = useTheme()
   const ready = media.outputs.filter((output) => output.ready)
   const output = ready[0]
   return (
-    <Pressable accessibilityRole="button" onPress={onPress} style={styles.mediaCard}>
+    <Pressable
+      accessibilityRole={selectionMode ? 'checkbox' : 'button'}
+      accessibilityState={selectionMode ? { checked: selected, disabled } : undefined}
+      disabled={disabled}
+      onPress={onPress}
+      style={[styles.mediaCard, selected && styles.selectedMediaCard]}>
+      {selectionMode &&
+        (selected ? (
+          <CheckCircleIcon
+            aria-hidden
+            size={iconSizes.md}
+            color={colors.primary.main}
+            weight="fill"
+          />
+        ) : (
+          <CircleIcon aria-hidden size={iconSizes.md} color={colors.text.muted} />
+        ))}
       <Image
         source={{ uri: thumbnailFile(media.id).uri }}
         contentFit="cover"
@@ -566,9 +704,15 @@ const createStyles = createThemedStyles((theme) => ({
     flexDirection: 'row',
     gap: theme.spacing.md,
     padding: theme.spacing.md,
+    borderWidth: 1,
+    borderColor: theme.colors.border.subtle,
     borderRadius: theme.borderRadius.lg,
     backgroundColor: theme.colors.background.surface,
     alignItems: 'center',
+  },
+  selectedMediaCard: {
+    borderColor: theme.colors.primary.main,
+    backgroundColor: theme.colors.primary.soft,
   },
   mediaTitle: { flexDirection: 'row', justifyContent: 'space-between', gap: theme.spacing.sm },
   thumbnail: {

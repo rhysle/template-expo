@@ -119,6 +119,20 @@ export async function deleteMedia(media: ProjectMedia) {
   useAppStore.getState().projects.removeMedia(media.id)
 }
 
+export async function deleteMediaBatch(mediaItems: ProjectMedia[]) {
+  let firstFailure: unknown
+
+  for (const media of mediaItems) {
+    try {
+      await deleteMedia(media)
+    } catch (cause) {
+      firstFailure ??= cause
+    }
+  }
+
+  if (firstFailure) throw firstFailure
+}
+
 export async function deleteProject(id: string) {
   if (id === DEFAULT_PROJECT_ID) return
   for (const media of useAppStore.getState().projects.media.filter((item) => item.projectId === id))
