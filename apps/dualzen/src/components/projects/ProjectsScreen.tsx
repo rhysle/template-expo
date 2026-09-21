@@ -12,7 +12,7 @@ import { withAlpha } from '@shared/core/utils/color'
 import { randomUUID } from 'expo-crypto'
 import { Image } from 'expo-image'
 import { useVideoPlayer, VideoView } from 'expo-video'
-import { CaretDownIcon, CheckCircleIcon, WarningCircleIcon } from 'phosphor-react-native'
+import { CaretDownIcon, CheckCircleIcon, ImageIcon, WarningCircleIcon } from 'phosphor-react-native'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
@@ -434,13 +434,15 @@ function MediaTile({
           />
         </View>
       )}
-      {media.mediaType === 'video' && (
-        <View pointerEvents="none" style={[styles.tileBadge, styles.durationBadge]}>
-          <Text variant="caption" tone="inverse" weight="semibold" style={styles.tabularNumbers}>
+      <View pointerEvents="none" style={[styles.tileBadge, styles.durationBadge]}>
+        {media.mediaType === 'video' ? (
+          <Text variant="caption" tone="primary" weight="semibold" style={styles.tabularNumbers}>
             {formatDuration(media.duration)}
           </Text>
-        </View>
-      )}
+        ) : (
+          <ImageIcon aria-hidden color={colors.text.primary} size={iconSizes.sm} weight="bold" />
+        )}
+      </View>
       {selectionMode && selected && (
         <View pointerEvents="none" style={styles.selectionIndicator}>
           <CheckCircleIcon
@@ -851,7 +853,8 @@ const createStyles = createThemedStyles((theme) => ({
   tileBadge: {
     position: 'absolute',
     borderRadius: theme.borderRadius.full,
-    backgroundColor: theme.colors.background.overlay,
+    backgroundColor: withAlpha(theme.colors.background.subtle, 0.5),
+    borderCurve: 'continuous',
   },
   incompleteBadge: {
     top: theme.spacing.xs,
