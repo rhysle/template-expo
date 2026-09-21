@@ -390,12 +390,12 @@ export function useCaptureController(active: boolean, retained: boolean) {
             ...(result.error ? { error: result.error } : {}),
           }
           if (video.outputs.some((output) => output.ready)) {
-            await saveMedia(video)
             const output =
               video.outputs.find((item) => item.kind === 'portrait' && item.ready) ??
               video.outputs.find((item) => item.ready)!
             const source = allocateExistingVideo(video, output.filename)
             await NativeRecorder.thumbnail(source, thumbnailFile(video.id).uri).catch(() => {})
+            await saveMedia(video)
             if (video.outputs.every((item) => item.ready) && !video.error) {
               showSnackbar({ title: t('camera.saved'), variant: 'success' })
             } else showCaptureNotice('partialSave')
