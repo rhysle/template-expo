@@ -92,6 +92,33 @@ export function CameraScreen({
     () => ({ ...sharedSettings, ...videoSettings }),
     [sharedSettings, videoSettings]
   )
+  const capabilitySettings = useMemo<RecordingSettings>(
+    () => ({
+      longEdge: sharedSettings.longEdge,
+      fps: videoSettings.fps,
+      container: videoSettings.container,
+      hdr: videoSettings.hdr,
+      stabilization: videoSettings.stabilization,
+      mode: sharedSettings.mode,
+      front: sharedSettings.front,
+      deviceId: sharedSettings.deviceId,
+      pairIndex: sharedSettings.pairIndex,
+      portraitPosition: 0.5,
+      landscapePosition: 0.5,
+      grid: false,
+    }),
+    [
+      sharedSettings.deviceId,
+      sharedSettings.front,
+      sharedSettings.longEdge,
+      sharedSettings.mode,
+      sharedSettings.pairIndex,
+      videoSettings.container,
+      videoSettings.fps,
+      videoSettings.hdr,
+      videoSettings.stabilization,
+    ]
+  )
   const layout = viewSettings.layout
   const { checkSettings } = recorder
   const [supported, setSupported] = useState<Record<string, boolean>>({})
@@ -101,6 +128,10 @@ export function CameraScreen({
   const [sessionTransitionVisible, setSessionTransitionVisible] = useState(false)
   const [toolbarHeight, setToolbarHeight] = useState<number>(theme.spacing['5xl'])
   const sessionSwitchProgress = useSharedValue(0)
+  const landscapeGuidePosition = useSharedValue(settings.landscapePosition)
+  useEffect(() => {
+    landscapeGuidePosition.set(settings.landscapePosition)
+  }, [landscapeGuidePosition, settings.landscapePosition])
   const switching = recorder.flipping
   const transitionSwitching = switching || sessionTransitionVisible
   const transitionProgress = sessionTransitionVisible
@@ -144,10 +175,13 @@ export function CameraScreen({
     let cancelled = false
     setSupported({})
     const variants = [
-      ...FPS_OPTIONS.map((fps) => ({ key: `fps${fps}`, settings: { ...settings, fps } })),
+      ...FPS_OPTIONS.map((fps) => ({
+        key: `fps${fps}`,
+        settings: { ...capabilitySettings, fps },
+      })),
       ...RESOLUTION_OPTIONS.map((longEdge) => ({
         key: `edge${longEdge}`,
-        settings: { ...settings, longEdge },
+        settings: { ...capabilitySettings, longEdge },
       })),
     ]
     void Promise.all(
@@ -158,7 +192,7 @@ export function CameraScreen({
     return () => {
       cancelled = true
     }
-  }, [checkSettings, settings])
+  }, [capabilitySettings, checkSettings])
   const idle = phase === 'idle'
   const photoMode = mediaType === 'photo'
   const immersive = layout === 'guide' && !landscape
@@ -388,6 +422,7 @@ export function CameraScreen({
           bottomInset={immersive || landscape ? 0 : theme.spacing['7xl'] + theme.spacing.sm * 2}
           switching={transitionSwitching}
           switchProgress={transitionProgress}
+          landscapeGuidePosition={landscapeGuidePosition}
         />
         <View style={[styles.panel, landscape && styles.panelLandscape]}>
           <View style={[styles.notices, landscape && styles.noticesLandscape]}>
@@ -539,7 +574,11 @@ export function CameraScreen({
             onPress={() => setFramingVisible(false)}
             style={styles.framingDismiss}
           />
-          <FramingControl landscape={landscape} />
+          <FramingControl
+            landscape={landscape}
+            deferLandscapeChange={layout === 'guide'}
+            landscapeGuidePosition={landscapeGuidePosition}
+          />
         </>
       )}
       <QuickSettingsSheet

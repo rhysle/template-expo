@@ -1,8 +1,9 @@
 import { withAlpha } from '@shared/core/utils/color'
 import { BlurView } from 'expo-blur'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet, View } from 'react-native'
+import type { SharedValue } from 'react-native-reanimated'
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
 
 import type { OutputKind } from '@/services/camera/types'
@@ -11,12 +12,43 @@ import { createThemedStyles, useTheme, useThemedStyles } from '@/theme'
 
 import { CameraOptionSegmentedControl, CameraOptionSlider } from './CameraOptionControls'
 
-export function FramingControl({ landscape }: { landscape: boolean }) {
+export function FramingControl({
+  landscape,
+  deferLandscapeChange,
+  landscapeGuidePosition,
+}: {
+  landscape: boolean
+  deferLandscapeChange: boolean
+  landscapeGuidePosition: SharedValue<number>
+}) {
   const { t } = useTranslation()
   const styles = useThemedStyles(createStyles)
   const theme = useTheme()
   const { sharedSettings: settings, phase, updateSharedSettings } = useCameraState()
   const [kind, setKind] = useState<OutputKind>('portrait')
+  const storedValue = kind === 'portrait' ? settings.portraitPosition : settings.landscapePosition
+  const [sliderValue, setSliderValue] = useState(storedValue)
+  const pendingLandscapeValue = useRef<number | null>(null)
+  useEffect(() => {
+    setSliderValue(storedValue)
+  }, [storedValue])
+  const changePosition = (value: number) => {
+    setSliderValue(value)
+    if (kind === 'landscape' && deferLandscapeChange) {
+      pendingLandscapeValue.current = value
+      landscapeGuidePosition.set(value)
+      return
+    }
+    updateSharedSettings(
+      kind === 'portrait' ? { portraitPosition: value } : { landscapePosition: value }
+    )
+  }
+  const finishPositionChange = () => {
+    const value = pendingLandscapeValue.current
+    if (value === null) return
+    pendingLandscapeValue.current = null
+    updateSharedSettings({ landscapePosition: value })
+  }
   const label = t('camera.crop', { kind: t(`camera.${kind}`) })
   return (
     <Animated.View
@@ -45,12 +77,9 @@ export function FramingControl({ landscape }: { landscape: boolean }) {
         <CameraOptionSlider
           accessibilityLabel={label}
           disabled={phase !== 'idle'}
-          value={kind === 'portrait' ? settings.portraitPosition : settings.landscapePosition}
-          onValueChange={(value) =>
-            updateSharedSettings(
-              kind === 'portrait' ? { portraitPosition: value } : { landscapePosition: value }
-            )
-          }
+          value={sliderValue}
+          onValueChange={changePosition}
+          onValueChangeFinished={finishPositionChange}
         />
       </View>
     </Animated.View>

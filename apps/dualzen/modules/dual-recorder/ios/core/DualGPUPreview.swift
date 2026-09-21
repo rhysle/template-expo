@@ -36,7 +36,8 @@ final class DualGPUPreview: UIView, MTKViewDelegate {
   func draw(in view: MTKView) {
     lock.lock(); let image = latest; lock.unlock()
     guard let image, let drawable = view.currentDrawable, let command = commands.makeCommandBuffer(), view.drawableSize.width > 0, view.drawableSize.height > 0 else { return }
-    let rect = DualEngine.crop(image.extent.size, portrait: portrait, position: mirrored ? 1 - position : position)
+    let nativePosition = portrait && mirrored ? 1 - position : position
+    let rect = DualEngine.crop(image.extent.size, portrait: portrait, position: nativePosition)
     var cropped = image.cropped(to: rect).transformed(by: CGAffineTransform(translationX: -rect.minX, y: -rect.minY))
     if mirrored { cropped = cropped.transformed(by: CGAffineTransform(a: -1, b: 0, c: 0, d: 1, tx: rect.width, ty: 0)) }
     let scale = max(view.drawableSize.width / rect.width, view.drawableSize.height / rect.height)

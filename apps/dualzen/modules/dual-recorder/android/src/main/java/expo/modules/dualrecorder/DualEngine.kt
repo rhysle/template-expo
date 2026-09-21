@@ -156,7 +156,8 @@ gl_FragColor=texture2D(uTexture,(uMatrix*vec4(p,0.0,1.0)).xy); }"""
   }
   private fun drawPreviews(channel: Int,stream: Stream) {
     views.toList().filter { it.first.channel==channel }.forEach { (view,target) ->
-      draw(stream,target.egl,view.width,view.height,view.portrait,if(view.mirrored)1-view.position else view.position,view.mirrored)
+      val position=if(view.portrait&&view.mirrored)1-view.position else view.position
+      draw(stream,target.egl,view.width,view.height,view.portrait,position,view.mirrored)
     }
   }
   private fun encode(channel: Int,stream: Stream) {

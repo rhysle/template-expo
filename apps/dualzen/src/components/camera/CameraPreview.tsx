@@ -9,6 +9,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import { scheduleOnRN } from 'react-native-worklets'
 
+import { getNativeCropPosition } from '@/services/camera/cropPosition'
 import type { OutputKind } from '@/services/camera/types'
 import type { CaptureController } from '@/services/camera/useRecorder'
 import { useCameraState } from '@/stores/features/camera'
@@ -30,6 +31,7 @@ export function CameraPreview({
   onDismissFocus,
   guide = false,
   guideOpacity,
+  guidePosition,
   meteringEnabled = true,
   embedded = false,
   pinchGesture,
@@ -45,6 +47,7 @@ export function CameraPreview({
   onDismissFocus: (id: number) => void
   guide?: boolean
   guideOpacity?: SharedValue<number>
+  guidePosition?: SharedValue<number>
   meteringEnabled?: boolean
   embedded?: boolean
   pinchGesture?: ReturnType<typeof Gesture.Pinch>
@@ -89,7 +92,7 @@ export function CameraPreview({
         const cropHeight = Math.min(source.height, source.width / ratio)
         const position =
           kind === 'portrait' ? settings.portraitPosition : settings.landscapePosition
-        const nativePosition = settings.front ? 1 - position : position
+        const nativePosition = getNativeCropPosition(kind, position, settings.front)
         await recorder.focus(
           ((source.width - cropWidth) * nativePosition +
             (settings.front ? 1 - normalized.x : normalized.x) * cropWidth) /
@@ -160,13 +163,13 @@ export function CameraPreview({
     zoomMax,
   ])
   // A reference rectangle must preserve 16:9, regardless of the negotiated source aspect ratio.
-  const guideFrame = getLandscapeGuideFrame(
-    width,
-    height,
-    settings.landscapePosition,
-    settings.front
-  )
-  const guideStyle = useAnimatedStyle(() => ({ opacity: guideOpacity?.value ?? 1 }))
+  const guideFrame = getLandscapeGuideFrame(width, height, settings.landscapePosition)
+  const guideStyle = useAnimatedStyle(() => ({
+    opacity: guideOpacity?.value ?? 1,
+    top: guidePosition
+      ? Math.max(0, height - guideFrame.height) * guidePosition.value
+      : guideFrame.top,
+  }))
   return (
     <GestureDetector gesture={gestures}>
       <View
@@ -199,7 +202,10 @@ export function CameraPreview({
           </View>
         )}
         {(guide || guideOpacity) && (
-          <Animated.View pointerEvents="none" style={[styles.guide, guideFrame, guideStyle]} />
+          <Animated.View
+            pointerEvents="none"
+            style={[styles.guide, { height: guideFrame.height }, guideStyle]}
+          />
         )}
         {point && (
           <FocusReticle

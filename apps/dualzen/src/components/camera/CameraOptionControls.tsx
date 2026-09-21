@@ -48,6 +48,7 @@ export const CameraOptionSegmentedControl = <T extends string>({
 interface CameraOptionSliderProps {
   value: number
   onValueChange: (value: number) => void
+  onValueChangeFinished?: () => void
   min?: number
   max?: number
   step?: number
@@ -59,6 +60,7 @@ interface CameraOptionSliderProps {
 export const CameraOptionSlider = ({
   value,
   onValueChange,
+  onValueChangeFinished,
   min,
   max,
   step,
@@ -70,6 +72,7 @@ export const CameraOptionSlider = ({
     <NativeSlider
       value={value}
       onValueChange={onValueChange}
+      onValueChangeFinished={onValueChangeFinished}
       min={min}
       max={max}
       step={step}
@@ -80,6 +83,7 @@ export const CameraOptionSlider = ({
     <Slider
       value={value}
       onValueChange={onValueChange}
+      onValueChangeFinished={onValueChangeFinished}
       min={min}
       max={max}
       step={step}

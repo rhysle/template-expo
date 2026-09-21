@@ -33,6 +33,7 @@ export function CameraStage({
   bottomInset,
   switching,
   switchProgress,
+  landscapeGuidePosition,
   children,
 }: {
   recorder: CaptureController
@@ -42,12 +43,13 @@ export function CameraStage({
   bottomInset: number
   switching: boolean
   switchProgress: SharedValue<number>
+  landscapeGuidePosition: SharedValue<number>
   children?: ReactNode
 }) {
   const { t } = useTranslation()
   const theme = useTheme()
   const styles = useThemedStyles(createStyles)
-  const { sharedSettings: settings, viewSettings, updatePipView } = useCameraState()
+  const { viewSettings, updatePipView } = useCameraState()
   const [stage, setStage] = useState({ width: 0, height: 0 })
   const stageHeight = useSharedValue(0)
   const stageTop = useSharedValue(topInset)
@@ -222,8 +224,7 @@ export function CameraStage({
     const guide = getLandscapeGuideFrame(
       portraitWidth,
       portraitHeight,
-      settings.landscapePosition,
-      settings.front
+      landscapeGuidePosition.value
     )
     return {
       viewportTop: stageTop.value,
@@ -341,6 +342,7 @@ export function CameraStage({
                 width={previewWidth}
                 height={previewHeight}
                 guideOpacity={guideOpacity}
+                guidePosition={landscapeGuidePosition}
                 embedded
               />
             </Animated.View>

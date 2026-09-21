@@ -23,6 +23,7 @@ import { useCameraState } from '@/stores/features/camera'
 
 import type { DualOutputFactory } from '../../../modules/dual-recorder/src/DualOutputFactory.nitro'
 import NativeRecorder from '../../../modules/dual-recorder/src/DualRecorderModule'
+import { getNativeCropPosition } from './cropPosition'
 import { allocateMedia, exportMedia, hydrateProjects, saveMedia, thumbnailFile } from './projects'
 import {
   cropSize,
@@ -817,12 +818,16 @@ export function useCaptureController(active: boolean) {
           ...settings,
           ...metadata.current,
           directory: allocation.directory.uri,
-          portraitPosition: settings.front
-            ? 1 - settings.portraitPosition
-            : settings.portraitPosition,
-          landscapePosition: settings.front
-            ? 1 - settings.landscapePosition
-            : settings.landscapePosition,
+          portraitPosition: getNativeCropPosition(
+            'portrait',
+            settings.portraitPosition,
+            settings.front
+          ),
+          landscapePosition: getNativeCropPosition(
+            'landscape',
+            settings.landscapePosition,
+            settings.front
+          ),
           reserveBytes: Math.max(256 * 1024 * 1024, bytesPerSecond * 15),
         })
       )
@@ -868,8 +873,8 @@ export function useCaptureController(active: boolean) {
       )
       useAppStore.getState().camera.setPhase('finalizing')
       const positions = {
-        portrait: settings.front ? 1 - settings.portraitPosition : settings.portraitPosition,
-        landscape: settings.front ? 1 - settings.landscapePosition : settings.landscapePosition,
+        portrait: getNativeCropPosition('portrait', settings.portraitPosition, settings.front),
+        landscape: getNativeCropPosition('landscape', settings.landscapePosition, settings.front),
       }
       const photoResults: PhotoOutput[] = []
       if (settings.mode === 'single') {
