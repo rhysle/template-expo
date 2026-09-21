@@ -19,6 +19,9 @@ import { DualRecorderPreview } from '../../../modules/dual-recorder/src/DualReco
 import { getLandscapeGuideFrame } from './cameraLayoutGeometry'
 import { FocusReticle } from './FocusReticle'
 
+const GUIDE_CORNER_STROKE_WIDTH = 2
+const GUIDE_CORNER_OFFSET = -(GUIDE_CORNER_STROKE_WIDTH / 2)
+
 export type FocusPoint = { id: number; kind: OutputKind; x: number; y: number }
 
 export function CameraPreview({
@@ -204,8 +207,12 @@ export function CameraPreview({
         {(guide || guideOpacity) && (
           <Animated.View
             pointerEvents="none"
-            style={[styles.guide, { height: guideFrame.height }, guideStyle]}
-          />
+            style={[styles.guide, { height: guideFrame.height }, guideStyle]}>
+            <View style={[styles.guideCorner, styles.guideCornerTopLeft]} />
+            <View style={[styles.guideCorner, styles.guideCornerTopRight]} />
+            <View style={[styles.guideCorner, styles.guideCornerBottomLeft]} />
+            <View style={[styles.guideCorner, styles.guideCornerBottomRight]} />
+          </Animated.View>
         )}
         {point && (
           <FocusReticle
@@ -251,5 +258,35 @@ const createStyles = createThemedStyles((theme) => ({
     right: 0,
     borderWidth: 1,
     borderColor: theme.colors.text.primary,
+  },
+  guideCorner: {
+    position: 'absolute',
+    width: theme.spacing.xl,
+    height: theme.spacing.xl,
+    borderColor: theme.colors.text.primary,
+  },
+  guideCornerTopLeft: {
+    top: GUIDE_CORNER_OFFSET,
+    left: GUIDE_CORNER_OFFSET,
+    borderTopWidth: GUIDE_CORNER_STROKE_WIDTH,
+    borderLeftWidth: GUIDE_CORNER_STROKE_WIDTH,
+  },
+  guideCornerTopRight: {
+    top: GUIDE_CORNER_OFFSET,
+    right: GUIDE_CORNER_OFFSET,
+    borderTopWidth: GUIDE_CORNER_STROKE_WIDTH,
+    borderRightWidth: GUIDE_CORNER_STROKE_WIDTH,
+  },
+  guideCornerBottomLeft: {
+    bottom: GUIDE_CORNER_OFFSET,
+    left: GUIDE_CORNER_OFFSET,
+    borderBottomWidth: GUIDE_CORNER_STROKE_WIDTH,
+    borderLeftWidth: GUIDE_CORNER_STROKE_WIDTH,
+  },
+  guideCornerBottomRight: {
+    bottom: GUIDE_CORNER_OFFSET,
+    right: GUIDE_CORNER_OFFSET,
+    borderBottomWidth: GUIDE_CORNER_STROKE_WIDTH,
+    borderRightWidth: GUIDE_CORNER_STROKE_WIDTH,
   },
 }))
