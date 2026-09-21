@@ -19,6 +19,8 @@ export interface NativeMenuProps {
   actions: readonly NativeMenuAction[]
   onSelect: (id: string) => void
   children: ReactNode
+  /** Optional informational text rendered at the bottom of the native menu. */
+  footer?: string
   title?: string
   trigger?: NativeMenuTrigger
   style?: StyleProp<ViewStyle>

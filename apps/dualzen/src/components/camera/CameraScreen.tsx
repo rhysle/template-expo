@@ -1,4 +1,10 @@
-import { Button, IconButton, Text } from '@shared/core/components/base'
+import {
+  Button,
+  IconButton,
+  NativeMenu,
+  type NativeMenuAction,
+  Text,
+} from '@shared/core/components/base'
 import { withAlpha } from '@shared/core/utils/color'
 import { BlurView } from 'expo-blur'
 import { GlassView, isGlassEffectAPIAvailable, isLiquidGlassAvailable } from 'expo-glass-effect'
@@ -34,7 +40,16 @@ import Animated, {
 import { scheduleOnRN } from 'react-native-worklets'
 
 import type { CaptureContextController } from '@/services/camera/CaptureProvider'
-import { formatDuration, type PreviewLayout, RESOLUTION_LABELS } from '@/services/camera/types'
+import {
+  formatDuration,
+  formatFilmingTime,
+  FPS_OPTIONS,
+  type PreviewLayout,
+  type RecordingSettings,
+  RESOLUTION_LABELS,
+  RESOLUTION_OPTIONS,
+  RESOLUTION_SHORT_LABELS,
+} from '@/services/camera/types'
 import { useCameraState } from '@/stores/features/camera'
 import { cameraColors, createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
 
@@ -46,6 +61,7 @@ const LAYOUTS: PreviewLayout[] = ['pip', 'stacked', 'guide']
 const LAYOUT_ICONS = { pip: SquaresFourIcon, stacked: StackIcon, guide: RectangleIcon }
 const CAMERA_BLUR_INTENSITY = 20
 const RECORD_MORPH_DURATION = 240
+
 export function CameraScreen({
   recorder,
   onSettings,
@@ -69,12 +85,16 @@ export function CameraScreen({
     phase,
     setLightEnabled,
     setPreviewLayout,
+    updateSharedSettings,
+    updateVideoSettings,
   } = useCameraState()
   const settings = useMemo(
     () => ({ ...sharedSettings, ...videoSettings }),
     [sharedSettings, videoSettings]
   )
   const layout = viewSettings.layout
+  const { checkSettings } = recorder
+  const [supported, setSupported] = useState<Record<string, boolean>>({})
   const [quickSettingsVisible, setQuickSettingsVisible] = useState(false)
   const [framingVisible, setFramingVisible] = useState(false)
   const pendingQuickAction = useRef<QuickSettingsAction | null>(null)
@@ -120,6 +140,25 @@ export function CameraScreen({
     )
   }, [phase, sessionTransitionVisible, sessionSwitchProgress])
   useEffect(() => () => cancelAnimation(sessionSwitchProgress), [sessionSwitchProgress])
+  useEffect(() => {
+    let cancelled = false
+    setSupported({})
+    const variants = [
+      ...FPS_OPTIONS.map((fps) => ({ key: `fps${fps}`, settings: { ...settings, fps } })),
+      ...RESOLUTION_OPTIONS.map((longEdge) => ({
+        key: `edge${longEdge}`,
+        settings: { ...settings, longEdge },
+      })),
+    ]
+    void Promise.all(
+      variants.map(async (variant) => [variant.key, await checkSettings(variant.settings)] as const)
+    ).then((values) => {
+      if (!cancelled) setSupported(Object.fromEntries(values))
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [checkSettings, settings])
   const idle = phase === 'idle'
   const photoMode = mediaType === 'photo'
   const immersive = layout === 'guide' && !landscape
@@ -186,6 +225,70 @@ export function CameraScreen({
       <Animated.View style={recordInnerStyle} />
     </BlurView>
   )
+  const qualityMenuActions = useMemo<readonly NativeMenuAction[]>(() => {
+    const actions: NativeMenuAction[] = [
+      {
+        id: 'resolution',
+        label: RESOLUTION_LABELS[settings.longEdge],
+        children: RESOLUTION_OPTIONS.map((longEdge) => ({
+          id: `resolution:${longEdge}`,
+          label: RESOLUTION_LABELS[longEdge],
+          disabled: supported[`edge${longEdge}`] !== true,
+          selected: longEdge === settings.longEdge,
+        })),
+      },
+    ]
+    if (!photoMode) {
+      actions.push({
+        id: 'fps',
+        label: `${settings.fps} FPS`,
+        children: FPS_OPTIONS.map((fps) => ({
+          id: `fps:${fps}`,
+          label: String(fps),
+          disabled: supported[`fps${fps}`] !== true,
+          selected: fps === settings.fps,
+        })),
+      })
+    }
+    return actions
+  }, [photoMode, settings.fps, settings.longEdge, supported])
+  const selectQualityMenuAction = (id: string) => {
+    if (id.startsWith('resolution:')) {
+      const longEdge = Number(id.slice('resolution:'.length))
+      if (RESOLUTION_OPTIONS.includes(longEdge as (typeof RESOLUTION_OPTIONS)[number]))
+        updateSharedSettings({ longEdge: longEdge as RecordingSettings['longEdge'] })
+    } else if (id.startsWith('fps:')) {
+      const fps = Number(id.slice('fps:'.length))
+      if (FPS_OPTIONS.includes(fps as (typeof FPS_OPTIONS)[number]))
+        updateVideoSettings({ fps: fps as RecordingSettings['fps'] })
+    }
+  }
+  const qualityMenuEnabled = idle && !switching
+  const dynamicRange = photoMode
+    ? recorder.photoHdrEnabled
+      ? 'HDR'
+      : 'SDR'
+    : settings.hdr
+      ? 'HDR'
+      : 'SDR'
+  const profileLabel = photoMode
+    ? `${t('camera.resolution')}: ${RESOLUTION_LABELS[settings.longEdge]}, ${t('camera.format')}: JPEG, ${dynamicRange}`
+    : `${t('camera.resolution')}: ${RESOLUTION_LABELS[settings.longEdge]}, ${t('camera.fps')}: ${settings.fps}, ${dynamicRange}`
+  const profile = (
+    <BlurView
+      {...cameraBlurProps}
+      accessible
+      accessibilityRole="button"
+      accessibilityLabel={profileLabel}
+      accessibilityState={{ disabled: !qualityMenuEnabled }}
+      style={styles.profile}>
+      <Text variant="label" weight="semibold" numberOfLines={1}>
+        {photoMode
+          ? `${RESOLUTION_SHORT_LABELS[settings.longEdge]} · JPEG · ${dynamicRange}`
+          : `${RESOLUTION_SHORT_LABELS[settings.longEdge]} · ${settings.fps} · ${dynamicRange}`}
+      </Text>
+    </BlurView>
+  )
   const openQuickSettings = () => {
     pendingQuickAction.current = null
     setFramingVisible(false)
@@ -242,13 +345,17 @@ export function CameraScreen({
         style={styles.toolbar}
         onLayout={(event) => setToolbarHeight(event.nativeEvent.layout.height)}>
         <View style={styles.toolbarSide}>
-          <BlurView {...cameraBlurProps} style={styles.profile}>
-            <Text variant="label" weight="semibold" numberOfLines={1}>
-              {photoMode
-                ? `${RESOLUTION_LABELS[settings.longEdge]} · JPEG · ${recorder.photoHdrEnabled ? 'HDR' : 'SDR'}`
-                : `${RESOLUTION_LABELS[settings.longEdge]} · ${settings.fps}`}
-            </Text>
-          </BlurView>
+          {qualityMenuEnabled ? (
+            <NativeMenu
+              actions={qualityMenuActions}
+              footer={t('camera.remaining', { time: formatFilmingTime(recorder.remaining) })}
+              onSelect={selectQualityMenuAction}
+              style={styles.profileMenu}>
+              {profile}
+            </NativeMenu>
+          ) : (
+            profile
+          )}
         </View>
         {recording && (
           <BlurView {...cameraBlurProps} style={styles.timerPill}>
@@ -488,6 +595,7 @@ const createStyles = createThemedStyles((theme) => ({
     borderRadius: theme.borderRadius.full,
     overflow: 'hidden',
   },
+  profileMenu: { flexShrink: 1 },
   permission: {
     flex: 1,
     justifyContent: 'center',

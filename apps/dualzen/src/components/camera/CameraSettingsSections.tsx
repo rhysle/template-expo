@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next'
 import { Platform, View } from 'react-native'
 
 import {
-  formatDuration,
+  formatFilmingTime,
   FPS_OPTIONS,
   type RecordingSettings,
   RESOLUTION_LABELS,
@@ -407,7 +407,7 @@ export function CameraSettingsSections({ recorder }: { recorder: CaptureControll
           <View style={styles.storageSummary}>
             <View pointerEvents="none" style={styles.dividerTop} />
             <Text variant="caption" tone="secondary">
-              {t('camera.remaining', { time: formatDuration(recorder.remaining) })}
+              {t('camera.remaining', { time: formatFilmingTime(recorder.remaining) })}
             </Text>
             <Text variant="caption" tone="muted">
               {t('camera.storageRate', {

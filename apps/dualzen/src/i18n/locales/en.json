@@ -206,7 +206,7 @@
     "thermal": "Recording stopped because the phone became too hot.",
     "interruption": "Recording stopped after a camera or audio interruption.",
     "heatWarning": "Phone is getting hot. Consider a lower resolution or frame rate.",
-    "remaining": "About {{time}} of filming space",
+    "remaining": "Recording estimate: {{time}}",
     "storageRate": "{{amount}} MB/min · {{free}} GB free",
     "resolution": "Resolution",
     "fps": "Frame rate",

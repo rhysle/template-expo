@@ -1180,25 +1180,15 @@ export function useCaptureController(active: boolean) {
           })
       )
     })
-  const sources =
-    settings.mode === 'dual' ? [stats.source1, stats.source2] : [stats.source0, stats.source0]
-  const sizes =
-    mediaType === 'photo'
-      ? (['portrait', 'landscape'] as const).map((kind) =>
-          outputSize(photoTargetResolution(settings.longEdge), kind, settings.longEdge)
-        )
-      : sources.map((source, index) =>
-          source
-            ? outputSize(source, index === 0 ? 'portrait' : 'landscape', settings.longEdge)
-            : null
-        )
+  const targetResolution = photoTargetResolution(settings.longEdge)
+  const sizes = (['portrait', 'landscape'] as const).map((kind) =>
+    outputSize(targetResolution, kind, settings.longEdge)
+  )
   const bytesPerSecond =
     ((sizes.reduce(
       (total, size) =>
         total +
-        (size
-          ? Math.max(4e6, size.width * size.height * settings.fps * (settings.hdr ? 0.14 : 0.18))
-          : 4e6),
+        Math.max(4e6, size.width * size.height * settings.fps * (settings.hdr ? 0.14 : 0.18)),
       0
     ) +
       256000) /

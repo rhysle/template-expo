@@ -169,7 +169,18 @@ export interface NativeCapabilities {
 }
 export const FPS_OPTIONS = [24, 30, 60, 120] as const
 export const RESOLUTION_OPTIONS = [1280, 1920, 2560, 3840] as const
-export const RESOLUTION_LABELS = { 1280: '720p', 1920: '1080p', 2560: '2K', 3840: '4K' } as const
+export const RESOLUTION_LABELS = {
+  1280: '720p (1280 x 720)',
+  1920: '1080p (1920 x 1080)',
+  2560: '2K (2560 x 1440)',
+  3840: '4K (3840 x 2160)',
+} as const
+export const RESOLUTION_SHORT_LABELS = {
+  1280: '720p',
+  1920: '1080p',
+  2560: '2K',
+  3840: '4K',
+} as const
 export function cropSize(source: PixelSize, kind: OutputKind): PixelSize {
   const portrait = kind === 'portrait'
   const ratio = portrait ? 9 / 16 : 16 / 9
@@ -214,4 +225,9 @@ export const formatDuration = (seconds: number) => {
   return `${Math.floor(value / 60)
     .toString()
     .padStart(2, '0')}:${(value % 60).toString().padStart(2, '0')}`
+}
+
+export const formatFilmingTime = (seconds: number) => {
+  const totalMinutes = Math.max(0, Math.floor(seconds / 60))
+  return `${Math.floor(totalMinutes / 60)}h ${totalMinutes % 60}m`
 }
