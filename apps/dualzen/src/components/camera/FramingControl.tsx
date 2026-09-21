@@ -1,17 +1,20 @@
 import { withAlpha } from '@shared/core/utils/color'
+import { BlurView } from 'expo-blur'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { StyleSheet, View } from 'react-native'
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
 
 import type { OutputKind } from '@/services/camera/types'
 import { useCameraState } from '@/stores/features/camera'
-import { createThemedStyles, useThemedStyles } from '@/theme'
+import { createThemedStyles, useTheme, useThemedStyles } from '@/theme'
 
 import { CameraOptionSegmentedControl, CameraOptionSlider } from './CameraOptionControls'
 
 export function FramingControl({ landscape }: { landscape: boolean }) {
   const { t } = useTranslation()
   const styles = useThemedStyles(createStyles)
+  const theme = useTheme()
   const { sharedSettings: settings, phase, updateSharedSettings } = useCameraState()
   const [kind, setKind] = useState<OutputKind>('portrait')
   const label = t('camera.crop', { kind: t(`camera.${kind}`) })
@@ -20,28 +23,36 @@ export function FramingControl({ landscape }: { landscape: boolean }) {
       entering={FadeIn.duration(150)}
       exiting={FadeOut.duration(150)}
       style={[styles.popover, landscape && styles.popoverLandscape]}>
-      <CameraOptionSegmentedControl
-        value={kind}
-        options={
-          [
-            { value: 'portrait', label: t('camera.portrait') },
-            { value: 'landscape', label: t('camera.landscape') },
-          ] as const
-        }
-        onValueChange={setKind}
-        disabled={phase !== 'idle'}
-        style={styles.segmentedControl}
+      <BlurView
+        tint={theme.appearance}
+        intensity={50}
+        pointerEvents="none"
+        style={styles.popoverBlur}
       />
-      <CameraOptionSlider
-        accessibilityLabel={label}
-        disabled={phase !== 'idle'}
-        value={kind === 'portrait' ? settings.portraitPosition : settings.landscapePosition}
-        onValueChange={(value) =>
-          updateSharedSettings(
-            kind === 'portrait' ? { portraitPosition: value } : { landscapePosition: value }
-          )
-        }
-      />
+      <View style={styles.popoverContent}>
+        <CameraOptionSegmentedControl
+          value={kind}
+          options={
+            [
+              { value: 'portrait', label: t('camera.portrait') },
+              { value: 'landscape', label: t('camera.landscape') },
+            ] as const
+          }
+          onValueChange={setKind}
+          disabled={phase !== 'idle'}
+          style={styles.segmentedControl}
+        />
+        <CameraOptionSlider
+          accessibilityLabel={label}
+          disabled={phase !== 'idle'}
+          value={kind === 'portrait' ? settings.portraitPosition : settings.landscapePosition}
+          onValueChange={(value) =>
+            updateSharedSettings(
+              kind === 'portrait' ? { portraitPosition: value } : { landscapePosition: value }
+            )
+          }
+        />
+      </View>
     </Animated.View>
   )
 }
@@ -53,12 +64,12 @@ const createStyles = createThemedStyles((theme) => ({
     right: theme.spacing.sm,
     zIndex: 6,
     padding: theme.spacing.lg,
-    gap: theme.spacing.lg,
     borderRadius: theme.borderRadius.xl,
-    borderWidth: 1,
-    borderColor: theme.colors.border.subtle,
-    backgroundColor: withAlpha(theme.colors.background.surface, 0.95),
+    overflow: 'hidden',
+    backgroundColor: withAlpha(theme.colors.background.surface, 0.45),
   },
+  popoverBlur: StyleSheet.absoluteFill,
+  popoverContent: { gap: theme.spacing.lg },
   popoverLandscape: {
     left: undefined,
     right: theme.spacing.sm,
