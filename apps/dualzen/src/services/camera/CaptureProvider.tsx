@@ -7,8 +7,16 @@ export type CaptureContextController = CaptureController & CameraFlipController
 
 const CaptureContext = createContext<CaptureContextController | null>(null)
 
-export function CaptureProvider({ active, children }: { active: boolean; children: ReactNode }) {
-  const controller = useCaptureController(active)
+export function CaptureProvider({
+  active,
+  retained,
+  children,
+}: {
+  active: boolean
+  retained: boolean
+  children: ReactNode
+}) {
+  const controller = useCaptureController(active, retained)
   const cameraFlip = useCameraFlip(controller)
   return <CaptureContext value={{ ...controller, ...cameraFlip }}>{children}</CaptureContext>
 }

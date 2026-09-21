@@ -327,7 +327,7 @@ export function CameraStage({
   return (
     <View style={styles.stage} onLayout={(event) => setStage(event.nativeEvent.layout)}>
       <Animated.View style={[styles.feed, feedStyle]}>
-        {(recorder.ready || switching) && stage.width > 0 && stage.height > 0 ? (
+        {(recorder.configured || switching) && stage.width > 0 && stage.height > 0 ? (
           <>
             {/* Stable native surfaces: only their wrappers move and scale between layouts. */}
             <Animated.View

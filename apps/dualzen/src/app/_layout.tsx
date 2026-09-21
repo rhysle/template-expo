@@ -35,6 +35,8 @@ function RootLayoutContent() {
   const { hasCompletedOnboarding } = useOnboardingState()
   const { appearance, colors, typography } = useTheme()
   const pathname = usePathname()
+  const captureActive = pathname === '/'
+  const captureRetained = captureActive || pathname === '/settings'
   const baseNavigationTheme = appearance === 'dark' ? DarkTheme : DefaultTheme
   const navigationTheme = {
     ...baseNavigationTheme,
@@ -96,7 +98,9 @@ function RootLayoutContent() {
     <ThemeProvider value={navigationTheme}>
       <StatusBar style={appearance === 'light' ? 'dark' : 'light'} />
       {hasCompletedOnboarding ? (
-        <CaptureProvider active={pathname === '/'}>{stack}</CaptureProvider>
+        <CaptureProvider active={captureActive} retained={captureRetained}>
+          {stack}
+        </CaptureProvider>
       ) : (
         stack
       )}

@@ -42,7 +42,7 @@ const WAKE_TAG = 'dualzen-recording'
 const factory = () => NitroModules.createHybridObject<DualOutputFactory>('DualOutputFactory')
 type ControlKind = 'zoom' | 'exposure' | 'torch'
 type ControlQueue = { running: boolean; pending: (() => Promise<void>) | null }
-export function useCaptureController(active: boolean) {
+export function useCaptureController(active: boolean, retained: boolean) {
   const { t } = useTranslation()
   const { showSnackbar, hideSnackbar } = useSnackbarState()
   const {
@@ -75,6 +75,7 @@ export function useCaptureController(active: boolean) {
     statsRef.current = stats
   }, [stats])
   const [error, setError] = useState<string | null>(null)
+  const [configured, setConfigured] = useState(false)
   const [ready, setReady] = useState(false)
   const [readyDeviceId, setReadyDeviceId] = useState<string | null>(null)
   const [cameraAuthorized, setCameraAuthorized] = useState(false)
@@ -89,6 +90,10 @@ export function useCaptureController(active: boolean) {
   }, [liveSettings])
   const session = useRef<CameraSession | null>(null)
   const lifecycle = useRef<Promise<void>>(Promise.resolve())
+  const activeRef = useRef(active)
+  useEffect(() => {
+    activeRef.current = active
+  }, [active])
   const captureSettings = useMemo<RecordingSettings>(
     () => ({
       longEdge: settings.longEdge,
@@ -477,7 +482,8 @@ export function useCaptureController(active: boolean) {
   }, [stop])
   const sessionMediaType = sessionStrategy === 'mode-specific' ? mediaType : null
   useEffect(() => {
-    if (!active || !authorized || !device) {
+    if (!retained || !authorized || !device) {
+      setConfigured(false)
       setReady(false)
       setReadyDeviceId(null)
       return
@@ -489,6 +495,7 @@ export function useCaptureController(active: boolean) {
     let localSession: CameraSession | null = null
     const subscriptions: { remove: () => void }[] = []
     const orientation = VisionCamera.createOrientationManager('interface')
+    setConfigured(false)
     setReady(false)
     setReadyDeviceId(null)
     setTorchEnabled(false)
@@ -629,6 +636,7 @@ export function useCaptureController(active: boolean) {
           }
         })
         await localSession.start()
+        if (!activeRef.current) await localSession.stop()
         let zoomRestoreFailed = false
         const exposureRestoreFailed = new Set<OutputKind>()
         await Promise.all(
@@ -723,8 +731,9 @@ export function useCaptureController(active: boolean) {
           })
         }
         if (!cancelled) {
-          setReady(true)
-          setReadyDeviceId(device.id)
+          setConfigured(true)
+          setReady(activeRef.current)
+          setReadyDeviceId(activeRef.current ? device.id : null)
           if (!zoomRestoreFailed) updateLiveSettings({ zoom: initialZoom })
           if (useAppStore.getState().camera.phase === 'switching')
             useAppStore.getState().camera.setPhase('idle')
@@ -745,6 +754,7 @@ export function useCaptureController(active: boolean) {
     return () => {
       cancelled = true
       invalidateFocus()
+      setConfigured(false)
       setReady(false)
       setReadyDeviceId(null)
       orientation.stopOrientationUpdates()
@@ -766,7 +776,7 @@ export function useCaptureController(active: boolean) {
     }
     // Settings are frozen throughout a take. Orientation and controls do not recreate this session.
   }, [
-    active,
+    retained,
     authorized,
     device,
     pairs,
@@ -780,6 +790,25 @@ export function useCaptureController(active: boolean) {
     setSessionStrategy,
     updateLiveSettings,
   ])
+  useEffect(() => {
+    activeRef.current = active
+    setReady(false)
+    setReadyDeviceId(null)
+    const transition = lifecycle.current
+      .then(async () => {
+        const current = session.current
+        if (!current) return
+        if (active) {
+          await current.start()
+          if (session.current === current) {
+            setReady(true)
+            setReadyDeviceId(device?.id ?? null)
+          }
+        } else await current.stop()
+      })
+      .catch((cause) => setError(String(cause)))
+    lifecycle.current = transition
+  }, [active, device?.id])
 
   const startVideo = async () => {
     if (
@@ -1207,6 +1236,7 @@ export function useCaptureController(active: boolean) {
     settings,
     mediaType,
     phase,
+    configured,
     ready,
     readyDeviceId,
     authorized,
