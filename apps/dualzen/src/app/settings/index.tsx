@@ -1,12 +1,4 @@
-import {
-  ActionListItem,
-  Card,
-  Pressable,
-  PromoBanner,
-  TabScreen,
-  Text,
-  useTabBarContentInset,
-} from '@shared/core/components/base'
+import { ActionListItem, Card, Pressable, PromoBanner, Text } from '@shared/core/components/base'
 import { getCurrentOtaUpdateId } from '@shared/core/services/otaUpdate'
 import { type PaywallSource, usePremiumGate } from '@shared/core/services/revenueCat'
 import { recordError } from '@shared/core/services/sentry'
@@ -19,7 +11,7 @@ import { useContactSupport } from '@shared/core/utils/useContactSupport'
 import { useShareApp } from '@shared/core/utils/useShareApp'
 import * as Clipboard from 'expo-clipboard'
 import Constants from 'expo-constants'
-import { Stack, useRouter } from 'expo-router'
+import { useRouter } from 'expo-router'
 import * as WebBrowser from 'expo-web-browser'
 import {
   ArrowSquareOutIcon,
@@ -34,7 +26,7 @@ import {
   StarIcon,
 } from 'phosphor-react-native'
 import { useTranslation } from 'react-i18next'
-import { Platform, ScrollView, View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 
 import { CameraSettingsSections } from '@/components/camera/CameraSettingsSections'
 import { AppConfig } from '@/configs'
@@ -48,7 +40,6 @@ const SETTINGS_PAYWALL_SOURCE = 'settings' satisfies PaywallSource
 export default function SettingsScreen() {
   const recorder = useCapture()
   const { t } = useTranslation()
-  const bottomInset = useTabBarContentInset()
   const theme = useTheme()
   const commonStyles = useCommonStyles()
   const styles = useThemedStyles(createStyles)
@@ -93,25 +84,10 @@ export default function SettingsScreen() {
   }
 
   return (
-    <TabScreen contentUnderTabBar>
-      <Stack.Screen
-        options={
-          Platform.OS === 'ios'
-            ? {
-                headerTransparent: true,
-                headerStyle: { backgroundColor: 'transparent' },
-                headerBlurEffect: 'systemChromeMaterial',
-                scrollEdgeEffects: { top: 'hidden' },
-              }
-            : {}
-        }
-      />
+    <View style={commonStyles.container}>
       <ScrollView
         style={commonStyles.container}
-        contentContainerStyle={[
-          styles.container,
-          { paddingBottom: bottomInset + theme.spacing['3xl'] },
-        ]}
+        contentContainerStyle={[styles.container, { paddingBottom: theme.spacing['3xl'] }]}
         contentInsetAdjustmentBehavior="automatic"
         showsVerticalScrollIndicator={false}>
         <Text variant="subtitle" tone="secondary" style={styles.subtitle}>
@@ -228,7 +204,7 @@ export default function SettingsScreen() {
           </View>
         )}
       </ScrollView>
-    </TabScreen>
+    </View>
   )
 }
 

@@ -14,7 +14,7 @@ export default function CameraTab() {
   return (
     <TabScreen>
       <SafeAreaView edges={['top', 'left', 'right']} style={styles.root}>
-        <CameraScreen recorder={recorder} onSettings={() => router.navigate('/settings')} />
+        <CameraScreen recorder={recorder} onSettings={() => router.push('/settings')} />
       </SafeAreaView>
     </TabScreen>
   )

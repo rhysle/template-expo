@@ -12,7 +12,7 @@ import { initSentry } from '@shared/core/services/sentry'
 import { useUserIdentityInit } from '@shared/core/services/userIdentity'
 import { useOnboardingState } from '@shared/core/stores/features/onboarding'
 import Constants from 'expo-constants'
-import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router'
+import { DarkTheme, DefaultTheme, Stack, ThemeProvider, usePathname } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { StatusBar } from 'expo-status-bar'
 import { useEffect, useRef } from 'react'
@@ -20,6 +20,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
 import { I18nProvider } from '@/i18n'
 import { useAdsInit } from '@/services/ads'
+import { CaptureProvider } from '@/services/camera/CaptureProvider'
 import { setAnalyticsUserProperties, useScreenTracker } from '@/services/firebase/analytics'
 import { useTheme } from '@/theme'
 
@@ -33,6 +34,7 @@ SplashScreen.setOptions({ fade: true, duration: 250 })
 function RootLayoutContent() {
   const { hasCompletedOnboarding } = useOnboardingState()
   const { appearance, colors, typography } = useTheme()
+  const pathname = usePathname()
   const baseNavigationTheme = appearance === 'dark' ? DarkTheme : DefaultTheme
   const navigationTheme = {
     ...baseNavigationTheme,
@@ -49,46 +51,55 @@ function RootLayoutContent() {
   useScreenTracker()
   useOtaUpdateInit()
 
+  const stack = (
+    <Stack
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: colors.background.base,
+        },
+        headerShadowVisible: false,
+        headerTintColor: colors.text.primary,
+        headerTitleStyle: {
+          fontFamily: typography.fontFamily.semibold,
+          fontWeight: typography.weights.semibold,
+          color: colors.text.primary,
+        },
+        contentStyle: {
+          backgroundColor: colors.background.base,
+        },
+      }}>
+      <Stack.Protected guard={hasCompletedOnboarding}>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="settings" options={{ presentation: 'modal', headerShown: false }} />
+        <Stack.Screen
+          name="paywall"
+          options={{ headerShown: false, presentation: 'fullScreenModal' }}
+        />
+        {__DEV__ ? (
+          <Stack.Screen
+            name="debug"
+            options={{
+              headerTitle: 'Debug State',
+              headerBackButtonDisplayMode: 'minimal',
+            }}
+          />
+        ) : null}
+      </Stack.Protected>
+      <Stack.Protected guard={!hasCompletedOnboarding}>
+        <Stack.Screen name="onboarding" options={{ headerShown: false, animation: 'fade' }} />
+      </Stack.Protected>
+      <Stack.Screen name="+not-found" />
+    </Stack>
+  )
+
   return (
     <ThemeProvider value={navigationTheme}>
       <StatusBar style={appearance === 'light' ? 'dark' : 'light'} />
-      <Stack
-        screenOptions={{
-          headerStyle: {
-            backgroundColor: colors.background.base,
-          },
-          headerShadowVisible: false,
-          headerTintColor: colors.text.primary,
-          headerTitleStyle: {
-            fontFamily: typography.fontFamily.semibold,
-            fontWeight: typography.weights.semibold,
-            color: colors.text.primary,
-          },
-          contentStyle: {
-            backgroundColor: colors.background.base,
-          },
-        }}>
-        <Stack.Protected guard={hasCompletedOnboarding}>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="paywall"
-            options={{ headerShown: false, presentation: 'fullScreenModal' }}
-          />
-          {__DEV__ ? (
-            <Stack.Screen
-              name="debug"
-              options={{
-                headerTitle: 'Debug State',
-                headerBackButtonDisplayMode: 'minimal',
-              }}
-            />
-          ) : null}
-        </Stack.Protected>
-        <Stack.Protected guard={!hasCompletedOnboarding}>
-          <Stack.Screen name="onboarding" options={{ headerShown: false, animation: 'fade' }} />
-        </Stack.Protected>
-        <Stack.Screen name="+not-found" />
-      </Stack>
+      {hasCompletedOnboarding ? (
+        <CaptureProvider active={pathname === '/'}>{stack}</CaptureProvider>
+      ) : (
+        stack
+      )}
       <SnackbarHost />
     </ThemeProvider>
   )
