@@ -60,7 +60,7 @@ export const NativeBottomSheet = ({
   if (backgroundVariant === 'solid') {
     modifiers.push(presentationBackground(colors.background.surface))
   } else if (backgroundVariant === 'translucent') {
-    modifiers.push(presentationBackground(withAlpha(colors.background.surface, 0.5)))
+    modifiers.push(presentationBackground(withAlpha(colors.background.surface, 0.4)))
   }
 
   if (fitsContent) {
