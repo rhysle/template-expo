@@ -149,6 +149,7 @@ export function useCaptureController(active: boolean, retained: boolean) {
   const [devices, setDevices] = useState<CameraDevice[]>([])
   const [pairs, setPairs] = useState<CameraDevice[][]>([])
   const [capabilities, setCapabilities] = useState<NativeCapabilities>({ hdr: false, mov: false })
+  const [capabilitiesLoaded, setCapabilitiesLoaded] = useState(false)
   const [stats, setStats] = useState<RecorderStats>({
     thermal: 0,
     freeBytes: 0,
@@ -324,7 +325,10 @@ export function useCaptureController(active: boolean, retained: boolean) {
       setError(String(cause))
     })
     void NativeRecorder.capabilities()
-      .then((value) => setCapabilities(JSON.parse(value) as NativeCapabilities))
+      .then((value) => {
+        setCapabilities(JSON.parse(value) as NativeCapabilities)
+        setCapabilitiesLoaded(true)
+      })
       .catch((cause) => {
         recordError(cause, 'camera.loadCapabilities', { platform: Platform.OS })
         setError(String(cause))
@@ -410,6 +414,7 @@ export function useCaptureController(active: boolean, retained: boolean) {
   const checkSettingsForStrategy = useCallback(
     async (candidate: RecordingSettings, combined: boolean): Promise<boolean> => {
       try {
+        if (!capabilitiesLoaded) return false
         if (
           (candidate.hdr && !capabilities.hdr) ||
           (candidate.container === 'mov' && !capabilities.mov)
@@ -468,7 +473,7 @@ export function useCaptureController(active: boolean, retained: boolean) {
         return false
       }
     },
-    [capabilities, configuration, device, devices, pairs]
+    [capabilities, capabilitiesLoaded, configuration, device, devices, pairs]
   )
   const checkSettings = useCallback(
     (candidate: RecordingSettings) =>
@@ -679,7 +684,7 @@ export function useCaptureController(active: boolean, retained: boolean) {
   }, [stop])
   const sessionMediaType = sessionStrategy === 'mode-specific' ? mediaType : null
   useEffect(() => {
-    if (!retained || !authorized || !device) {
+    if (!retained || !authorized || !device || !capabilitiesLoaded) {
       setConfigured(false)
       setReady(false)
       setReadyDeviceId(null)
@@ -1009,6 +1014,7 @@ export function useCaptureController(active: boolean, retained: boolean) {
     retained,
     authorized,
     device,
+    capabilitiesLoaded,
     pairs,
     captureSettings,
     configuration,
