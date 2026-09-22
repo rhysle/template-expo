@@ -298,9 +298,8 @@ final class DualEngine: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
         let ready = sink.writer.status == .completed && duration > 0 && sink.audioSamples > 0
         var result: [String: Any] = ["kind": sink.portrait ? "portrait" : "landscape", "filename": sink.url.lastPathComponent,
           "width": Int(sink.size.width), "height": Int(sink.size.height), "bitrate": sink.bitrate,
-          "bytes": (try? sink.url.resourceValues(forKeys: [.fileSizeKey]).fileSize) ?? 0, "ready": ready, "keyframes": []]
-        if ready { result["keyframes"] = (try? Self.keyframes(sink.url)) ?? [] }
-        else { result["error"] = sink.writer.error?.localizedDescription ?? self.failure ?? "Video was not finalized" }
+          "bytes": (try? sink.url.resourceValues(forKeys: [.fileSizeKey]).fileSize) ?? 0, "ready": ready]
+        if !ready { result["error"] = sink.writer.error?.localizedDescription ?? self.failure ?? "Video was not finalized" }
         return result
       }
       var result: [String: Any] = ["id": self.config["id"] as? String ?? "", "duration": duration,
@@ -311,7 +310,7 @@ final class DualEngine: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
       if let directory = self.config["directory"] as? String, let url = URL(string: directory) {
         var media: [String: Any] = ["id": self.config["id"] as? String ?? "", "projectId": self.config["projectId"] as? String ?? "default", "mediaType": "video",
           "createdAt": self.config["createdAt"] as? Double ?? 0, "settings": self.config["settings"] as? [String: Any] ?? [:], "duration": duration,
-          "outputs": outputs, "trim": NSNull(), "exports": [], "reason": reason]
+          "outputs": outputs, "exports": [], "reason": reason]
         if let failure = self.failure { media["error"] = failure }
         do {
           // Foundation raises an Objective-C exception for invalid JSON objects;
@@ -333,25 +332,6 @@ final class DualEngine: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
       self.onStopped?(self.lastResult)
       self.endFinalizationAllowance()
     }
-  }
-  static func keyframes(_ url: URL) throws -> [Double] {
-    let asset = AVURLAsset(url: url)
-    guard let track = asset.tracks(withMediaType: .video).first else { return [] }
-    let reader = try AVAssetReader(asset: asset)
-    let output = AVAssetReaderTrackOutput(track: track, outputSettings: nil)
-    output.alwaysCopiesSampleData = false; reader.add(output); reader.startReading()
-    var values: [Double] = []
-    while let sample = output.copyNextSampleBuffer() {
-      // Reader boundary markers carry no compressed frame and are not cut points.
-      guard CMSampleBufferGetNumSamples(sample) > 0, CMSampleBufferGetTotalSampleSize(sample) > 0 else { continue }
-      let attachments = CMSampleBufferGetSampleAttachmentsArray(sample, createIfNecessary: false) as? [[String: Any]]
-      if attachments?.first?[kCMSampleAttachmentKey_NotSync as String] as? Bool != true {
-        let time = CMTimeGetSeconds(CMSampleBufferGetPresentationTimeStamp(sample))
-        if time.isFinite { values.append(time) }
-      }
-    }
-    if reader.status == .failed { throw reader.error ?? CaptureError(message: "Cannot read keyframes") }
-    return values
   }
   static func json(_ object: [String: Any]) -> String {
     guard JSONSerialization.isValidJSONObject(object) else { return "{}" }

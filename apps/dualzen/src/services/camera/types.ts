@@ -82,7 +82,6 @@ export interface VideoOutput extends PixelSize {
   bytes: number
   bitrate: number
   ready: boolean
-  keyframes: number[]
   error?: string
 }
 export interface PhotoOutput extends PixelSize {
@@ -92,10 +91,6 @@ export interface PhotoOutput extends PixelSize {
   ready: boolean
   error?: string
 }
-export interface TrimRange {
-  start: number
-  end: number
-}
 export interface ExportResult {
   kind: OutputKind
   assetId?: string
@@ -103,7 +98,6 @@ export interface ExportResult {
 }
 export interface ExportReceipt {
   kind: OutputKind
-  revision: string
   assetId: string
 }
 interface ProjectMediaBase {
@@ -119,7 +113,6 @@ export interface VideoCapture extends ProjectMediaBase {
   duration: number
   settings: RecordingSettings
   outputs: VideoOutput[]
-  trim: TrimRange | null
   reason: string
 }
 export interface PhotoSettings {
@@ -215,28 +208,6 @@ export function outputSize(source: PixelSize, kind: OutputKind, edge: number): P
     Math.min((width * scale) / (portrait ? 18 : 32), (height * scale) / (portrait ? 32 : 18))
   )
   return { width: unit * (portrait ? 18 : 32), height: unit * (portrait ? 32 : 18) }
-}
-export function sharedCutPoints(take: VideoCapture): number[] {
-  const ready = take.outputs.filter((output) => output.ready)
-  if (!ready.length) return []
-  const tolerance = 0.25 / take.settings.fps
-  const shared = ready[0].keyframes.filter((point) =>
-    ready.every((output) => output.keyframes.some((other) => Math.abs(point - other) <= tolerance))
-  )
-  return [
-    ...new Set([0, ...shared.filter((point) => point > 0 && point < take.duration), take.duration]),
-  ].sort((a, b) => a - b)
-}
-export function snapTrim(take: VideoCapture, start: number, end: number): TrimRange | null {
-  const points = sharedCutPoints(take)
-  if (points.length < 2) return null
-  const nearest = (value: number) =>
-    points.reduce(
-      (best, point) => (Math.abs(point - value) < Math.abs(best - value) ? point : best),
-      points[0]
-    )
-  const range = { start: nearest(start), end: nearest(end) }
-  return range.end > range.start ? range : null
 }
 export const formatDuration = (seconds: number) => {
   const value = Math.max(0, Math.floor(seconds))

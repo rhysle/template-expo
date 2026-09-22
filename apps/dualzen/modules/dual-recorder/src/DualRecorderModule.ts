@@ -9,12 +9,7 @@ declare class RecorderModule extends NativeModule<RecorderEvents> {
   stats(): Promise<string>
   canEncode(longEdge: number, fps: number, hdr: boolean): Promise<boolean>
   capabilities(): Promise<string>
-  exportMedia(
-    uri: string,
-    mediaType: 'video' | 'photo',
-    start: number,
-    end: number
-  ): Promise<string>
+  exportMedia(uri: string, mediaType: 'video' | 'photo'): Promise<string>
   openPhotoLibrary(assetId: string, mediaType: 'video' | 'photo'): Promise<void>
   thumbnail(uri: string, destination: string): Promise<void>
   writeManifest(uri: string, content: string): Promise<void>

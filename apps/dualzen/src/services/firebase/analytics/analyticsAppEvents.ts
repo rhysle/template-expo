@@ -8,4 +8,6 @@ export const AnalyticsAppEvents = {
   CAMERA_SESSION_FAILED: 'camera_session_failed',
   MEDIA_EXPORT_COMPLETED: 'media_export_completed',
   MEDIA_EXPORT_FAILED: 'media_export_failed',
+  MEDIA_SHARE_REQUESTED: 'media_share_requested',
+  MEDIA_SHARE_FAILED: 'media_share_failed',
 } as const

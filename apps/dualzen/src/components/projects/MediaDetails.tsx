@@ -1,10 +1,26 @@
-import { Button, SegmentedControl, Slider, Text } from '@shared/core/components/base'
+import {
+  CapsuleNavigationAccessory,
+  NativeMenu,
+  type NativeMenuAction,
+  NativeSegmentedControl,
+  Pressable,
+  Text,
+} from '@shared/core/components/base'
 import { recordError } from '@shared/core/services/sentry'
+import { useSnackbarState } from '@shared/core/stores/features/snackbar'
 import { Image } from 'expo-image'
+import { Stack } from 'expo-router'
 import { useVideoPlayer, VideoView } from 'expo-video'
-import { type ReactNode, useState } from 'react'
+import {
+  DotsThreeIcon,
+  DownloadSimpleIcon,
+  FolderSimpleIcon,
+  ShareIcon,
+  TrashIcon,
+} from 'phosphor-react-native'
+import { type ReactNode, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Alert, ScrollView, View } from 'react-native'
+import { Alert, type LayoutChangeEvent, View } from 'react-native'
 
 import {
   deleteMedia,
@@ -12,21 +28,26 @@ import {
   mediaFile,
   mutateProjects,
   saveMedia,
+  shareMedia,
   videoFile,
 } from '@/services/camera/projects'
 import {
-  type ExportResult,
   formatDuration,
   type OutputKind,
-  type PhotoCapture,
   type ProjectMedia,
-  sharedCutPoints,
-  snapTrim,
   type VideoCapture,
 } from '@/services/camera/types'
 import { useCameraState } from '@/stores/features/camera'
 import { useProjectsState } from '@/stores/features/projects'
-import { createThemedStyles, useThemedStyles } from '@/theme'
+import { createThemedStyles, iconSizes, useTheme, useThemedStyles } from '@/theme'
+
+import { ProjectBottomActionBar } from './ProjectBottomActionBar'
+import { ProjectGlassSurface, useProjectGlass } from './ProjectGlassControls'
+
+interface PreviewBounds {
+  height: number
+  width: number
+}
 
 function recordProjectError(cause: unknown, context: string, details?: Record<string, unknown>) {
   const message = cause instanceof Error ? cause.message : String(cause)
@@ -34,175 +55,172 @@ function recordProjectError(cause: unknown, context: string, details?: Record<st
   recordError(cause, context, details)
 }
 
-export function MediaDetails({ media, onClose }: { media: ProjectMedia; onClose: () => void }) {
-  return media.mediaType === 'video' ? (
-    <VideoDetails video={media} onClose={onClose} />
-  ) : (
-    <PhotoDetails photo={media} onClose={onClose} />
-  )
+function fitPreview(bounds: PreviewBounds, kind: OutputKind) {
+  const ratio = kind === 'portrait' ? 9 / 16 : 16 / 9
+  const width = Math.min(bounds.width, bounds.height * ratio)
+  return { width, height: width / ratio }
 }
 
-function VideoPlayback({ video, kind }: { video: VideoCapture; kind: OutputKind }) {
+function VideoPlayback({
+  bounds,
+  kind,
+  video,
+}: {
+  bounds: PreviewBounds
+  kind: OutputKind
+  video: VideoCapture
+}) {
   const styles = useThemedStyles(createDetailsStyles)
+  const size = fitPreview(bounds, kind)
   const player = useVideoPlayer(videoFile(video, kind).uri, (instance) => {
     instance.loop = false
   })
   return (
-    <VideoView
-      player={player}
-      nativeControls
+    <VideoView player={player} nativeControls contentFit="contain" style={[styles.preview, size]} />
+  )
+}
+
+function MediaPreview({
+  bounds,
+  kind,
+  media,
+}: {
+  bounds: PreviewBounds
+  kind: OutputKind
+  media: ProjectMedia
+}) {
+  const styles = useThemedStyles(createDetailsStyles)
+  if (bounds.width <= 0 || bounds.height <= 0) return null
+  if (media.mediaType === 'video')
+    return <VideoPlayback bounds={bounds} kind={kind} video={media} />
+
+  return (
+    <Image
+      source={{ uri: mediaFile(media, kind).uri }}
       contentFit="contain"
-      style={[styles.preview, { aspectRatio: kind === 'portrait' ? 9 / 16 : 16 / 9 }]}
+      style={[styles.preview, fitPreview(bounds, kind)]}
     />
   )
 }
 
-function VideoDetails({ video, onClose }: { video: VideoCapture; onClose: () => void }) {
+function ActionItem({
+  accessibilityLabel,
+  children,
+  disabled,
+  onPress,
+}: {
+  accessibilityLabel: string
+  children: ReactNode
+  disabled?: boolean
+  onPress?: () => void
+}) {
+  const styles = useThemedStyles(createDetailsStyles)
+  const content = (
+    <View
+      accessible
+      accessibilityLabel={accessibilityLabel}
+      accessibilityRole="button"
+      accessibilityState={{ disabled }}
+      style={styles.actionItem}>
+      {children}
+    </View>
+  )
+  if (!onPress) return content
+  return (
+    <Pressable
+      accessibilityLabel={accessibilityLabel}
+      accessibilityRole="button"
+      accessibilityState={{ disabled }}
+      disabled={disabled}
+      haptic
+      hapticType="selection"
+      onPress={onPress}
+      style={styles.actionItem}>
+      {children}
+    </Pressable>
+  )
+}
+
+export function MediaDetails({ media, onClose }: { media: ProjectMedia; onClose: () => void }) {
   const { t } = useTranslation()
-  const [start, setStart] = useState(video.trim?.start ?? 0)
-  const [end, setEnd] = useState(video.trim?.end ?? video.duration)
-  const cuts = sharedCutPoints(video)
-  const range = snapTrim(video, start, end)
-  const [message, setMessage] = useState<string | null>(null)
-  const changeTrim = async (reset = false) => {
-    if (!reset && (!range || cuts.length < 3)) {
-      setMessage(t('projects.trimUnavailable'))
+  const styles = useThemedStyles(createDetailsStyles)
+  const { colors, spacing } = useTheme()
+  const glass = useProjectGlass()
+  const { showSnackbar } = useSnackbarState()
+  const { projects } = useProjectsState()
+  const { phase } = useCameraState()
+  const available = media.outputs.filter((output) => output.ready)
+  const [kind, setKind] = useState<OutputKind>(available[0]?.kind ?? 'portrait')
+  const [previewBounds, setPreviewBounds] = useState<PreviewBounds>({ width: 0, height: 0 })
+  const [actionBarInset, setActionBarInset] = useState(0)
+  const [sharing, setSharing] = useState(false)
+  const currentOutput = available.find((output) => output.kind === kind) ?? available[0]
+  const activeKind = currentOutput?.kind ?? kind
+  const busy = phase !== 'idle' || sharing
+  const labels = useMemo(
+    () => ({ portrait: t('camera.portrait'), landscape: t('camera.landscape') }),
+    [t]
+  )
+  const selectorOptions = available.map((output) => ({
+    value: output.kind,
+    label: labels[output.kind],
+  }))
+
+  const showResult = (failed: boolean) =>
+    showSnackbar({
+      title: failed ? t('projects.exportFailure') : t('projects.exported'),
+      variant: failed ? 'error' : 'success',
+    })
+
+  const exportOutputs = async (kinds: OutputKind[], anotherCopy = false) => {
+    if (busy) return
+    if (
+      !anotherCopy &&
+      kinds.every((item) => media.exports.some((receipt) => receipt.kind === item))
+    ) {
+      showSnackbar({ title: t('projects.alreadyExported'), variant: 'info' })
       return
     }
     try {
-      await mutateProjects(() => saveMedia({ ...video, trim: reset ? null : range }))
-      if (reset) {
-        setStart(0)
-        setEnd(video.duration)
-      }
-    } catch (cause) {
-      recordProjectError(cause, 'projects.saveTrim', { reset })
-      setMessage(t('projects.trimUnavailable'))
-    }
-  }
-  return (
-    <DetailsShell media={video} onClose={onClose} message={message} setMessage={setMessage}>
-      {({ kind, available }) => (
-        <>
-          {available.some((output) => output.kind === kind) && (
-            <VideoPlayback key={kind} video={video} kind={kind} />
-          )}
-          <Text tone="muted">
-            {formatDuration(video.duration)} · {video.settings.fps} FPS ·{' '}
-            {video.settings.container.toUpperCase()} · {video.settings.hdr ? 'HDR' : 'SDR'}
-          </Text>
-          <Text variant="subtitle">{t('projects.trim')}</Text>
-          <Text variant="caption" tone="muted">
-            {t('projects.trimBody')}
-          </Text>
-          {cuts.length >= 3 ? (
-            <>
-              <Text>{t('projects.trimStart')}</Text>
-              <Slider min={0} max={video.duration} value={start} onValueChange={setStart} />
-              <Text>{t('projects.trimEnd')}</Text>
-              <Slider min={0} max={video.duration} value={end} onValueChange={setEnd} />
-              {range && (
-                <Text tone="accent">
-                  {t('projects.trimRange', {
-                    start: range.start.toFixed(2),
-                    end: range.end.toFixed(2),
-                  })}
-                </Text>
-              )}
-              <Button
-                disabled={!range}
-                onPress={() => void changeTrim()}
-                label={t('projects.applyTrim')}
-              />
-            </>
-          ) : (
-            <Text tone="muted">{t('projects.trimUnavailable')}</Text>
-          )}
-          {video.trim && (
-            <Button
-              variant="ghost"
-              onPress={() => void changeTrim(true)}
-              label={t('projects.resetTrim')}
-            />
-          )}
-        </>
-      )}
-    </DetailsShell>
-  )
-}
-
-function PhotoDetails({ photo, onClose }: { photo: PhotoCapture; onClose: () => void }) {
-  const styles = useThemedStyles(createDetailsStyles)
-  return (
-    <DetailsShell media={photo} onClose={onClose}>
-      {({ kind, available }) =>
-        available.some((output) => output.kind === kind) ? (
-          <Image
-            source={{ uri: mediaFile(photo, kind).uri }}
-            contentFit="contain"
-            style={[styles.preview, { aspectRatio: kind === 'portrait' ? 9 / 16 : 16 / 9 }]}
-          />
-        ) : null
-      }
-    </DetailsShell>
-  )
-}
-
-function DetailsShell({
-  media,
-  onClose,
-  children,
-  message: externalMessage,
-  setMessage: setExternalMessage,
-}: {
-  media: ProjectMedia
-  onClose: () => void
-  children: (value: { kind: OutputKind; available: ProjectMedia['outputs'] }) => ReactNode
-  message?: string | null
-  setMessage?: (value: string | null) => void
-}) {
-  const { t } = useTranslation()
-  const styles = useThemedStyles(createDetailsStyles)
-  const { projects } = useProjectsState()
-  const { phase } = useCameraState()
-  const [kind, setKind] = useState<OutputKind>(
-    media.outputs.find((output) => output.ready)?.kind ?? 'portrait'
-  )
-  const [localMessage, setLocalMessage] = useState<string | null>(null)
-  const [exportResults, setExportResults] = useState<ExportResult[]>([])
-  const available = media.outputs.filter((output) => output.ready)
-  const busy = phase !== 'idle'
-  const revision =
-    media.mediaType === 'video' && media.trim ? `${media.trim.start}:${media.trim.end}` : 'original'
-  const message = externalMessage ?? localMessage
-  const setMessage = setExternalMessage ?? setLocalMessage
-  const labels = { portrait: t('camera.portrait'), landscape: t('camera.landscape') }
-  const exportOutputs = async (kinds: OutputKind[], again = false) => {
-    if (busy) return
-    try {
-      if (
-        !again &&
-        kinds.every((item) =>
-          media.exports.some((receipt) => receipt.kind === item && receipt.revision === revision)
-        )
-      ) {
-        setMessage(t('projects.alreadyExported'))
-        return
-      }
-      const result = await exportMedia(media, kinds, again)
-      setExportResults(result)
-      setMessage(
-        result.some((item) => item.error) ? t('projects.exportFailure') : t('projects.exported')
-      )
+      const results = await exportMedia(media, kinds, anotherCopy)
+      showResult(results.some((result) => result.error))
     } catch (cause) {
       recordProjectError(cause, 'projects.exportMediaRequest', {
         media_type: media.mediaType,
         output_count: kinds.length,
-        another_copy: again,
+        another_copy: anotherCopy,
       })
-      setMessage(t('projects.exportFailure'))
+      showResult(true)
     }
   }
+
+  const handleShare = async () => {
+    if (busy || !currentOutput) return
+    setSharing(true)
+    try {
+      await shareMedia(media, activeKind)
+    } catch {
+      showSnackbar({ title: t('projects.shareFailure'), variant: 'error' })
+    } finally {
+      setSharing(false)
+    }
+  }
+
+  const moveToProject = async (projectId: string) => {
+    if (busy || projectId === media.projectId) return
+    const project = projects.find((item) => item.id === projectId)
+    try {
+      await mutateProjects(() => saveMedia({ ...media, projectId }))
+      showSnackbar({
+        title: t('projects.moved', { name: project?.name ?? t('projects.default') }),
+        variant: 'success',
+      })
+    } catch (cause) {
+      recordProjectError(cause, 'projects.moveMedia', { media_type: media.mediaType })
+      showSnackbar({ title: t('projects.moveFailure'), variant: 'error' })
+    }
+  }
+
   const remove = () =>
     Alert.alert(t('projects.deleteMediaTitle'), t('projects.deleteMediaBody'), [
       { text: t('projects.cancel'), style: 'cancel' },
@@ -214,133 +232,208 @@ function DetailsShell({
             .then(onClose)
             .catch((cause) => {
               recordProjectError(cause, 'projects.deleteMedia', { media_type: media.mediaType })
-              setMessage(t('projects.exportFailure'))
+              showSnackbar({ title: t('projects.deleteMediaFailure'), variant: 'error' })
             })
         },
       },
     ])
-  return (
-    <ScrollView
-      style={styles.root}
-      contentContainerStyle={styles.details}
-      contentInsetAdjustmentBehavior="automatic">
-      <View style={styles.header}>
-        <Text variant="subtitle">{t('projects.mediaDetails')}</Text>
-        <Button
-          size="sm"
-          variant="ghost"
-          disabled={busy}
-          onPress={onClose}
-          label={t('projects.close')}
-        />
+
+  const projectActions = useMemo<readonly NativeMenuAction[]>(
+    () =>
+      projects.map((project) => ({
+        id: project.id,
+        label: project.name ?? t('projects.default'),
+        selected: project.id === media.projectId,
+        disabled: busy || project.id === media.projectId,
+        image: 'folder',
+      })),
+    [busy, media.projectId, projects, t]
+  )
+  const moreActions = useMemo<readonly NativeMenuAction[]>(
+    () => [
+      ...(available.length === 2
+        ? [
+            {
+              id: 'save-both',
+              label: t('projects.saveBoth'),
+              disabled: busy,
+              image: 'square.and.arrow.down',
+            } satisfies NativeMenuAction,
+          ]
+        : []),
+      {
+        id: 'save-another',
+        label: t('projects.saveAnotherCopy'),
+        disabled: busy || !currentOutput,
+        image: 'plus.square.on.square',
+      },
+    ],
+    [available.length, busy, currentOutput, t]
+  )
+  const handleMoreAction = (id: string) => {
+    if (id === 'save-both') void exportOutputs(available.map((output) => output.kind))
+    else if (id === 'save-another') void exportOutputs([activeKind], true)
+  }
+
+  const onPreviewLayout = (event: LayoutChangeEvent) => {
+    const { width, height } = event.nativeEvent.layout
+    setPreviewBounds((current) =>
+      current.width === width && current.height === height ? current : { width, height }
+    )
+  }
+
+  const centerActions = (
+    <View style={styles.actionGroupShadow}>
+      <ProjectGlassSurface {...glass} style={styles.actionGroupSurface}>
+        <View />
+      </ProjectGlassSurface>
+      <View style={styles.actionGroupContent}>
+        <ActionItem
+          accessibilityLabel={t('projects.saveCurrent', { orientation: labels[activeKind] })}
+          disabled={busy || !currentOutput}
+          onPress={() => void exportOutputs([activeKind])}>
+          <DownloadSimpleIcon color={colors.text.primary} size={iconSizes.lg} />
+        </ActionItem>
+        <NativeMenu
+          actions={projectActions}
+          onSelect={(id) => void moveToProject(id)}
+          title={t('projects.move')}
+          style={styles.actionMenu}>
+          <ActionItem accessibilityLabel={t('projects.move')} disabled={busy}>
+            <FolderSimpleIcon color={colors.text.primary} size={iconSizes.lg} />
+          </ActionItem>
+        </NativeMenu>
+        <NativeMenu
+          actions={moreActions}
+          onSelect={handleMoreAction}
+          title={t('projects.moreActions')}
+          style={styles.actionMenu}>
+          <ActionItem accessibilityLabel={t('projects.moreActions')} disabled={busy}>
+            <DotsThreeIcon color={colors.text.primary} size={iconSizes.lg} weight="bold" />
+          </ActionItem>
+        </NativeMenu>
       </View>
-      <SegmentedControl
-        value={kind}
-        onValueChange={(value) => setKind(value as OutputKind)}
-        options={(['portrait', 'landscape'] as const).map((item) => ({
-          value: item,
-          label: labels[item],
-          disabled: !available.some((output) => output.kind === item),
-        }))}
+    </View>
+  )
+
+  return (
+    <View style={styles.root}>
+      <Stack.Screen
+        options={{
+          presentation: 'card',
+          headerShown: true,
+          headerBackButtonDisplayMode: 'minimal',
+          headerTitleAlign: 'center',
+          title: t('projects.mediaDetails'),
+          headerTitle:
+            selectorOptions.length > 1
+              ? () => (
+                  <NativeSegmentedControl
+                    value={activeKind}
+                    onValueChange={setKind}
+                    options={selectorOptions}
+                    style={styles.headerSelector}
+                  />
+                )
+              : labels[activeKind],
+        }}
       />
-      {children({ kind, available })}
-      {media.outputs.map((output) => (
-        <Text key={output.kind} variant="caption" tone="muted">
-          {labels[output.kind]} · {output.width} × {output.height} ·{' '}
-          {(output.bytes / 1048576).toFixed(1)} MB
-          {!output.ready ? ` · ${t('projects.incomplete')}` : ''}
-        </Text>
-      ))}
-      <Text variant="subtitle">{t('projects.export')}</Text>
-      <View style={styles.actions}>
-        {available.map((output) => (
-          <Button
-            key={output.kind}
-            size="sm"
-            disabled={busy}
-            onPress={() => void exportOutputs([output.kind])}
-            label={labels[output.kind]}
-          />
-        ))}
-        {available.length === 2 && (
-          <Button
-            size="sm"
-            disabled={busy}
-            onPress={() => void exportOutputs(['portrait', 'landscape'])}
-            label={t('camera.both')}
-          />
+      <View style={[styles.content, { paddingBottom: actionBarInset + spacing.md }]}>
+        <View style={styles.previewFrame} onLayout={onPreviewLayout}>
+          {currentOutput ? (
+            <MediaPreview
+              key={`${media.id}:${activeKind}`}
+              bounds={previewBounds}
+              kind={activeKind}
+              media={media}
+            />
+          ) : (
+            <Text tone="muted">{t('projects.incomplete')}</Text>
+          )}
+        </View>
+        {currentOutput && (
+          <View style={styles.metadata}>
+            {media.mediaType === 'video' && (
+              <Text selectable variant="caption" tone="muted" style={styles.tabularNumbers}>
+                {formatDuration(media.duration)} · {media.settings.fps} FPS ·{' '}
+                {media.settings.container.toUpperCase()} · {media.settings.hdr ? 'HDR' : 'SDR'}
+              </Text>
+            )}
+            <Text selectable variant="caption" tone="muted" style={styles.tabularNumbers}>
+              {labels[activeKind]} · {currentOutput.width} × {currentOutput.height} ·{' '}
+              {(currentOutput.bytes / 1048576).toFixed(1)} MB
+            </Text>
+          </View>
         )}
       </View>
-      {exportResults.map((result) => (
-        <Text key={result.kind} variant="caption" tone={result.error ? 'error' : 'accent'}>
-          {labels[result.kind]} ·{' '}
-          {result.error ? t('projects.exportFailure') : t('projects.exported')}
-        </Text>
-      ))}
-      {busy && <Text tone="accent">{t('camera.exporting')}</Text>}
-      {message && <Text tone="accent">{message}</Text>}
-      {media.exports.some((receipt) => receipt.revision === revision) && (
-        <Button
-          variant="ghost"
-          disabled={busy}
-          onPress={() =>
-            void exportOutputs(
-              available.map((output) => output.kind),
-              true
-            )
-          }
-          label={t('projects.exportAgain')}
-        />
-      )}
-      <Text variant="subtitle">{t('projects.move')}</Text>
-      <ScrollView horizontal contentContainerStyle={styles.pills}>
-        {projects.map((project) => (
-          <Button
-            key={project.id}
-            size="sm"
-            variant="ghost"
-            disabled={busy || project.id === media.projectId}
-            onPress={() =>
-              void mutateProjects(() => saveMedia({ ...media, projectId: project.id })).catch(
-                (cause) => {
-                  recordProjectError(cause, 'projects.moveMedia', { media_type: media.mediaType })
-                  setMessage(t('projects.exportFailure'))
-                }
-              )
-            }
-            label={project.name ?? t('projects.default')}
-          />
-        ))}
-      </ScrollView>
-      <Button variant="ghost" disabled={busy} onPress={remove} label={t('projects.deleteMedia')} />
-    </ScrollView>
+      <ProjectBottomActionBar
+        manageTabBarHeight={false}
+        onHeightChange={setActionBarInset}
+        leading={
+          <CapsuleNavigationAccessory
+            accessibilityLabel={t('projects.share')}
+            disabled={busy || !currentOutput}
+            onPress={() => void handleShare()}>
+            <ShareIcon color={colors.text.primary} size={iconSizes.lg} />
+          </CapsuleNavigationAccessory>
+        }
+        center={centerActions}
+        trailing={
+          <CapsuleNavigationAccessory
+            accessibilityLabel={t('projects.deleteMedia')}
+            disabled={busy}
+            onPress={remove}>
+            <TrashIcon color={colors.status.error} size={iconSizes.lg} />
+          </CapsuleNavigationAccessory>
+        }
+      />
+    </View>
   )
 }
 
 const createDetailsStyles = createThemedStyles((theme) => ({
   root: { flex: 1, backgroundColor: theme.colors.background.base },
-  details: {
-    gap: theme.spacing.lg,
-    padding: theme.spacing.lg,
-    paddingBottom: theme.spacing['5xl'],
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+  headerSelector: { width: theme.spacing['9xl'] * 2.25 },
+  content: {
+    flex: 1,
     gap: theme.spacing.md,
+    paddingTop: theme.spacing.md,
+    paddingHorizontal: theme.spacing.lg,
+  },
+  previewFrame: {
+    flex: 1,
+    minHeight: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   preview: {
-    width: '100%',
-    maxHeight: theme.spacing['9xl'] * 3,
+    overflow: 'hidden',
+    borderRadius: theme.borderRadius.md,
+    borderCurve: 'continuous',
     backgroundColor: theme.colors.background.surface,
   },
-  pills: { gap: theme.spacing.sm, paddingHorizontal: theme.spacing.lg },
-  actions: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: theme.spacing.sm,
-    paddingHorizontal: theme.spacing.lg,
-    flexWrap: 'wrap',
+  metadata: { alignItems: 'center', gap: theme.spacing.xs },
+  tabularNumbers: { fontVariant: ['tabular-nums'] },
+  actionGroupShadow: {
+    maxWidth: '60%',
+    minHeight: theme.spacing['5xl'],
+    borderRadius: theme.borderRadius.full,
+    ...theme.shadows.md,
   },
+  actionGroupSurface: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+  },
+  actionGroupContent: { flexDirection: 'row', alignItems: 'center' },
+  actionItem: {
+    width: theme.spacing['5xl'],
+    height: theme.spacing['5xl'],
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: theme.borderRadius.full,
+  },
+  actionMenu: { width: theme.spacing['5xl'], height: theme.spacing['5xl'] },
 }))

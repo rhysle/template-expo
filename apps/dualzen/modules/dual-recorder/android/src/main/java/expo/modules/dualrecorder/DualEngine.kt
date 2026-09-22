@@ -302,7 +302,7 @@ gl_FragColor=texture2D(uTexture,(uMatrix*vec4(p,0.0,1.0)).xy); }"""
         catch(t: Throwable){error=t.message;runCatching { sink.release(false) }}
         outputs.put(JSONObject().put("kind",if(sink.portrait)"portrait" else "landscape").put("filename",sink.file.name)
           .put("width",sink.width).put("height",sink.height).put("bytes",sink.file.length()).put("bitrate",sink.bitrate).put("ready",ready)
-          .put("keyframes",JSONArray(sink.keyframes)).apply { if(!ready)put("error",error?:failure?:"Video was not finalized") })
+          .apply { if(!ready)put("error",error?:failure?:"Video was not finalized") })
       }
       lastResult=JSONObject().put("id",config.optString("id")).put("duration",duration).put("outputs",outputs)
         .put("reason",reason).put("frames",frames).put("dropped",dropped).apply { failure?.let { put("error",it) } }.toString()
@@ -311,7 +311,7 @@ gl_FragColor=texture2D(uTexture,(uMatrix*vec4(p,0.0,1.0)).xy); }"""
       try {
         val media=JSONObject().put("id",config.getString("id")).put("projectId",config.optString("projectId","default")).put("mediaType","video")
           .put("createdAt",config.optLong("createdAt")).put("settings",config.getJSONObject("settings")).put("duration",duration)
-          .put("outputs",outputs).put("trim",JSONObject.NULL).put("exports",JSONArray()).put("reason",reason)
+          .put("outputs",outputs).put("exports",JSONArray()).put("reason",reason)
           .apply { failure?.let { put("error",it) } }
         val manifest=android.util.AtomicFile(File(localFile(config.getString("directory")),"manifest.json"))
         val stream=manifest.startWrite()
@@ -338,7 +338,6 @@ gl_FragColor=texture2D(uTexture,(uMatrix*vec4(p,0.0,1.0)).xy); }"""
     private var videoTrack=-1;private var audioTrack=-1;private var muxing=false;private var released=false
     private val waiting=mutableListOf<Packet>()
     var lastKeyRequest=-1L;var videoSamples=0;var audioSamples=0
-    val keyframes=mutableListOf<Double>()
     private data class Packet(val video: Boolean,val bytes: ByteArray,val pts: Long,val flags: Int)
     init {
       val format=MediaFormat.createVideoFormat(MediaFormat.MIMETYPE_VIDEO_AVC,width,height).apply {
@@ -365,7 +364,7 @@ gl_FragColor=texture2D(uTexture,(uMatrix*vec4(p,0.0,1.0)).xy); }"""
       if(released)return
       val info=MediaCodec.BufferInfo().apply { set(0,packet.bytes.size,packet.pts,packet.flags) }
       muxer.writeSampleData(if(packet.video)videoTrack else audioTrack,ByteBuffer.wrap(packet.bytes),info)
-      if(packet.video){videoSamples++;if(packet.flags and MediaCodec.BUFFER_FLAG_KEY_FRAME!=0)keyframes.add(packet.pts/1e6)} else audioSamples++
+      if(packet.video)videoSamples++ else audioSamples++
     }
     fun drain(eos: Boolean) {
       val info=MediaCodec.BufferInfo();val deadline=System.nanoTime()+2_000_000_000

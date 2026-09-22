@@ -1,6 +1,7 @@
 import { recordError } from '@shared/core/services/sentry'
 import { randomUUID } from 'expo-crypto'
 import { Directory, File, Paths } from 'expo-file-system'
+import * as Sharing from 'expo-sharing'
 
 import { AnalyticsAppEvents, trackEvent } from '@/services/firebase/analytics'
 import { useAppStore } from '@/stores/appStore'
@@ -8,6 +9,7 @@ import { useAppStore } from '@/stores/appStore'
 import NativeRecorder from '../../../modules/dual-recorder/src/DualRecorderModule'
 import {
   DEFAULT_PROJECT_ID,
+  type ExportReceipt,
   type ExportResult,
   type OutputKind,
   type PhotoCapture,
@@ -40,6 +42,21 @@ function readyOutput(media: ProjectMedia, kind: OutputKind) {
   const output = media.outputs.find((item) => item.kind === kind && item.ready)
   if (!output) throw new Error('Media output is not available')
   return output
+}
+
+function normalizeExportReceipts(value: unknown): ExportReceipt[] {
+  if (!Array.isArray(value)) return []
+  const receipts = new Map<OutputKind, ExportReceipt>()
+  for (const raw of value) {
+    if (
+      raw &&
+      typeof raw === 'object' &&
+      (raw.kind === 'portrait' || raw.kind === 'landscape') &&
+      typeof raw.assetId === 'string'
+    )
+      receipts.set(raw.kind, { kind: raw.kind, assetId: raw.assetId })
+  }
+  return [...receipts.values()]
 }
 
 export const mediaFile = (media: ProjectMedia, kind: OutputKind) =>
@@ -109,18 +126,27 @@ export async function hydrateProjects() {
     const manifest = new File(directory, 'manifest.json')
     if (!manifest.exists) continue
     try {
-      const media = JSON.parse(await manifest.text()) as ProjectMedia
+      const raw = JSON.parse(await manifest.text()) as ProjectMedia & {
+        trim?: unknown
+        outputs: (ProjectMedia['outputs'][number] & { keyframes?: unknown })[]
+        exports?: unknown
+      }
       if (
-        typeof media.id !== 'string' ||
-        media.id !== directory.name ||
-        !['video', 'photo'].includes(media.mediaType) ||
-        !Array.isArray(media.outputs)
+        typeof raw.id !== 'string' ||
+        raw.id !== directory.name ||
+        !['video', 'photo'].includes(raw.mediaType) ||
+        !Array.isArray(raw.outputs)
       )
         continue
-      media.outputs = media.outputs.map((output) => ({
-        ...output,
-        ready: output.ready && new File(directory, output.filename).exists,
-      }))
+      const { trim: _legacyTrim, outputs: rawOutputs, exports: rawExports, ...base } = raw
+      const media = {
+        ...base,
+        outputs: rawOutputs.map(({ keyframes: _legacyKeyframes, ...output }) => ({
+          ...output,
+          ready: output.ready && new File(directory, output.filename).exists,
+        })),
+        exports: normalizeExportReceipts(rawExports),
+      } as ProjectMedia
       if (!catalog.projects.some((project) => project.id === media.projectId))
         media.projectId = DEFAULT_PROJECT_ID
       catalog.putMedia(media)
@@ -179,41 +205,27 @@ export async function exportMedia(
   useAppStore.getState().camera.setPhase('exporting')
   const results: ExportResult[] = []
   let current = useAppStore.getState().projects.media.find((item) => item.id === media.id) ?? media
-  const revision =
-    current.mediaType === 'video' && current.trim
-      ? `${current.trim.start}:${current.trim.end}`
-      : 'original'
   let outcomeTracked = false
   try {
     if (anotherCopy) {
       current = {
         ...current,
-        exports: current.exports.filter(
-          (receipt) => receipt.revision !== revision || !kinds.includes(receipt.kind)
-        ),
+        exports: current.exports.filter((receipt) => !kinds.includes(receipt.kind)),
       }
       await saveMedia(current)
     }
     for (const kind of kinds) {
-      const existing = current.exports.find(
-        (receipt) => receipt.kind === kind && receipt.revision === revision
-      )
+      const existing = current.exports.find((receipt) => receipt.kind === kind)
       if (existing) {
         results.push({ kind, assetId: existing.assetId })
         continue
       }
       try {
         const file = mediaFile(current, kind)
-        const trim = current.mediaType === 'video' ? current.trim : null
-        if (Paths.availableDiskSpace < file.size * (trim ? 2 : 1) + 32 * 1024 * 1024)
+        if (Paths.availableDiskSpace < file.size + 32 * 1024 * 1024)
           throw new Error('Not enough space to export; original is safe')
-        const assetId = await NativeRecorder.exportMedia(
-          file.uri,
-          current.mediaType,
-          trim?.start ?? -1,
-          trim?.end ?? -1
-        )
-        current = { ...current, exports: [...current.exports, { kind, revision, assetId }] }
+        const assetId = await NativeRecorder.exportMedia(file.uri, current.mediaType)
+        current = { ...current, exports: [...current.exports, { kind, assetId }] }
         useAppStore.getState().projects.putMedia(current)
         await saveMedia(current)
         results.push({ kind, assetId })
@@ -223,7 +235,6 @@ export async function exportMedia(
           recordError(error, 'projects.exportMedia', {
             media_type: current.mediaType,
             output_kind: kind,
-            trimmed: current.mediaType === 'video' && current.trim !== null,
             another_copy: anotherCopy,
           })
         results.push({ kind, error: error instanceof Error ? error.message : String(error) })
@@ -236,7 +247,6 @@ export async function exportMedia(
       output_count: kinds.length,
       succeeded_output_count: results.length - failed.length,
       another_copy: anotherCopy ? 1 : 0,
-      trimmed: current.mediaType === 'video' && current.trim !== null ? 1 : 0,
     }
     if (failed.length) {
       trackEvent(AnalyticsAppEvents.MEDIA_EXPORT_FAILED, {
@@ -253,7 +263,6 @@ export async function exportMedia(
         output_count: kinds.length,
         succeeded_output_count: results.filter((result) => !result.error).length,
         another_copy: anotherCopy ? 1 : 0,
-        trimmed: current.mediaType === 'video' && current.trim !== null ? 1 : 0,
         reason: exportFailureReason(cause),
       })
     throw cause
@@ -261,4 +270,27 @@ export async function exportMedia(
     useAppStore.getState().camera.setPhase('idle')
   }
   return results
+}
+
+export async function shareMedia(media: ProjectMedia, kind: OutputKind) {
+  const details = { media_type: media.mediaType, output_kind: kind }
+  trackEvent(AnalyticsAppEvents.MEDIA_SHARE_REQUESTED, details)
+  if (!(await Sharing.isAvailableAsync())) {
+    trackEvent(AnalyticsAppEvents.MEDIA_SHARE_FAILED, { ...details, reason: 'unavailable' })
+    throw new Error('Sharing is unavailable')
+  }
+
+  const file = mediaFile(media, kind)
+  const isPhoto = media.mediaType === 'photo'
+  const isMov = media.mediaType === 'video' && media.settings.container === 'mov'
+  try {
+    await Sharing.shareAsync(file.uri, {
+      mimeType: isPhoto ? 'image/jpeg' : isMov ? 'video/quicktime' : 'video/mp4',
+      UTI: isPhoto ? 'public.jpeg' : isMov ? 'com.apple.quicktime-movie' : 'public.mpeg-4',
+    })
+  } catch (cause) {
+    recordError(cause, 'projects.shareMedia', details)
+    trackEvent(AnalyticsAppEvents.MEDIA_SHARE_FAILED, { ...details, reason: 'share_failed' })
+    throw cause
+  }
 }

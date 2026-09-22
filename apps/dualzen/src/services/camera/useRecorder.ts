@@ -497,7 +497,6 @@ export function useCaptureController(active: boolean, retained: boolean) {
             mediaType: 'video',
             duration: result.duration,
             outputs: result.outputs,
-            trim: null,
             exports: [],
             reason: result.reason,
             ...(result.error ? { error: result.error } : {}),

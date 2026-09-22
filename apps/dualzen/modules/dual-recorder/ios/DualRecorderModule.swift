@@ -57,25 +57,12 @@ public class DualRecorderModule: Module {
     AsyncFunction("writeManifest") { (uri: String, content: String) throws -> Void in
       try Data(content.utf8).write(to: Self.localURL(uri), options: .atomic)
     }
-    AsyncFunction("exportMedia") { (uri: String, mediaType: String, start: Double, end: Double) async throws -> String in
+    AsyncFunction("exportMedia") { (uri: String, mediaType: String) async throws -> String in
       guard mediaType == "video" || mediaType == "photo" else { throw CaptureError(message: "Unsupported media type") }
       let source = try Self.localURL(uri)
-      var export = source
-      let temporary = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + "." + source.pathExtension)
-      defer { try? FileManager.default.removeItem(at: temporary) }
-      if mediaType == "video" && start >= 0 {
-        guard start.isFinite, end.isFinite, end > start else { throw CaptureError(message: "Invalid trim range") }
-        let asset = AVURLAsset(url: source)
-        guard let session = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetPassthrough) else { throw CaptureError(message: "Passthrough trimming unavailable") }
-        session.outputURL = temporary; session.outputFileType = source.pathExtension == "mov" ? .mov : .mp4
-        session.timeRange = CMTimeRange(start: CMTime(seconds: start, preferredTimescale: 60000), end: CMTime(seconds: end, preferredTimescale: 60000))
-        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in session.exportAsynchronously { continuation.resume() } }
-        guard session.status == .completed else { throw session.error ?? CaptureError(message: "Trim failed") }
-        export = temporary
-      }
       let status = await PHPhotoLibrary.requestAuthorization(for: .addOnly)
       guard status == .authorized || status == .limited else { throw CaptureError(message: "Photo library permission denied") }
-      let url = export
+      let url = source
       return try await withCheckedThrowingContinuation { continuation in
         var identifier = ""
         PHPhotoLibrary.shared().performChanges({
