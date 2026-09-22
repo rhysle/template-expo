@@ -1,6 +1,8 @@
+import { recordError } from '@shared/core/services/sentry'
 import { randomUUID } from 'expo-crypto'
 import { Directory, File, Paths } from 'expo-file-system'
 
+import { AnalyticsAppEvents, trackEvent } from '@/services/firebase/analytics'
 import { useAppStore } from '@/stores/appStore'
 
 import NativeRecorder from '../../../modules/dual-recorder/src/DualRecorderModule'
@@ -18,6 +20,21 @@ export const dualZenRoot = new Directory(Paths.document, 'DualZen')
 export const mediaRoot = new Directory(dualZenRoot, 'media')
 export const mediaDirectory = (id: string) => new Directory(mediaRoot, id)
 export const thumbnailFile = (id: string) => new File(mediaDirectory(id), 'thumbnail.jpg')
+
+type MediaExportSource = 'automatic' | 'manual'
+
+function exportFailureReason(cause: unknown) {
+  const message = (cause instanceof Error ? cause.message : String(cause)).toLowerCase()
+  if (
+    message.includes('storage') ||
+    message.includes('disk') ||
+    message.includes('space') ||
+    message.includes('enospc')
+  )
+    return 'storage'
+  if (message.includes('permission') || message.includes('denied')) return 'permission'
+  return 'export_failed'
+}
 
 function readyOutput(media: ProjectMedia, kind: OutputKind) {
   const output = media.outputs.find((item) => item.kind === kind && item.ready)
@@ -155,7 +172,8 @@ export async function mutateProjects(action: () => Promise<unknown>) {
 export async function exportMedia(
   media: ProjectMedia,
   kinds: OutputKind[],
-  anotherCopy = false
+  anotherCopy = false,
+  source: MediaExportSource = 'manual'
 ): Promise<ExportResult[]> {
   if (useAppStore.getState().camera.phase !== 'idle') throw new Error('Camera is busy')
   useAppStore.getState().camera.setPhase('exporting')
@@ -165,6 +183,7 @@ export async function exportMedia(
     current.mediaType === 'video' && current.trim
       ? `${current.trim.start}:${current.trim.end}`
       : 'original'
+  let outcomeTracked = false
   try {
     if (anotherCopy) {
       current = {
@@ -199,9 +218,45 @@ export async function exportMedia(
         await saveMedia(current)
         results.push({ kind, assetId })
       } catch (error) {
+        const message = error instanceof Error ? error.message : String(error)
+        if (!message.toLowerCase().includes('not enough space'))
+          recordError(error, 'projects.exportMedia', {
+            media_type: current.mediaType,
+            output_kind: kind,
+            trimmed: current.mediaType === 'video' && current.trim !== null,
+            another_copy: anotherCopy,
+          })
         results.push({ kind, error: error instanceof Error ? error.message : String(error) })
       }
     }
+    const failed = results.filter((result) => result.error)
+    const eventParams = {
+      media_type: current.mediaType,
+      source,
+      output_count: kinds.length,
+      succeeded_output_count: results.length - failed.length,
+      another_copy: anotherCopy ? 1 : 0,
+      trimmed: current.mediaType === 'video' && current.trim !== null ? 1 : 0,
+    }
+    if (failed.length) {
+      trackEvent(AnalyticsAppEvents.MEDIA_EXPORT_FAILED, {
+        ...eventParams,
+        reason: exportFailureReason(failed[0].error),
+      })
+    } else trackEvent(AnalyticsAppEvents.MEDIA_EXPORT_COMPLETED, eventParams)
+    outcomeTracked = true
+  } catch (cause) {
+    if (!outcomeTracked)
+      trackEvent(AnalyticsAppEvents.MEDIA_EXPORT_FAILED, {
+        media_type: current.mediaType,
+        source,
+        output_count: kinds.length,
+        succeeded_output_count: results.filter((result) => !result.error).length,
+        another_copy: anotherCopy ? 1 : 0,
+        trimmed: current.mediaType === 'video' && current.trim !== null ? 1 : 0,
+        reason: exportFailureReason(cause),
+      })
+    throw cause
   } finally {
     useAppStore.getState().camera.setPhase('idle')
   }

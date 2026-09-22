@@ -8,6 +8,7 @@ import {
   Text,
   useTabBarContentInset,
 } from '@shared/core/components/base'
+import { recordError } from '@shared/core/services/sentry'
 import { withAlpha } from '@shared/core/utils/color'
 import { randomUUID } from 'expo-crypto'
 import { Image } from 'expo-image'
@@ -59,6 +60,12 @@ import { useProjectsSelection } from './ProjectsSelectionContext'
 
 type MediaFilter = 'all' | MediaType
 
+function recordProjectError(cause: unknown, context: string, details?: Record<string, unknown>) {
+  const message = cause instanceof Error ? cause.message : String(cause)
+  if (message === 'Camera is busy') return
+  recordError(cause, context, details)
+}
+
 export function ProjectsScreen() {
   const { t } = useTranslation()
   const styles = useThemedStyles(createStyles)
@@ -94,14 +101,17 @@ export function ProjectsScreen() {
   const tileSize = Math.max(0, Math.floor((gridWidth - gridInset * 2 - gridGap * 2) / 3))
 
   const guard = async (
+    operation: string,
     action: () => Promise<unknown>,
-    failureKind: 'generic' | 'bulkDelete' = 'generic'
+    failureKind: 'generic' | 'bulkDelete' = 'generic',
+    details?: Record<string, unknown>
   ) => {
     try {
       setFailure(null)
       await mutateProjects(action)
       return true
-    } catch {
+    } catch (cause) {
+      recordProjectError(cause, `projects.${operation}`, details)
       setFailure(failureKind)
       return false
     }
@@ -134,7 +144,7 @@ export function ProjectsScreen() {
       Alert.alert(t('projects.nameRequired'))
       return
     }
-    void guard(() => saveProject({ ...value, name })).then((succeeded) => {
+    void guard('saveProject', () => saveProject({ ...value, name })).then((succeeded) => {
       if (!succeeded) return
       exitSelectionMode()
       selectProject(value.id)
@@ -173,7 +183,9 @@ export function ProjectsScreen() {
             text: t('projects.deleteSelected'),
             style: 'destructive',
             onPress: () => {
-              void guard(() => deleteMediaBatch(selectedItems), 'bulkDelete').then((succeeded) => {
+              void guard('deleteMediaBatch', () => deleteMediaBatch(selectedItems), 'bulkDelete', {
+                item_count: selectedItems.length,
+              }).then((succeeded) => {
                 if (succeeded) exitSelectionMode()
               })
             },
@@ -205,7 +217,7 @@ export function ProjectsScreen() {
         text: t('projects.delete'),
         style: 'destructive',
         onPress: () => {
-          void guard(() => deleteProject(project.id)).then((succeeded) => {
+          void guard('deleteProject', () => deleteProject(project.id)).then((succeeded) => {
             if (succeeded) exitSelectionMode()
           })
         },
@@ -553,7 +565,8 @@ function VideoDetails({ video, onClose }: { video: VideoCapture; onClose: () => 
         setStart(0)
         setEnd(video.duration)
       }
-    } catch {
+    } catch (cause) {
+      recordProjectError(cause, 'projects.saveTrim', { reset })
       setMessage(t('projects.trimUnavailable'))
     }
   }
@@ -671,7 +684,12 @@ function DetailsShell({
       setMessage(
         result.some((item) => item.error) ? t('projects.exportFailure') : t('projects.exported')
       )
-    } catch {
+    } catch (cause) {
+      recordProjectError(cause, 'projects.exportMediaRequest', {
+        media_type: media.mediaType,
+        output_count: kinds.length,
+        another_copy: again,
+      })
       setMessage(t('projects.exportFailure'))
     }
   }
@@ -684,7 +702,10 @@ function DetailsShell({
         onPress: () => {
           void mutateProjects(() => deleteMedia(media))
             .then(onClose)
-            .catch(() => setMessage(t('projects.exportFailure')))
+            .catch((cause) => {
+              recordProjectError(cause, 'projects.deleteMedia', { media_type: media.mediaType })
+              setMessage(t('projects.exportFailure'))
+            })
         },
       },
     ])

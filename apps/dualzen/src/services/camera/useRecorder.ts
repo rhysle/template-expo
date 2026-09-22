@@ -1,3 +1,4 @@
+import { recordError } from '@shared/core/services/sentry'
 import { useSnackbarState } from '@shared/core/stores/features/snackbar'
 import { File } from 'expo-file-system'
 import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake'
@@ -18,6 +19,7 @@ import {
   VisionCamera,
 } from 'react-native-vision-camera'
 
+import { AnalyticsAppEvents, trackEvent } from '@/services/firebase/analytics'
 import { useAppStore } from '@/stores/appStore'
 import { useCameraState } from '@/stores/features/camera'
 
@@ -43,12 +45,95 @@ const WAKE_TAG = 'dualzen-recording'
 const factory = () => NitroModules.createHybridObject<DualOutputFactory>('DualOutputFactory')
 type ControlKind = 'zoom' | 'exposure' | 'torch'
 type ControlQueue = { running: boolean; pending: (() => Promise<void>) | null }
+type CaptureMediaType = 'photo' | 'video'
+type CaptureFailureStage =
+  'permission' | 'session' | 'start' | 'capture' | 'processing' | 'save' | 'stop'
+
+function captureEventParams(mediaType: CaptureMediaType, settings: RecordingSettings) {
+  return {
+    media_type: mediaType,
+    mode: settings.mode,
+    camera_position: settings.front ? 'front' : 'back',
+    resolution: settings.longEdge,
+    ...(mediaType === 'video' ? { fps: settings.fps, hdr: settings.hdr ? 1 : 0 } : {}),
+  }
+}
+
+function errorMessage(cause: unknown) {
+  if (cause instanceof Error) return cause.message
+  return String(cause ?? '')
+}
+
+function captureFailureReason(cause: unknown, fallback: string) {
+  const message = errorMessage(cause).toLowerCase()
+  if (message.includes('interrupt') || message.includes('background')) return 'interruption'
+  if (
+    message.includes('storage') ||
+    message.includes('disk') ||
+    message.includes('space') ||
+    message.includes('enospc')
+  )
+    return 'storage'
+  if (message.includes('thermal') || message.includes('temperature')) return 'thermal'
+  if (
+    message.includes('permission') ||
+    message.includes('authorized') ||
+    message.includes('microphone')
+  )
+    return 'permission'
+  if (message.includes('unsupported') || message.includes('not supported')) return 'unsupported'
+  return fallback
+}
+
+function recordingStopReason(reason: string) {
+  return ['manual', 'thermal', 'storage', 'interruption', 'encoder', 'audio'].includes(reason)
+    ? reason
+    : 'unknown'
+}
+
+function recordingFailureReason(reason: string, fallback: string) {
+  const normalized = recordingStopReason(reason)
+  return normalized === 'manual' || normalized === 'unknown' ? fallback : normalized
+}
+
+function photoFailureReason(stage: CaptureFailureStage) {
+  return stage === 'save'
+    ? 'save_failed'
+    : stage === 'processing'
+      ? 'processing_failed'
+      : 'capture_failed'
+}
+
+function reportCaptureFailure(
+  cause: unknown,
+  context: string,
+  mediaType: CaptureMediaType,
+  settings: RecordingSettings,
+  stage: CaptureFailureStage,
+  fallbackReason: string,
+  details: Record<string, unknown> = {}
+) {
+  const reason = captureFailureReason(cause, fallbackReason)
+  if (!['interruption', 'storage', 'thermal', 'permission', 'unsupported'].includes(reason)) {
+    recordError(cause, context, {
+      platform: Platform.OS,
+      media_type: mediaType,
+      mode: settings.mode,
+      stage,
+      reason,
+      ...details,
+    })
+  }
+  return reason
+}
+
 export function useCaptureController(active: boolean, retained: boolean) {
   const { t } = useTranslation()
   const { showSnackbar, hideSnackbar } = useSnackbarState()
   const {
     sharedSettings,
     videoSettings,
+    viewSettings,
     mediaType,
     phase,
     lightEnabled,
@@ -85,6 +170,15 @@ export function useCaptureController(active: boolean, retained: boolean) {
   const [torchEnabled, setTorchEnabled] = useState(false)
   const [photoHdrEnabled, setPhotoHdrEnabled] = useState(false)
   const [elapsed, setElapsed] = useState(0)
+  const reportedErrors = useRef(new Set<string>())
+  const recordErrorOnce = useCallback(
+    (key: string, cause: unknown, context: string, details?: Record<string, unknown>) => {
+      if (reportedErrors.current.has(key)) return
+      reportedErrors.current.add(key)
+      recordError(cause, context, details)
+    },
+    []
+  )
   const liveSettingsRef = useRef(liveSettings)
   useEffect(() => {
     liveSettingsRef.current = liveSettings
@@ -121,6 +215,12 @@ export function useCaptureController(active: boolean, retained: boolean) {
       settings.stabilization,
     ]
   )
+  const captureSettingsRef = useRef(captureSettings)
+  const mediaTypeRef = useRef(mediaType)
+  useEffect(() => {
+    captureSettingsRef.current = captureSettings
+    mediaTypeRef.current = mediaType
+  }, [captureSettings, mediaType])
   const controllers = useRef<CameraController[]>([])
   const controlQueues = useRef<Record<ControlKind, ControlQueue>>({
     zoom: { running: false, pending: null },
@@ -202,6 +302,7 @@ export function useCaptureController(active: boolean, retained: boolean) {
       const camera = await VisionCamera.requestCameraPermission()
       setCameraAuthorized(camera)
     } catch (cause) {
+      recordError(cause, 'camera.requestCameraPermission', { platform: Platform.OS })
       setError(String(cause))
     }
   }, [])
@@ -212,15 +313,22 @@ export function useCaptureController(active: boolean, retained: boolean) {
       if (!microphone) showCaptureNotice('microphoneRequired')
       return microphone
     } catch (cause) {
+      recordError(cause, 'camera.requestMicrophonePermission', { platform: Platform.OS })
       setError(String(cause))
       return false
     }
   }, [showCaptureNotice])
   useEffect(() => {
-    void hydrateProjects().catch((cause) => setError(String(cause)))
+    void hydrateProjects().catch((cause) => {
+      recordError(cause, 'projects.hydrate', { platform: Platform.OS })
+      setError(String(cause))
+    })
     void NativeRecorder.capabilities()
       .then((value) => setCapabilities(JSON.parse(value) as NativeCapabilities))
-      .catch((cause) => setError(String(cause)))
+      .catch((cause) => {
+        recordError(cause, 'camera.loadCapabilities', { platform: Platform.OS })
+        setError(String(cause))
+      })
     let cancelled = false
     let listener: { remove: () => void } | undefined
     void VisionCamera.createDeviceFactory()
@@ -257,7 +365,10 @@ export function useCaptureController(active: boolean, retained: boolean) {
         )
         listener = source.addOnCameraDevicesChangedListener(setDevices)
       })
-      .catch((cause) => setError(String(cause)))
+      .catch((cause) => {
+        recordError(cause, 'camera.discoverDevices', { platform: Platform.OS })
+        setError(String(cause))
+      })
     setCameraAuthorized(VisionCamera.cameraPermissionStatus === 'authorized')
     setMicrophoneAuthorized(VisionCamera.microphonePermissionStatus === 'authorized')
     return () => {
@@ -379,6 +490,7 @@ export function useCaptureController(active: boolean, retained: boolean) {
       const meta = metadata.current
       const task = (async () => {
         useAppStore.getState().camera.setPhase('finalizing')
+        let outcomeTracked = false
         try {
           const video: VideoCapture = {
             ...meta,
@@ -395,26 +507,99 @@ export function useCaptureController(active: boolean, retained: boolean) {
               video.outputs.find((item) => item.kind === 'portrait' && item.ready) ??
               video.outputs.find((item) => item.ready)!
             const source = allocateExistingVideo(video, output.filename)
-            await NativeRecorder.thumbnail(source, thumbnailFile(video.id).uri).catch(() => {})
+            await NativeRecorder.thumbnail(source, thumbnailFile(video.id).uri).catch((cause) => {
+              recordError(cause, 'camera.createVideoThumbnail', {
+                platform: Platform.OS,
+                mode: meta.settings.mode,
+              })
+            })
             await saveMedia(video)
-            if (video.outputs.every((item) => item.ready) && !video.error) {
+            const completeCapture = video.outputs.every((item) => item.ready) && !video.error
+            if (completeCapture) {
               showSnackbar({ title: t('camera.saved'), variant: 'success' })
-            } else showCaptureNotice('partialSave')
+            } else {
+              const partialCause =
+                video.error ??
+                video.outputs.find((item) => !item.ready)?.error ??
+                'Video capture was partially successful'
+              reportCaptureFailure(
+                partialCause,
+                'camera.completeVideo.partial',
+                'video',
+                meta.settings,
+                'processing',
+                recordingFailureReason(result.reason, 'processing_failed'),
+                {
+                  ready_output_count: video.outputs.filter((item) => item.ready).length,
+                  output_count: video.outputs.length,
+                }
+              )
+              showCaptureNotice('partialSave')
+            }
+            trackEvent(AnalyticsAppEvents.CAPTURE_COMPLETED, {
+              ...captureEventParams('video', meta.settings),
+              result: completeCapture ? 'complete' : 'partial',
+              output_count: video.outputs.filter((item) => item.ready).length,
+              duration_seconds: Math.max(0, Math.round(video.duration)),
+              stop_reason: recordingStopReason(result.reason),
+            })
+            outcomeTracked = true
             useAppStore.getState().camera.setPhase('idle')
             if (useAppStore.getState().camera.autoSaveToLibrary) {
               const exported = await exportMedia(
                 video,
-                video.outputs.filter((item) => item.ready).map((item) => item.kind)
+                video.outputs.filter((item) => item.ready).map((item) => item.kind),
+                false,
+                'automatic'
               )
-              if (exported.some((item) => item.error)) showCaptureNotice('exportFailed')
+              const failedExports = exported.filter((item) => item.error)
+              if (failedExports.length) {
+                showCaptureNotice('exportFailed')
+              }
             }
-          } else
-            setError(
+          } else {
+            const cause =
               result.error ?? result.outputs.find((item) => item.error)?.error ?? 'saveFailed'
+            const reason = reportCaptureFailure(
+              cause,
+              'camera.completeVideo',
+              'video',
+              meta.settings,
+              'processing',
+              recordingFailureReason(result.reason, 'processing_failed'),
+              { output_count: result.outputs.length }
             )
+            trackEvent(AnalyticsAppEvents.CAPTURE_FAILED, {
+              ...captureEventParams('video', meta.settings),
+              stage: 'processing',
+              reason,
+            })
+            outcomeTracked = true
+            setError(cause)
+          }
           if (['storage', 'thermal', 'interruption'].includes(result.reason))
             showCaptureNotice(result.reason)
         } catch (cause) {
+          if (outcomeTracked) {
+            recordError(cause, 'camera.autoExportVideo', {
+              platform: Platform.OS,
+              mode: meta.settings.mode,
+            })
+          } else {
+            const reason = reportCaptureFailure(
+              cause,
+              'camera.completeVideo',
+              'video',
+              meta.settings,
+              'save',
+              'save_failed'
+            )
+            trackEvent(AnalyticsAppEvents.CAPTURE_FAILED, {
+              ...captureEventParams('video', meta.settings),
+              stage: 'save',
+              reason,
+            })
+          }
           setError(String(cause))
         } finally {
           metadata.current = null
@@ -436,6 +621,17 @@ export function useCaptureController(active: boolean, retained: boolean) {
       await complete(JSON.parse(await NativeRecorder.stop()) as NativeRecordingResult)
       await handling.current
     } catch (cause) {
+      const meta = metadata.current
+      if (meta) {
+        reportCaptureFailure(
+          cause,
+          'camera.stopVideo',
+          'video',
+          meta.settings,
+          'stop',
+          'stop_failed'
+        )
+      } else recordError(cause, 'camera.stopVideo', { platform: Platform.OS })
       setError(String(cause))
       useAppStore.getState().camera.setPhase('idle')
       await releaseLocks()
@@ -461,7 +657,10 @@ export function useCaptureController(active: boolean, retained: boolean) {
             setElapsed(Math.max(0, (Date.now() - metadata.current.createdAt) / 1000))
         }
       } catch (cause) {
-        if (!cancelled) setError(String(cause))
+        if (!cancelled) {
+          recordErrorOnce('stats', cause, 'camera.readRecorderStats', { platform: Platform.OS })
+          setError(String(cause))
+        }
       } finally {
         polling = false
       }
@@ -474,7 +673,7 @@ export function useCaptureController(active: boolean, retained: boolean) {
       cancelled = true
       clearInterval(timer)
     }
-  }, [])
+  }, [recordErrorOnce])
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (state) => {
       if (state !== 'active') void stop()
@@ -560,6 +759,19 @@ export function useCaptureController(active: boolean, retained: boolean) {
         let selectedVideoSupported = true
         subscriptions.push(
           localSession.addOnErrorListener((cause) => {
+            const reason = reportCaptureFailure(
+              cause,
+              'camera.sessionRuntime',
+              activeSessionMediaType,
+              captureSettings,
+              'session',
+              'runtime_error'
+            )
+            trackEvent(AnalyticsAppEvents.CAMERA_SESSION_FAILED, {
+              ...captureEventParams(activeSessionMediaType, captureSettings),
+              stage: 'runtime',
+              reason,
+            })
             setError(cause.message)
             void stop()
           })
@@ -751,6 +963,19 @@ export function useCaptureController(active: boolean, retained: boolean) {
           setSessionStrategy('mode-specific')
           return
         }
+        const reason = reportCaptureFailure(
+          cause,
+          'camera.configureSession',
+          activeSessionMediaType,
+          captureSettings,
+          'session',
+          'configuration_failed'
+        )
+        trackEvent(AnalyticsAppEvents.CAMERA_SESSION_FAILED, {
+          ...captureEventParams(activeSessionMediaType, captureSettings),
+          stage: 'configuration',
+          reason,
+        })
         setError(cause instanceof Error ? cause.message : String(cause))
         if (useAppStore.getState().camera.phase === 'switching')
           useAppStore.getState().camera.setPhase('idle')
@@ -814,7 +1039,24 @@ export function useCaptureController(active: boolean, retained: boolean) {
           }
         } else await current.stop()
       })
-      .catch((cause) => setError(String(cause)))
+      .catch((cause) => {
+        const currentSettings = captureSettingsRef.current
+        const currentMediaType = mediaTypeRef.current
+        const reason = reportCaptureFailure(
+          cause,
+          'camera.transitionSession',
+          currentMediaType,
+          currentSettings,
+          'session',
+          active ? 'start_failed' : 'stop_failed'
+        )
+        trackEvent(AnalyticsAppEvents.CAMERA_SESSION_FAILED, {
+          ...captureEventParams(currentMediaType, currentSettings),
+          stage: active ? 'start' : 'stop',
+          reason,
+        })
+        setError(String(cause))
+      })
     lifecycle.current = transition
   }, [active, device?.id])
 
@@ -831,6 +1073,10 @@ export function useCaptureController(active: boolean, retained: boolean) {
     useAppStore.getState().camera.setPhase('preparing')
     hideSnackbar()
     setElapsed(0)
+    trackEvent(AnalyticsAppEvents.CAPTURE_STARTED, {
+      ...captureEventParams('video', settings),
+      preview_layout: viewSettings.layout,
+    })
     try {
       const orientation = await ScreenOrientation.getOrientationAsync()
       previousOrientation.current = await ScreenOrientation.getOrientationLockAsync()
@@ -873,6 +1119,19 @@ export function useCaptureController(active: boolean, retained: boolean) {
       if (AppState.currentState !== 'active') await stop()
     } catch (cause) {
       metadata.current = null
+      const reason = reportCaptureFailure(
+        cause,
+        'camera.startVideo',
+        'video',
+        settings,
+        'start',
+        'start_failed'
+      )
+      trackEvent(AnalyticsAppEvents.CAPTURE_FAILED, {
+        ...captureEventParams('video', settings),
+        stage: 'start',
+        reason,
+      })
       setError(String(cause))
       useAppStore.getState().camera.setPhase('idle')
       await releaseLocks()
@@ -890,8 +1149,14 @@ export function useCaptureController(active: boolean, retained: boolean) {
       return
     useAppStore.getState().camera.setPhase('capturing')
     hideSnackbar()
-    const allocation = allocateMedia()
+    trackEvent(AnalyticsAppEvents.CAPTURE_STARTED, {
+      ...captureEventParams('photo', settings),
+      preview_layout: viewSettings.layout,
+    })
+    let photoStage: CaptureFailureStage = 'capture'
+    let photoOutcomeTracked = false
     try {
+      const allocation = allocateMedia()
       const selectedFlash =
         settings.mode === 'single' && !settings.front && device?.hasFlash && lightEnabled
           ? 'on'
@@ -903,6 +1168,7 @@ export function useCaptureController(active: boolean, retained: boolean) {
             photoResults.find((output) => output.error)?.error ?? 'Photo capture failed'
           )
         }
+        photoStage = 'save'
         const photo: PhotoCapture = {
           id: allocation.id,
           projectId: useAppStore.getState().projects.selectedProjectId,
@@ -932,16 +1198,46 @@ export function useCaptureController(active: boolean, retained: boolean) {
             : {}),
         }
         await saveMedia(photo)
-        if (photo.outputs.every((output) => output.ready))
+        const completeCapture = photo.outputs.every((output) => output.ready)
+        if (completeCapture) {
           showSnackbar({ title: t('camera.photoSaved'), variant: 'success' })
-        else showCaptureNotice('partialPhotoSave')
+        } else {
+          const partialCause =
+            photo.error ??
+            photo.outputs.find((output) => !output.ready)?.error ??
+            'Photo capture was partially successful'
+          reportCaptureFailure(
+            partialCause,
+            'camera.takePhoto.partial',
+            'photo',
+            settings,
+            'processing',
+            'processing_failed',
+            {
+              ready_output_count: photo.outputs.filter((output) => output.ready).length,
+              output_count: photo.outputs.length,
+            }
+          )
+          showCaptureNotice('partialPhotoSave')
+        }
+        trackEvent(AnalyticsAppEvents.CAPTURE_COMPLETED, {
+          ...captureEventParams('photo', settings),
+          result: completeCapture ? 'complete' : 'partial',
+          output_count: photo.outputs.filter((output) => output.ready).length,
+        })
+        photoOutcomeTracked = true
         useAppStore.getState().camera.setPhase('idle')
         if (useAppStore.getState().camera.autoSaveToLibrary) {
           const exported = await exportMedia(
             photo,
-            photo.outputs.filter((output) => output.ready).map((output) => output.kind)
+            photo.outputs.filter((output) => output.ready).map((output) => output.kind),
+            false,
+            'automatic'
           )
-          if (exported.some((item) => item.error)) showCaptureNotice('exportFailed')
+          const failedExports = exported.filter((item) => item.error)
+          if (failedExports.length) {
+            showCaptureNotice('exportFailed')
+          }
         }
       }
       if (usesPreviewFramePhotos()) {
@@ -993,6 +1289,7 @@ export function useCaptureController(active: boolean, retained: boolean) {
         )
       )
       useAppStore.getState().camera.setPhase('finalizing')
+      photoStage = 'processing'
       const positions = {
         portrait: getNativeCropPosition('portrait', settings.portraitPosition, settings.front),
         landscape: getNativeCropPosition('landscape', settings.landscapePosition, settings.front),
@@ -1074,6 +1371,26 @@ export function useCaptureController(active: boolean, retained: boolean) {
       }
       await persistPhoto(photoResults)
     } catch (cause) {
+      if (photoOutcomeTracked) {
+        recordError(cause, 'camera.autoExportPhoto', {
+          platform: Platform.OS,
+          mode: settings.mode,
+        })
+      } else {
+        const reason = reportCaptureFailure(
+          cause,
+          'camera.takePhoto',
+          'photo',
+          settings,
+          photoStage,
+          photoFailureReason(photoStage)
+        )
+        trackEvent(AnalyticsAppEvents.CAPTURE_FAILED, {
+          ...captureEventParams('photo', settings),
+          stage: photoStage,
+          reason,
+        })
+      }
       setError(cause instanceof Error ? cause.message : String(cause))
     } finally {
       useAppStore.getState().camera.setPhase('idle')
