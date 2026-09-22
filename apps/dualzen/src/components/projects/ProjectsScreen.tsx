@@ -368,10 +368,19 @@ export function ProjectsScreen() {
         )}
         ListEmptyComponent={
           <View style={styles.empty}>
-            <Text variant="subtitle">{t('projects.emptyTitle')}</Text>
-            <Text tone="muted">
-              {projectMedia.length ? t('projects.emptyFilterBody') : t('projects.emptyBody')}
-            </Text>
+            <Image
+              source={require('@/assets/images/empty-state.png')}
+              contentFit="contain"
+              style={styles.emptyImage}
+            />
+            <View style={styles.emptyCopy}>
+              <Text variant="subtitle" align="center">
+                {t('projects.emptyTitle')}
+              </Text>
+              <Text tone="muted" align="center">
+                {projectMedia.length ? t('projects.emptyFilterBody') : t('projects.emptyBody')}
+              </Text>
+            </View>
           </View>
         }
         showsVerticalScrollIndicator={false}
@@ -557,10 +566,20 @@ const createStyles = createThemedStyles((theme) => ({
   gridRow: { gap: theme.spacing.xs },
   empty: {
     flex: 1,
+    alignItems: 'center',
     justifyContent: 'center',
-    gap: theme.spacing.md,
     paddingHorizontal: theme.spacing.xl,
     paddingVertical: theme.spacing['5xl'],
+  },
+  emptyImage: {
+    width: 300,
+    height: 300,
+    aspectRatio: 1,
+  },
+  emptyCopy: {
+    alignItems: 'center',
+    gap: theme.spacing.md,
+    paddingHorizontal: theme.spacing['3xl'],
   },
   mediaTile: {
     position: 'relative',
