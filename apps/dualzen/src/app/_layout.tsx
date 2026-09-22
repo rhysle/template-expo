@@ -73,6 +73,7 @@ function RootLayoutContent() {
       <Stack.Protected guard={hasCompletedOnboarding}>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="settings" options={{ presentation: 'modal', headerShown: false }} />
+        <Stack.Screen name="projects/[mediaId]" options={{ presentation: 'card' }} />
         <Stack.Screen
           name="paywall"
           options={{ headerShown: false, presentation: 'fullScreenModal' }}
