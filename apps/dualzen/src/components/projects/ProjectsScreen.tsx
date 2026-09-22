@@ -203,34 +203,53 @@ export function ProjectsScreen() {
     ])
   const projectActions = useMemo<readonly NativeMenuAction[]>(
     () => [
-      ...projects.map((item): NativeMenuAction => ({
-        id: `project:${item.id}`,
-        label: item.name ?? t('projects.default'),
-        selected: item.id === selectedProjectId,
-        disabled: busy,
-        image: 'folder',
-      })),
       {
-        id: 'new',
-        label: t('projects.new'),
-        disabled: busy,
-        image: 'folder.badge.plus',
+        id: 'project-management',
+        label: '',
+        displayInline: true,
+        children: [
+          {
+            id: 'new',
+            label: t('projects.new'),
+            disabled: busy,
+            image: 'folder.badge.plus',
+          },
+          {
+            id: 'rename',
+            label: t('projects.rename'),
+            disabled: busy,
+            image: 'pencil',
+          },
+        ],
       } satisfies NativeMenuAction,
       {
-        id: 'rename',
-        label: t('projects.rename'),
-        disabled: busy,
-        image: 'pencil',
+        id: 'project-list',
+        label: '',
+        displayInline: true,
+        children: projects.map((item): NativeMenuAction => ({
+          id: `project:${item.id}`,
+          label: item.name ?? t('projects.default'),
+          selected: item.id === selectedProjectId,
+          disabled: busy,
+          image: 'folder',
+        })),
       } satisfies NativeMenuAction,
       ...(project.id === DEFAULT_PROJECT_ID
         ? []
         : [
             {
-              id: 'delete',
-              label: t('projects.delete'),
-              disabled: busy,
-              destructive: true,
-              image: 'trash',
+              id: 'project-danger',
+              label: '',
+              displayInline: true,
+              children: [
+                {
+                  id: 'delete',
+                  label: t('projects.delete'),
+                  disabled: busy,
+                  destructive: true,
+                  image: 'trash',
+                },
+              ],
             } satisfies NativeMenuAction,
           ]),
     ],

@@ -13,6 +13,8 @@ export interface NativeMenuAction {
   imageColor?: MenuAction['imageColor']
   selected?: boolean
   children?: readonly NativeMenuAction[]
+  /** Renders children in the parent menu as a separate section instead of a submenu. */
+  displayInline?: boolean
 }
 
 export interface NativeMenuProps {

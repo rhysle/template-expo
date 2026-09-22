@@ -1,6 +1,7 @@
 import {
   DropdownMenu,
   DropdownMenuItem,
+  HorizontalDivider,
   Host,
   Icon,
   RNHostView,
@@ -151,15 +152,34 @@ export function NativeMenu({
             </RNHostView>
           </DropdownMenu.Trigger>
           <DropdownMenu.Items>
-            {actions.map((action) => (
-              <MenuActionItem
-                key={action.id}
-                action={action}
-                onSelect={onSelect}
-                dismissAll={dismissAll}
-                destructiveColor={destructiveColor}
-              />
-            ))}
+            {actions.map((action, index) => {
+              const inlineChildren = action.displayInline ? action.children : undefined
+              if (inlineChildren && inlineChildren.length > 0) {
+                return (
+                  <React.Fragment key={action.id}>
+                    {index > 0 && <HorizontalDivider />}
+                    {inlineChildren.map((child) => (
+                      <MenuActionItem
+                        key={child.id}
+                        action={child}
+                        onSelect={onSelect}
+                        dismissAll={dismissAll}
+                        destructiveColor={destructiveColor}
+                      />
+                    ))}
+                  </React.Fragment>
+                )
+              }
+              return (
+                <MenuActionItem
+                  key={action.id}
+                  action={action}
+                  onSelect={onSelect}
+                  dismissAll={dismissAll}
+                  destructiveColor={destructiveColor}
+                />
+              )
+            })}
             {footer ? <MenuFooter footer={footer} /> : null}
           </DropdownMenu.Items>
         </DropdownMenu>

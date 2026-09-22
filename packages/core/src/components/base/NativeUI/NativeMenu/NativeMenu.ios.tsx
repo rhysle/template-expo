@@ -17,8 +17,13 @@ import type { ReactNode } from 'react'
 
 import type { NativeMenuAction, NativeMenuProps } from './NativeMenu.types'
 
-function renderAction(action: NativeMenuAction, onSelect: (id: string) => void): ReactNode {
-  const { children, disabled, destructive, image, imageColor, selected, label } = action
+function renderAction(
+  action: NativeMenuAction,
+  onSelect: (id: string) => void,
+  sectionTitle?: string
+): ReactNode {
+  const { children, disabled, destructive, displayInline, image, imageColor, selected, label } =
+    action
   const systemImage = typeof image === 'string' ? image : undefined
   const modifiers = [
     ...(disabled ? [disabledModifier(true)] : []),
@@ -27,6 +32,13 @@ function renderAction(action: NativeMenuAction, onSelect: (id: string) => void):
   const onPress = () => onSelect(action.id)
 
   if (children && children.length > 0) {
+    if (displayInline) {
+      return (
+        <Section key={action.id} title={sectionTitle}>
+          {children.map((child) => renderAction(child, onSelect))}
+        </Section>
+      )
+    }
     return (
       <Menu key={action.id} label={label} systemImage={systemImage} modifiers={modifiers}>
         {children.map((child) => renderAction(child, onSelect))}
@@ -77,9 +89,15 @@ export const NativeMenu = ({
   style,
   testID,
 }: NativeMenuProps) => {
-  const items = actions.map((action) => renderAction(action, onSelect))
+  const firstInlineSectionId = actions.find(
+    (action) => action.displayInline && action.children && action.children.length > 0
+  )?.id
+  const items = actions.map((action) =>
+    renderAction(action, onSelect, action.id === firstInlineSectionId ? title : undefined)
+  )
   const menuItems = footer ? [...items, renderFooter(footer)] : items
-  const body = title ? <Section title={title}>{menuItems}</Section> : menuItems
+  const body =
+    title && !firstInlineSectionId ? <Section title={title}>{menuItems}</Section> : menuItems
   const triggerView = (
     <RNHostView matchContents>
       <>{children}</>
