@@ -1,9 +1,7 @@
 package expo.modules.dualrecorder
 
 import android.content.ContentValues
-import android.content.Intent
 import android.media.*
-import android.net.Uri
 import android.os.Build
 import android.os.StatFs
 import android.provider.MediaStore
@@ -65,18 +63,8 @@ class DualRecorderModule : Module() {
       try {
         ctx.contentResolver.openOutputStream(target)?.use { output -> source.inputStream().use { it.copyTo(output) } }?:error("Cannot write Gallery asset")
         ctx.contentResolver.update(target,ContentValues().apply { put(MediaStore.MediaColumns.IS_PENDING,0) },null,null)
-        target.toString()
+        Unit
       }catch(t: Throwable){ctx.contentResolver.delete(target,null,null);throw t}
-    }
-    AsyncFunction("openPhotoLibrary") { assetId: String,mediaType: String ->
-      val ctx=appContext.reactContext?:error("React context unavailable")
-      require(mediaType=="video"||mediaType=="photo"){"Unsupported media type"}
-      val intent=Intent(Intent.ACTION_VIEW).apply {
-        setDataAndType(Uri.parse(assetId),if(mediaType=="video")"video/*" else "image/*")
-        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK)
-      }
-      check(intent.resolveActivity(ctx.packageManager)!=null){"Gallery is unavailable"}
-      ctx.startActivity(intent)
     }
     AsyncFunction("thumbnail") { uri: String,destination: String ->
       val retriever=MediaMetadataRetriever()

@@ -9,7 +9,6 @@ import { useAppStore } from '@/stores/appStore'
 import NativeRecorder from '../../../modules/dual-recorder/src/DualRecorderModule'
 import {
   DEFAULT_PROJECT_ID,
-  type ExportReceipt,
   type ExportResult,
   type OutputKind,
   type PhotoCapture,
@@ -42,21 +41,6 @@ function readyOutput(media: ProjectMedia, kind: OutputKind) {
   const output = media.outputs.find((item) => item.kind === kind && item.ready)
   if (!output) throw new Error('Media output is not available')
   return output
-}
-
-function normalizeExportReceipts(value: unknown): ExportReceipt[] {
-  if (!Array.isArray(value)) return []
-  const receipts = new Map<OutputKind, ExportReceipt>()
-  for (const raw of value) {
-    if (
-      raw &&
-      typeof raw === 'object' &&
-      (raw.kind === 'portrait' || raw.kind === 'landscape') &&
-      typeof raw.assetId === 'string'
-    )
-      receipts.set(raw.kind, { kind: raw.kind, assetId: raw.assetId })
-  }
-  return [...receipts.values()]
 }
 
 export const mediaFile = (media: ProjectMedia, kind: OutputKind) =>
@@ -138,14 +122,13 @@ export async function hydrateProjects() {
         !Array.isArray(raw.outputs)
       )
         continue
-      const { trim: _legacyTrim, outputs: rawOutputs, exports: rawExports, ...base } = raw
+      const { trim: _legacyTrim, outputs: rawOutputs, exports: _legacyExports, ...base } = raw
       const media = {
         ...base,
         outputs: rawOutputs.map(({ keyframes: _legacyKeyframes, ...output }) => ({
           ...output,
           ready: output.ready && new File(directory, output.filename).exists,
         })),
-        exports: normalizeExportReceipts(rawExports),
       } as ProjectMedia
       if (!catalog.projects.some((project) => project.id === media.projectId))
         media.projectId = DEFAULT_PROJECT_ID
@@ -198,44 +181,28 @@ export async function mutateProjects(action: () => Promise<unknown>) {
 export async function exportMedia(
   media: ProjectMedia,
   kinds: OutputKind[],
-  anotherCopy = false,
   source: MediaExportSource = 'manual'
 ): Promise<ExportResult[]> {
   if (useAppStore.getState().camera.phase !== 'idle') throw new Error('Camera is busy')
   useAppStore.getState().camera.setPhase('exporting')
   const results: ExportResult[] = []
-  let current = useAppStore.getState().projects.media.find((item) => item.id === media.id) ?? media
+  const current =
+    useAppStore.getState().projects.media.find((item) => item.id === media.id) ?? media
   let outcomeTracked = false
   try {
-    if (anotherCopy) {
-      current = {
-        ...current,
-        exports: current.exports.filter((receipt) => !kinds.includes(receipt.kind)),
-      }
-      await saveMedia(current)
-    }
     for (const kind of kinds) {
-      const existing = current.exports.find((receipt) => receipt.kind === kind)
-      if (existing) {
-        results.push({ kind, assetId: existing.assetId })
-        continue
-      }
       try {
         const file = mediaFile(current, kind)
         if (Paths.availableDiskSpace < file.size + 32 * 1024 * 1024)
           throw new Error('Not enough space to export; original is safe')
-        const assetId = await NativeRecorder.exportMedia(file.uri, current.mediaType)
-        current = { ...current, exports: [...current.exports, { kind, assetId }] }
-        useAppStore.getState().projects.putMedia(current)
-        await saveMedia(current)
-        results.push({ kind, assetId })
+        await NativeRecorder.exportMedia(file.uri, current.mediaType)
+        results.push({ kind })
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error)
         if (!message.toLowerCase().includes('not enough space'))
           recordError(error, 'projects.exportMedia', {
             media_type: current.mediaType,
             output_kind: kind,
-            another_copy: anotherCopy,
           })
         results.push({ kind, error: error instanceof Error ? error.message : String(error) })
       }
@@ -246,7 +213,6 @@ export async function exportMedia(
       source,
       output_count: kinds.length,
       succeeded_output_count: results.length - failed.length,
-      another_copy: anotherCopy ? 1 : 0,
     }
     if (failed.length) {
       trackEvent(AnalyticsAppEvents.MEDIA_EXPORT_FAILED, {
@@ -262,7 +228,6 @@ export async function exportMedia(
         source,
         output_count: kinds.length,
         succeeded_output_count: results.filter((result) => !result.error).length,
-        another_copy: anotherCopy ? 1 : 0,
         reason: exportFailureReason(cause),
       })
     throw cause

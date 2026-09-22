@@ -220,8 +220,8 @@
       "on": "On"
     },
     "flip": "Switch front/back camera",
-    "openLatestPhoto": "Open latest photo in the photo library",
-    "openLatestVideo": "Open latest video in the photo library",
+    "openLatestPhoto": "Open latest photo in Projects",
+    "openLatestVideo": "Open latest video in Projects",
     "crop": "Adjust {{kind}} framing",
     "quickSettings": "Quick settings",
     "moreSettings": "More settings",
@@ -314,10 +314,8 @@
     "shareFailure": "The share sheet could not be opened. Try again.",
     "saveCurrent": "Save {{orientation}}",
     "saveBoth": "Save both versions",
-    "saveAnotherCopy": "Save another copy",
     "moreActions": "More actions",
     "exported": "Saved to Photos or Gallery",
-    "alreadyExported": "This version is already saved.",
     "exportFailure": "Export failed. Check permissions and free storage, then retry.",
     "mediaDetails": "Media details"
   }

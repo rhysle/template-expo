@@ -1,5 +1,6 @@
 import { CapsuleNavigationAccessory } from '@shared/core/components/base'
 import { Image } from 'expo-image'
+import { useRouter } from 'expo-router'
 import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import Animated, {
@@ -12,19 +13,17 @@ import Animated, {
 } from 'react-native-reanimated'
 
 import { thumbnailFile } from '@/services/camera/projects'
-import { useLatestLibraryMedia } from '@/stores/features/projects'
+import { useLatestProjectMedia } from '@/stores/features/projects'
 import { createThemedStyles, useThemedStyles } from '@/theme'
 
-import NativeRecorder from '../../../modules/dual-recorder/src/DualRecorderModule'
-
-export function LatestLibraryPreviewButton({ onOpenFailure }: { onOpenFailure: () => void }) {
+export function LatestLibraryPreviewButton() {
   const { t } = useTranslation()
+  const router = useRouter()
   const styles = useThemedStyles(createStyles)
-  const media = useLatestLibraryMedia()
+  const media = useLatestProjectMedia()
   const scale = useSharedValue(1)
   const newestSeenCreatedAt = useRef(media?.createdAt ?? 0)
   const animationReady = useRef(false)
-  const receipt = media?.exports.findLast((item) => item.kind === 'portrait')
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -60,16 +59,16 @@ export function LatestLibraryPreviewButton({ onOpenFailure }: { onOpenFailure: (
 
   const animatedStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }))
 
-  if (!media || !receipt) return null
+  if (!media) return null
 
   return (
     <CapsuleNavigationAccessory
       accessibilityLabel={
         media.mediaType === 'video' ? t('camera.openLatestVideo') : t('camera.openLatestPhoto')
       }
-      onPress={() => {
-        void NativeRecorder.openPhotoLibrary(receipt.assetId, media.mediaType).catch(onOpenFailure)
-      }}>
+      onPress={() =>
+        router.push({ pathname: '/projects/[mediaId]', params: { mediaId: media.id } })
+      }>
       <Animated.View style={[styles.imageContainer, animatedStyle]}>
         <Image
           source={{ uri: thumbnailFile(media.id).uri }}

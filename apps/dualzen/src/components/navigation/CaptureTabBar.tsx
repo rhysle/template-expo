@@ -70,11 +70,7 @@ export function CaptureTabBar({ state, descriptors, navigation }: BottomTabBarPr
 
   return (
     <CapsuleNavigationBar
-      leadingAccessory={
-        captureFocused ? (
-          <LatestLibraryPreviewButton onOpenFailure={() => navigation.navigate('projects')} />
-        ) : undefined
-      }
+      leadingAccessory={captureFocused ? <LatestLibraryPreviewButton /> : undefined}
       trailingAccessory={
         captureFocused ? (
           <CapsuleNavigationAccessory

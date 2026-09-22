@@ -311,7 +311,7 @@ gl_FragColor=texture2D(uTexture,(uMatrix*vec4(p,0.0,1.0)).xy); }"""
       try {
         val media=JSONObject().put("id",config.getString("id")).put("projectId",config.optString("projectId","default")).put("mediaType","video")
           .put("createdAt",config.optLong("createdAt")).put("settings",config.getJSONObject("settings")).put("duration",duration)
-          .put("outputs",outputs).put("exports",JSONArray()).put("reason",reason)
+          .put("outputs",outputs).put("reason",reason)
           .apply { failure?.let { put("error",it) } }
         val manifest=android.util.AtomicFile(File(localFile(config.getString("directory")),"manifest.json"))
         val stream=manifest.startWrite()

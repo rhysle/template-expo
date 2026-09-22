@@ -57,31 +57,22 @@ public class DualRecorderModule: Module {
     AsyncFunction("writeManifest") { (uri: String, content: String) throws -> Void in
       try Data(content.utf8).write(to: Self.localURL(uri), options: .atomic)
     }
-    AsyncFunction("exportMedia") { (uri: String, mediaType: String) async throws -> String in
+    AsyncFunction("exportMedia") { (uri: String, mediaType: String) async throws -> Void in
       guard mediaType == "video" || mediaType == "photo" else { throw CaptureError(message: "Unsupported media type") }
       let source = try Self.localURL(uri)
       let status = await PHPhotoLibrary.requestAuthorization(for: .addOnly)
       guard status == .authorized || status == .limited else { throw CaptureError(message: "Photo library permission denied") }
       let url = source
-      return try await withCheckedThrowingContinuation { continuation in
-        var identifier = ""
+      try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
         PHPhotoLibrary.shared().performChanges({
-          let request = mediaType == "video"
+          _ = mediaType == "video"
             ? PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: url)
             : PHAssetChangeRequest.creationRequestForAssetFromImage(atFileURL: url)
-          identifier = request?.placeholderForCreatedAsset?.localIdentifier ?? ""
         }, completionHandler: { success, error in
-          if success, !identifier.isEmpty { continuation.resume(returning: identifier) }
+          if success { continuation.resume(returning: ()) }
           else { continuation.resume(throwing: error ?? CaptureError(message: "Photo library save failed")) }
         })
       }
-    }
-    AsyncFunction("openPhotoLibrary") { (_: String, _: String) async throws -> Void in
-      // Photos has no public URL for selecting a PHAsset. Match the system Camera behavior as
-      // closely as possible by opening the Photos library and let JS fall back if unavailable.
-      guard let url = URL(string: "photos-redirect://") else { throw CaptureError(message: "Photos is unavailable") }
-      let opened = await UIApplication.shared.open(url)
-      guard opened else { throw CaptureError(message: "Photos is unavailable") }
     }
     AsyncFunction("thumbnail") { (uri: String, destination: String) throws -> Void in
       let asset = AVURLAsset(url: try Self.localURL(uri))

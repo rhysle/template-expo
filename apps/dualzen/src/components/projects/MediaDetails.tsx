@@ -14,8 +14,8 @@ import { useVideoPlayer, VideoView } from 'expo-video'
 import {
   DotsThreeIcon,
   DownloadSimpleIcon,
+  ExportIcon,
   FolderSimpleIcon,
-  ShareIcon,
   TrashIcon,
 } from 'phosphor-react-native'
 import { type ReactNode, useMemo, useState } from 'react'
@@ -172,23 +172,15 @@ export function MediaDetails({ media, onClose }: { media: ProjectMedia; onClose:
       variant: failed ? 'error' : 'success',
     })
 
-  const exportOutputs = async (kinds: OutputKind[], anotherCopy = false) => {
+  const exportOutputs = async (kinds: OutputKind[]) => {
     if (busy) return
-    if (
-      !anotherCopy &&
-      kinds.every((item) => media.exports.some((receipt) => receipt.kind === item))
-    ) {
-      showSnackbar({ title: t('projects.alreadyExported'), variant: 'info' })
-      return
-    }
     try {
-      const results = await exportMedia(media, kinds, anotherCopy)
+      const results = await exportMedia(media, kinds)
       showResult(results.some((result) => result.error))
     } catch (cause) {
       recordProjectError(cause, 'projects.exportMediaRequest', {
         media_type: media.mediaType,
         output_count: kinds.length,
-        another_copy: anotherCopy,
       })
       showResult(true)
     }
@@ -251,28 +243,17 @@ export function MediaDetails({ media, onClose }: { media: ProjectMedia; onClose:
   )
   const moreActions = useMemo<readonly NativeMenuAction[]>(
     () => [
-      ...(available.length === 2
-        ? [
-            {
-              id: 'save-both',
-              label: t('projects.saveBoth'),
-              disabled: busy,
-              image: 'square.and.arrow.down',
-            } satisfies NativeMenuAction,
-          ]
-        : []),
       {
-        id: 'save-another',
-        label: t('projects.saveAnotherCopy'),
-        disabled: busy || !currentOutput,
-        image: 'plus.square.on.square',
+        id: 'save-both',
+        label: t('projects.saveBoth'),
+        disabled: busy,
+        image: 'square.and.arrow.down',
       },
     ],
-    [available.length, busy, currentOutput, t]
+    [busy, t]
   )
   const handleMoreAction = (id: string) => {
     if (id === 'save-both') void exportOutputs(available.map((output) => output.kind))
-    else if (id === 'save-another') void exportOutputs([activeKind], true)
   }
 
   const onPreviewLayout = (event: LayoutChangeEvent) => {
@@ -303,15 +284,17 @@ export function MediaDetails({ media, onClose }: { media: ProjectMedia; onClose:
             <FolderSimpleIcon color={colors.text.primary} size={iconSizes.lg} />
           </ActionItem>
         </NativeMenu>
-        <NativeMenu
-          actions={moreActions}
-          onSelect={handleMoreAction}
-          title={t('projects.moreActions')}
-          style={styles.actionMenu}>
-          <ActionItem accessibilityLabel={t('projects.moreActions')} disabled={busy}>
-            <DotsThreeIcon color={colors.text.primary} size={iconSizes.lg} weight="bold" />
-          </ActionItem>
-        </NativeMenu>
+        {available.length === 2 && (
+          <NativeMenu
+            actions={moreActions}
+            onSelect={handleMoreAction}
+            title={t('projects.moreActions')}
+            style={styles.actionMenu}>
+            <ActionItem accessibilityLabel={t('projects.moreActions')} disabled={busy}>
+              <DotsThreeIcon color={colors.text.primary} size={iconSizes.lg} weight="bold" />
+            </ActionItem>
+          </NativeMenu>
+        )}
       </View>
     </View>
   )
@@ -374,7 +357,7 @@ export function MediaDetails({ media, onClose }: { media: ProjectMedia; onClose:
             accessibilityLabel={t('projects.share')}
             disabled={busy || !currentOutput}
             onPress={() => void handleShare()}>
-            <ShareIcon color={colors.text.primary} size={iconSizes.lg} />
+            <ExportIcon color={colors.text.primary} size={iconSizes.lg} />
           </CapsuleNavigationAccessory>
         }
         center={centerActions}

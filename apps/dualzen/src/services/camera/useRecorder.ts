@@ -497,7 +497,6 @@ export function useCaptureController(active: boolean, retained: boolean) {
             mediaType: 'video',
             duration: result.duration,
             outputs: result.outputs,
-            exports: [],
             reason: result.reason,
             ...(result.error ? { error: result.error } : {}),
           }
@@ -548,7 +547,6 @@ export function useCaptureController(active: boolean, retained: boolean) {
               const exported = await exportMedia(
                 video,
                 video.outputs.filter((item) => item.ready).map((item) => item.kind),
-                false,
                 'automatic'
               )
               const failedExports = exported.filter((item) => item.error)
@@ -1188,7 +1186,6 @@ export function useCaptureController(active: boolean, retained: boolean) {
             flashMode: selectedFlash,
           },
           outputs: photoResults,
-          exports: [],
           ...(photoResults.some((output) => !output.ready)
             ? {
                 error:
@@ -1230,7 +1227,6 @@ export function useCaptureController(active: boolean, retained: boolean) {
           const exported = await exportMedia(
             photo,
             photo.outputs.filter((output) => output.ready).map((output) => output.kind),
-            false,
             'automatic'
           )
           const failedExports = exported.filter((item) => item.error)

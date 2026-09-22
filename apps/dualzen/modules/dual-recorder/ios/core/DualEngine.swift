@@ -310,7 +310,7 @@ final class DualEngine: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
       if let directory = self.config["directory"] as? String, let url = URL(string: directory) {
         var media: [String: Any] = ["id": self.config["id"] as? String ?? "", "projectId": self.config["projectId"] as? String ?? "default", "mediaType": "video",
           "createdAt": self.config["createdAt"] as? Double ?? 0, "settings": self.config["settings"] as? [String: Any] ?? [:], "duration": duration,
-          "outputs": outputs, "exports": [], "reason": reason]
+          "outputs": outputs, "reason": reason]
         if let failure = self.failure { media["error"] = failure }
         do {
           // Foundation raises an Objective-C exception for invalid JSON objects;

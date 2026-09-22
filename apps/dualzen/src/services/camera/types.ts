@@ -93,19 +93,13 @@ export interface PhotoOutput extends PixelSize {
 }
 export interface ExportResult {
   kind: OutputKind
-  assetId?: string
   error?: string
-}
-export interface ExportReceipt {
-  kind: OutputKind
-  assetId: string
 }
 interface ProjectMediaBase {
   id: string
   projectId: string
   createdAt: number
   mediaType: MediaType
-  exports: ExportReceipt[]
   error?: string
 }
 export interface VideoCapture extends ProjectMediaBase {

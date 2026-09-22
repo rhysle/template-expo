@@ -58,11 +58,10 @@ export const sliceConfig = {
 export const useProjectsState = () =>
   getUseAppStore()(useShallow((state) => ({ ...state.projects })))
 
-export const useLatestLibraryMedia = () =>
+export const useLatestProjectMedia = () =>
   getUseAppStore()((state) =>
     state.projects.media.reduce<ProjectMedia | null>((latest, media) => {
-      const hasPortraitExport = media.exports.some((receipt) => receipt.kind === 'portrait')
-      if (!hasPortraitExport || (latest && latest.createdAt >= media.createdAt)) return latest
+      if (latest && latest.createdAt >= media.createdAt) return latest
       return media
     }, null)
   )
