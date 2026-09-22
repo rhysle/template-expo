@@ -487,13 +487,17 @@ const createDetailsStyles = createThemedStyles((theme) => ({
     borderRadius: theme.borderRadius.full,
     ...theme.shadows.md,
   },
-  actionGroupSurface: { flexDirection: 'row', alignItems: 'center' },
+  actionGroupSurface: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: theme.spacing.sm,
+  },
   actionItem: {
-    width: theme.spacing['5xl'],
+    width: theme.spacing['6xl'],
     height: theme.spacing['5xl'],
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: theme.borderRadius.full,
   },
-  actionMenu: { width: theme.spacing['5xl'], height: theme.spacing['5xl'] },
+  actionMenu: { width: theme.spacing['6xl'], height: theme.spacing['5xl'] },
 }))

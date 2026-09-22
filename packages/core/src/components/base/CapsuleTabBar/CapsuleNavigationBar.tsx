@@ -442,6 +442,12 @@ const createStyles = createThemedStyles((t) => ({
     height: '100%',
     borderRadius: t.borderRadius.full,
   },
-  accessoryContent: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  accessoryContent: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: t.borderRadius.full,
+    overflow: 'hidden',
+  },
   accessoryDisabled: { opacity: 0.4 },
 }))
