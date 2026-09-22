@@ -67,7 +67,7 @@ export function ProjectGlassSurface({
         glassEffectStyle="regular"
         tintColor={withAlpha(colors.background.surface, 0.3)}
         isInteractive={interactive}
-        pointerEvents="none"
+        pointerEvents={interactive ? 'auto' : 'none'}
         style={[styles.surface, style]}>
         {children}
       </GlassView>
@@ -77,13 +77,15 @@ export function ProjectGlassSurface({
       <BlurView
         tint={appearance}
         intensity={60}
-        pointerEvents="none"
+        pointerEvents={interactive ? 'auto' : 'none'}
         style={[styles.surface, styles.frosted, style]}>
         {children}
       </BlurView>
     )
   return (
-    <View pointerEvents="none" style={[styles.surface, styles.solid, style]}>
+    <View
+      pointerEvents={interactive ? 'auto' : 'none'}
+      style={[styles.surface, styles.solid, style]}>
       {children}
     </View>
   )
@@ -147,7 +149,6 @@ const createStyles = createThemedStyles((theme) => ({
     height: theme.spacing['5xl'],
   },
   surface: {
-    overflow: 'hidden',
     borderRadius: theme.borderRadius.full,
   },
   actionSurface: {
@@ -163,6 +164,9 @@ const createStyles = createThemedStyles((theme) => ({
     height: '100%',
     paddingHorizontal: 0,
   },
-  frosted: { backgroundColor: withAlpha(theme.colors.background.surface, 0.8) },
+  frosted: {
+    overflow: 'hidden',
+    backgroundColor: withAlpha(theme.colors.background.surface, 0.8),
+  },
   solid: { backgroundColor: theme.colors.background.surface },
 }))

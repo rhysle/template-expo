@@ -347,10 +347,7 @@ export function MediaDetails({ media }: { media: ProjectMedia }) {
 
   const centerActions = (
     <View style={styles.actionGroupShadow}>
-      <ProjectGlassSurface {...glass} style={styles.actionGroupSurface}>
-        <View />
-      </ProjectGlassSurface>
-      <View style={styles.actionGroupContent}>
+      <ProjectGlassSurface {...glass} interactive style={styles.actionGroupSurface}>
         <ActionItem
           accessibilityLabel={t('projects.saveCurrent', { orientation: labels[activeKind] })}
           disabled={busy || !currentOutput}
@@ -374,7 +371,7 @@ export function MediaDetails({ media }: { media: ProjectMedia }) {
             <FolderSimpleIcon color={colors.text.primary} size={iconSizes.lg} />
           </ActionItem>
         </NativeMenu>
-      </View>
+      </ProjectGlassSurface>
     </View>
   )
 
@@ -490,14 +487,7 @@ const createDetailsStyles = createThemedStyles((theme) => ({
     borderRadius: theme.borderRadius.full,
     ...theme.shadows.md,
   },
-  actionGroupSurface: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-  },
-  actionGroupContent: { flexDirection: 'row', alignItems: 'center' },
+  actionGroupSurface: { flexDirection: 'row', alignItems: 'center' },
   actionItem: {
     width: theme.spacing['5xl'],
     height: theme.spacing['5xl'],

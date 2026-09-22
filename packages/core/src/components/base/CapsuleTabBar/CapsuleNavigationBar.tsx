@@ -90,7 +90,6 @@ export function CapsuleNavigationAccessory({
       glassEffectStyle="regular"
       tintColor={withAlpha(colors.background.surface, 0.3)}
       isInteractive
-      pointerEvents="none"
       style={styles.accessorySurface}>
       {content}
     </GlassView>
@@ -442,7 +441,6 @@ const createStyles = createThemedStyles((t) => ({
     width: '100%',
     height: '100%',
     borderRadius: t.borderRadius.full,
-    overflow: 'hidden',
   },
   accessoryContent: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   accessoryDisabled: { opacity: 0.4 },
