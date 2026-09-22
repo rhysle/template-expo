@@ -5,7 +5,7 @@ import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake'
 import * as ScreenOrientation from 'expo-screen-orientation'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AppState, Platform } from 'react-native'
+import { AppState, Platform, useWindowDimensions } from 'react-native'
 import type { Image as NitroImage } from 'react-native-nitro-image'
 import { NitroModules } from 'react-native-nitro-modules'
 import {
@@ -22,6 +22,7 @@ import {
 import { AnalyticsAppEvents, trackEvent } from '@/services/firebase/analytics'
 import { useAppStore } from '@/stores/appStore'
 import { useCameraState } from '@/stores/features/camera'
+import { spacing } from '@/theme'
 
 import type { DualOutputFactory } from '../../../modules/dual-recorder/src/DualOutputFactory.nitro'
 import NativeRecorder from '../../../modules/dual-recorder/src/DualRecorderModule'
@@ -130,6 +131,10 @@ function reportCaptureFailure(
 export function useCaptureController(active: boolean, retained: boolean) {
   const { t } = useTranslation()
   const { showSnackbar, hideSnackbar } = useSnackbarState()
+  const { width, height } = useWindowDimensions()
+  // In portrait the shutter sits just above the floating tab bar. Keep capture
+  // feedback above that control; landscape uses the side control panel instead.
+  const captureSnackbarBottomOffset = width <= height ? spacing['7xl'] : 0
   const {
     sharedSettings,
     videoSettings,
@@ -271,9 +276,9 @@ export function useCaptureController(active: boolean, retained: boolean) {
         default:
           title = t('camera.failure')
       }
-      showSnackbar({ title, variant: 'warning' })
+      showSnackbar({ title, variant: 'warning', bottomOffset: captureSnackbarBottomOffset })
     },
-    [showSnackbar, t]
+    [captureSnackbarBottomOffset, showSnackbar, t]
   )
   const rearZoomDevice = devices
     .filter(
@@ -519,7 +524,11 @@ export function useCaptureController(active: boolean, retained: boolean) {
             await saveMedia(video)
             const completeCapture = video.outputs.every((item) => item.ready) && !video.error
             if (completeCapture) {
-              showSnackbar({ title: t('camera.saved'), variant: 'success' })
+              showSnackbar({
+                title: t('camera.saved'),
+                variant: 'success',
+                bottomOffset: captureSnackbarBottomOffset,
+              })
             } else {
               const partialCause =
                 video.error ??
@@ -614,7 +623,7 @@ export function useCaptureController(active: boolean, retained: boolean) {
       await task
       handling.current = null
     },
-    [releaseLocks, showCaptureNotice, showSnackbar, t]
+    [captureSnackbarBottomOffset, releaseLocks, showCaptureNotice, showSnackbar, t]
   )
   const stop = useCallback(async () => {
     if (!metadata.current || useAppStore.getState().camera.phase !== 'recording') return
@@ -1202,7 +1211,11 @@ export function useCaptureController(active: boolean, retained: boolean) {
         await saveMedia(photo)
         const completeCapture = photo.outputs.every((output) => output.ready)
         if (completeCapture) {
-          showSnackbar({ title: t('camera.photoSaved'), variant: 'success' })
+          showSnackbar({
+            title: t('camera.photoSaved'),
+            variant: 'success',
+            bottomOffset: captureSnackbarBottomOffset,
+          })
         } else {
           const partialCause =
             photo.error ??

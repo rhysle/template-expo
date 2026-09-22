@@ -88,7 +88,7 @@ export const SnackbarHost = () => {
         action={lastSnackbar?.action}
         onAction={handleAction}
         onDismiss={triggerDismiss}
-        bottomOffset={spacing.lg}
+        bottomOffset={spacing.lg + (lastSnackbar?.bottomOffset ?? 0)}
         showAccent={lastSnackbar?.showAccent ?? false}
         showShadow={lastSnackbar?.showShadow ?? true}
         blur={lastSnackbar?.blur ?? true}
