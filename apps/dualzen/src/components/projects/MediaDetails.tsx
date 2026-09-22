@@ -12,15 +12,23 @@ import { Image } from 'expo-image'
 import { Stack } from 'expo-router'
 import { useVideoPlayer, VideoView } from 'expo-video'
 import {
-  DotsThreeIcon,
   DownloadSimpleIcon,
   ExportIcon,
   FolderSimpleIcon,
+  StackIcon,
   TrashIcon,
 } from 'phosphor-react-native'
-import { type ReactNode, useMemo, useState } from 'react'
+import { type ReactNode, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, type LayoutChangeEvent, View } from 'react-native'
+import { Gesture, GestureDetector } from 'react-native-gesture-handler'
+import Animated, {
+  cancelAnimation,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated'
+import { scheduleOnRN } from 'react-native-worklets'
 
 import {
   deleteMedia,
@@ -48,6 +56,8 @@ interface PreviewBounds {
   height: number
   width: number
 }
+
+const PREVIEW_SPRING = { damping: 20, mass: 0.9, stiffness: 200 }
 
 function recordProjectError(cause: unknown, context: string, details?: Record<string, unknown>) {
   const message = cause instanceof Error ? cause.message : String(cause)
@@ -103,6 +113,93 @@ function MediaPreview({
   )
 }
 
+function MediaPreviewCarousel({
+  bounds,
+  kinds,
+  media,
+  selectedKind,
+  onKindChange,
+}: {
+  bounds: PreviewBounds
+  kinds: readonly OutputKind[]
+  media: ProjectMedia
+  selectedKind: OutputKind
+  onKindChange: (kind: OutputKind) => void
+}) {
+  const styles = useThemedStyles(createDetailsStyles)
+  const pageWidth = useSharedValue(bounds.width)
+  const translateX = useSharedValue(0)
+  const gestureStartX = useSharedValue(0)
+  const kindChangeHandler = useSharedValue({ callback: onKindChange })
+  const selectedIndex = Math.max(0, kinds.indexOf(selectedKind))
+
+  useEffect(() => {
+    pageWidth.set(bounds.width)
+    if (bounds.width > 0) translateX.set(withSpring(-selectedIndex * bounds.width, PREVIEW_SPRING))
+  }, [bounds.width, pageWidth, selectedIndex, translateX])
+
+  useEffect(() => {
+    kindChangeHandler.set({ callback: onKindChange })
+  }, [kindChangeHandler, onKindChange])
+
+  useEffect(() => () => cancelAnimation(translateX), [translateX])
+
+  const gesture = useMemo(
+    () =>
+      Gesture.Pan()
+        .enabled(kinds.length > 1)
+        .activeOffsetX([-10, 10])
+        .failOffsetY([-20, 20])
+        .maxPointers(1)
+        .onStart(() => {
+          cancelAnimation(translateX)
+          gestureStartX.value = translateX.value
+        })
+        .onUpdate((event) => {
+          const minTranslateX = -(kinds.length - 1) * pageWidth.value
+          translateX.value = Math.min(
+            0,
+            Math.max(minTranslateX, gestureStartX.value + event.translationX)
+          )
+        })
+        .onEnd((event) => {
+          if (pageWidth.value <= 0) return
+
+          const startIndex = Math.round(-gestureStartX.value / pageWidth.value)
+          const threshold = pageWidth.value * 0.2
+          const nextIndex =
+            event.translationX < -threshold || event.velocityX < -500
+              ? Math.min(startIndex + 1, kinds.length - 1)
+              : event.translationX > threshold || event.velocityX > 500
+                ? Math.max(startIndex - 1, 0)
+                : Math.round(-translateX.value / pageWidth.value)
+          const targetKind = kinds[nextIndex]
+
+          translateX.value = withSpring(-nextIndex * pageWidth.value, PREVIEW_SPRING)
+          if (nextIndex !== startIndex && targetKind)
+            scheduleOnRN(kindChangeHandler.value.callback, targetKind)
+        }),
+    [gestureStartX, kindChangeHandler, kinds, pageWidth, translateX]
+  )
+
+  const trackStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: translateX.value }],
+  }))
+
+  return (
+    <GestureDetector gesture={gesture}>
+      <Animated.View
+        style={[styles.previewTrack, trackStyle, { width: bounds.width * kinds.length }]}>
+        {kinds.map((kind) => (
+          <View key={kind} style={[styles.previewPage, { width: bounds.width }]}>
+            <MediaPreview bounds={bounds} kind={kind} media={media} />
+          </View>
+        ))}
+      </Animated.View>
+    </GestureDetector>
+  )
+}
+
 function ActionItem({
   accessibilityLabel,
   children,
@@ -141,7 +238,7 @@ function ActionItem({
   )
 }
 
-export function MediaDetails({ media, onClose }: { media: ProjectMedia; onClose: () => void }) {
+export function MediaDetails({ media }: { media: ProjectMedia }) {
   const { t } = useTranslation()
   const styles = useThemedStyles(createDetailsStyles)
   const { colors, spacing } = useTheme()
@@ -149,7 +246,7 @@ export function MediaDetails({ media, onClose }: { media: ProjectMedia; onClose:
   const { showSnackbar } = useSnackbarState()
   const { projects } = useProjectsState()
   const { phase } = useCameraState()
-  const available = media.outputs.filter((output) => output.ready)
+  const available = useMemo(() => media.outputs.filter((output) => output.ready), [media.outputs])
   const [kind, setKind] = useState<OutputKind>(available[0]?.kind ?? 'portrait')
   const [previewBounds, setPreviewBounds] = useState<PreviewBounds>({ width: 0, height: 0 })
   const [actionBarInset, setActionBarInset] = useState(0)
@@ -220,12 +317,10 @@ export function MediaDetails({ media, onClose }: { media: ProjectMedia; onClose:
         text: t('projects.deleteMedia'),
         style: 'destructive',
         onPress: () => {
-          void mutateProjects(() => deleteMedia(media))
-            .then(onClose)
-            .catch((cause) => {
-              recordProjectError(cause, 'projects.deleteMedia', { media_type: media.mediaType })
-              showSnackbar({ title: t('projects.deleteMediaFailure'), variant: 'error' })
-            })
+          void mutateProjects(() => deleteMedia(media)).catch((cause) => {
+            recordProjectError(cause, 'projects.deleteMedia', { media_type: media.mediaType })
+            showSnackbar({ title: t('projects.deleteMediaFailure'), variant: 'error' })
+          })
         },
       },
     ])
@@ -236,25 +331,12 @@ export function MediaDetails({ media, onClose }: { media: ProjectMedia; onClose:
         id: project.id,
         label: project.name ?? t('projects.default'),
         selected: project.id === media.projectId,
-        disabled: busy || project.id === media.projectId,
+        disabled: busy,
         image: 'folder',
       })),
     [busy, media.projectId, projects, t]
   )
-  const moreActions = useMemo<readonly NativeMenuAction[]>(
-    () => [
-      {
-        id: 'save-both',
-        label: t('projects.saveBoth'),
-        disabled: busy,
-        image: 'square.and.arrow.down',
-      },
-    ],
-    [busy, t]
-  )
-  const handleMoreAction = (id: string) => {
-    if (id === 'save-both') void exportOutputs(available.map((output) => output.kind))
-  }
+  const availableKinds = useMemo(() => available.map((output) => output.kind), [available])
 
   const onPreviewLayout = (event: LayoutChangeEvent) => {
     const { width, height } = event.nativeEvent.layout
@@ -275,6 +357,14 @@ export function MediaDetails({ media, onClose }: { media: ProjectMedia; onClose:
           onPress={() => void exportOutputs([activeKind])}>
           <DownloadSimpleIcon color={colors.text.primary} size={iconSizes.lg} />
         </ActionItem>
+        {available.length === 2 && (
+          <ActionItem
+            accessibilityLabel={t('projects.saveBoth')}
+            disabled={busy}
+            onPress={() => void exportOutputs(availableKinds)}>
+            <StackIcon color={colors.text.primary} size={iconSizes.lg} />
+          </ActionItem>
+        )}
         <NativeMenu
           actions={projectActions}
           onSelect={(id) => void moveToProject(id)}
@@ -284,17 +374,6 @@ export function MediaDetails({ media, onClose }: { media: ProjectMedia; onClose:
             <FolderSimpleIcon color={colors.text.primary} size={iconSizes.lg} />
           </ActionItem>
         </NativeMenu>
-        {available.length === 2 && (
-          <NativeMenu
-            actions={moreActions}
-            onSelect={handleMoreAction}
-            title={t('projects.moreActions')}
-            style={styles.actionMenu}>
-            <ActionItem accessibilityLabel={t('projects.moreActions')} disabled={busy}>
-              <DotsThreeIcon color={colors.text.primary} size={iconSizes.lg} weight="bold" />
-            </ActionItem>
-          </NativeMenu>
-        )}
       </View>
     </View>
   )
@@ -324,11 +403,12 @@ export function MediaDetails({ media, onClose }: { media: ProjectMedia; onClose:
       <View style={[styles.content, { paddingBottom: actionBarInset + spacing.md }]}>
         <View style={styles.previewFrame} onLayout={onPreviewLayout}>
           {currentOutput ? (
-            <MediaPreview
-              key={`${media.id}:${activeKind}`}
+            <MediaPreviewCarousel
               bounds={previewBounds}
-              kind={activeKind}
+              kinds={availableKinds}
               media={media}
+              onKindChange={setKind}
+              selectedKind={activeKind}
             />
           ) : (
             <Text tone="muted">{t('projects.incomplete')}</Text>
@@ -343,7 +423,7 @@ export function MediaDetails({ media, onClose }: { media: ProjectMedia; onClose:
               </Text>
             )}
             <Text selectable variant="caption" tone="muted" style={styles.tabularNumbers}>
-              {labels[activeKind]} · {currentOutput.width} × {currentOutput.height} ·{' '}
+              {currentOutput.width} × {currentOutput.height} ·{' '}
               {(currentOutput.bytes / 1048576).toFixed(1)} MB
             </Text>
           </View>
@@ -386,6 +466,13 @@ const createDetailsStyles = createThemedStyles((theme) => ({
   previewFrame: {
     flex: 1,
     minHeight: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+  },
+  previewTrack: { alignSelf: 'flex-start', flexDirection: 'row', height: '100%' },
+  previewPage: {
+    height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
   },

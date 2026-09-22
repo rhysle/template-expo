@@ -314,7 +314,6 @@
     "shareFailure": "The share sheet could not be opened. Try again.",
     "saveCurrent": "Save {{orientation}}",
     "saveBoth": "Save both versions",
-    "moreActions": "More actions",
     "exported": "Saved to Photos or Gallery",
     "exportFailure": "Export failed. Check permissions and free storage, then retry.",
     "mediaDetails": "Media details"
