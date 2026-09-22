@@ -35,6 +35,7 @@ export function CameraPreview({
   guide = false,
   guideOpacity,
   guidePosition,
+  showGrid = true,
   meteringEnabled = true,
   embedded = false,
   pinchGesture,
@@ -51,6 +52,7 @@ export function CameraPreview({
   guide?: boolean
   guideOpacity?: SharedValue<number>
   guidePosition?: SharedValue<number>
+  showGrid?: boolean
   meteringEnabled?: boolean
   embedded?: boolean
   pinchGesture?: ReturnType<typeof Gesture.Pinch>
@@ -190,7 +192,7 @@ export function CameraPreview({
           }
           mirrored={settings.front}
         />
-        {settings.grid && (
+        {settings.grid && showGrid && (
           <View pointerEvents="none" style={styles.fill}>
             {[1, 2].map((line) => (
               <View
@@ -245,6 +247,7 @@ const createStyles = createThemedStyles((theme) => ({
     width: 1,
     top: 0,
     bottom: 0,
+    opacity: 0.5,
     backgroundColor: theme.colors.border.strong,
   },
   horizontalGrid: {
@@ -252,6 +255,7 @@ const createStyles = createThemedStyles((theme) => ({
     height: 1,
     left: 0,
     right: 0,
+    opacity: 0.5,
     backgroundColor: theme.colors.border.strong,
   },
   guide: {

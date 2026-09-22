@@ -325,6 +325,7 @@ export function CameraStage({
     focusPoint,
     onFocusPoint: setFocusPoint,
     onDismissFocus: dismissFocus,
+    showGrid: layout !== 'guide',
   }
   return (
     <View style={styles.stage} onLayout={(event) => setStage(event.nativeEvent.layout)}>

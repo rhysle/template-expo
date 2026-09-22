@@ -28,7 +28,7 @@ export const defaultTheme: Theme = {
       info: '#84B9FF',
       neutral: '#858585',
     },
-    border: { subtle: '#292929', default: '#3A3A3A', strong: '#686868' },
+    border: { subtle: '#292929', default: '#3A3A3A', strong: '#C4C4C4' },
     shadow: { base: '#000000' },
   },
 }
