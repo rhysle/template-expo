@@ -90,10 +90,6 @@ export default function SettingsScreen() {
         contentContainerStyle={[styles.container, { paddingBottom: theme.spacing['3xl'] }]}
         contentInsetAdjustmentBehavior="automatic"
         showsVerticalScrollIndicator={false}>
-        <Text variant="subtitle" tone="secondary" style={styles.subtitle}>
-          {t('settings.subtitle')}
-        </Text>
-
         {premiumState === 'free' && (
           <PromoBanner
             icon={<CrownIcon size={iconSizes.lg} color={theme.colors.text.inverse} />}
