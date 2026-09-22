@@ -637,7 +637,6 @@ export function useCaptureController(active: boolean, retained: boolean) {
           }
         })
         await localSession.start()
-        if (!activeRef.current) await localSession.stop()
         let zoomRestoreFailed = false
         const exposureRestoreFailed = new Set<OutputKind>()
         await Promise.all(
@@ -731,6 +730,11 @@ export function useCaptureController(active: boolean, retained: boolean) {
             showCaptureNotice('restoreControlFailed')
           })
         }
+        // Camera controls can remain pending on iOS after a session has stopped. Restore them while
+        // the new session is active, then move it back to Ready if Settings is still on screen.
+        if (!activeRef.current) {
+          await localSession.stop()
+        }
         if (!cancelled) {
           setConfigured(true)
           setReady(activeRef.current)
@@ -770,6 +774,9 @@ export function useCaptureController(active: boolean, retained: boolean) {
           await stop()
           if (localSession) {
             await localSession.stop().catch(() => {})
+            // Match VisionCamera's own teardown: release every native camera connection before
+            // disposing the JS wrapper so the next device/session can acquire the hardware.
+            await localSession.configure([], {}).catch(() => {})
             localSession.dispose()
           }
         })
