@@ -39,6 +39,8 @@ class DualRecorderModule : Module() {
       }
     }
     AsyncFunction("capabilities") { "{\"hdr\":false,\"mov\":false}" }
+    Function("photoLibraryPermissionStatus") { "authorized" }
+    AsyncFunction("requestPhotoLibraryPermission") { "authorized" }
     AsyncFunction("writeManifest") { uri: String,content: String ->
       val file=android.util.AtomicFile(DualEngine.localFile(uri))
       val stream=file.startWrite()

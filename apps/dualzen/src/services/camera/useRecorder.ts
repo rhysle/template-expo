@@ -5,7 +5,7 @@ import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake'
 import * as ScreenOrientation from 'expo-screen-orientation'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AppState, Platform, useWindowDimensions } from 'react-native'
+import { Alert, AppState, Linking, Platform, useWindowDimensions } from 'react-native'
 import type { Image as NitroImage } from 'react-native-nitro-image'
 import { NitroModules } from 'react-native-nitro-modules'
 import {
@@ -16,6 +16,8 @@ import {
   type CameraSession,
   CommonResolutions,
   type Constraint,
+  useCameraPermission,
+  useMicrophonePermission,
   VisionCamera,
 } from 'react-native-vision-camera'
 
@@ -41,6 +43,7 @@ import {
   type RecordingSettings,
   type VideoCapture,
 } from './types'
+import { usePhotoLibraryPermission } from './usePhotoLibraryPermission'
 
 const WAKE_TAG = 'dualzen-recording'
 const factory = () => NitroModules.createHybridObject<DualOutputFactory>('DualOutputFactory')
@@ -144,9 +147,32 @@ export function useCaptureController(active: boolean, retained: boolean) {
     lightEnabled,
     liveSettings,
     sessionStrategy,
+    autoSaveToLibrary,
+    capturePermissionPrompted,
     updateLiveSettings,
     setSessionStrategy,
+    setAutoSaveToLibrary,
+    markCapturePermissionPrompted,
   } = useCameraState()
+  const {
+    status: cameraPermissionStatus,
+    hasPermission: cameraAuthorized,
+    canRequestPermission: cameraPermissionCanRequest,
+    requestPermission: requestCameraPermission,
+  } = useCameraPermission()
+  const {
+    status: microphonePermissionStatus,
+    hasPermission: microphoneAuthorized,
+    canRequestPermission: microphonePermissionCanRequest,
+    requestPermission: requestMicrophonePermission,
+  } = useMicrophonePermission()
+  const {
+    status: photoLibraryPermissionStatus,
+    hasPermission: photoLibraryAuthorized,
+    canRequestPermission: photoLibraryPermissionCanRequest,
+    requesting: photoLibraryPermissionRequesting,
+    requestPermission: requestPhotoLibraryPermission,
+  } = usePhotoLibraryPermission()
   const settings = useMemo(
     () => ({ ...sharedSettings, ...videoSettings }),
     [sharedSettings, videoSettings]
@@ -170,8 +196,8 @@ export function useCaptureController(active: boolean, retained: boolean) {
   const [configured, setConfigured] = useState(false)
   const [ready, setReady] = useState(false)
   const [readyDeviceId, setReadyDeviceId] = useState<string | null>(null)
-  const [cameraAuthorized, setCameraAuthorized] = useState(false)
-  const [microphoneAuthorized, setMicrophoneAuthorized] = useState(false)
+  const [capturePermissionsRequesting, setCapturePermissionsRequesting] = useState(false)
+  const capturePermissionRequestActive = useRef(false)
   const [zoomRange, setZoomRange] = useState({ min: 1, max: 1 })
   const [torchEnabled, setTorchEnabled] = useState(false)
   const [photoHdrEnabled, setPhotoHdrEnabled] = useState(false)
@@ -274,9 +300,6 @@ export function useCaptureController(active: boolean, retained: boolean) {
         case 'partialPhotoSave':
           title = t('camera.partialPhotoSave')
           break
-        case 'microphoneRequired':
-          title = t('camera.microphoneRequired')
-          break
         default:
           title = t('camera.failure')
       }
@@ -297,27 +320,38 @@ export function useCaptureController(active: boolean, retained: boolean) {
           devices.find((item) => item.position === 'back' && item.type === 'wide-angle') ??
           devices.find((item) => item.position === 'back'))
 
-  const permission = useCallback(async () => {
+  const requestCapturePermissions = useCallback(async () => {
+    if (capturePermissionRequestActive.current) return
+    capturePermissionRequestActive.current = true
+    setCapturePermissionsRequesting(true)
     try {
-      const camera = await VisionCamera.requestCameraPermission()
-      setCameraAuthorized(camera)
-    } catch (cause) {
-      recordError(cause, 'camera.requestCameraPermission', { platform: Platform.OS })
-      setError(String(cause))
+      if (cameraPermissionCanRequest) {
+        markCapturePermissionPrompted('camera')
+        try {
+          await requestCameraPermission()
+        } catch (cause) {
+          recordError(cause, 'camera.requestCameraPermission', { platform: Platform.OS })
+        }
+      }
+      if (microphonePermissionCanRequest) {
+        markCapturePermissionPrompted('microphone')
+        try {
+          await requestMicrophonePermission()
+        } catch (cause) {
+          recordError(cause, 'camera.requestMicrophonePermission', { platform: Platform.OS })
+        }
+      }
+    } finally {
+      capturePermissionRequestActive.current = false
+      setCapturePermissionsRequesting(false)
     }
-  }, [])
-  const requestMicrophone = useCallback(async () => {
-    try {
-      const microphone = await VisionCamera.requestMicrophonePermission()
-      setMicrophoneAuthorized(microphone)
-      if (!microphone) showCaptureNotice('microphoneRequired')
-      return microphone
-    } catch (cause) {
-      recordError(cause, 'camera.requestMicrophonePermission', { platform: Platform.OS })
-      setError(String(cause))
-      return false
-    }
-  }, [showCaptureNotice])
+  }, [
+    cameraPermissionCanRequest,
+    markCapturePermissionPrompted,
+    microphonePermissionCanRequest,
+    requestCameraPermission,
+    requestMicrophonePermission,
+  ])
   useEffect(() => {
     void hydrateProjects().catch((cause) => {
       recordError(cause, 'projects.hydrate', { platform: Platform.OS })
@@ -372,15 +406,68 @@ export function useCaptureController(active: boolean, retained: boolean) {
         recordError(cause, 'camera.discoverDevices', { platform: Platform.OS })
         setError(String(cause))
       })
-    setCameraAuthorized(VisionCamera.cameraPermissionStatus === 'authorized')
-    setMicrophoneAuthorized(VisionCamera.microphonePermissionStatus === 'authorized')
     return () => {
       cancelled = true
       listener?.remove()
     }
   }, [])
 
-  const authorized = cameraAuthorized
+  const authorized = cameraAuthorized && microphoneAuthorized
+  const photoLibraryAccessFlow = useRef<Promise<boolean> | null>(null)
+  const showPhotoLibrarySettingsAlert = useCallback(() => {
+    Alert.alert(t('camera.photoLibraryPermissionTitle'), t('camera.photoLibraryPermissionBody'), [
+      { text: t('common.cancel'), style: 'cancel' },
+      {
+        text: t('common.openSettings'),
+        onPress: () => {
+          void Linking.openSettings().catch((cause) => {
+            recordError(cause, 'permissions.openSettings', { platform: Platform.OS })
+          })
+        },
+      },
+    ])
+  }, [t])
+  const ensurePhotoLibraryAccess = useCallback(() => {
+    if (photoLibraryAccessFlow.current) return photoLibraryAccessFlow.current
+
+    const flow = (async () => {
+      if (photoLibraryAuthorized) return true
+      if (photoLibraryPermissionCanRequest && (await requestPhotoLibraryPermission())) return true
+      showPhotoLibrarySettingsAlert()
+      return false
+    })()
+    photoLibraryAccessFlow.current = flow
+    const clearFlow = () => {
+      if (photoLibraryAccessFlow.current === flow) photoLibraryAccessFlow.current = null
+    }
+    void flow.then(clearFlow, clearFlow)
+    return flow
+  }, [
+    photoLibraryAuthorized,
+    photoLibraryPermissionCanRequest,
+    requestPhotoLibraryPermission,
+    showPhotoLibrarySettingsAlert,
+  ])
+  const setAutoSaveToLibraryEnabled = useCallback(
+    async (value: boolean) => {
+      if (!value) {
+        setAutoSaveToLibrary(false)
+        return
+      }
+      if (await ensurePhotoLibraryAccess()) setAutoSaveToLibrary(true)
+    },
+    [ensurePhotoLibraryAccess, setAutoSaveToLibrary]
+  )
+  useEffect(() => {
+    if (!autoSaveToLibrary || photoLibraryAuthorized) return
+    setAutoSaveToLibrary(false)
+    showSnackbar({
+      title: t('camera.autoSaveDisabled'),
+      subtitle: t('camera.autoSaveDisabledBody'),
+      variant: 'warning',
+      durationMs: 0,
+    })
+  }, [autoSaveToLibrary, photoLibraryAuthorized, setAutoSaveToLibrary, showSnackbar, t])
 
   const configuration = useCallback(
     (
@@ -1083,13 +1170,13 @@ export function useCaptureController(active: boolean, retained: boolean) {
   const startVideo = async () => {
     if (
       mediaType !== 'video' ||
+      !authorized ||
       !ready ||
       error ||
       handling.current ||
       useAppStore.getState().camera.phase !== 'idle'
     )
       return
-    if (!microphoneAuthorized && !(await requestMicrophone())) return
     useAppStore.getState().camera.setPhase('preparing')
     hideSnackbar()
     setElapsed(0)
@@ -1160,6 +1247,7 @@ export function useCaptureController(active: boolean, retained: boolean) {
   const takePhoto = async () => {
     if (
       mediaType !== 'photo' ||
+      !authorized ||
       !ready ||
       error ||
       handling.current ||
@@ -1637,7 +1725,18 @@ export function useCaptureController(active: boolean, retained: boolean) {
     ready,
     readyDeviceId,
     authorized,
-    permission,
+    cameraPermissionStatus,
+    cameraPermissionCanRequest,
+    cameraPermissionPrompted: capturePermissionPrompted.camera,
+    microphonePermissionStatus,
+    microphonePermissionCanRequest,
+    microphonePermissionPrompted: capturePermissionPrompted.microphone,
+    capturePermissionsRequesting,
+    requestCapturePermissions,
+    photoLibraryPermissionStatus,
+    photoLibraryPermissionRequesting,
+    ensurePhotoLibraryAccess,
+    setAutoSaveToLibraryEnabled,
     devices,
     pairs,
     device,

@@ -30,6 +30,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import { scheduleOnRN } from 'react-native-worklets'
 
+import { useCapture } from '@/services/camera/CaptureProvider'
 import {
   deleteMedia,
   exportMedia,
@@ -246,6 +247,7 @@ export function MediaDetails({ media }: { media: ProjectMedia }) {
   const { showSnackbar } = useSnackbarState()
   const { projects } = useProjectsState()
   const { phase } = useCameraState()
+  const recorder = useCapture()
   const available = useMemo(() => media.outputs.filter((output) => output.ready), [media.outputs])
   const [kind, setKind] = useState<OutputKind>(available[0]?.kind ?? 'portrait')
   const [previewBounds, setPreviewBounds] = useState<PreviewBounds>({ width: 0, height: 0 })
@@ -253,7 +255,7 @@ export function MediaDetails({ media }: { media: ProjectMedia }) {
   const [sharing, setSharing] = useState(false)
   const currentOutput = available.find((output) => output.kind === kind) ?? available[0]
   const activeKind = currentOutput?.kind ?? kind
-  const busy = phase !== 'idle' || sharing
+  const busy = phase !== 'idle' || sharing || recorder.photoLibraryPermissionRequesting
   const labels = useMemo(
     () => ({ portrait: t('camera.portrait'), landscape: t('camera.landscape') }),
     [t]
@@ -271,6 +273,7 @@ export function MediaDetails({ media }: { media: ProjectMedia }) {
 
   const exportOutputs = async (kinds: OutputKind[]) => {
     if (busy) return
+    if (!(await recorder.ensurePhotoLibraryAccess())) return
     try {
       const results = await exportMedia(media, kinds)
       showResult(results.some((result) => result.error))

@@ -5,17 +5,21 @@ import {
   type NativeMenuAction,
   Text,
 } from '@shared/core/components/base'
+import { recordError } from '@shared/core/services/sentry'
 import { withAlpha } from '@shared/core/utils/color'
 import { BlurView } from 'expo-blur'
 import { GlassView, isGlassEffectAPIAvailable, isLiquidGlassAvailable } from 'expo-glass-effect'
 import {
+  CheckSquareIcon,
   GearSixIcon,
   LightningIcon,
   LightningSlashIcon,
   RectangleIcon,
   SlidersHorizontalIcon,
+  SquareIcon,
   SquaresFourIcon,
   StackIcon,
+  XSquareIcon,
 } from 'phosphor-react-native'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -37,6 +41,7 @@ import Animated, {
   withDelay,
   withTiming,
 } from 'react-native-reanimated'
+import type { PermissionStatus } from 'react-native-vision-camera'
 import { scheduleOnRN } from 'react-native-worklets'
 
 import type { CaptureContextController } from '@/services/camera/CaptureProvider'
@@ -61,6 +66,43 @@ const LAYOUTS: PreviewLayout[] = ['pip', 'stacked', 'guide']
 const LAYOUT_ICONS = { pip: SquaresFourIcon, stacked: StackIcon, guide: RectangleIcon }
 const CAMERA_BLUR_INTENSITY = 20
 const RECORD_MORPH_DURATION = 240
+
+function PermissionRow({
+  label,
+  prompted,
+  status,
+}: {
+  label: string
+  prompted: boolean
+  status: PermissionStatus
+}) {
+  const styles = useThemedStyles(createStyles)
+  const { colors } = useTheme()
+  const { t } = useTranslation()
+  const authorized = status === 'authorized'
+  const denied = status === 'denied' || status === 'restricted' || prompted
+  const stateLabel = authorized
+    ? t('camera.permissionGranted')
+    : denied
+      ? t('camera.permissionDenied')
+      : t('camera.permissionNotRequested')
+  const StatusIcon = authorized ? CheckSquareIcon : denied ? XSquareIcon : SquareIcon
+  const color = authorized ? colors.primary.main : denied ? colors.status.error : colors.text.muted
+
+  return (
+    <View accessible accessibilityLabel={`${label}: ${stateLabel}`} style={styles.permissionRow}>
+      <Text variant="subtitle" weight="medium">
+        {label}
+      </Text>
+      <StatusIcon
+        aria-hidden
+        color={color}
+        size={iconSizes.md}
+        weight={authorized || denied ? 'fill' : 'regular'}
+      />
+    </View>
+  )
+}
 
 export function CameraScreen({
   recorder,
@@ -350,32 +392,44 @@ export function CameraScreen({
     idle: '',
     recording: '',
   }
-  const permissionTitle = photoMode ? t('camera.photoPermissionTitle') : t('camera.permissionTitle')
-  const permissionBody = photoMode ? t('camera.photoPermissionBody') : t('camera.permissionBody')
-  if (!recorder.authorized)
+  if (!recorder.authorized) {
+    const canRequestPermission =
+      recorder.cameraPermissionCanRequest || recorder.microphonePermissionCanRequest
     return (
       <View style={styles.permission}>
         <Text variant="title" weight="bold" align="center">
-          {permissionTitle}
+          {t('camera.permissionTitle')}
         </Text>
         <Text tone="secondary" align="center">
-          {permissionBody}
+          {t('camera.permissionBody')}
         </Text>
+        <View style={styles.permissionRows}>
+          <PermissionRow
+            label={t('camera.cameraPermission')}
+            prompted={recorder.cameraPermissionPrompted}
+            status={recorder.cameraPermissionStatus}
+          />
+          <PermissionRow
+            label={t('camera.microphonePermission')}
+            prompted={recorder.microphonePermissionPrompted}
+            status={recorder.microphonePermissionStatus}
+          />
+        </View>
         <Button
+          fullWidth
+          loading={recorder.capturePermissionsRequesting}
           onPress={() => {
-            void recorder.permission()
+            if (canRequestPermission) void recorder.requestCapturePermissions()
+            else
+              void Linking.openSettings().catch((cause) => {
+                recordError(cause, 'permissions.openSettings', { platform: Platform.OS })
+              })
           }}
-          label={t('camera.allowAccess')}
-        />
-        <Button
-          variant="ghost"
-          onPress={() => {
-            void Linking.openSettings()
-          }}
-          label={t('camera.openSettings')}
+          label={canRequestPermission ? t('camera.allowAccess') : t('camera.openSettings')}
         />
       </View>
     )
+  }
   return (
     <View style={styles.root}>
       <View
@@ -641,8 +695,21 @@ const createStyles = createThemedStyles((theme) => ({
   permission: {
     flex: 1,
     justifyContent: 'center',
-    padding: theme.spacing.xl,
+    paddingVertical: theme.spacing.xl,
+    paddingHorizontal: theme.spacing['4xl'],
     gap: theme.spacing.xl,
+  },
+  permissionRows: {
+    gap: theme.spacing.sm,
+  },
+  permissionRow: {
+    minHeight: theme.spacing['4xl'],
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: theme.spacing.lg,
+    borderRadius: theme.borderRadius.lg,
+    backgroundColor: theme.colors.background.surface,
   },
   notices: {
     position: 'absolute',

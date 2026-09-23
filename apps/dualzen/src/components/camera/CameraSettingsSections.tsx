@@ -180,7 +180,6 @@ export function CameraSettingsSections({ recorder }: { recorder: CaptureControll
     updateSharedSettings,
     updateVideoSettings,
     autoSaveToLibrary,
-    setAutoSaveToLibrary,
     phase,
   } = useCameraState()
   const settings = useMemo(
@@ -337,8 +336,8 @@ export function CameraSettingsSections({ recorder }: { recorder: CaptureControll
             label={t('camera.autoSaveToLibrary')}
             subtitle={t('camera.autoSaveToLibraryBody')}
             value={autoSaveToLibrary}
-            onValueChange={setAutoSaveToLibrary}
-            disabled={phase !== 'idle'}
+            onValueChange={(value) => void recorder.setAutoSaveToLibraryEnabled(value)}
+            disabled={phase !== 'idle' || recorder.photoLibraryPermissionRequesting}
             divider
           />
           <DescriptionRow label={t('camera.storageTitle')} body={t('camera.storageBody')} />

@@ -28,6 +28,10 @@ interface CameraSlice {
   liveSettings: LiveCameraSettings
   sessionStrategy: SessionStrategy
   autoSaveToLibrary: boolean
+  capturePermissionPrompted: {
+    camera: boolean
+    microphone: boolean
+  }
   phase: CapturePhase
   updateSharedSettings: (settings: Partial<SharedCaptureSettings>) => void
   updateVideoSettings: (settings: Partial<VideoSettings>) => void
@@ -38,6 +42,7 @@ interface CameraSlice {
   updateLiveSettings: (settings: Partial<LiveCameraSettings>) => void
   setSessionStrategy: (value: SessionStrategy) => void
   setAutoSaveToLibrary: (value: boolean) => void
+  markCapturePermissionPrompted: (permission: 'camera' | 'microphone') => void
   setPhase: (phase: CapturePhase) => void
 }
 declare global {
@@ -55,6 +60,7 @@ export const sliceConfig = {
     liveSettings: DEFAULT_LIVE_CAMERA_SETTINGS,
     sessionStrategy: 'combined',
     autoSaveToLibrary: false,
+    capturePermissionPrompted: { camera: false, microphone: false },
     phase: 'idle',
     updateSharedSettings: (settings) =>
       set((state) => {
@@ -95,6 +101,10 @@ export const sliceConfig = {
     setAutoSaveToLibrary: (value) =>
       set((state) => {
         state.autoSaveToLibrary = value
+      }),
+    markCapturePermissionPrompted: (permission) =>
+      set((state) => {
+        state.capturePermissionPrompted[permission] = true
       }),
     setPhase: (phase) =>
       set((state) => {

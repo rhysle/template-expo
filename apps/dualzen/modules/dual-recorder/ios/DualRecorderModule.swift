@@ -54,13 +54,20 @@ public class DualRecorderModule: Module {
       return true
     }
     AsyncFunction("capabilities") { () -> String in "{\"hdr\":true,\"mov\":true}" }
+    Function("photoLibraryPermissionStatus") { () -> String in
+      Self.photoLibraryPermissionStatus(PHPhotoLibrary.authorizationStatus(for: .addOnly))
+    }
+    AsyncFunction("requestPhotoLibraryPermission") { () async -> String in
+      let status = await PHPhotoLibrary.requestAuthorization(for: .addOnly)
+      return Self.photoLibraryPermissionStatus(status)
+    }
     AsyncFunction("writeManifest") { (uri: String, content: String) throws -> Void in
       try Data(content.utf8).write(to: Self.localURL(uri), options: .atomic)
     }
     AsyncFunction("exportMedia") { (uri: String, mediaType: String) async throws -> Void in
       guard mediaType == "video" || mediaType == "photo" else { throw CaptureError(message: "Unsupported media type") }
       let source = try Self.localURL(uri)
-      let status = await PHPhotoLibrary.requestAuthorization(for: .addOnly)
+      let status = PHPhotoLibrary.authorizationStatus(for: .addOnly)
       guard status == .authorized || status == .limited else { throw CaptureError(message: "Photo library permission denied") }
       let url = source
       try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
@@ -94,6 +101,15 @@ public class DualRecorderModule: Module {
     let root = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].standardizedFileURL.path
     guard url.standardizedFileURL.path.hasPrefix(root + "/DualZen/") else { throw CaptureError(message: "File is outside project storage") }
     return url
+  }
+  private static func photoLibraryPermissionStatus(_ status: PHAuthorizationStatus) -> String {
+    switch status {
+    case .notDetermined: return "not-determined"
+    case .authorized, .limited: return "authorized"
+    case .denied: return "denied"
+    case .restricted: return "restricted"
+    @unknown default: return "restricted"
+    }
   }
 }
 
