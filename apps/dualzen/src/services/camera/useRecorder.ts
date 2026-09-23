@@ -68,6 +68,10 @@ function errorMessage(cause: unknown) {
   return String(cause ?? '')
 }
 
+function isCameraDisabledError(cause: unknown) {
+  return errorMessage(cause).toLowerCase().includes('camera is disabled')
+}
+
 function captureFailureReason(cause: unknown, fallback: string) {
   const message = errorMessage(cause).toLowerCase()
   if (message.includes('interrupt') || message.includes('background')) return 'interruption'
@@ -217,10 +221,16 @@ export function useCaptureController(active: boolean, retained: boolean) {
   }, [liveSettings])
   const session = useRef<CameraSession | null>(null)
   const lifecycle = useRef<Promise<void>>(Promise.resolve())
+  const appStateRef = useRef(AppState.currentState)
+  const backgroundRecordingStop = useRef<Promise<void> | null>(null)
+  const [appIsActive, setAppIsActive] = useState(
+    AppState.currentState !== 'background' && AppState.currentState !== 'inactive'
+  )
+  const sessionActive = active && appIsActive
   const activeRef = useRef(active)
   useEffect(() => {
-    activeRef.current = active
-  }, [active])
+    activeRef.current = sessionActive
+  }, [sessionActive])
   const captureSettings = useMemo<RecordingSettings>(
     () => ({
       longEdge: settings.longEdge,
@@ -782,7 +792,20 @@ export function useCaptureController(active: boolean, retained: boolean) {
   }, [recordErrorOnce])
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (state) => {
-      if (state !== 'active') void stop()
+      appStateRef.current = state
+      if (state === 'active') {
+        setAppIsActive(true)
+        return
+      }
+
+      // Finish an in-flight take before deactivating CameraX so its outputs can finalize.
+      const pendingStop = backgroundRecordingStop.current ?? stop()
+      backgroundRecordingStop.current = pendingStop
+      const clearBackgroundRecordingStop = () => {
+        if (backgroundRecordingStop.current === pendingStop) backgroundRecordingStop.current = null
+      }
+      void pendingStop.then(clearBackgroundRecordingStop, clearBackgroundRecordingStop)
+      setAppIsActive(false)
     })
     return () => subscription.remove()
   }, [stop])
@@ -865,6 +888,12 @@ export function useCaptureController(active: boolean, retained: boolean) {
         let selectedVideoSupported = true
         subscriptions.push(
           localSession.addOnErrorListener((cause) => {
+            const appIsBackgrounded =
+              appStateRef.current === 'background' || appStateRef.current === 'inactive'
+            if (Platform.OS === 'android' && appIsBackgrounded && isCameraDisabledError(cause)) {
+              return
+            }
+
             const reason = reportCaptureFailure(
               cause,
               'camera.sessionRuntime',
@@ -1131,20 +1160,23 @@ export function useCaptureController(active: boolean, retained: boolean) {
     updateLiveSettings,
   ])
   useEffect(() => {
-    activeRef.current = active
+    activeRef.current = sessionActive
     setReady(false)
     setReadyDeviceId(null)
     const transition = lifecycle.current
       .then(async () => {
         const current = session.current
         if (!current) return
-        if (active) {
+        if (sessionActive) {
           await current.start()
           if (session.current === current) {
             setReady(true)
             setReadyDeviceId(device?.id ?? null)
           }
-        } else await current.stop()
+        } else {
+          await backgroundRecordingStop.current?.catch(() => {})
+          await current.stop()
+        }
       })
       .catch((cause) => {
         const currentSettings = captureSettingsRef.current
@@ -1155,17 +1187,17 @@ export function useCaptureController(active: boolean, retained: boolean) {
           currentMediaType,
           currentSettings,
           'session',
-          active ? 'start_failed' : 'stop_failed'
+          sessionActive ? 'start_failed' : 'stop_failed'
         )
         trackEvent(AnalyticsAppEvents.CAMERA_SESSION_FAILED, {
           ...captureEventParams(currentMediaType, currentSettings),
-          stage: active ? 'start' : 'stop',
+          stage: sessionActive ? 'start' : 'stop',
           reason,
         })
         setError(String(cause))
       })
     lifecycle.current = transition
-  }, [active, device?.id])
+  }, [sessionActive, device?.id])
 
   const startVideo = async () => {
     if (
