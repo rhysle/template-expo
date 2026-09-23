@@ -199,7 +199,7 @@ export function useCaptureController(active: boolean, retained: boolean) {
     () => ({
       longEdge: settings.longEdge,
       fps: settings.fps,
-      container: 'mp4' as const,
+      container: settings.container,
       hdr: settings.hdr,
       stabilization: settings.stabilization,
       mode: settings.mode,
@@ -217,6 +217,7 @@ export function useCaptureController(active: boolean, retained: boolean) {
       settings.pairIndex,
       settings.longEdge,
       settings.fps,
+      settings.container,
       settings.hdr,
       settings.stabilization,
     ]
@@ -423,8 +424,9 @@ export function useCaptureController(active: boolean, retained: boolean) {
         if (
           (candidate.hdr && !capabilities.hdr) ||
           (candidate.container === 'mov' && !capabilities.mov)
-        )
+        ) {
           return false
+        }
         const selected =
           devices.find(
             (item) =>

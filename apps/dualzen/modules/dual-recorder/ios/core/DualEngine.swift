@@ -295,11 +295,16 @@ final class DualEngine: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
     }
     group.notify(queue: queue) {
       let outputs = captured.map { sink -> [String: Any] in
-        let ready = sink.writer.status == .completed && duration > 0 && sink.audioSamples > 0
+        var ready = sink.writer.status == .completed && duration > 0 && sink.audioSamples > 0
+        var metadataError: Error?
+        if ready, (self.config["fps"] as? Int ?? 30) >= 120, sink.url.pathExtension.lowercased() == "mp4" {
+          do { try MP4PlaybackIntent.writeFullSpeed(to: sink.url) }
+          catch { ready = false; metadataError = error }
+        }
         var result: [String: Any] = ["kind": sink.portrait ? "portrait" : "landscape", "filename": sink.url.lastPathComponent,
           "width": Int(sink.size.width), "height": Int(sink.size.height), "bitrate": sink.bitrate,
           "bytes": (try? sink.url.resourceValues(forKeys: [.fileSizeKey]).fileSize) ?? 0, "ready": ready]
-        if !ready { result["error"] = sink.writer.error?.localizedDescription ?? self.failure ?? "Video was not finalized" }
+        if !ready { result["error"] = metadataError?.localizedDescription ?? sink.writer.error?.localizedDescription ?? self.failure ?? "Video was not finalized" }
         return result
       }
       var result: [String: Any] = ["id": self.config["id"] as? String ?? "", "duration": duration,
@@ -359,6 +364,14 @@ private final class VideoSink {
     bitrate = max(4_000_000, Int(size.width * size.height * Double(fps) * (hdr ? 0.14 : 0.18)))
     colorSpace = CGColorSpace(name: hdr ? CGColorSpace.itur_2100_HLG : CGColorSpace.itur_709)!
     writer = try AVAssetWriter(outputURL: url, fileType: url.pathExtension == "mov" ? .mov : .mp4)
+    // AVAssetWriter preserves this metadata in MOV; MP4 gets it after finalization.
+    if #available(iOS 18.0, *), fps >= 120, url.pathExtension.lowercased() == "mov" {
+      let playbackIntent = AVMutableMetadataItem()
+      playbackIntent.identifier = .quickTimeMetadataFullFrameRatePlaybackIntent
+      playbackIntent.value = NSNumber(value: 1)
+      playbackIntent.dataType = kCMMetadataBaseDataType_SInt8 as String
+      writer.metadata = [playbackIntent]
+    }
     let colors: [String: String] = [AVVideoColorPrimariesKey: hdr ? AVVideoColorPrimaries_ITU_R_2020 : AVVideoColorPrimaries_ITU_R_709_2,
       AVVideoTransferFunctionKey: hdr ? AVVideoTransferFunction_ITU_R_2100_HLG : AVVideoTransferFunction_ITU_R_709_2,
       AVVideoYCbCrMatrixKey: hdr ? AVVideoYCbCrMatrix_ITU_R_2020 : AVVideoYCbCrMatrix_ITU_R_709_2]
@@ -393,4 +406,109 @@ private final class VideoSink {
     context.render(cropped, to: buffer, bounds: CGRect(origin: .zero, size: size), colorSpace: colorSpace)
     guard adaptor.append(buffer, withPresentationTime: pts) else { throw writer.error ?? CaptureError(message: "Video encoder failed") }
   }
+}
+
+
+// AVAssetWriter discards QuickTime movie metadata when its output type is MP4.
+// Add the same integer-typed mdta item after writing, while the moov box is last.
+enum MP4PlaybackIntent {
+  private struct Box {
+    let offset: UInt64
+    let size: UInt64
+    let headerSize: UInt64
+    let type: [UInt8]
+  }
+
+  static func writeFullSpeed(to url: URL) throws {
+    let file = try FileHandle(forUpdating: url)
+    defer { try? file.close() }
+    let fileSize = try file.seekToEnd()
+    var offset: UInt64 = 0
+    var movie: Box?
+    var hasMedia = false
+
+    while offset < fileSize {
+      let entry = try readBox(from: file, at: offset, endingAt: fileSize)
+      if entry.type == Array("mdat".utf8) { hasMedia = true }
+      if entry.type == Array("moov".utf8) { movie = entry }
+      offset += entry.size
+    }
+    guard hasMedia, let movie, movie.offset + movie.size == fileSize,
+      movie.headerSize == 8, movie.size <= UInt64(UInt32.max) - UInt64(fullSpeedMetadata.count)
+    else { throw CaptureError(message: "MP4 movie metadata cannot be updated") }
+
+    offset = movie.offset + movie.headerSize
+    while offset < fileSize {
+      let child = try readBox(from: file, at: offset, endingAt: fileSize)
+      guard child.type != Array("meta".utf8) else {
+        throw CaptureError(message: "MP4 already contains movie metadata")
+      }
+      offset += child.size
+    }
+
+    try file.seek(toOffset: fileSize)
+    try file.write(contentsOf: fullSpeedMetadata)
+    try file.seek(toOffset: movie.offset)
+    try file.write(contentsOf: uint32(UInt32(movie.size) + UInt32(fullSpeedMetadata.count)))
+    try file.synchronize()
+  }
+
+  private static func readBox(from file: FileHandle, at offset: UInt64, endingAt end: UInt64) throws -> Box {
+    guard end - offset >= 8 else { throw CaptureError(message: "Invalid MP4 box") }
+    try file.seek(toOffset: offset)
+    guard let header = try file.read(upToCount: 8), header.count == 8 else {
+      throw CaptureError(message: "Cannot read MP4 box")
+    }
+    let initialSize = header.prefix(4).reduce(UInt32(0)) { ($0 << 8) | UInt32($1) }
+    let headerSize: UInt64 = initialSize == 1 ? 16 : 8
+    let size: UInt64
+    if initialSize == 1 {
+      guard end - offset >= 16, let extended = try file.read(upToCount: 8), extended.count == 8 else {
+        throw CaptureError(message: "Invalid extended MP4 box")
+      }
+      size = extended.reduce(UInt64(0)) { ($0 << 8) | UInt64($1) }
+    } else {
+      size = initialSize == 0 ? end - offset : UInt64(initialSize)
+    }
+    guard size >= headerSize, size <= end - offset else {
+      throw CaptureError(message: "Invalid MP4 box size")
+    }
+    return Box(offset: offset, size: size, headerSize: headerSize, type: Array(header[4..<8]))
+  }
+
+  private static func uint32(_ value: UInt32) -> Data {
+    Data([UInt8(value >> 24), UInt8((value >> 16) & 0xff),
+      UInt8((value >> 8) & 0xff), UInt8(value & 0xff)])
+  }
+
+  private static func box(_ type: [UInt8], _ payload: Data) -> Data {
+    var value = uint32(UInt32(payload.count + 8))
+    value.append(contentsOf: type)
+    value.append(payload)
+    return value
+  }
+
+  private static let fullSpeedMetadata: Data = {
+    let key = Data("com.apple.quicktime.full-frame-rate-playback-intent".utf8)
+    var handler = Data(repeating: 0, count: 8)
+    handler.append(contentsOf: "mdta".utf8)
+    handler.append(Data(repeating: 0, count: 12))
+
+    var keyEntry = uint32(UInt32(key.count + 8))
+    keyEntry.append(contentsOf: "mdta".utf8)
+    keyEntry.append(key)
+    var keys = Data(repeating: 0, count: 4)
+    keys.append(uint32(1))
+    keys.append(keyEntry)
+
+    var value = uint32(21) // com.apple.metadata.datatype.int8
+    value.append(uint32(0)) // locale
+    value.append(1) // full frame rate
+    let item = box([0, 0, 0, 1], box(Array("data".utf8), value))
+
+    var metadata = box(Array("hdlr".utf8), handler)
+    metadata.append(box(Array("keys".utf8), keys))
+    metadata.append(box(Array("ilst".utf8), item))
+    return box(Array("meta".utf8), metadata)
+  }()
 }
