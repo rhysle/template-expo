@@ -13,6 +13,7 @@ declare class RecorderModule extends NativeModule<RecorderEvents> {
   capabilities(): Promise<string>
   photoLibraryPermissionStatus(): PhotoLibraryPermissionStatus
   requestPhotoLibraryPermission(): Promise<PhotoLibraryPermissionStatus>
+  openPhotoLibrary(): Promise<void>
   exportMedia(uri: string, mediaType: 'video' | 'photo'): Promise<void>
   thumbnail(uri: string, destination: string): Promise<void>
   writeManifest(uri: string, content: string): Promise<void>

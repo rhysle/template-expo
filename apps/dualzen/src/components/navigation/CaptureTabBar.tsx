@@ -15,7 +15,7 @@ import { iconSizes, useTheme } from '@/theme'
 
 import { useProjectsSelection } from '../projects/ProjectsSelectionContext'
 import { ProjectsSelectionTabBar } from '../projects/ProjectsSelectionTabBar'
-import { LatestLibraryPreviewButton } from './LatestLibraryPreviewButton'
+import { PhotoLibraryButton } from './PhotoLibraryButton'
 
 export function CaptureTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const { t } = useTranslation()
@@ -70,7 +70,7 @@ export function CaptureTabBar({ state, descriptors, navigation }: BottomTabBarPr
 
   return (
     <CapsuleNavigationBar
-      leadingAccessory={captureFocused ? <LatestLibraryPreviewButton /> : undefined}
+      leadingAccessory={captureFocused ? <PhotoLibraryButton disabled={disabled} /> : undefined}
       trailingAccessory={
         captureFocused ? (
           <CapsuleNavigationAccessory

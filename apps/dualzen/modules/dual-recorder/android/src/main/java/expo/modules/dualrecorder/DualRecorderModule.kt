@@ -1,6 +1,7 @@
 package expo.modules.dualrecorder
 
 import android.content.ContentValues
+import android.content.Intent
 import android.media.*
 import android.os.Build
 import android.os.StatFs
@@ -8,6 +9,7 @@ import android.provider.MediaStore
 import android.graphics.Bitmap
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
+import expo.modules.kotlin.functions.Queues
 import java.io.File
 import java.util.UUID
 
@@ -41,6 +43,12 @@ class DualRecorderModule : Module() {
     AsyncFunction("capabilities") { "{\"hdr\":false,\"mov\":false}" }
     Function("photoLibraryPermissionStatus") { "authorized" }
     AsyncFunction("requestPhotoLibraryPermission") { "authorized" }
+    AsyncFunction("openPhotoLibrary") {
+      val activity = appContext.currentActivity ?: error("Active activity unavailable")
+      activity.startActivity(
+        Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_GALLERY)
+      )
+    }.runOnQueue(Queues.MAIN)
     AsyncFunction("writeManifest") { uri: String,content: String ->
       val file=android.util.AtomicFile(DualEngine.localFile(uri))
       val stream=file.startWrite()

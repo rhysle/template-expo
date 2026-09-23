@@ -226,8 +226,7 @@
       "on": "On"
     },
     "flip": "Switch front/back camera",
-    "openLatestPhoto": "Open latest photo in Projects",
-    "openLatestVideo": "Open latest video in Projects",
+    "openPhotoLibrary": "Open photo library",
     "crop": "Adjust {{kind}} framing",
     "quickSettings": "Quick settings",
     "moreSettings": "More settings",
