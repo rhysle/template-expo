@@ -326,6 +326,14 @@ export function CameraSettingsSections({ recorder }: { recorder: CaptureControll
             divider
           />
           <ToggleRow
+            label={t('camera.mirrorFrontCamera')}
+            subtitle={t('camera.mirrorFrontCameraBody')}
+            value={sharedSettings.mirrorFrontCamera}
+            onValueChange={(mirrorFrontCamera) => updateSharedSettings({ mirrorFrontCamera })}
+            disabled={phase !== 'idle'}
+            divider
+          />
+          <ToggleRow
             label={t('camera.autoSaveToLibrary')}
             subtitle={t('camera.autoSaveToLibraryBody')}
             value={autoSaveToLibrary}

@@ -30,6 +30,7 @@ export interface SharedCaptureSettings {
   portraitPosition: number
   landscapePosition: number
   grid: boolean
+  mirrorFrontCamera: boolean
 }
 export interface VideoSettings {
   fps: 24 | 30 | 60 | 120
@@ -52,6 +53,7 @@ export const DEFAULT_SHARED_CAPTURE_SETTINGS: SharedCaptureSettings = {
   portraitPosition: 0.5,
   landscapePosition: 0.5,
   grid: false,
+  mirrorFrontCamera: false,
 }
 export const DEFAULT_VIDEO_SETTINGS: VideoSettings = {
   fps: 30,
@@ -109,14 +111,7 @@ export interface VideoCapture extends ProjectMediaBase {
   outputs: VideoOutput[]
   reason: string
 }
-export interface PhotoSettings {
-  mode: CaptureMode
-  front: boolean
-  deviceId: string | null
-  pairIndex: number
-  portraitPosition: number
-  landscapePosition: number
-  longEdge: SharedCaptureSettings['longEdge']
+export type PhotoSettings = SharedCaptureSettings & {
   container: 'jpeg'
   quality: number
   targetResolution: PixelSize

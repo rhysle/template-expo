@@ -122,6 +122,9 @@ final class DualEngine: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
         guard channels.allSatisfy({ pixelFormats[$0] == kCVPixelFormatType_420YpCbCr10BiPlanarVideoRange }) else { throw CaptureError(message: "Camera negotiated an incompatible HDR pixel format") }
       }
       let edge = request["longEdge"] as? Double ?? 1920
+      let mirrorFrontCamera = (request["mode"] as? String) == "single" &&
+        (request["front"] as? Bool) == true &&
+        (request["mirrorFrontCamera"] as? Bool) == true
       let fps = request["fps"] as? Int ?? 30
       var prepared: [VideoSink] = []
       beginFinalizationAllowance()
@@ -132,7 +135,8 @@ final class DualEngine: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
           let name = index == 0 ? "portrait" : "landscape"
           prepared.append(try VideoSink(url: url.appendingPathComponent(name + "." + (request["container"] as? String ?? "mp4")), size: size,
             fps: fps, hdr: request["hdr"] as? Bool ?? false, portrait: index == 0,
-            position: request[index == 0 ? "portraitPosition" : "landscapePosition"] as? Double ?? 0.5))
+            position: request[index == 0 ? "portraitPosition" : "landscapePosition"] as? Double ?? 0.5,
+            mirror: mirrorFrontCamera))
         }
         let session = AVCaptureSession()
         guard let mic = AVCaptureDevice.default(for: .audio) else { throw CaptureError(message: "Microphone unavailable") }
@@ -177,6 +181,9 @@ final class DualEngine: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
 
       let channels = request["mode"] as? String == "dual" ? [1, 2] : [0, 0]
       let edge = request["longEdge"] as? Double ?? 1920
+      let mirrorFrontCamera = (request["mode"] as? String) == "single" &&
+        (request["front"] as? Bool) == true &&
+        (request["mirrorFrontCamera"] as? Bool) == true
       var outputs: [[String: Any]] = []
       for index in 0..<2 {
         guard let source = sources[channels[index]]?.0 else {
@@ -186,10 +193,13 @@ final class DualEngine: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
         let position = request[portrait ? "portraitPosition" : "landscapePosition"] as? Double ?? 0.5
         let rect = Self.crop(source.extent.size, portrait: portrait, position: position)
         let size = Self.outputSize(source.extent.size, portrait: portrait, edge: edge)
-        let rendered = source.cropped(to: rect)
+        let scaled = source.cropped(to: rect)
           .transformed(by: CGAffineTransform(translationX: -rect.minX, y: -rect.minY))
           .transformed(by: CGAffineTransform(scaleX: size.width / rect.width,
             y: size.height / rect.height))
+        let rendered = mirrorFrontCamera
+          ? scaled.transformed(by: CGAffineTransform(a: -1, b: 0, c: 0, d: 1, tx: size.width, ty: 0))
+          : scaled
         guard let cgImage = context.createCGImage(rendered, from: CGRect(origin: .zero, size: size)),
           let jpeg = UIImage(cgImage: cgImage).jpegData(compressionQuality: 0.9)
         else { throw CaptureError(message: "Photo rendering failed") }
@@ -355,12 +365,13 @@ private final class VideoSink {
   let size: CGSize
   let portrait: Bool
   let position: Double
+  let mirror: Bool
   let bitrate: Int
   private let colorSpace: CGColorSpace
 
-  init(url: URL, size: CGSize, fps: Int, hdr: Bool, portrait: Bool, position: Double) throws {
+  init(url: URL, size: CGSize, fps: Int, hdr: Bool, portrait: Bool, position: Double, mirror: Bool) throws {
     guard size.width >= 18, size.height >= 18 else { throw CaptureError(message: "Invalid video dimensions") }
-    self.url = url; self.size = size; self.portrait = portrait; self.position = position
+    self.url = url; self.size = size; self.portrait = portrait; self.position = position; self.mirror = mirror
     bitrate = max(4_000_000, Int(size.width * size.height * Double(fps) * (hdr ? 0.14 : 0.18)))
     colorSpace = CGColorSpace(name: hdr ? CGColorSpace.itur_2100_HLG : CGColorSpace.itur_709)!
     writer = try AVAssetWriter(outputURL: url, fileType: url.pathExtension == "mov" ? .mov : .mp4)
@@ -403,7 +414,10 @@ private final class VideoSink {
     let rect = DualEngine.crop(image.extent.size, portrait: portrait, position: position)
     let cropped = image.cropped(to: rect).transformed(by: CGAffineTransform(translationX: -rect.minX, y: -rect.minY))
       .transformed(by: CGAffineTransform(scaleX: size.width / rect.width, y: size.height / rect.height))
-    context.render(cropped, to: buffer, bounds: CGRect(origin: .zero, size: size), colorSpace: colorSpace)
+    let rendered = mirror
+      ? cropped.transformed(by: CGAffineTransform(a: -1, b: 0, c: 0, d: 1, tx: size.width, ty: 0))
+      : cropped
+    context.render(rendered, to: buffer, bounds: CGRect(origin: .zero, size: size), colorSpace: colorSpace)
     guard adaptor.append(buffer, withPresentationTime: pts) else { throw writer.error ?? CaptureError(message: "Video encoder failed") }
   }
 }

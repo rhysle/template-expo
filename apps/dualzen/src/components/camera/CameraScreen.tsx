@@ -103,9 +103,12 @@ export function CameraScreen({
       front: sharedSettings.front,
       deviceId: sharedSettings.deviceId,
       pairIndex: sharedSettings.pairIndex,
+      // Capability checks ignore crop, grid, and output-mirroring preferences. Keep these
+      // fields fixed so changing them doesn't invalidate the checks below.
       portraitPosition: 0.5,
       landscapePosition: 0.5,
       grid: false,
+      mirrorFrontCamera: false,
     }),
     [
       sharedSettings.deviceId,

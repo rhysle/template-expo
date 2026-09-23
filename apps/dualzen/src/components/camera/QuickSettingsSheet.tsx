@@ -1,6 +1,11 @@
 import { NativeBottomSheet, Text } from '@shared/core/components/base'
 import { withAlpha } from '@shared/core/utils/color'
-import { FrameCornersIcon, GearSixIcon, GridNineIcon } from 'phosphor-react-native'
+import {
+  FlipHorizontalIcon,
+  FrameCornersIcon,
+  GearSixIcon,
+  GridNineIcon,
+} from 'phosphor-react-native'
 import { useTranslation } from 'react-i18next'
 import { Pressable, View } from 'react-native'
 
@@ -21,7 +26,7 @@ export function QuickSettingsSheet({
   const { t } = useTranslation()
   const theme = useTheme()
   const styles = useThemedStyles(createStyles)
-  const { sharedSettings, updateSharedSettings } = useCameraState()
+  const { sharedSettings, updateSharedSettings, phase } = useCameraState()
 
   const actions = [
     {
@@ -36,6 +41,15 @@ export function QuickSettingsSheet({
       icon: GridNineIcon,
       selected: sharedSettings.grid,
       onPress: () => updateSharedSettings({ grid: !sharedSettings.grid }),
+    },
+    {
+      id: 'mirror-front-camera' as const,
+      label: t('camera.mirrorFrontCameraQuick'),
+      accessibilityLabel: t('camera.mirrorFrontCamera'),
+      icon: FlipHorizontalIcon,
+      selected: sharedSettings.mirrorFrontCamera,
+      disabled: phase !== 'idle',
+      onPress: () => updateSharedSettings({ mirrorFrontCamera: !sharedSettings.mirrorFrontCamera }),
     },
     {
       id: 'settings' as const,
@@ -53,31 +67,42 @@ export function QuickSettingsSheet({
       backgroundVariant="translucent"
       contentContainerStyle={styles.content}>
       <View style={styles.actions}>
-        {actions.map(({ id, label, icon: Icon, onPress, selected = false }) => (
-          <Pressable
-            key={id}
-            accessibilityRole="button"
-            accessibilityLabel={label}
-            accessibilityState={{ selected }}
-            onPress={onPress}
-            style={styles.action}>
-            <View pointerEvents="none" style={styles.actionIcon}>
-              <Icon
-                size={iconSizes.xl}
-                color={selected ? theme.colors.primary.main : theme.colors.text.primary}
-                weight="thin"
-              />
-            </View>
-            <Text
-              variant="label"
-              weight="semibold"
-              align="center"
-              numberOfLines={2}
-              style={[styles.actionLabel, selected && styles.actionLabelSelected]}>
-              {label}
-            </Text>
-          </Pressable>
-        ))}
+        {actions.map(
+          ({
+            id,
+            label,
+            accessibilityLabel,
+            icon: Icon,
+            onPress,
+            selected = false,
+            disabled = false,
+          }) => (
+            <Pressable
+              key={id}
+              accessibilityRole="button"
+              accessibilityLabel={accessibilityLabel ?? label}
+              accessibilityState={{ selected, disabled }}
+              disabled={disabled}
+              onPress={onPress}
+              style={[styles.action, disabled && styles.actionDisabled]}>
+              <View pointerEvents="none" style={styles.actionIcon}>
+                <Icon
+                  size={iconSizes.xl}
+                  color={selected ? theme.colors.primary.main : theme.colors.text.primary}
+                  weight="thin"
+                />
+              </View>
+              <Text
+                variant="label"
+                weight="semibold"
+                align="center"
+                numberOfLines={2}
+                style={[styles.actionLabel, selected && styles.actionLabelSelected]}>
+                {label}
+              </Text>
+            </Pressable>
+          )
+        )}
       </View>
     </NativeBottomSheet>
   )
@@ -92,13 +117,16 @@ const createStyles = createThemedStyles((theme) => ({
   },
   actions: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-evenly',
     gap: theme.spacing.md,
   },
   action: {
-    flex: 1,
+    width: '29%',
     alignItems: 'center',
     gap: theme.spacing.sm,
   },
+  actionDisabled: { opacity: 0.5 },
   actionLabel: { textTransform: 'uppercase' },
   actionLabelSelected: { color: theme.colors.primary.main },
   actionIcon: {

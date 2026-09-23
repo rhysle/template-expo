@@ -206,9 +206,12 @@ export function useCaptureController(active: boolean, retained: boolean) {
       front: settings.front,
       deviceId: settings.deviceId,
       pairIndex: settings.pairIndex,
+      // This object drives session setup and is an effect dependency. Keep crop, grid,
+      // and output-mirroring preferences fixed; their live values are applied at capture time.
       portraitPosition: 0.5,
       landscapePosition: 0.5,
       grid: false,
+      mirrorFrontCamera: false,
     }),
     [
       settings.mode,
@@ -1161,6 +1164,8 @@ export function useCaptureController(active: boolean, retained: boolean) {
     let photoOutcomeTracked = false
     try {
       const allocation = allocateMedia()
+      const mirrorFrontCamera = settings.mirrorFrontCamera
+      const mirrorPhoto = settings.mode === 'single' && settings.front && mirrorFrontCamera
       const selectedFlash =
         settings.mode === 'single' && !settings.front && device?.hasFlash && lightEnabled
           ? 'on'
@@ -1181,10 +1186,12 @@ export function useCaptureController(active: boolean, retained: boolean) {
           settings: {
             mode: settings.mode,
             front: settings.front,
+            mirrorFrontCamera,
             deviceId: settings.deviceId,
             pairIndex: settings.pairIndex,
             portraitPosition: settings.portraitPosition,
             landscapePosition: settings.landscapePosition,
+            grid: settings.grid,
             longEdge: settings.longEdge,
             container: 'jpeg',
             quality: 0.9,
@@ -1260,6 +1267,8 @@ export function useCaptureController(active: boolean, retained: boolean) {
               JSON.stringify({
                 directory: allocation.directory.uri,
                 mode: settings.mode,
+                front: settings.front,
+                mirrorFrontCamera,
                 longEdge: settings.longEdge,
                 portraitPosition: getNativeCropPosition(
                   'portrait',
@@ -1323,7 +1332,8 @@ export function useCaptureController(active: boolean, retained: boolean) {
                     kind,
                     positions[kind],
                     settings.longEdge,
-                    !thumbnailFile(allocation.id).exists
+                    !thumbnailFile(allocation.id).exists,
+                    mirrorPhoto
                   )
                 )
               } catch (cause) {
@@ -1363,7 +1373,8 @@ export function useCaptureController(active: boolean, retained: boolean) {
                 kind,
                 positions[kind],
                 settings.longEdge,
-                !thumbnailFile(allocation.id).exists
+                !thumbnailFile(allocation.id).exists,
+                mirrorPhoto
               )
             )
           } catch (cause) {
@@ -1668,16 +1679,19 @@ async function savePhotoOutput(
   kind: OutputKind,
   position: number,
   longEdge: RecordingSettings['longEdge'],
-  createThumbnail: boolean
+  createThumbnail: boolean,
+  mirrorHorizontally: boolean
 ): Promise<PhotoOutput> {
   const { x, y, width, height } = cropRect(image, kind, position)
   const cropped = await image.cropAsync(x, y, x + width, y + height)
+  let mirrored: NitroImage | null = null
   try {
-    const target = outputSize(cropped, kind, longEdge)
+    const transformed = mirrorHorizontally ? (mirrored = cropped.mirrorHorizontally()) : cropped
+    const target = outputSize(transformed, kind, longEdge)
     const output =
-      target.width === cropped.width && target.height === cropped.height
-        ? cropped
-        : await cropped.resizeAsync(target.width, target.height)
+      target.width === transformed.width && target.height === transformed.height
+        ? transformed
+        : await transformed.resizeAsync(target.width, target.height)
     const filename = `${kind}.jpg`
     const destination = new File(directory, filename)
     try {
@@ -1703,9 +1717,10 @@ async function savePhotoOutput(
         ready: true,
       }
     } finally {
-      if (output !== cropped) output.dispose()
+      if (output !== transformed) output.dispose()
     }
   } finally {
+    mirrored?.dispose()
     cropped.dispose()
   }
 }

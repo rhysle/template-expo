@@ -212,6 +212,9 @@
     "hdr": "HDR",
     "stabilization": "Stabilization",
     "grid": "Grid",
+    "mirrorFrontCamera": "Mirror Front Camera",
+    "mirrorFrontCameraQuick": "Mirror Front",
+    "mirrorFrontCameraBody": "Save front camera photos and videos mirrored to match the preview.",
     "torch": "Torch",
     "flashMode": "Flash: {{mode}}",
     "flash": {

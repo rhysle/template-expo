@@ -174,9 +174,11 @@ gl_FragColor=texture2D(uTexture,(uMatrix*vec4(p,0.0,1.0)).xy); }"""
     // one synchronized pair per requested output-frame slot without retiming audio.
     val frameSlot=(pts*config.optInt("fps",30)+500_000L)/1_000_000L
     if(frameSlot<=lastFrameSlot){dropped++;return}
+    val mirrorFrontCamera = config.optString("mode") == "single" &&
+      config.optBoolean("front") && config.optBoolean("mirrorFrontCamera")
     sinks.forEachIndexed { index,sink ->
       if(pts/2_000_000>sink.lastKeyRequest){sink.codec.setParameters(Bundle().apply { putInt(MediaCodec.PARAMETER_KEY_REQUEST_SYNC_FRAME,0) });sink.lastKeyRequest=pts/2_000_000}
-      draw(inputs[index],sink.egl,sink.width,sink.height,sink.portrait,sink.position,false,pts)
+      draw(inputs[index],sink.egl,sink.width,sink.height,sink.portrait,sink.position,mirrorFrontCamera,pts)
       sink.drain(false)
     }
     lastPTS=pts;lastFrameSlot=frameSlot;frames++
