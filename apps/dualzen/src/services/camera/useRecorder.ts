@@ -573,7 +573,20 @@ export function useCaptureController(active: boolean, retained: boolean) {
               meta.settings,
               'processing',
               recordingFailureReason(result.reason, 'processing_failed'),
-              { output_count: result.outputs.length }
+              {
+                output_count: result.outputs.length,
+                duration_seconds: result.duration,
+                frame_count: result.frames,
+                dropped_frame_count: result.dropped,
+                writer_statuses: result.writerStatuses?.join(',') ?? 'unavailable',
+                audio_sample_counts: result.audioSampleCounts?.join(',') ?? 'unavailable',
+                camera_position: meta.settings.front ? 'front' : 'back',
+                resolution: meta.settings.longEdge,
+                fps: meta.settings.fps,
+                hdr: meta.settings.hdr,
+                container: meta.settings.container,
+                stabilization: meta.settings.stabilization,
+              }
             )
             trackEvent(AnalyticsAppEvents.CAPTURE_FAILED, {
               ...captureEventParams('video', meta.settings),

@@ -269,7 +269,13 @@ final class DualEngine: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
     guard CMSampleBufferCreateCopyWithNewTiming(allocator: nil, sampleBuffer: sampleBuffer, sampleTimingEntryCount: count, sampleTimingArray: &timings, sampleBufferOut: &retimed) == noErr, let retimed else { failure = "Cannot align microphone timing"; finish(reason: "audio", completion: nil); return }
     let pts = CMSampleBufferGetPresentationTimeStamp(retimed)
     guard pts.isValid, CMTimeGetSeconds(pts).isFinite else { return }
-    guard let origin else { firstAudio = retimed; return }
+    // Preserve the earliest microphone sample until a video frame reaches its
+    // timestamp. Replacing it on every audio callback creates a moving target
+    // that can prevent short recordings from ever starting the asset writer.
+    guard let origin else {
+      if firstAudio == nil { firstAudio = retimed }
+      return
+    }
     guard pts >= origin else { return }
     _ = appendAudio(retimed)
   }
@@ -314,11 +320,20 @@ final class DualEngine: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
         var result: [String: Any] = ["kind": sink.portrait ? "portrait" : "landscape", "filename": sink.url.lastPathComponent,
           "width": Int(sink.size.width), "height": Int(sink.size.height), "bitrate": sink.bitrate,
           "bytes": (try? sink.url.resourceValues(forKeys: [.fileSizeKey]).fileSize) ?? 0, "ready": ready]
-        if !ready { result["error"] = metadataError?.localizedDescription ?? sink.writer.error?.localizedDescription ?? self.failure ?? "Video was not finalized" }
+        if !ready {
+          let finalizationError: String
+          if sink.writer.status != .completed { finalizationError = "Video writer did not complete" }
+          else if duration <= 0 { finalizationError = "Video contained no finalized frames" }
+          else if sink.audioSamples <= 0 { finalizationError = "Video contained no finalized audio" }
+          else { finalizationError = "Video was not finalized" }
+          result["error"] = metadataError?.localizedDescription ?? sink.writer.error?.localizedDescription ?? self.failure ?? finalizationError
+        }
         return result
       }
       var result: [String: Any] = ["id": self.config["id"] as? String ?? "", "duration": duration,
-        "outputs": outputs, "reason": reason, "frames": self.recordedFrames, "dropped": self.droppedFrames]
+        "outputs": outputs, "reason": reason, "frames": self.recordedFrames, "dropped": self.droppedFrames,
+        "writerStatuses": captured.map { $0.writer.status.rawValue },
+        "audioSampleCounts": captured.map { $0.audioSamples }]
       if let failure = self.failure { result["error"] = failure }
       // Save finalized originals natively before emitting the JS event. The JS
       // runtime may already be suspended when filming stops in the background.

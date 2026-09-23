@@ -138,6 +138,8 @@ export interface NativeRecordingResult {
   error?: string
   frames: number
   dropped: number
+  writerStatuses?: number[]
+  audioSampleCounts?: number[]
 }
 export interface NativePhotoResult {
   outputs: PhotoOutput[]
