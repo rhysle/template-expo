@@ -216,7 +216,8 @@ export function CameraSettingsSections({ recorder }: { recorder: CaptureControll
 
   const changeMode = (mode: RecordingSettings['mode']) => {
     const androidDual = Platform.OS === 'android' && mode === 'dual'
-    updateSharedSettings({ mode, front: false, deviceId: null, pairIndex: 0 })
+    const deviceId = mode === 'dual' && settings.front ? null : settings.deviceId
+    updateSharedSettings({ mode, front: false, deviceId, pairIndex: 0 })
     if (androidDual) updateVideoSettings({ fps: 30, hdr: false, stabilization: false })
   }
 

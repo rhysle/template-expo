@@ -281,14 +281,6 @@ export function useCaptureController(active: boolean, retained: boolean) {
     },
     [captureSnackbarBottomOffset, showSnackbar, t]
   )
-  const rearZoomDevice = devices
-    .filter(
-      (item) =>
-        item.position === 'back' &&
-        item.isVirtualDevice &&
-        item.physicalDevices.some((physical) => physical.type === 'ultra-wide-angle')
-    )
-    .sort((a, b) => b.physicalDevices.length - a.physicalDevices.length)[0]
   const device =
     settings.mode === 'dual'
       ? pairs[settings.pairIndex]?.[0]
@@ -296,7 +288,6 @@ export function useCaptureController(active: boolean, retained: boolean) {
           (item) =>
             item.id === settings.deviceId && item.position === (settings.front ? 'front' : 'back')
         ) ??
-        (!settings.front ? rearZoomDevice : undefined) ??
         devices.find(
           (item) =>
             item.position === (settings.front ? 'front' : 'back') &&
