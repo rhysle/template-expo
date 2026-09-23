@@ -370,14 +370,14 @@ export function CameraStage({
               />
             </Animated.View>
           </>
-        ) : (
+        ) : !recorder.error ? (
           <View style={styles.waiting}>
             <SpinArcLoader color={theme.colors.primary.main} />
             <Text tone="secondary">
               {recorder.device ? t('camera.waiting') : t('camera.noCamera')}
             </Text>
           </View>
-        )}
+        ) : null}
       </Animated.View>
       {switching && <CameraTransition progress={switchProgress} />}
       {children}

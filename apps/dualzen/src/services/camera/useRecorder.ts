@@ -453,12 +453,14 @@ export function useCaptureController(active: boolean, retained: boolean) {
           const outputConfigurations = [output, photoOutput]
             .filter((item): item is CameraOutput => item !== undefined)
             .map((item) => ({ output: item, mirrorMode: 'off' as const }))
+          // Match createCameraSession(mode === 'dual') so capability checks use the same formats.
           const resolved = await VisionCamera.resolveConstraints(
             input,
             outputConfigurations,
-            configuration(output, photoOutput, candidate)
+            configuration(output, photoOutput, candidate),
+            candidate.mode === 'dual'
           )
-          if (combined && !input.isSessionConfigSupported(resolved)) return false
+          if (!input.isSessionConfigSupported(resolved)) return false
           if (resolved.selectedFPS !== candidate.fps) return false
           if (
             candidate.hdr &&
