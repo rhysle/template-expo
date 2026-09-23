@@ -281,19 +281,18 @@ export function useCaptureController(active: boolean, retained: boolean) {
     },
     [captureSnackbarBottomOffset, showSnackbar, t]
   )
+  const frontDevice =
+    devices.find((item) => item.position === 'front' && item.type === 'wide-angle') ??
+    devices.find((item) => item.position === 'front' && item.type === 'true-depth') ??
+    devices.find((item) => item.position === 'front')
   const device =
     settings.mode === 'dual'
       ? pairs[settings.pairIndex]?.[0]
-      : (devices.find(
-          (item) =>
-            item.id === settings.deviceId && item.position === (settings.front ? 'front' : 'back')
-        ) ??
-        devices.find(
-          (item) =>
-            item.position === (settings.front ? 'front' : 'back') &&
-            ['wide-angle', 'true-depth'].includes(item.type)
-        ) ??
-        devices.find((item) => item.position === (settings.front ? 'front' : 'back')))
+      : settings.front
+        ? frontDevice
+        : (devices.find((item) => item.id === settings.deviceId && item.position === 'back') ??
+          devices.find((item) => item.position === 'back' && item.type === 'wide-angle') ??
+          devices.find((item) => item.position === 'back'))
 
   const permission = useCallback(async () => {
     try {
@@ -418,12 +417,10 @@ export function useCaptureController(active: boolean, retained: boolean) {
         ) {
           return false
         }
-        const selected =
-          devices.find(
-            (item) =>
-              item.id === candidate.deviceId &&
-              item.position === (candidate.front ? 'front' : 'back')
-          ) ?? device
+        const selected = candidate.front
+          ? frontDevice
+          : (devices.find((item) => item.id === candidate.deviceId && item.position === 'back') ??
+            device)
         const inputs =
           candidate.mode === 'dual' ? pairs[candidate.pairIndex] : selected ? [selected] : []
         if (
@@ -473,7 +470,7 @@ export function useCaptureController(active: boolean, retained: boolean) {
         return false
       }
     },
-    [capabilities, capabilitiesLoaded, configuration, device, devices, pairs]
+    [capabilities, capabilitiesLoaded, configuration, device, devices, frontDevice, pairs]
   )
   const checkSettings = useCallback(
     (candidate: RecordingSettings) =>

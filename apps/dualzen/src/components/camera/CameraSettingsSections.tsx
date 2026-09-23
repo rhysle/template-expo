@@ -235,8 +235,8 @@ export function CameraSettingsSections({ recorder }: { recorder: CaptureControll
 
   const availableLenses = recorder.devices.filter(
     (device) =>
-      device.position === (settings.front ? 'front' : 'back') &&
-      ['wide-angle', 'ultra-wide-angle', 'telephoto', 'true-depth'].includes(device.type)
+      device.position === 'back' &&
+      ['wide-angle', 'ultra-wide-angle', 'telephoto'].includes(device.type)
   )
   const selectedLens = availableLenses.find((device) => device.id === recorder.device?.id)
   const selectedProject = projects.find((project) => project.id === selectedProjectId)
@@ -270,7 +270,13 @@ export function CameraSettingsSections({ recorder }: { recorder: CaptureControll
           )}
 
           {settings.mode === 'single' &&
-            (availableLenses.length ? (
+            (settings.front ? (
+              <ReadOnlyOptionRow
+                label={t('camera.lens')}
+                value={recorder.device ? t('camera.selfie') : '—'}
+                divider
+              />
+            ) : availableLenses.length ? (
               <MenuOptionRow
                 label={t('camera.lens')}
                 value={selectedLens ? lensLabel(selectedLens) : '—'}
