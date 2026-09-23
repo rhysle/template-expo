@@ -11,11 +11,11 @@ import { BlurView } from 'expo-blur'
 import { GlassView, isGlassEffectAPIAvailable, isLiquidGlassAvailable } from 'expo-glass-effect'
 import {
   CheckSquareIcon,
+  DotsSixIcon,
   GearSixIcon,
   LightningIcon,
   LightningSlashIcon,
   RectangleIcon,
-  SlidersHorizontalIcon,
   SquareIcon,
   SquaresFourIcon,
   StackIcon,
@@ -612,7 +612,7 @@ export function CameraScreen({
               </BlurView>
               <BlurView {...cameraBlurProps} style={styles.controlBlur}>
                 <IconButton
-                  icon={SlidersHorizontalIcon}
+                  icon={DotsSixIcon}
                   style={styles.controlButton}
                   disabled={!idle || switching}
                   accessibilityLabel={t('camera.quickSettings')}
