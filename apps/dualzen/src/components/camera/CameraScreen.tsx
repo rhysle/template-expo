@@ -9,6 +9,7 @@ import { recordError } from '@shared/core/services/sentry'
 import { withAlpha } from '@shared/core/utils/color'
 import { BlurView } from 'expo-blur'
 import { GlassView, isGlassEffectAPIAvailable, isLiquidGlassAvailable } from 'expo-glass-effect'
+import { Image } from 'expo-image'
 import {
   CheckSquareIcon,
   DotsSixIcon,
@@ -397,36 +398,44 @@ export function CameraScreen({
       recorder.cameraPermissionCanRequest || recorder.microphonePermissionCanRequest
     return (
       <View style={styles.permission}>
-        <Text variant="title" weight="bold" align="center">
-          {t('camera.permissionTitle')}
-        </Text>
-        <Text tone="secondary" align="center">
-          {t('camera.permissionBody')}
-        </Text>
-        <View style={styles.permissionRows}>
-          <PermissionRow
-            label={t('camera.cameraPermission')}
-            prompted={recorder.cameraPermissionPrompted}
-            status={recorder.cameraPermissionStatus}
-          />
-          <PermissionRow
-            label={t('camera.microphonePermission')}
-            prompted={recorder.microphonePermissionPrompted}
-            status={recorder.microphonePermissionStatus}
+        <Image
+          accessible={false}
+          contentFit="contain"
+          source={require('@/assets/images/camera-permission.png')}
+          style={styles.permissionIllustration}
+        />
+        <View style={styles.permissionContent}>
+          <Text variant="title" weight="bold" align="center">
+            {t('camera.permissionTitle')}
+          </Text>
+          <Text tone="secondary" align="center">
+            {t('camera.permissionBody')}
+          </Text>
+          <View style={styles.permissionRows}>
+            <PermissionRow
+              label={t('camera.cameraPermission')}
+              prompted={recorder.cameraPermissionPrompted}
+              status={recorder.cameraPermissionStatus}
+            />
+            <PermissionRow
+              label={t('camera.microphonePermission')}
+              prompted={recorder.microphonePermissionPrompted}
+              status={recorder.microphonePermissionStatus}
+            />
+          </View>
+          <Button
+            fullWidth
+            loading={recorder.capturePermissionsRequesting}
+            onPress={() => {
+              if (canRequestPermission) void recorder.requestCapturePermissions()
+              else
+                void Linking.openSettings().catch((cause) => {
+                  recordError(cause, 'permissions.openSettings', { platform: Platform.OS })
+                })
+            }}
+            label={canRequestPermission ? t('camera.allowAccess') : t('camera.openSettings')}
           />
         </View>
-        <Button
-          fullWidth
-          loading={recorder.capturePermissionsRequesting}
-          onPress={() => {
-            if (canRequestPermission) void recorder.requestCapturePermissions()
-            else
-              void Linking.openSettings().catch((cause) => {
-                recordError(cause, 'permissions.openSettings', { platform: Platform.OS })
-              })
-          }}
-          label={canRequestPermission ? t('camera.allowAccess') : t('camera.openSettings')}
-        />
       </View>
     )
   }
@@ -697,6 +706,14 @@ const createStyles = createThemedStyles((theme) => ({
     justifyContent: 'center',
     paddingVertical: theme.spacing.xl,
     paddingHorizontal: theme.spacing['4xl'],
+    gap: theme.spacing.sm,
+  },
+  permissionIllustration: {
+    width: 176,
+    height: 132,
+    alignSelf: 'center',
+  },
+  permissionContent: {
     gap: theme.spacing.xl,
   },
   permissionRows: {
