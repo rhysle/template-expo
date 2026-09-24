@@ -4,7 +4,7 @@ import { withAlpha } from '@shared/core/utils/color'
 export const defaultTheme: Theme = {
   appearance: 'dark',
   colors: {
-    primary: { main: '#D9A441', strong: '#B8832E', soft: '#3A2E19' },
+    primary: { main: '#FF6B78', strong: '#E84F66', soft: '#3A2024' },
     background: {
       base: '#131313',
       surface: '#171717',
@@ -13,22 +13,22 @@ export const defaultTheme: Theme = {
       overlay: withAlpha('#000000', 0.8),
     },
     text: {
-      primary: '#F4F6FA',
-      secondary: '#C4C4C4',
-      muted: '#858585',
-      accent: '#E7BA63',
-      inverse: '#131313',
-      inverseSecondary: '#1A1A1A',
-      inverseMuted: withAlpha('#131313', 0.72),
+      primary: '#F5F5F7',
+      secondary: '#C7C7CC',
+      muted: '#909097',
+      accent: '#FF6B78',
+      inverse: '#171416',
+      inverseSecondary: '#211A1C',
+      inverseMuted: withAlpha('#171416', 0.72),
     },
     status: {
       success: '#68C28C',
       error: '#FF655E',
       warning: '#FFC66D',
-      info: '#84B9FF',
-      neutral: '#858585',
+      info: '#44D8F2',
+      neutral: '#909097',
     },
-    border: { subtle: '#292929', default: '#3A3A3A', strong: '#C4C4C4' },
+    border: { subtle: '#2A2A2E', default: '#3B3B42', strong: '#BFC0C7' },
     shadow: { base: '#000000' },
   },
 }
