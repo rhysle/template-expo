@@ -1,5 +1,6 @@
 import { CapsuleNavigationAccessory, Text } from '@shared/core/components/base'
 import { TrashIcon } from 'phosphor-react-native'
+import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
 
@@ -10,12 +11,14 @@ import { ProjectGlassSurface, useProjectGlass } from './ProjectGlassControls'
 
 interface ProjectsSelectionTabBarProps {
   disabled: boolean
+  leading: ReactNode
   onDelete: () => void
   selectedCount: number
 }
 
 export function ProjectsSelectionTabBar({
   disabled,
+  leading,
   onDelete,
   selectedCount,
 }: ProjectsSelectionTabBarProps) {
@@ -26,6 +29,7 @@ export function ProjectsSelectionTabBar({
 
   return (
     <ProjectBottomActionBar
+      leading={leading}
       center={
         <View style={styles.countShadow}>
           <ProjectGlassSurface {...glass} style={styles.countSurface}>

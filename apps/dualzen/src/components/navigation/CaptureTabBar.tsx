@@ -63,6 +63,7 @@ export function CaptureTabBar({ state, descriptors, navigation }: BottomTabBarPr
     return (
       <ProjectsSelectionTabBar
         disabled={disabled}
+        leading={<PhotoLibraryButton disabled={disabled} />}
         onDelete={requestDelete}
         selectedCount={selectedMediaIds.size}
       />
@@ -70,7 +71,9 @@ export function CaptureTabBar({ state, descriptors, navigation }: BottomTabBarPr
 
   return (
     <CapsuleNavigationBar
-      leadingAccessory={captureFocused ? <PhotoLibraryButton disabled={disabled} /> : undefined}
+      leadingAccessory={
+        captureFocused || projectsFocused ? <PhotoLibraryButton disabled={disabled} /> : undefined
+      }
       trailingAccessory={
         captureFocused ? (
           <CapsuleNavigationAccessory
