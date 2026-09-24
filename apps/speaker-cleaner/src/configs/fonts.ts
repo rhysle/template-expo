@@ -5,7 +5,7 @@
 // To change font: change FONT_NAME, then run pnpm setup:font
 //
 // To check if a font is available in @expo-google-fonts/dev, search the package's source:
-// import { BodoniModaSC_400Regular, OpenSans_300Light } from '@expo-google-fonts/dev'
+// import { JosefinSlab_100Thin, OpenSans_300Light } from '@expo-google-fonts/dev'
 
 export const FONT_NAME = 'Inter'
 
