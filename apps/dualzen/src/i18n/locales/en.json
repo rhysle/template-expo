@@ -305,8 +305,8 @@
     "emptyTitle": "Your next take starts here",
     "emptyBody": "Take a photo or record a video. Your paired portrait and landscape originals will appear here.",
     "emptyFilterBody": "No media matches this filter.",
-    "videoCapture": "Video · {{date}}",
-    "photoCapture": "Photo · {{date}}",
+    "videoCapture": "Video",
+    "photoCapture": "Photo",
     "filters": {
       "all": "All",
       "photos": "Photos",

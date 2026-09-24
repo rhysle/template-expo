@@ -413,9 +413,7 @@ function MediaTile({
   const output = ready[0]
   const incomplete = Boolean(media.error || media.outputs.some((item) => !item.ready))
   const captureLabel =
-    media.mediaType === 'photo'
-      ? t('projects.photoCapture', { date: new Date(media.createdAt).toLocaleString() })
-      : t('projects.videoCapture', { date: new Date(media.createdAt).toLocaleString() })
+    media.mediaType === 'photo' ? t('projects.photoCapture') : t('projects.videoCapture')
   const formatLabel =
     media.mediaType === 'video'
       ? `${formatDuration(media.duration)}, ${media.settings.fps} FPS, ${media.settings.container.toUpperCase()}`
@@ -475,18 +473,6 @@ function MediaTile({
           />
         </View>
       )}
-      {/* {selectionMode && (
-        <View pointerEvents="none" style={styles.selectionIndicator}>
-          {selected ? (
-            <CheckCircleIcon
-              aria-hidden
-              size={iconSizes.lg}
-              color={colors.primary.main}
-              weight="fill"
-            />
-          ) : null}
-        </View>
-      )} */}
     </Pressable>
   )
 }

@@ -200,12 +200,33 @@ export function outputSize(source: PixelSize, kind: OutputKind, edge: number): P
   )
   return { width: unit * (portrait ? 18 : 32), height: unit * (portrait ? 32 : 18) }
 }
-export const formatDuration = (seconds: number) => {
-  const value = Math.max(0, Math.floor(seconds))
+const formatWholeSeconds = (seconds: number) => {
+  const value = Math.max(0, seconds)
   return `${Math.floor(value / 60)
     .toString()
     .padStart(2, '0')}:${(value % 60).toString().padStart(2, '0')}`
 }
+
+export const formatDuration = (seconds: number) => formatWholeSeconds(Math.round(seconds))
+
+export const formatElapsedDuration = (seconds: number) => formatWholeSeconds(Math.floor(seconds))
+
+export const formatCaptureDate = (timestamp: number) =>
+  new Date(timestamp).toLocaleDateString(undefined, {
+    day: 'numeric',
+    month: 'numeric',
+    year: 'numeric',
+  })
+
+export const formatCaptureTime = (timestamp: number) =>
+  new Date(timestamp).toLocaleTimeString(undefined, {
+    hour: 'numeric',
+    hour12: true,
+    minute: '2-digit',
+  })
+
+export const formatCaptureTimestamp = (timestamp: number) =>
+  `${formatCaptureDate(timestamp)} · ${formatCaptureTime(timestamp)}`
 
 export const formatFilmingTime = (seconds: number) => {
   const totalMinutes = Math.max(0, Math.floor(seconds / 60))

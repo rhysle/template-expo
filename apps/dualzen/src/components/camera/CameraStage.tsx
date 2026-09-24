@@ -373,9 +373,7 @@ export function CameraStage({
         ) : !recorder.error ? (
           <View style={styles.waiting}>
             <SpinArcLoader color={theme.colors.primary.main} />
-            <Text tone="secondary">
-              {recorder.device ? t('camera.waiting') : t('camera.noCamera')}
-            </Text>
+            {!recorder.device && <Text tone="secondary">{t('camera.noCamera')}</Text>}
           </View>
         ) : null}
       </Animated.View>

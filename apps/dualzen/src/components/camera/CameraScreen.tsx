@@ -46,7 +46,7 @@ import { scheduleOnRN } from 'react-native-worklets'
 
 import type { CaptureContextController } from '@/services/camera/CaptureProvider'
 import {
-  formatDuration,
+  formatElapsedDuration,
   formatFilmingTime,
   FPS_OPTIONS,
   type PreviewLayout,
@@ -452,7 +452,7 @@ export function CameraScreen({
           <BlurView {...cameraBlurProps} style={styles.timerPill}>
             <View style={styles.recordingDot} />
             <Text weight="semibold" style={styles.timer}>
-              {formatDuration(recorder.elapsed)}
+              {formatElapsedDuration(recorder.elapsed)}
             </Text>
           </BlurView>
         )}

@@ -12,6 +12,7 @@ import { Image } from 'expo-image'
 import { Stack } from 'expo-router'
 import { useVideoPlayer, VideoView } from 'expo-video'
 import {
+  ClockIcon,
   DownloadSimpleIcon,
   ExportIcon,
   FolderSimpleIcon,
@@ -41,6 +42,7 @@ import {
   videoFile,
 } from '@/services/camera/projects'
 import {
+  formatCaptureTimestamp,
   formatDuration,
   type OutputKind,
   type ProjectMedia,
@@ -414,20 +416,28 @@ export function MediaDetails({ media }: { media: ProjectMedia }) {
             <Text tone="muted">{t('projects.incomplete')}</Text>
           )}
         </View>
-        {currentOutput && (
-          <View style={styles.metadata}>
-            {media.mediaType === 'video' && (
-              <Text selectable variant="caption" tone="muted" style={styles.tabularNumbers}>
-                {formatDuration(media.duration)} · {media.settings.fps} FPS ·{' '}
-                {media.settings.container.toUpperCase()} · {media.settings.hdr ? 'HDR' : 'SDR'}
-              </Text>
-            )}
+        <View style={styles.metadata}>
+          <View style={styles.captureTime}>
+            <ClockIcon color={colors.text.secondary} size={iconSizes.sm} />
             <Text selectable variant="caption" tone="muted" style={styles.tabularNumbers}>
-              {currentOutput.width} × {currentOutput.height} ·{' '}
-              {(currentOutput.bytes / 1048576).toFixed(1)} MB
+              {formatCaptureTimestamp(media.createdAt)}
             </Text>
           </View>
-        )}
+          {currentOutput && (
+            <>
+              {media.mediaType === 'video' && (
+                <Text selectable variant="caption" tone="muted" style={styles.tabularNumbers}>
+                  {formatDuration(media.duration)} · {media.settings.fps} FPS ·{' '}
+                  {media.settings.container.toUpperCase()} · {media.settings.hdr ? 'HDR' : 'SDR'}
+                </Text>
+              )}
+              <Text selectable variant="caption" tone="muted" style={styles.tabularNumbers}>
+                {currentOutput.width} × {currentOutput.height} ·{' '}
+                {(currentOutput.bytes / 1048576).toFixed(1)} MB
+              </Text>
+            </>
+          )}
+        </View>
       </View>
       <ProjectBottomActionBar
         manageTabBarHeight={false}
@@ -483,6 +493,7 @@ const createDetailsStyles = createThemedStyles((theme) => ({
     backgroundColor: theme.colors.background.surface,
   },
   metadata: { alignItems: 'center', gap: theme.spacing.xs },
+  captureTime: { flexDirection: 'row', alignItems: 'center', gap: theme.spacing.xs },
   tabularNumbers: { fontVariant: ['tabular-nums'] },
   actionGroupShadow: {
     maxWidth: '60%',
