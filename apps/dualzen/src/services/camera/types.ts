@@ -19,7 +19,7 @@ export interface CameraViewSettings {
 }
 export const DEFAULT_CAMERA_VIEW_SETTINGS: CameraViewSettings = {
   layout: 'pip',
-  pip: { x: 1, y: 1, size: 0.4 },
+  pip: { x: 0.5, y: 0.88, size: 0.4 },
 }
 export interface SharedCaptureSettings {
   longEdge: 1280 | 1920 | 2560 | 3840
