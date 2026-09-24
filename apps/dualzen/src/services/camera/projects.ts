@@ -168,7 +168,121 @@ export async function deleteProject(id: string) {
   useAppStore.getState().projects.removeProject(id)
 }
 
-export async function mutateProjects(action: () => Promise<unknown>) {
+export async function clearAllProjects() {
+  const projectsState = useAppStore.getState().projects
+  const mediaCount = projectsState.media.length
+  const projectCount = projectsState.projects.filter(
+    (project) => project.id !== DEFAULT_PROJECT_ID
+  ).length
+  let firstFailure: unknown
+  let hasFailure = false
+  let canInspectMedia = true
+  let mediaEntries: (Directory | File)[] = []
+  const rememberFailure = (cause: unknown) => {
+    hasFailure = true
+    firstFailure ??= cause
+  }
+
+  try {
+    if (mediaRoot.exists) mediaEntries = mediaRoot.list()
+    else {
+      const mediaPathFile = new File(dualZenRoot, 'media')
+      if (mediaPathFile.exists) mediaPathFile.delete()
+    }
+  } catch (cause) {
+    rememberFailure(cause)
+    canInspectMedia = false
+  }
+
+  if (canInspectMedia) {
+    const failedMediaDirectories = new Set<string>()
+
+    for (const entry of mediaEntries) {
+      try {
+        entry.delete()
+      } catch (cause) {
+        rememberFailure(cause)
+        if (entry instanceof Directory) failedMediaDirectories.add(entry.name)
+      }
+    }
+
+    try {
+      if (mediaRoot.exists) {
+        mediaRoot.delete()
+      }
+    } catch (cause) {
+      rememberFailure(cause)
+    }
+
+    let remainingMediaDirectories = failedMediaDirectories
+    try {
+      if (!mediaRoot.exists) remainingMediaDirectories = new Set()
+      else {
+        remainingMediaDirectories = new Set(
+          mediaRoot
+            .list()
+            .filter((entry): entry is Directory => entry instanceof Directory)
+            .map((directory) => directory.name)
+        )
+      }
+    } catch (cause) {
+      rememberFailure(cause)
+    }
+
+    for (const media of projectsState.media)
+      if (!remainingMediaDirectories.has(media.id)) projectsState.removeMedia(media.id)
+  }
+
+  // Keep every project manifest until all media directories have been cleared. This
+  // leaves any files that could not be removed attached to their original project.
+  if (canInspectMedia && !hasFailure) {
+    const projectsDirectory = new Directory(dualZenRoot, 'projects')
+    const remainingEntries = new Set<string>()
+    let canInspectProjects = true
+    try {
+      if (projectsDirectory.exists) {
+        for (const entry of projectsDirectory.list()) {
+          if (entry instanceof File && entry.name === `${DEFAULT_PROJECT_ID}.json`) continue
+          try {
+            entry.delete()
+          } catch (cause) {
+            rememberFailure(cause)
+            let stillExists = true
+            try {
+              stillExists = entry.exists
+            } catch (existsCause) {
+              rememberFailure(existsCause)
+            }
+            if (stillExists) remainingEntries.add(entry.name)
+          }
+        }
+      } else {
+        const projectsPathFile = new File(dualZenRoot, 'projects')
+        if (projectsPathFile.exists) {
+          try {
+            projectsPathFile.delete()
+          } catch (cause) {
+            rememberFailure(cause)
+          }
+        }
+      }
+    } catch (cause) {
+      rememberFailure(cause)
+      canInspectProjects = false
+    }
+
+    if (canInspectProjects)
+      for (const project of projectsState.projects)
+        if (project.id !== DEFAULT_PROJECT_ID && !remainingEntries.has(`${project.id}.json`))
+          projectsState.removeProject(project.id)
+  }
+
+  if (hasFailure) throw firstFailure ?? new Error('Unable to clear all media and projects')
+  projectsState.selectProject(DEFAULT_PROJECT_ID)
+  return { mediaCount, projectCount }
+}
+
+export async function mutateProjects<T>(action: () => Promise<T>): Promise<T> {
   if (useAppStore.getState().camera.phase !== 'idle') throw new Error('Camera is busy')
   useAppStore.getState().camera.setPhase('finalizing')
   try {

@@ -29,6 +29,7 @@ import { useTranslation } from 'react-i18next'
 import { ScrollView, View } from 'react-native'
 
 import { CameraSettingsSections } from '@/components/camera/CameraSettingsSections'
+import { MediaStorageSection } from '@/components/settings/MediaStorageSection'
 import { AppConfig } from '@/configs'
 import { AdsConsent, isAnyAdFormatEnabled } from '@/services/ads'
 import { useCapture } from '@/services/camera/CaptureProvider'
@@ -101,6 +102,8 @@ export default function SettingsScreen() {
         )}
 
         <CameraSettingsSections recorder={recorder} />
+
+        <MediaStorageSection />
 
         <View style={styles.section}>
           <Text variant="subtitle" weight="semibold" tone="accent" style={styles.sectionTitle}>

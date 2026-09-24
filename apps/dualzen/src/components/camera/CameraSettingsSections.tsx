@@ -142,23 +142,6 @@ function ToggleRow({
   )
 }
 
-function DescriptionRow({ label, body }: { label: string; body: string }) {
-  const styles = useThemedStyles(createStyles)
-
-  return (
-    <View style={styles.optionRow}>
-      <View style={styles.optionText}>
-        <Text variant="subtitle" weight="medium">
-          {label}
-        </Text>
-        <Text variant="caption" tone="muted">
-          {body}
-        </Text>
-      </View>
-    </View>
-  )
-}
-
 function Section({ label, children }: { label: string; children: ReactNode }) {
   const styles = useThemedStyles(createStyles)
 
@@ -338,9 +321,7 @@ export function CameraSettingsSections({ recorder }: { recorder: CaptureControll
             value={autoSaveToLibrary}
             onValueChange={(value) => void recorder.setAutoSaveToLibraryEnabled(value)}
             disabled={phase !== 'idle' || recorder.photoLibraryPermissionRequesting}
-            divider
           />
-          <DescriptionRow label={t('camera.storageTitle')} body={t('camera.storageBody')} />
         </Card>
         {settings.mode === 'dual' && Platform.OS === 'android' && (
           <Text variant="caption" tone="muted" style={styles.helperText}>

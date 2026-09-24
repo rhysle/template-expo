@@ -10,4 +10,6 @@ export const AnalyticsAppEvents = {
   MEDIA_EXPORT_FAILED: 'media_export_failed',
   MEDIA_SHARE_REQUESTED: 'media_share_requested',
   MEDIA_SHARE_FAILED: 'media_share_failed',
+  PROJECTS_CLEARED: 'projects_cleared',
+  PROJECTS_CLEAR_FAILED: 'projects_clear_failed',
 } as const
