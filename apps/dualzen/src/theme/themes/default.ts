@@ -23,7 +23,7 @@ export const defaultTheme: Theme = {
     },
     status: {
       success: '#68C28C',
-      error: '#FF655E',
+      error: '#D92D20',
       warning: '#FFC66D',
       info: '#44D8F2',
       neutral: '#909097',
