@@ -2,6 +2,7 @@ package expo.modules.dualrecorder
 
 import android.content.Context
 import android.graphics.SurfaceTexture
+import android.hardware.DataSpace
 import android.media.*
 import android.opengl.*
 import android.os.*
@@ -29,8 +30,12 @@ object DualEngine {
   var onStopped: ((String) -> Unit)? = null
   private var display = EGL14.EGL_NO_DISPLAY
   private var eglContext = EGL14.EGL_NO_CONTEXT
-  private lateinit var eglConfig: EGLConfig
+  private var hdrContext = EGL14.EGL_NO_CONTEXT
+  private lateinit var sdrConfig: EGLConfig
+  private var hdrConfig: EGLConfig? = null
   private var dummy = EGL14.EGL_NO_SURFACE
+  private var hdrDummy = EGL14.EGL_NO_SURFACE
+  private var initialized = false
   private var program = 0
   private val streams = mutableMapOf<Int, Stream>()
   private val views = mutableMapOf<DualPreview, Window>()
@@ -53,63 +58,168 @@ object DualEngine {
   private var power: PowerManager? = null
   private var thermalListener: PowerManager.OnThermalStatusChangedListener? = null
 
-  private data class Stream(val texture: Int, val buffer: SurfaceTexture, val surface: Surface, val width: Int, val height: Int,
+  private data class Stream(val texture: Int, val buffer: SurfaceTexture, val surface: Surface, val width: Int, val height: Int, val hdr: Boolean,
     val matrix: FloatArray = FloatArray(16), var rotation: Int = 0, var timestamp: Long = 0, var offset: Long? = null,
-    var previousTS: Long = 0, var fps: Double = 0.0)
-  private data class Window(val surface: Surface, val egl: EGLSurface)
+    var previousTS: Long = 0, var fps: Double = 0.0, var hdrDataSpaceVerified: Boolean = false)
+  private data class Window(val surface: Surface, val egl: EGLSurface, val hdr: Boolean = false)
+
+  private const val EGL_RECORDABLE_ANDROID = 0x3142
+  private const val EGL_GL_COLORSPACE = 0x309D
+  private const val EGL_GL_COLORSPACE_BT2020_HLG_EXT = 0x3540
 
   private val vertices = ByteBuffer.allocateDirect(16 * 4).order(ByteOrder.nativeOrder()).asFloatBuffer().apply {
     put(floatArrayOf(-1f,-1f,0f,0f, 1f,-1f,1f,0f, -1f,1f,0f,1f, 1f,1f,1f,1f)); position(0)
   }
   private fun initialize() {
-    if (display != EGL14.EGL_NO_DISPLAY) return
-    display = EGL14.eglGetDisplay(EGL14.EGL_DEFAULT_DISPLAY)
-    check(EGL14.eglInitialize(display, IntArray(2), 0, IntArray(2), 0)) { "EGL initialization failed" }
-    val configs = arrayOfNulls<EGLConfig>(1)
-    val attrs = intArrayOf(EGL14.EGL_RED_SIZE,8,EGL14.EGL_GREEN_SIZE,8,EGL14.EGL_BLUE_SIZE,8,
-      EGL14.EGL_RENDERABLE_TYPE,EGL14.EGL_OPENGL_ES2_BIT, EGL14.EGL_SURFACE_TYPE,EGL14.EGL_WINDOW_BIT or EGL14.EGL_PBUFFER_BIT,
-      0x3142,1,EGL14.EGL_NONE)
-    check(EGL14.eglChooseConfig(display, attrs,0,configs,0,1,IntArray(1),0))
-    eglConfig = configs[0]!!
-    eglContext = EGL14.eglCreateContext(display,eglConfig,EGL14.EGL_NO_CONTEXT,intArrayOf(EGL14.EGL_CONTEXT_CLIENT_VERSION,2,EGL14.EGL_NONE),0)
-    dummy = EGL14.eglCreatePbufferSurface(display,eglConfig,intArrayOf(EGL14.EGL_WIDTH,1,EGL14.EGL_HEIGHT,1,EGL14.EGL_NONE),0)
-    current(dummy)
-    val vertex = "attribute vec4 aPosition; attribute vec2 aUV; varying vec2 vUV; void main(){gl_Position=aPosition;vUV=aUV;}"
-    val fragment = """#extension GL_OES_EGL_image_external : require
+    if (initialized) return
+    try {
+      display = EGL14.eglGetDisplay(EGL14.EGL_DEFAULT_DISPLAY)
+      check(display != EGL14.EGL_NO_DISPLAY) { "EGL display unavailable" }
+      check(EGL14.eglInitialize(display, IntArray(2), 0, IntArray(2), 0)) { "EGL initialization failed" }
+      val extensions = EGL14.eglQueryString(display, EGL14.EGL_EXTENSIONS).orEmpty().split(' ').toSet()
+      sdrConfig = chooseConfig(8, 0) ?: error("EGL has no recordable 8-bit config")
+      eglContext = EGL14.eglCreateContext(display, sdrConfig, EGL14.EGL_NO_CONTEXT,
+        intArrayOf(EGL14.EGL_CONTEXT_CLIENT_VERSION, 2, EGL14.EGL_NONE), 0)
+      check(eglContext != EGL14.EGL_NO_CONTEXT) { "EGL context creation failed" }
+      dummy = EGL14.eglCreatePbufferSurface(display, sdrConfig,
+        intArrayOf(EGL14.EGL_WIDTH, 1, EGL14.EGL_HEIGHT, 1, EGL14.EGL_NONE), 0)
+      check(dummy != EGL14.EGL_NO_SURFACE) { "EGL preview surface creation failed" }
+      current(dummy)
+      val vertex = "attribute vec4 aPosition; attribute vec2 aUV; varying vec2 vUV; void main(){gl_Position=aPosition;vUV=aUV;}"
+      val fragment = """#extension GL_OES_EGL_image_external : require
 precision highp float;
 uniform samplerExternalOES uTexture; uniform mat4 uMatrix; uniform vec4 uCrop;
-uniform bool uMirror; varying vec2 vUV;
+uniform bool uMirror; uniform bool uToneMap; varying vec2 vUV;
 void main(){ vec2 p=vUV; if(uMirror)p.x=1.0-p.x; p=uCrop.xy+p*uCrop.zw;
-gl_FragColor=texture2D(uTexture,(uMatrix*vec4(p,0.0,1.0)).xy); }"""
-    fun shader(type: Int, source: String): Int {
-      val id=GLES20.glCreateShader(type); GLES20.glShaderSource(id,source); GLES20.glCompileShader(id)
-      val ok=IntArray(1); GLES20.glGetShaderiv(id,GLES20.GL_COMPILE_STATUS,ok,0)
-      check(ok[0]!=0) { GLES20.glGetShaderInfoLog(id) }; return id
+vec3 color=texture2D(uTexture,(uMatrix*vec4(p,0.0,1.0)).xy).rgb;
+if(uToneMap){
+  vec3 hlg=clamp(color,0.0,1.0);
+  vec3 scene=mix(hlg*hlg/3.0,(exp((hlg-vec3(0.55991073))/0.17883277)+0.28466892)/12.0,step(vec3(0.5),hlg));
+  vec3 rec709=vec3(dot(vec3(1.6605,-0.5876,-0.0728),scene),dot(vec3(-0.1246,1.1329,-0.0083),scene),dot(vec3(-0.0182,-0.1006,1.1187),scene));
+  vec3 mapped=max(rec709,0.0)/(1.0+max(rec709,0.0)*0.2);
+  color=mix(mapped*12.92,1.055*pow(mapped,vec3(1.0/2.4))-0.055,step(vec3(0.0031308),mapped));
+}
+gl_FragColor=vec4(color,1.0); }"""
+      fun shader(type: Int, source: String): Int {
+        val id=GLES20.glCreateShader(type); GLES20.glShaderSource(id,source); GLES20.glCompileShader(id)
+        val ok=IntArray(1); GLES20.glGetShaderiv(id,GLES20.GL_COMPILE_STATUS,ok,0)
+        check(ok[0]!=0) { GLES20.glGetShaderInfoLog(id) }; return id
+      }
+      val v=shader(GLES20.GL_VERTEX_SHADER,vertex); val f=shader(GLES20.GL_FRAGMENT_SHADER,fragment)
+      program=GLES20.glCreateProgram(); GLES20.glAttachShader(program,v); GLES20.glAttachShader(program,f); GLES20.glLinkProgram(program)
+      val linked=IntArray(1); GLES20.glGetProgramiv(program,GLES20.GL_LINK_STATUS,linked,0); check(linked[0]!=0) { GLES20.glGetProgramInfoLog(program) }
+      GLES20.glDeleteShader(v); GLES20.glDeleteShader(f)
+
+      // EGL14 requires a non-null EGLConfig object. A configless context cannot be
+      // passed as null through this Java binding; Android ART aborts from JNI.
+      // Create a shared context for the 10-bit HLG config instead.
+      if ("EGL_KHR_gl_colorspace" in extensions && "EGL_EXT_gl_colorspace_bt2020_hlg" in extensions) {
+        val candidateConfig = chooseConfig(10, 2)
+        if (candidateConfig != null) {
+          val candidateContext = EGL14.eglCreateContext(display, candidateConfig, eglContext,
+            intArrayOf(EGL14.EGL_CONTEXT_CLIENT_VERSION, 2, EGL14.EGL_NONE), 0)
+          if (candidateContext != EGL14.EGL_NO_CONTEXT) {
+            val candidateSurface = EGL14.eglCreatePbufferSurface(display, candidateConfig,
+              intArrayOf(EGL14.EGL_WIDTH, 1, EGL14.EGL_HEIGHT, 1, EGL14.EGL_NONE), 0)
+            val sharedProgramAvailable = candidateSurface != EGL14.EGL_NO_SURFACE &&
+              EGL14.eglMakeCurrent(display, candidateSurface, candidateSurface, candidateContext) &&
+              GLES20.glIsProgram(program)
+            if (sharedProgramAvailable) {
+              hdrConfig = candidateConfig
+              hdrContext = candidateContext
+              hdrDummy = candidateSurface
+            } else {
+              if (candidateSurface != EGL14.EGL_NO_SURFACE) EGL14.eglDestroySurface(display, candidateSurface)
+              EGL14.eglDestroyContext(display, candidateContext)
+            }
+            check(EGL14.eglMakeCurrent(display, dummy, dummy, eglContext)) { "EGL SDR context restore failed" }
+          }
+        }
+      }
+      initialized = true
+    } catch (error: Throwable) {
+      releaseEglState()
+      throw error
     }
-    val v=shader(GLES20.GL_VERTEX_SHADER,vertex); val f=shader(GLES20.GL_FRAGMENT_SHADER,fragment)
-    program=GLES20.glCreateProgram(); GLES20.glAttachShader(program,v); GLES20.glAttachShader(program,f); GLES20.glLinkProgram(program)
-    val linked=IntArray(1); GLES20.glGetProgramiv(program,GLES20.GL_LINK_STATUS,linked,0); check(linked[0]!=0) { GLES20.glGetProgramInfoLog(program) }
-    GLES20.glDeleteShader(v); GLES20.glDeleteShader(f)
   }
-  private fun current(surface: EGLSurface) { check(EGL14.eglMakeCurrent(display,surface,surface,eglContext)) { "EGL context lost" } }
-  private fun window(surface: Surface): EGLSurface {
-    initialize(); return EGL14.eglCreateWindowSurface(display,eglConfig,surface,intArrayOf(EGL14.EGL_NONE),0).also { check(it!=EGL14.EGL_NO_SURFACE) }
+  private fun releaseEglState() {
+    if (display != EGL14.EGL_NO_DISPLAY) {
+      runCatching { EGL14.eglMakeCurrent(display, EGL14.EGL_NO_SURFACE, EGL14.EGL_NO_SURFACE, EGL14.EGL_NO_CONTEXT) }
+      if (hdrDummy != EGL14.EGL_NO_SURFACE) runCatching { EGL14.eglDestroySurface(display, hdrDummy) }
+      if (dummy != EGL14.EGL_NO_SURFACE) runCatching { EGL14.eglDestroySurface(display, dummy) }
+      if (hdrContext != EGL14.EGL_NO_CONTEXT) runCatching { EGL14.eglDestroyContext(display, hdrContext) }
+      if (eglContext != EGL14.EGL_NO_CONTEXT) runCatching { EGL14.eglDestroyContext(display, eglContext) }
+      runCatching { EGL14.eglTerminate(display) }
+    }
+    display = EGL14.EGL_NO_DISPLAY
+    eglContext = EGL14.EGL_NO_CONTEXT
+    hdrContext = EGL14.EGL_NO_CONTEXT
+    dummy = EGL14.EGL_NO_SURFACE
+    hdrDummy = EGL14.EGL_NO_SURFACE
+    hdrConfig = null
+    program = 0
+    initialized = false
   }
-  fun attach(channel: Int, request: SurfaceRequest) {
+  private fun chooseConfig(colorBits: Int, alphaBits: Int): EGLConfig? {
+    val configs = arrayOfNulls<EGLConfig>(1)
+    val attrs = intArrayOf(EGL14.EGL_RED_SIZE, colorBits, EGL14.EGL_GREEN_SIZE, colorBits,
+      EGL14.EGL_BLUE_SIZE, colorBits, EGL14.EGL_ALPHA_SIZE, alphaBits,
+      EGL14.EGL_RENDERABLE_TYPE, EGL14.EGL_OPENGL_ES2_BIT,
+      EGL14.EGL_SURFACE_TYPE, EGL14.EGL_WINDOW_BIT or EGL14.EGL_PBUFFER_BIT,
+      EGL_RECORDABLE_ANDROID, 1, EGL14.EGL_NONE)
+    val count = IntArray(1)
+    if (!EGL14.eglChooseConfig(display, attrs, 0, configs, 0, configs.size, count, 0) || count[0] == 0) return null
+    return configs[0]
+  }
+  fun supportsHdrGraphics(): Boolean {
+    val latch = CountDownLatch(1)
+    var supported = false
+    handler.post {
+      supported = runCatching { initialize(); hdrConfig != null }.getOrDefault(false)
+      latch.countDown()
+    }
+    latch.await()
+    return supported
+  }
+  private fun current(surface: EGLSurface, hdr: Boolean = false) {
+    val context = if (hdr) hdrContext else eglContext
+    check(context != EGL14.EGL_NO_CONTEXT && EGL14.eglMakeCurrent(display,surface,surface,context)) { "EGL context lost" }
+  }
+  private fun window(surface: Surface, hdr: Boolean = false): Window {
+    initialize()
+    val config = if (hdr) hdrConfig ?: error("10-bit HLG EGL output is unavailable") else sdrConfig
+    check(!hdr || hdrContext != EGL14.EGL_NO_CONTEXT) { "10-bit HLG EGL context is unavailable" }
+    val attrs = if (hdr) intArrayOf(EGL_GL_COLORSPACE, EGL_GL_COLORSPACE_BT2020_HLG_EXT, EGL14.EGL_NONE)
+      else intArrayOf(EGL14.EGL_NONE)
+    val eglSurface = EGL14.eglCreateWindowSurface(display, config, surface, attrs, 0).also {
+      check(it != EGL14.EGL_NO_SURFACE) { "EGL output surface creation failed (${EGL14.eglGetError()})" }
+    }
+    return Window(surface, eglSurface, hdr)
+  }
+  fun attach(channel: Int, request: SurfaceRequest, hdr: Boolean) {
     try {
       initialize(); current(dummy)
+      check(!hdr || hdrConfig != null) { "10-bit HLG EGL output is unavailable" }
       val id=IntArray(1); GLES20.glGenTextures(1,id,0); GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES,id[0])
       GLES20.glTexParameteri(GLES11Ext.GL_TEXTURE_EXTERNAL_OES,GLES20.GL_TEXTURE_MIN_FILTER,GLES20.GL_LINEAR)
       GLES20.glTexParameteri(GLES11Ext.GL_TEXTURE_EXTERNAL_OES,GLES20.GL_TEXTURE_MAG_FILTER,GLES20.GL_LINEAR)
       val texture=SurfaceTexture(id[0]); texture.setDefaultBufferSize(request.resolution.width,request.resolution.height)
       val surface=Surface(texture)
-      val stream=Stream(id[0],texture,surface,request.resolution.width,request.resolution.height)
+      val stream=Stream(id[0],texture,surface,request.resolution.width,request.resolution.height,hdr)
       val clockSource = request.camera.cameraInfo.cameraCharacteristicsOrNull?.get(CameraCharacteristics.SENSOR_INFO_TIMESTAMP_SOURCE)
       if (clockSource == CameraCharacteristics.SENSOR_INFO_TIMESTAMP_SOURCE_REALTIME) stream.offset = System.nanoTime() - SystemClock.elapsedRealtimeNanos()
       streams[channel]=stream
       request.setTransformationInfoListener(executor) { stream.rotation=it.rotationDegrees }
       texture.setOnFrameAvailableListener({
         try { current(dummy); texture.updateTexImage(); texture.getTransformMatrix(stream.matrix)
+          if (stream.hdr && !stream.hdrDataSpaceVerified) {
+            check(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+              DataSpace.getStandard(texture.dataSpace) == DataSpace.STANDARD_BT2020 &&
+              DataSpace.getTransfer(texture.dataSpace) == DataSpace.TRANSFER_HLG) {
+              "Camera did not deliver BT.2020 HLG frames"
+            }
+            stream.hdrDataSpaceVerified = true
+          }
           val timestamp=texture.timestamp
           if(stream.offset==null)stream.offset=System.nanoTime()-timestamp
           if(stream.previousTS>0 && timestamp>stream.previousTS)stream.fps=if(stream.fps==0.0)1e9/(timestamp-stream.previousTS) else stream.fps*0.9+0.1e9/(timestamp-stream.previousTS)
@@ -125,7 +235,7 @@ gl_FragColor=texture2D(uTexture,(uMatrix*vec4(p,0.0,1.0)).xy); }"""
     } catch(error: Throwable) { request.willNotProvideSurface(); failure=error.message; finish("camera") }
   }
   fun previewAvailable(view: DualPreview, texture: SurfaceTexture) { handler.post {
-    try { val surface=Surface(texture); views.remove(view)?.let { EGL14.eglDestroySurface(display,it.egl);it.surface.release() }; views[view]=Window(surface,window(surface)) }
+    try { val surface=Surface(texture); views.remove(view)?.let { EGL14.eglDestroySurface(display,it.egl);it.surface.release() }; views[view]=window(surface) }
     catch(error: Throwable) { failure=error.message }
   } }
   fun previewGone(view: DualPreview, texture: SurfaceTexture) { handler.post { views.remove(view)?.let { current(dummy); EGL14.eglDestroySurface(display,it.egl);it.surface.release() }; texture.release() } }
@@ -136,28 +246,29 @@ gl_FragColor=texture2D(uTexture,(uMatrix*vec4(p,0.0,1.0)).xy); }"""
     val scale=min(1.0,edge/max(w,h)); val unit=floor(min(w*scale/(if(portrait)18 else 32),h*scale/(if(portrait)32 else 18))).toInt()
     return unit*(if(portrait)18 else 32) to unit*(if(portrait)32 else 18)
   }
-  private fun draw(stream: Stream,target: EGLSurface,width: Int,height: Int,portrait: Boolean,position: Double,mirror: Boolean,pts: Long?=null) {
+  private fun draw(stream: Stream,target: Window,width: Int,height: Int,portrait: Boolean,position: Double,mirror: Boolean,pts: Long?=null,toneMap: Boolean=false) {
     if(width<=0||height<=0)return
-    current(target); GLES20.glViewport(0,0,width,height);GLES20.glUseProgram(program)
+    current(target.egl,target.hdr); GLES20.glViewport(0,0,width,height);GLES20.glUseProgram(program)
     val (sw,sh)=dimensions(stream);val ratio=if(portrait)9.0/16 else 16.0/9
     // The view uses aspect-fit bounds from JS, so this crop matches the encoded output.
     val cw=min(1.0,sh*ratio/sw);val ch=min(1.0,sw/ratio/sh);val p=position.coerceIn(0.0,1.0)
     GLES20.glUniform4f(GLES20.glGetUniformLocation(program,"uCrop"),((1-cw)*p).toFloat(),((1-ch)*(1-p)).toFloat(),cw.toFloat(),ch.toFloat())
     GLES20.glUniformMatrix4fv(GLES20.glGetUniformLocation(program,"uMatrix"),1,false,stream.matrix,0)
     GLES20.glUniform1i(GLES20.glGetUniformLocation(program,"uMirror"),if(mirror)1 else 0)
+    GLES20.glUniform1i(GLES20.glGetUniformLocation(program,"uToneMap"),if(toneMap)1 else 0)
     GLES20.glActiveTexture(GLES20.GL_TEXTURE0);GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES,stream.texture)
     GLES20.glUniform1i(GLES20.glGetUniformLocation(program,"uTexture"),0)
     val ap=GLES20.glGetAttribLocation(program,"aPosition");val au=GLES20.glGetAttribLocation(program,"aUV")
     vertices.position(0);GLES20.glVertexAttribPointer(ap,2,GLES20.GL_FLOAT,false,16,vertices);GLES20.glEnableVertexAttribArray(ap)
     vertices.position(2);GLES20.glVertexAttribPointer(au,2,GLES20.GL_FLOAT,false,16,vertices);GLES20.glEnableVertexAttribArray(au)
     GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP,0,4)
-    if(pts!=null)EGLExt.eglPresentationTimeANDROID(display,target,pts*1000)
-    check(EGL14.eglSwapBuffers(display,target)) { "Surface rendering failed" }
+    if(pts!=null)EGLExt.eglPresentationTimeANDROID(display,target.egl,pts*1000)
+    check(EGL14.eglSwapBuffers(display,target.egl)) { "Surface rendering failed" }
   }
   private fun drawPreviews(channel: Int,stream: Stream) {
     views.toList().filter { it.first.channel==channel }.forEach { (view,target) ->
       val position=if(view.portrait&&view.mirrored)1-view.position else view.position
-      draw(stream,target.egl,view.width,view.height,view.portrait,position,view.mirrored)
+      draw(stream,target,view.width,view.height,view.portrait,position,view.mirrored,toneMap=stream.hdr)
     }
   }
   private fun encode(channel: Int,stream: Stream) {
@@ -178,7 +289,7 @@ gl_FragColor=texture2D(uTexture,(uMatrix*vec4(p,0.0,1.0)).xy); }"""
       config.optBoolean("front") && config.optBoolean("mirrorFrontCamera")
     sinks.forEachIndexed { index,sink ->
       if(pts/2_000_000>sink.lastKeyRequest){sink.codec.setParameters(Bundle().apply { putInt(MediaCodec.PARAMETER_KEY_REQUEST_SYNC_FRAME,0) });sink.lastKeyRequest=pts/2_000_000}
-      draw(inputs[index],sink.egl,sink.width,sink.height,sink.portrait,sink.position,mirrorFrontCamera,pts)
+      draw(inputs[index],sink.egl ?: error("Video EGL surface unavailable"),sink.width,sink.height,sink.portrait,sink.position,mirrorFrontCamera,pts)
       sink.drain(false)
     }
     lastPTS=pts;lastFrameSlot=frameSlot;frames++
@@ -189,19 +300,21 @@ gl_FragColor=texture2D(uTexture,(uMatrix*vec4(p,0.0,1.0)).xy); }"""
     val latch=CountDownLatch(1);var error: Throwable?=null
     handler.post { try {
       check(sinks.isEmpty()&&!stopping){"Recorder is busy"};check(thermal<PowerManager.THERMAL_STATUS_CRITICAL){"Phone is too hot"}
-      require(!request.optBoolean("hdr")){"HDR pipeline unavailable"}
+      val hdr=request.optBoolean("hdr")
+      require(!hdr || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && hdrConfig != null)) { "10-bit HLG recording is unavailable" }
       require(request.optString("container")=="mp4"){"MOV is unavailable on Android"}
       val directory=localFile(request.getString("directory"));directory.mkdirs()
       check(StatFs(directory.path).availableBytes>request.optLong("reserveBytes",268435456)){"Not enough storage"}
       val channels=if(request.optString("mode")=="dual")listOf(1,2) else listOf(0,0)
+      require(!hdr || channels.all { streams[it]?.hdr == true }) { "The active camera session is not configured for HLG10" }
       val prepared=mutableListOf<VideoSink>()
       try {
         channels.forEachIndexed { index,c ->
           val input=streams[c]?:error("Waiting for camera frames");val (w,h)=dimensions(input)
           val (ow,oh)=size(w,h,index==0,request.getInt("longEdge"))
-          val sink=VideoSink(File(directory,if(index==0)"portrait.mp4" else "landscape.mp4"),ow,oh,request.getInt("fps"),index==0,
+          val sink=VideoSink(File(directory,if(index==0)"portrait.mp4" else "landscape.mp4"),ow,oh,request.getInt("fps"),index==0,hdr,
             request.optDouble(if(index==0)"portraitPosition" else "landscapePosition",0.5))
-          prepared.add(sink);sink.egl=window(sink.surface)
+          prepared.add(sink);sink.egl=window(sink.surface,hdr)
         }
         prepareAudio()
       } catch(t: Throwable){prepared.forEach { it.release(false) };throw t}
@@ -331,26 +444,31 @@ gl_FragColor=texture2D(uTexture,(uMatrix*vec4(p,0.0,1.0)).xy); }"""
     // Expo Paths.document on Android is filesDir.
     require(file.path.startsWith(root.path+File.separator)){"File is outside project storage"};return file
   }
-  private class VideoSink(val file: File,val width: Int,val height: Int,val fps: Int,val portrait: Boolean,val position: Double) {
-    val bitrate=maxOf(4_000_000,(width.toDouble()*height*fps*0.18).toInt())
+  private class VideoSink(val file: File,val width: Int,val height: Int,val fps: Int,val portrait: Boolean,val hdr: Boolean,val position: Double) {
+    val bitrate=maxOf(4_000_000,(width.toDouble()*height*fps*(if(hdr)0.14 else 0.18)).toInt())
     val codec: MediaCodec
     val surface: Surface
-    var egl: EGLSurface=EGL14.EGL_NO_SURFACE
+    var egl: Window?=null
     private val muxer=MediaMuxer(file.path,MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4)
     private var videoTrack=-1;private var audioTrack=-1;private var muxing=false;private var released=false
     private val waiting=mutableListOf<Packet>()
     var lastKeyRequest=-1L;var videoSamples=0;var audioSamples=0
     private data class Packet(val video: Boolean,val bytes: ByteArray,val pts: Long,val flags: Int)
     init {
-      val format=MediaFormat.createVideoFormat(MediaFormat.MIMETYPE_VIDEO_AVC,width,height).apply {
+      val mime=if(hdr)MediaFormat.MIMETYPE_VIDEO_HEVC else MediaFormat.MIMETYPE_VIDEO_AVC
+      val format=MediaFormat.createVideoFormat(mime,width,height).apply {
         setInteger(MediaFormat.KEY_COLOR_FORMAT,MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface)
         setInteger(MediaFormat.KEY_BIT_RATE,bitrate);setInteger(MediaFormat.KEY_FRAME_RATE,fps);setInteger(MediaFormat.KEY_I_FRAME_INTERVAL,2)
-        setInteger(MediaFormat.KEY_COLOR_STANDARD,MediaFormat.COLOR_STANDARD_BT709);setInteger(MediaFormat.KEY_COLOR_TRANSFER,MediaFormat.COLOR_TRANSFER_SDR_VIDEO)
+        if(hdr){setInteger(MediaFormat.KEY_PROFILE,MediaCodecInfo.CodecProfileLevel.HEVCProfileMain10)
+          setInteger(MediaFormat.KEY_COLOR_STANDARD,MediaFormat.COLOR_STANDARD_BT2020);setInteger(MediaFormat.KEY_COLOR_TRANSFER,MediaFormat.COLOR_TRANSFER_HLG)}
+        else {setInteger(MediaFormat.KEY_COLOR_STANDARD,MediaFormat.COLOR_STANDARD_BT709);setInteger(MediaFormat.KEY_COLOR_TRANSFER,MediaFormat.COLOR_TRANSFER_SDR_VIDEO)}
         setInteger(MediaFormat.KEY_COLOR_RANGE,MediaFormat.COLOR_RANGE_LIMITED);if(Build.VERSION.SDK_INT>=29)setInteger(MediaFormat.KEY_MAX_B_FRAMES,0)
       }
       val encoder=MediaCodecList(MediaCodecList.REGULAR_CODECS).codecInfos.firstOrNull { info ->
-        info.isEncoder && (Build.VERSION.SDK_INT<29||info.isHardwareAccelerated) && info.supportedTypes.any { it.equals("video/avc",true) } &&
-          runCatching { val caps=info.getCapabilitiesForType("video/avc");caps.maxSupportedInstances>=2&&caps.isFormatSupported(format) }.getOrDefault(false)
+        info.isEncoder && (Build.VERSION.SDK_INT<29||info.isHardwareAccelerated) && info.supportedTypes.any { it.equals(mime,true) } &&
+          runCatching { val caps=info.getCapabilitiesForType(mime);caps.maxSupportedInstances>=2&&
+            (!hdr||(Build.VERSION.SDK_INT>=Build.VERSION_CODES.TIRAMISU&&caps.isFeatureSupported(MediaCodecInfo.CodecCapabilities.FEATURE_HdrEditing)))&&
+            caps.colorFormats.contains(MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface)&&caps.isFormatSupported(format) }.getOrDefault(false)
       }?.name?:error("Hardware encoder does not support two outputs at these dimensions/FPS")
       codec=MediaCodec.createByCodecName(encoder)
       try { codec.configure(format,null,null,MediaCodec.CONFIGURE_FLAG_ENCODE);surface=codec.createInputSurface();codec.start() }
@@ -387,7 +505,7 @@ gl_FragColor=texture2D(uTexture,(uMatrix*vec4(p,0.0,1.0)).xy); }"""
       released=true
       var problem: Throwable?=null
       try { if(muxing)muxer.stop() }catch(t: Throwable){problem=t}
-      finally { muxer.release();runCatching { codec.stop() };codec.release();surface.release();if(egl!=EGL14.EGL_NO_SURFACE)EGL14.eglDestroySurface(display,egl);waiting.clear() }
+      finally { muxer.release();runCatching { codec.stop() };codec.release();surface.release();egl?.let { EGL14.eglDestroySurface(display,it.egl) };waiting.clear() }
       if(success)problem?.let { throw it }
     }
   }

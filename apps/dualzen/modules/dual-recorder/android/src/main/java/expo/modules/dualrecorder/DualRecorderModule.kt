@@ -29,18 +29,13 @@ class DualRecorderModule : Module() {
     AsyncFunction("stop") { DualEngine.stop() }
     AsyncFunction("stats") { DualEngine.stats() }
     AsyncFunction("canEncode") { edge: Int,fps: Int,hdr: Boolean ->
-      if(hdr||edge<=0||fps<=0)false else {
-        val unit=edge/32
-        MediaCodecList(MediaCodecList.REGULAR_CODECS).codecInfos.any { info ->
-          info.isEncoder && (Build.VERSION.SDK_INT<29||info.isHardwareAccelerated) && info.supportedTypes.any { it.equals("video/avc",true) } && runCatching {
-            val caps=info.getCapabilitiesForType("video/avc")
-            caps.maxSupportedInstances>=2 && caps.colorFormats.contains(MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface) &&
-              caps.videoCapabilities.areSizeAndRateSupported(unit*18,unit*32,fps.toDouble()) && caps.videoCapabilities.areSizeAndRateSupported(unit*32,unit*18,fps.toDouble())
-          }.getOrDefault(false)
-        }
-      }
+      canEncode(edge, fps, hdr)
     }
-    AsyncFunction("capabilities") { "{\"hdr\":false,\"mov\":false}" }
+    AsyncFunction("capabilities") {
+      val hdr = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+        DualEngine.supportsHdrGraphics() && canEncode(720, 30, true)
+      "{\"hdr\":$hdr,\"mov\":false}"
+    }
     Function("photoLibraryPermissionStatus") { "authorized" }
     AsyncFunction("requestPhotoLibraryPermission") { "authorized" }
     AsyncFunction("openPhotoLibrary") {
@@ -92,6 +87,44 @@ class DualRecorderModule : Module() {
       Prop("portrait") { view: DualPreview,value: Boolean -> view.portrait=value }
       Prop("cropPosition") { view: DualPreview,value: Double -> view.position=value }
       Prop("mirrored") { view: DualPreview,value: Boolean -> view.mirrored=value }
+    }
+  }
+
+  private fun canEncode(edge: Int, fps: Int, hdr: Boolean): Boolean {
+    if (edge <= 0 || fps <= 0) return false
+    if (hdr && (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU || !DualEngine.supportsHdrGraphics())) return false
+    val unit = edge / 32
+    val mime = if (hdr) MediaFormat.MIMETYPE_VIDEO_HEVC else MediaFormat.MIMETYPE_VIDEO_AVC
+    val format = MediaFormat.createVideoFormat(mime, unit * 18, unit * 32).apply {
+      setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface)
+      setInteger(MediaFormat.KEY_BIT_RATE, maxOf(4_000_000, (unit * 18.0 * unit * 32 * fps * if (hdr) 0.14 else 0.18).toInt()))
+      setInteger(MediaFormat.KEY_FRAME_RATE, fps)
+      setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 2)
+      if (hdr) {
+        setInteger(MediaFormat.KEY_PROFILE, MediaCodecInfo.CodecProfileLevel.HEVCProfileMain10)
+        setInteger(MediaFormat.KEY_COLOR_STANDARD, MediaFormat.COLOR_STANDARD_BT2020)
+        setInteger(MediaFormat.KEY_COLOR_TRANSFER, MediaFormat.COLOR_TRANSFER_HLG)
+        setInteger(MediaFormat.KEY_COLOR_RANGE, MediaFormat.COLOR_RANGE_LIMITED)
+      } else {
+        setInteger(MediaFormat.KEY_COLOR_STANDARD, MediaFormat.COLOR_STANDARD_BT709)
+        setInteger(MediaFormat.KEY_COLOR_TRANSFER, MediaFormat.COLOR_TRANSFER_SDR_VIDEO)
+        setInteger(MediaFormat.KEY_COLOR_RANGE, MediaFormat.COLOR_RANGE_LIMITED)
+      }
+      if (Build.VERSION.SDK_INT >= 29) setInteger(MediaFormat.KEY_MAX_B_FRAMES, 0)
+    }
+    return MediaCodecList(MediaCodecList.REGULAR_CODECS).codecInfos.any { info ->
+      info.isEncoder && (Build.VERSION.SDK_INT < 29 || info.isHardwareAccelerated) &&
+        info.supportedTypes.any { it.equals(mime, true) } && runCatching {
+          val caps = info.getCapabilitiesForType(mime)
+          val video = caps.videoCapabilities ?: return@runCatching false
+          caps.maxSupportedInstances >= 2 &&
+            caps.colorFormats.contains(MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface) &&
+            (!hdr || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+              caps.isFeatureSupported(MediaCodecInfo.CodecCapabilities.FEATURE_HdrEditing))) &&
+            caps.isFormatSupported(format) &&
+            video.areSizeAndRateSupported(unit * 18, unit * 32, fps.toDouble()) &&
+            video.areSizeAndRateSupported(unit * 32, unit * 18, fps.toDouble())
+        }.getOrDefault(false)
     }
   }
 }
