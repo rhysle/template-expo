@@ -26,7 +26,7 @@
       "allowBackup": false,
       "adaptiveIcon": {
         "foregroundImage": "./assets/icons/android-icon-adaptive.png",
-        "backgroundColor": "#F7FBFF"
+        "backgroundColor": "#242424"
       },
       "predictiveBackGestureEnabled": false,
       "package": "com.rhysle.dualzen",
