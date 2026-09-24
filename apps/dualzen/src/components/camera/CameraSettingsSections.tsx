@@ -402,6 +402,11 @@ export function CameraSettingsSections({ recorder }: { recorder: CaptureControll
             disabled={!settings.stabilization && supported.stabilization !== true}
             onValueChange={(stabilization) => updateVideoSettings({ stabilization })}
           />
+          {stabilizationUnavailable && (
+            <Text variant="caption" tone="muted" style={styles.stabilizationHelperText}>
+              {t('camera.stabilizationUnavailable')}
+            </Text>
+          )}
           <View style={styles.storageSummary}>
             <View pointerEvents="none" style={styles.dividerTop} />
             <Text variant="caption" tone="secondary">
@@ -415,11 +420,6 @@ export function CameraSettingsSections({ recorder }: { recorder: CaptureControll
             </Text>
           </View>
         </Card>
-        {stabilizationUnavailable && (
-          <Text variant="caption" tone="muted" style={styles.helperText}>
-            {t('camera.stabilizationUnavailable')}
-          </Text>
-        )}
       </Section>
 
       <Section label={t('camera.sections.photo')}>
@@ -494,6 +494,10 @@ const createStyles = createThemedStyles((theme) => ({
     backgroundColor: theme.colors.border.subtle,
   },
   helperText: { paddingHorizontal: theme.spacing.sm },
+  stabilizationHelperText: {
+    paddingHorizontal: theme.spacing.xl,
+    paddingBottom: theme.spacing.md,
+  },
   storageSummary: {
     position: 'relative',
     paddingHorizontal: theme.spacing.xl,
