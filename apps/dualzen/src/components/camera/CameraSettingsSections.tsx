@@ -400,6 +400,9 @@ export function CameraSettingsSections({ recorder }: { recorder: CaptureControll
                 ]}
                 style={styles.segmentedControl}
               />
+              <Text variant="caption" tone="muted">
+                {t('camera.formatSuggestion')}
+              </Text>
             </ControlRow>
           ) : (
             <ReadOnlyOptionRow label={t('camera.format')} value="MP4" divider />

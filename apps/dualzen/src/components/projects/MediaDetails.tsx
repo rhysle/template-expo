@@ -16,7 +16,6 @@ import {
   DownloadSimpleIcon,
   ExportIcon,
   FolderSimpleIcon,
-  StackIcon,
   TrashIcon,
 } from 'phosphor-react-native'
 import { type ReactNode, useEffect, useMemo, useState } from 'react'
@@ -364,7 +363,19 @@ export function MediaDetails({ media }: { media: ProjectMedia }) {
             accessibilityLabel={t('projects.saveBoth')}
             disabled={busy}
             onPress={() => void exportOutputs(availableKinds)}>
-            <StackIcon color={colors.text.primary} size={iconSizes.lg} />
+            <View style={styles.saveBothIcon}>
+              <DownloadSimpleIcon color={colors.text.primary} size={iconSizes.lg} />
+              <View accessible={false} pointerEvents="none" style={styles.saveBothBadge}>
+                <Text
+                  accessible={false}
+                  variant="caption"
+                  weight="bold"
+                  tone="primary"
+                  style={styles.saveBothBadgeText}>
+                  2
+                </Text>
+              </View>
+            </View>
           </ActionItem>
         )}
         <NativeMenu
@@ -512,6 +523,23 @@ const createDetailsStyles = createThemedStyles((theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: theme.borderRadius.full,
+  },
+  saveBothIcon: { alignItems: 'center', justifyContent: 'center' },
+  saveBothBadge: {
+    position: 'absolute',
+    top: -theme.spacing.xs,
+    right: -theme.spacing.xs,
+    width: theme.spacing.lg,
+    height: theme.spacing.lg,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: theme.borderRadius.full,
+  },
+  saveBothBadgeText: {
+    fontSize: theme.typography.sizes.xs,
+    lineHeight: theme.typography.sizes.sm,
+    fontVariant: ['tabular-nums'],
+    textAlign: 'center',
   },
   actionMenu: { width: theme.spacing['6xl'], height: theme.spacing['5xl'] },
 }))

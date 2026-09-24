@@ -213,6 +213,7 @@
     "resolution": "Resolution",
     "fps": "Frame rate",
     "format": "File format",
+    "formatSuggestion": "MP4 is best for sharing and compatibility. MOV is ideal for professional editing workflows.",
     "hdr": "HDR",
     "stabilization": "Stabilization",
     "grid": "Grid",
