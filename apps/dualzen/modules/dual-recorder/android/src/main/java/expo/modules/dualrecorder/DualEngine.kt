@@ -18,6 +18,7 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.util.concurrent.Executor
 import java.util.concurrent.CountDownLatch
+import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.math.*
 
@@ -26,6 +27,9 @@ object DualEngine {
   private val thread = HandlerThread("DualZenGPU").apply { start() }
   val handler = Handler(thread.looper)
   val executor = Executor { handler.post(it) }
+  private val storageExecutor = Executors.newSingleThreadExecutor { task ->
+    Thread(task, "DualZenStorage").apply { isDaemon = true }
+  }
   var context: Context? = null
   var onStopped: ((String) -> Unit)? = null
   private var display = EGL14.EGL_NO_DISPLAY
@@ -325,10 +329,25 @@ gl_FragColor=vec4(color,1.0); }"""
   }
   private val poll=object: Runnable { override fun run() {
     if(sinks.isEmpty()||stopping)return
-    try { if(thermal>=PowerManager.THERMAL_STATUS_CRITICAL)finish("thermal")
-      else if(StatFs(localFile(config.getString("directory")).path).availableBytes<=config.optLong("reserveBytes",268435456))finish("storage")
-      else handler.postDelayed(this,1000)
-    } catch(t: Throwable){failure=t.message;finish("storage")}
+    if(thermal>=PowerManager.THERMAL_STATUS_CRITICAL){finish("thermal");return}
+    val directory=localFile(config.getString("directory"))
+    val recordingId=config.optString("id")
+    val reserve=config.optLong("reserveBytes",268435456)
+    storageExecutor.execute {
+      try {
+        val freeBytes=StatFs(directory.path).availableBytes
+        handler.post {
+          if(sinks.isEmpty()||stopping||config.optString("id")!=recordingId)return@post
+          if(thermal>=PowerManager.THERMAL_STATUS_CRITICAL)finish("thermal")
+          else if(freeBytes<=reserve)finish("storage")
+          else handler.postDelayed(this,1000)
+        }
+      } catch(t: Throwable) {
+        handler.post {
+          if(sinks.isNotEmpty()&&!stopping&&config.optString("id")==recordingId){failure=t.message;finish("storage")}
+        }
+      }
+    }
   } }
   fun initializeThermal(ctx: Context) {
     context=ctx
@@ -340,12 +359,15 @@ gl_FragColor=vec4(color,1.0); }"""
   }
   fun destroy() { handler.post { finish("interruption");if(Build.VERSION.SDK_INT>=29)thermalListener?.let { power?.removeThermalStatusListener(it) };thermalListener=null } }
   fun stats(): String {
-    val latch=CountDownLatch(1);var result="{}"
+    val latch=CountDownLatch(1);var result="{}";var recording=false
     handler.post { val json=JSONObject().put("thermal",when {thermal>=4->3;thermal>=3->2;thermal>0->1;else->0})
-      .put("freeBytes",context?.filesDir?.let { StatFs(it.path).availableBytes }?:0).put("frames",frames).put("dropped",dropped).put("recording",sinks.isNotEmpty())
+      recording=sinks.isNotEmpty()
       streams.forEach { (id,stream) -> val (w,h)=dimensions(stream);json.put("source$id",JSONObject().put("width",w).put("height",h).put("fps",stream.fps).put("rotation",stream.rotation)) }
       result=json.toString();latch.countDown() }
-    latch.await();return result
+    latch.await()
+    val json=JSONObject(result)
+    if(!recording){val freeBytes=context?.filesDir?.let { StatFs(it.path).availableBytes }?:0;json.put("freeBytes",freeBytes)}
+    return json.toString()
   }
   private fun prepareAudio() {
     val minimum=AudioRecord.getMinBufferSize(48000,AudioFormat.CHANNEL_IN_MONO,AudioFormat.ENCODING_PCM_16BIT)

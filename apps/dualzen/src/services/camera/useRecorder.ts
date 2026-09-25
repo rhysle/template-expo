@@ -135,6 +135,24 @@ function reportCaptureFailure(
   return reason
 }
 
+function sameSource(left: RecorderStats['source0'], right: RecorderStats['source0']) {
+  return (
+    left?.width === right?.width &&
+    left?.height === right?.height &&
+    left?.rotation === right?.rotation
+  )
+}
+
+function samePresentedStats(left: RecorderStats, right: RecorderStats) {
+  return (
+    left.thermal === right.thermal &&
+    left.freeBytes === right.freeBytes &&
+    sameSource(left.source0, right.source0) &&
+    sameSource(left.source1, right.source1) &&
+    sameSource(left.source2, right.source2)
+  )
+}
+
 export function useCaptureController(active: boolean, retained: boolean) {
   const { t } = useTranslation()
   const { showSnackbar, hideSnackbar } = useSnackbarState()
@@ -188,14 +206,8 @@ export function useCaptureController(active: boolean, retained: boolean) {
   const [stats, setStats] = useState<RecorderStats>({
     thermal: 0,
     freeBytes: 0,
-    frames: 0,
-    dropped: 0,
-    recording: false,
   })
   const statsRef = useRef(stats)
-  useEffect(() => {
-    statsRef.current = stats
-  }, [stats])
   const [error, setError] = useState<string | null>(null)
   const [configured, setConfigured] = useState(false)
   const [ready, setReady] = useState(false)
@@ -205,7 +217,7 @@ export function useCaptureController(active: boolean, retained: boolean) {
   const [zoomRange, setZoomRange] = useState({ min: 1, max: 1 })
   const [torchEnabled, setTorchEnabled] = useState(false)
   const [photoHdrEnabled, setPhotoHdrEnabled] = useState(false)
-  const [elapsed, setElapsed] = useState(0)
+  const [recordingStartedAt, setRecordingStartedAt] = useState<number | null>(null)
   const reportedErrors = useRef(new Set<string>())
   const recordErrorOnce = useCallback(
     (key: string, cause: unknown, context: string, details?: Record<string, unknown>) => {
@@ -588,6 +600,7 @@ export function useCaptureController(active: boolean, retained: boolean) {
   const complete = useCallback(
     async (result: NativeRecordingResult) => {
       if (!result.id || handled.current.has(result.id) || metadata.current?.id !== result.id) return
+      setRecordingStartedAt(null)
       handled.current.add(result.id)
       const meta = metadata.current
       const task = (async () => {
@@ -732,6 +745,7 @@ export function useCaptureController(active: boolean, retained: boolean) {
   )
   const stop = useCallback(async () => {
     if (!metadata.current || useAppStore.getState().camera.phase !== 'recording') return
+    setRecordingStartedAt(null)
     useAppStore.getState().camera.setPhase('finalizing')
     try {
       await complete(JSON.parse(await NativeRecorder.stop()) as NativeRecordingResult)
@@ -760,6 +774,7 @@ export function useCaptureController(active: boolean, retained: boolean) {
     return () => listener.remove()
   }, [complete])
   useEffect(() => {
+    if (!retained || !appIsActive) return
     let cancelled = false
     let polling = false
     const poll = async () => {
@@ -768,9 +783,16 @@ export function useCaptureController(active: boolean, retained: boolean) {
       try {
         const value = JSON.parse(await NativeRecorder.stats()) as RecorderStats
         if (!cancelled) {
-          setStats(value)
-          if (metadata.current)
-            setElapsed(Math.max(0, (Date.now() - metadata.current.createdAt) / 1000))
+          const next = metadata.current
+            ? { ...value, freeBytes: statsRef.current.freeBytes }
+            : value
+          statsRef.current = next
+          setStats((current) => {
+            // Free space is only presented while idle. The native reserve monitor still
+            // protects recording, so capture-time capacity changes need not rerender the UI.
+            const presented = metadata.current ? { ...next, freeBytes: current.freeBytes } : next
+            return samePresentedStats(current, presented) ? current : presented
+          })
         }
       } catch (cause) {
         if (!cancelled) {
@@ -789,7 +811,7 @@ export function useCaptureController(active: boolean, retained: boolean) {
       cancelled = true
       clearInterval(timer)
     }
-  }, [recordErrorOnce])
+  }, [appIsActive, recordErrorOnce, retained])
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (state) => {
       appStateRef.current = state
@@ -1211,7 +1233,7 @@ export function useCaptureController(active: boolean, retained: boolean) {
       return
     useAppStore.getState().camera.setPhase('preparing')
     hideSnackbar()
-    setElapsed(0)
+    setRecordingStartedAt(null)
     trackEvent(AnalyticsAppEvents.CAPTURE_STARTED, {
       ...captureEventParams('video', settings),
       preview_layout: viewSettings.layout,
@@ -1229,12 +1251,14 @@ export function useCaptureController(active: boolean, retained: boolean) {
       await activateKeepAwakeAsync(WAKE_TAG)
       if (AppState.currentState !== 'active') throw new Error('interruption')
       const allocation = allocateMedia()
+      const createdAt = Date.now()
       metadata.current = {
         id: allocation.id,
         settings: { ...settings },
         projectId: useAppStore.getState().projects.selectedProjectId,
-        createdAt: Date.now(),
+        createdAt,
       }
+      setRecordingStartedAt(createdAt)
       await NativeRecorder.start(
         JSON.stringify({
           ...settings,
@@ -1258,6 +1282,7 @@ export function useCaptureController(active: boolean, retained: boolean) {
       if (AppState.currentState !== 'active') await stop()
     } catch (cause) {
       metadata.current = null
+      setRecordingStartedAt(null)
       const reason = reportCaptureFailure(
         cause,
         'camera.startVideo',
@@ -1776,7 +1801,7 @@ export function useCaptureController(active: boolean, retained: boolean) {
     stats,
     sizes,
     error,
-    elapsed,
+    recordingStartedAt,
     zoom: liveSettings.zoom,
     zoomRange,
     zoomPresets: [0.5, 1, 2, 5].filter(

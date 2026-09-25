@@ -22,7 +22,7 @@ import {
   StackIcon,
   XSquareIcon,
 } from 'phosphor-react-native'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { memo, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   AccessibilityInfo,
@@ -104,6 +104,28 @@ function PermissionRow({
     </View>
   )
 }
+
+const RecordingTimerPill = memo(function RecordingTimerPill({ startedAt }: { startedAt: number }) {
+  const theme = useTheme()
+  const styles = useThemedStyles(createStyles)
+  const [elapsed, setElapsed] = useState(0)
+
+  useEffect(() => {
+    const updateElapsed = () => setElapsed(Math.max(0, (Date.now() - startedAt) / 1000))
+    updateElapsed()
+    const timer = setInterval(updateElapsed, 1000)
+    return () => clearInterval(timer)
+  }, [startedAt])
+
+  return (
+    <BlurView tint={theme.appearance} intensity={CAMERA_BLUR_INTENSITY} style={styles.timerPill}>
+      <View style={styles.recordingDot} />
+      <Text weight="semibold" style={styles.timer}>
+        {formatElapsedDuration(elapsed)}
+      </Text>
+    </BlurView>
+  )
+})
 
 export function CameraScreen({
   recorder,
@@ -459,13 +481,8 @@ export function CameraScreen({
             profile
           )}
         </View>
-        {recording && (
-          <BlurView {...cameraBlurProps} style={styles.timerPill}>
-            <View style={styles.recordingDot} />
-            <Text weight="semibold" style={styles.timer}>
-              {formatElapsedDuration(recorder.elapsed)}
-            </Text>
-          </BlurView>
+        {recording && recorder.recordingStartedAt !== null && (
+          <RecordingTimerPill startedAt={recorder.recordingStartedAt} />
         )}
         <View style={[styles.toolbarSide, styles.toolbarActions]}>
           <BlurView {...cameraBlurProps} style={styles.controlBlur}>

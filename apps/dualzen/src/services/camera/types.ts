@@ -147,9 +147,6 @@ export interface NativePhotoResult {
 export interface RecorderStats {
   thermal: number
   freeBytes: number
-  frames: number
-  dropped: number
-  recording: boolean
   source0?: PixelSize & { fps?: number; rotation?: number }
   source1?: PixelSize & { fps?: number; rotation?: number }
   source2?: PixelSize & { fps?: number; rotation?: number }

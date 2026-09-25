@@ -13,6 +13,7 @@ struct CaptureError: LocalizedError {
 final class DualEngine: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
   static let shared = DualEngine()
   let queue = DispatchQueue(label: "com.rhysle.dualzen.recording", qos: .userInitiated)
+  private let storageQueue = DispatchQueue(label: "com.rhysle.dualzen.storage", qos: .utility)
   let context = CIContext(mtlDevice: MTLCreateSystemDefaultDevice()!, options: [.cacheIntermediates: false])
   var onStopped: ((String) -> Void)?
   private let previews = NSHashTable<DualGPUPreview>.weakObjects()
@@ -94,15 +95,19 @@ final class DualEngine: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
     (try? url.resourceValues(forKeys: [.volumeAvailableCapacityForImportantUsageKey]).volumeAvailableCapacityForImportantUsage) ?? 0
   }
   func stats() -> String {
-    queue.sync {
-      var value: [String: Any] = ["thermal": ProcessInfo.processInfo.thermalState.rawValue,
-        "recording": !sinks.isEmpty, "frames": recordedFrames, "dropped": droppedFrames,
-        "freeBytes": Self.freeBytes(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0])]
+    let snapshot = queue.sync { () -> ([String: Any], Bool) in
+      var value: [String: Any] = ["thermal": ProcessInfo.processInfo.thermalState.rawValue]
       for (channel, source) in sources {
         value["source\(channel)"] = ["width": source.0.extent.width, "height": source.0.extent.height, "rotation": rotations[channel] ?? 0]
       }
-      return Self.json(value)
+      return (value, !sinks.isEmpty)
     }
+    var value = snapshot.0
+    if !snapshot.1 {
+      let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+      value["freeBytes"] = Self.freeBytes(documents)
+    }
+    return Self.json(value)
   }
   func start(_ text: String) throws {
     guard let data = text.data(using: .utf8), let request = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
@@ -153,12 +158,22 @@ final class DualEngine: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
         throw error
       }
       config = request; sinks = prepared; origin = nil; firstAudio = nil; lastPTS = .zero; failure = nil; recordedFrames = 0; droppedFrames = 0; pairedPTS.removeAll()
-      let poll = DispatchSource.makeTimerSource(queue: queue)
+      let recordingID = request["id"] as? String
+      // Disk-capacity queries can block; keep them off the sample-buffer queue.
+      let poll = DispatchSource.makeTimerSource(queue: storageQueue)
       poll.schedule(deadline: .now() + 1, repeating: 1)
       poll.setEventHandler { [weak self] in
-        guard let self, !self.sinks.isEmpty, !self.stopping else { return }
-        if ProcessInfo.processInfo.thermalState == .critical { self.finish(reason: "thermal", completion: nil) }
-        else if Self.freeBytes(url) <= reserve { self.finish(reason: "storage", completion: nil) }
+        guard let self else { return }
+        let freeBytes = Self.freeBytes(url)
+        self.queue.async {
+          guard !self.sinks.isEmpty, !self.stopping,
+            self.config["id"] as? String == recordingID else { return }
+          if ProcessInfo.processInfo.thermalState == .critical {
+            self.finish(reason: "thermal", completion: nil)
+          } else if freeBytes <= reserve {
+            self.finish(reason: "storage", completion: nil)
+          }
+        }
       }
       timer = poll; poll.resume()
     }
