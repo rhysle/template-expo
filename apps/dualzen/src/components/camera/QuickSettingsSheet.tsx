@@ -1,10 +1,12 @@
 import { NativeBottomSheet, Text } from '@shared/core/components/base'
 import { withAlpha } from '@shared/core/utils/color'
 import {
+  ArrowsOutSimpleIcon,
   FlipHorizontalIcon,
   FrameCornersIcon,
   GearSixIcon,
   GridNineIcon,
+  VideoCameraIcon,
 } from 'phosphor-react-native'
 import { useTranslation } from 'react-i18next'
 import { Pressable, View } from 'react-native'
@@ -18,15 +20,26 @@ export function QuickSettingsSheet({
   visible,
   onAction,
   onDismiss,
+  hdrSupported,
+  stabilizationSupported,
 }: {
   visible: boolean
   onAction: (action: QuickSettingsAction) => void
   onDismiss: () => void
+  hdrSupported: boolean
+  stabilizationSupported: boolean
 }) {
   const { t } = useTranslation()
   const theme = useTheme()
   const styles = useThemedStyles(createStyles)
-  const { sharedSettings, updateSharedSettings, phase } = useCameraState()
+  const {
+    sharedSettings,
+    videoSettings,
+    mediaType,
+    updateSharedSettings,
+    updateVideoSettings,
+    phase,
+  } = useCameraState()
 
   const actions = [
     {
@@ -51,6 +64,26 @@ export function QuickSettingsSheet({
       disabled: phase !== 'idle',
       onPress: () => updateSharedSettings({ mirrorFrontCamera: !sharedSettings.mirrorFrontCamera }),
     },
+    ...(mediaType === 'video'
+      ? [
+          {
+            id: 'video-hdr' as const,
+            label: t('camera.hdr'),
+            icon: VideoCameraIcon,
+            selected: videoSettings.hdr,
+            disabled: phase !== 'idle' || (!videoSettings.hdr && !hdrSupported),
+            onPress: () => updateVideoSettings({ hdr: !videoSettings.hdr }),
+          },
+          {
+            id: 'stabilization' as const,
+            label: t('camera.stabilization'),
+            icon: ArrowsOutSimpleIcon,
+            selected: videoSettings.stabilization,
+            disabled: phase !== 'idle' || (!videoSettings.stabilization && !stabilizationSupported),
+            onPress: () => updateVideoSettings({ stabilization: !videoSettings.stabilization }),
+          },
+        ]
+      : []),
     {
       id: 'settings' as const,
       label: t('camera.moreSettings'),

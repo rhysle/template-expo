@@ -229,6 +229,8 @@ export function CameraScreen({
         key: `edge${longEdge}`,
         settings: { ...capabilitySettings, longEdge },
       })),
+      { key: 'hdr', settings: { ...capabilitySettings, hdr: true } },
+      { key: 'stabilization', settings: { ...capabilitySettings, stabilization: true } },
     ]
     void Promise.all(
       variants.map(async (variant) => [variant.key, await checkSettings(variant.settings)] as const)
@@ -649,8 +651,10 @@ export function CameraScreen({
       )}
       <QuickSettingsSheet
         visible={quickSettingsVisible}
+        hdrSupported={supported.hdr === true}
         onAction={selectQuickAction}
         onDismiss={finishQuickSettingsDismiss}
+        stabilizationSupported={supported.stabilization === true}
       />
     </View>
   )
