@@ -638,6 +638,9 @@ const createStyles = createThemedStyles((theme) => ({
   input: {
     backgroundColor: theme.colors.background.subtle,
     color: theme.colors.text.primary,
+    fontFamily: theme.typography.fontFamily.regular,
+    fontWeight: theme.typography.weights.regular,
+    fontSize: theme.typography.sizes.lg,
     padding: theme.spacing.md,
     borderRadius: theme.borderRadius.sm,
   },

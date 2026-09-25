@@ -5,12 +5,12 @@ import {
   Host,
   Icon,
   RNHostView,
-  Text as ComposeText,
   useMaterialColors,
 } from '@expo/ui/jetpack-compose'
 import * as React from 'react'
 import { Pressable, View } from 'react-native'
 
+import { NativeText } from '../NativeText'
 import type { NativeMenuAction, NativeMenuProps } from './NativeMenu.types'
 
 function buildElementColors(
@@ -49,7 +49,7 @@ function MenuActionItem({ action, onSelect, dismissAll, destructiveColor }: Menu
             elementColors={elementColors}
             onClick={() => setSubmenuExpanded(true)}>
             <DropdownMenuItem.Text>
-              <ComposeText>{label}</ComposeText>
+              <NativeText>{label}</NativeText>
             </DropdownMenuItem.Text>
             {leadingIconSource && (
               <DropdownMenuItem.LeadingIcon>
@@ -85,7 +85,7 @@ function MenuActionItem({ action, onSelect, dismissAll, destructiveColor }: Menu
         dismissAll()
       }}>
       <DropdownMenuItem.Text>
-        <ComposeText>{label}</ComposeText>
+        <NativeText>{label}</NativeText>
       </DropdownMenuItem.Text>
       {leadingIconSource && (
         <DropdownMenuItem.LeadingIcon>
@@ -94,7 +94,7 @@ function MenuActionItem({ action, onSelect, dismissAll, destructiveColor }: Menu
       )}
       {selected === true && (
         <DropdownMenuItem.TrailingIcon>
-          <ComposeText>✓</ComposeText>
+          <NativeText>✓</NativeText>
         </DropdownMenuItem.TrailingIcon>
       )}
     </DropdownMenuItem>
@@ -105,7 +105,7 @@ function MenuFooter({ footer }: { footer: string }) {
   return (
     <DropdownMenuItem enabled={false}>
       <DropdownMenuItem.Text>
-        <ComposeText style={{ typography: 'labelSmall' }}>{footer}</ComposeText>
+        <NativeText textStyle={{ fontSize: 12 }}>{footer}</NativeText>
       </DropdownMenuItem.Text>
     </DropdownMenuItem>
   )

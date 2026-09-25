@@ -6,6 +6,7 @@
     "./app-variant": "./scripts/app-variant.js",
     "./expo-app-config": "./scripts/expo-app-config.js",
     "./monetization-types": "./scripts/monetization/types.ts",
+    "./plugins/withSegmentedControlFont.js": "./plugins/withSegmentedControlFont.js",
     "./plugins/withRNFirebaseStaticFramework": "./plugins/withRNFirebaseStaticFramework.js",
     "./plugins/withRNFirebaseStaticFramework.js": "./plugins/withRNFirebaseStaticFramework.js"
   },

@@ -1,18 +1,10 @@
-import { Row, Switch, Text } from '@expo/ui/jetpack-compose'
+import { Row, Switch } from '@expo/ui/jetpack-compose'
 import { testID as testIDModifier, weight } from '@expo/ui/jetpack-compose/modifiers'
 import { useTheme } from '@shared/core/theme'
-import type { StyleProp, ViewStyle } from 'react-native'
 
-import { NativeUIHost } from './NativeUIHost'
-
-export interface NativeToggleProps {
-  value: boolean
-  onValueChange: (value: boolean) => void
-  label?: string
-  disabled?: boolean
-  style?: StyleProp<ViewStyle>
-  testID?: string
-}
+import { NativeText } from '../NativeText'
+import { NativeUIHost } from '../NativeUIHost'
+import type { NativeToggleProps } from './NativeToggle.types'
 
 export const NativeToggle = ({
   value,
@@ -44,7 +36,7 @@ export const NativeToggle = ({
     <NativeUIHost style={style}>
       {label ? (
         <Row verticalAlignment="center" horizontalArrangement={{ spacedBy: 8 }}>
-          <Text modifiers={[weight(1)]}>{label}</Text>
+          <NativeText modifiers={[weight(1)]}>{label}</NativeText>
           {toggle}
         </Row>
       ) : (

@@ -133,6 +133,12 @@
         }
       ],
       [
+        "@shared/tooling/plugins/withSegmentedControlFont.js",
+        {
+          "postScriptName": "Inter-Regular"
+        }
+      ],
+      [
         "@sentry/react-native/expo",
         {
           "url": "https://sentry.io/"

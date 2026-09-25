@@ -23,6 +23,9 @@ export const TabStack = ({ headerRight, title }: TabStackProps) => {
           fontFamily: typography.fontFamily.semibold,
           fontWeight: typography.weights.semibold,
         },
+        headerBackTitleStyle: {
+          fontFamily: typography.fontFamily.regular,
+        },
       }}>
       <Stack.Screen name="index" options={{ title }} />
     </Stack>

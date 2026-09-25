@@ -163,8 +163,27 @@ function main() {
     plugins.push(fontPluginEntry)
   }
 
+  // Keep the iOS native segmented control's UIKit appearance on the configured font face.
+  // UIKit expects the PostScript face name, while FONT_NAME is the Google Fonts family name.
+  const segmentedControlPluginName = '@shared/tooling/plugins/withSegmentedControlFont.js'
+  const segmentedControlPluginIndex = plugins.findIndex(
+    (p) => Array.isArray(p) && p[0] === segmentedControlPluginName
+  )
+  const segmentedControlPluginEntry = [
+    segmentedControlPluginName,
+    {
+      postScriptName: `${prefix}-Regular`,
+    },
+  ]
+
+  if (segmentedControlPluginIndex !== -1) {
+    plugins[segmentedControlPluginIndex] = segmentedControlPluginEntry
+  } else {
+    plugins.push(segmentedControlPluginEntry)
+  }
+
   fs.writeFileSync(appJsonPath, JSON.stringify(appJson, null, 2) + '\n')
-  console.log('✏️  Updated app.json (expo-font plugin)\n')
+  console.log('✏️  Updated app.json (expo-font and segmented-control font plugins)\n')
 
   // 5. Done
   console.log(`✅ Font "${prefix}" is ready!`)

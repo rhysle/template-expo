@@ -35,7 +35,10 @@
         "android.permission.READ_EXTERNAL_STORAGE",
         "android.permission.WRITE_EXTERNAL_STORAGE"
       ],
-      "permissions": ["android.permission.CAMERA", "android.permission.RECORD_AUDIO"]
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "plugins": [
       "expo-router",
@@ -99,42 +102,48 @@
         {
           "ios": {
             "fonts": [
-              "../../node_modules/@expo-google-fonts/inter/300Light/Inter_300Light.ttf",
-              "../../node_modules/@expo-google-fonts/inter/400Regular/Inter_400Regular.ttf",
-              "../../node_modules/@expo-google-fonts/inter/500Medium/Inter_500Medium.ttf",
-              "../../node_modules/@expo-google-fonts/inter/600SemiBold/Inter_600SemiBold.ttf",
-              "../../node_modules/@expo-google-fonts/inter/700Bold/Inter_700Bold.ttf"
+              "../../node_modules/@expo-google-fonts/josefin-slab/300Light/JosefinSlab_300Light.ttf",
+              "../../node_modules/@expo-google-fonts/josefin-slab/400Regular/JosefinSlab_400Regular.ttf",
+              "../../node_modules/@expo-google-fonts/josefin-slab/500Medium/JosefinSlab_500Medium.ttf",
+              "../../node_modules/@expo-google-fonts/josefin-slab/600SemiBold/JosefinSlab_600SemiBold.ttf",
+              "../../node_modules/@expo-google-fonts/josefin-slab/700Bold/JosefinSlab_700Bold.ttf"
             ]
           },
           "android": {
             "fonts": [
               {
-                "fontFamily": "Inter",
+                "fontFamily": "JosefinSlab",
                 "fontDefinitions": [
                   {
-                    "path": "../../node_modules/@expo-google-fonts/inter/300Light/Inter_300Light.ttf",
+                    "path": "../../node_modules/@expo-google-fonts/josefin-slab/300Light/JosefinSlab_300Light.ttf",
                     "weight": 300
                   },
                   {
-                    "path": "../../node_modules/@expo-google-fonts/inter/400Regular/Inter_400Regular.ttf",
+                    "path": "../../node_modules/@expo-google-fonts/josefin-slab/400Regular/JosefinSlab_400Regular.ttf",
                     "weight": 400
                   },
                   {
-                    "path": "../../node_modules/@expo-google-fonts/inter/500Medium/Inter_500Medium.ttf",
+                    "path": "../../node_modules/@expo-google-fonts/josefin-slab/500Medium/JosefinSlab_500Medium.ttf",
                     "weight": 500
                   },
                   {
-                    "path": "../../node_modules/@expo-google-fonts/inter/600SemiBold/Inter_600SemiBold.ttf",
+                    "path": "../../node_modules/@expo-google-fonts/josefin-slab/600SemiBold/JosefinSlab_600SemiBold.ttf",
                     "weight": 600
                   },
                   {
-                    "path": "../../node_modules/@expo-google-fonts/inter/700Bold/Inter_700Bold.ttf",
+                    "path": "../../node_modules/@expo-google-fonts/josefin-slab/700Bold/JosefinSlab_700Bold.ttf",
                     "weight": 700
                   }
                 ]
               }
             ]
           }
+        }
+      ],
+      [
+        "@shared/tooling/plugins/withSegmentedControlFont.js",
+        {
+          "postScriptName": "JosefinSlab-Regular"
         }
       ],
       [
@@ -154,7 +163,10 @@
           },
           "ios": {
             "useFrameworks": "static",
-            "forceStaticLinking": ["RNFBApp", "RNFBAnalytics"],
+            "forceStaticLinking": [
+              "RNFBApp",
+              "RNFBAnalytics"
+            ],
             "enableSceneSupport": true
           }
         }
@@ -190,6 +202,9 @@
     "updates": {
       "url": "https://u.expo.dev/c1d6d208-8446-46ae-a625-1f9a8776d42c"
     },
-    "platforms": ["ios", "android"]
+    "platforms": [
+      "ios",
+      "android"
+    ]
   }
 }

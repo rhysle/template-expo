@@ -66,6 +66,9 @@ function RootLayoutContent() {
           fontWeight: typography.weights.semibold,
           color: colors.text.primary,
         },
+        headerBackTitleStyle: {
+          fontFamily: typography.fontFamily.regular,
+        },
         contentStyle: {
           backgroundColor: colors.background.base,
         },
