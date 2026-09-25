@@ -8,6 +8,9 @@
 // import { JosefinSlab_100Thin, OpenSans_300Light } from '@expo-google-fonts/dev'
 
 export const FONT_NAME = 'Inter'
+// export const FONT_NAME = 'Manrope'
+// export const FONT_NAME = 'Outfit'
+// export const FONT_NAME = 'Sora'
 
 export const runtimeFontFamilyMap = {
   light: `${FONT_NAME}_300Light`,
