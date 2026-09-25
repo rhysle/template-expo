@@ -80,10 +80,10 @@ importers:
 
   apps/dualzen:
     dependencies:
-      '@expo-google-fonts/inter':
-        specifier: 0.4.2
-        version: 0.4.2
       '@expo-google-fonts/josefin-slab':
+        specifier: ^0.4.1
+        version: 0.4.1
+      '@expo-google-fonts/lexend':
         specifier: ^0.4.1
         version: 0.4.1
       '@expo/ui':
@@ -1560,6 +1560,9 @@ packages:
 
   '@expo-google-fonts/josefin-slab@0.4.1':
     resolution: {integrity: sha512-si72R2W3np+fMWELgd1BfikFlK/ozefuSzP14XCXqWRKnnB7b/VvMy96HesZ8tP5ZouNdQ7iCipUuPowFFG9SQ==}
+
+  '@expo-google-fonts/lexend@0.4.1':
+    resolution: {integrity: sha512-uddqvCw9zFeYVUqUmPkCxFqEd+YbmCKqpNpdzj+LhJwYM2AwjR8i+Zq5Qx7KhbP/vzIZUfSwC5bnZ3cx2ltqGw==}
 
   '@expo-google-fonts/material-symbols@0.4.47':
     resolution: {integrity: sha512-5G4ObZlyGvDzx6g/+NC+RAMeeCc3dc0/HLu/llY5dYZUlNDYzaZWQZwPUzoTixf27riT8I7ur9mQKPYCPFDJzQ==}
@@ -6689,6 +6692,8 @@ snapshots:
   '@expo-google-fonts/inter@0.4.2': {}
 
   '@expo-google-fonts/josefin-slab@0.4.1': {}
+
+  '@expo-google-fonts/lexend@0.4.1': {}
 
   '@expo-google-fonts/material-symbols@0.4.47': {}
 

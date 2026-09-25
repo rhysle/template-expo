@@ -72,8 +72,8 @@
     "eas-build:inspect": "APP_VARIANT=production node --import tsx ../../packages/tooling/scripts/eas-app.ts build:inspect --platform ios --stage archive"
   },
   "dependencies": {
-    "@expo-google-fonts/inter": "0.4.2",
     "@expo-google-fonts/josefin-slab": "^0.4.1",
+    "@expo-google-fonts/lexend": "^0.4.1",
     "@expo/ui": "57.0.18",
     "@react-native-firebase/analytics": "24.1.1",
     "@react-native-firebase/app": "24.1.1",
