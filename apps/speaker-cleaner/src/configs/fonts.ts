@@ -63,13 +63,11 @@ const LATIN_LANGUAGES = new Set([
   'cs',
   'sk',
   'hr',
-  'sl',
   'da',
   'sv',
   'nb',
   'fi',
   'hu',
-  'af',
 ])
 
 /**
