@@ -460,11 +460,13 @@ const createStyles = createThemedStyles((theme) => ({
     gap: theme.spacing.lg,
   },
   optionValue: {
+    minHeight: theme.spacing['4xl'],
     minWidth: 0,
     flexShrink: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end',
+    paddingStart: theme.spacing.md,
     gap: theme.spacing.xs,
   },
   optionValueText: { flexShrink: 1 },
