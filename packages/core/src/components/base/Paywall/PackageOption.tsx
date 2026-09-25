@@ -7,6 +7,7 @@ import { View } from 'react-native'
 import type { PurchasesPackage } from 'react-native-purchases'
 import Animated, { FadeIn } from 'react-native-reanimated'
 
+import { useScaleAnimation } from '../Button/pressAnimations/useScaleAnimation'
 import { getPeriodKey, type PeriodKey } from './savings'
 
 interface PackageOptionProps {
@@ -27,6 +28,7 @@ export const PackageOption = ({
   const styles = useThemedStyles(createStyles)
   const { t } = useTranslation()
   const { colors } = useTheme()
+  const { outerStyle, onPressIn, onPressOut } = useScaleAnimation()
   const { product } = pkg
 
   const periodKey = getPeriodKey(product.subscriptionPeriod)
@@ -63,10 +65,12 @@ export const PackageOption = ({
   }
 
   return (
-    <Animated.View entering={FadeIn.delay(index * 100)}>
+    <Animated.View entering={FadeIn.delay(index * 100)} style={outerStyle}>
       <Pressable
         style={[styles.container, selected && styles.containerSelected]}
         haptic
+        onPressIn={onPressIn}
+        onPressOut={onPressOut}
         onPress={() => onSelect(pkg)}
         accessibilityRole="radio"
         accessibilityState={{ selected }}>
