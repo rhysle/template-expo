@@ -126,8 +126,7 @@ export function QuickSettingsSheet({
                 />
               </View>
               <Text
-                variant="label"
-                weight="semibold"
+                variant="caption"
                 align="center"
                 numberOfLines={2}
                 style={[styles.actionLabel, selected && styles.actionLabelSelected]}>
@@ -153,6 +152,7 @@ const createStyles = createThemedStyles((theme) => ({
     flexWrap: 'wrap',
     justifyContent: 'space-evenly',
     gap: theme.spacing.md,
+    rowGap: theme.spacing['4xl'],
   },
   action: {
     width: '29%',
