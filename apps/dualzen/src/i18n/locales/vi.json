@@ -59,10 +59,10 @@
     "trialDisclaimer": "Hủy bất cứ lúc nào. Chưa cần thanh toán ngay",
     "subscriptionDisclaimer": "Hủy bất cứ lúc nào.",
     "lifetimeDisclaimer": "Thanh toán một lần. Không có phí định kỳ.",
-    "restore": "Khôi phục giao dịch mua",
+    "restore": "Khôi phục giao dịch",
     "terms": "Điều khoản dịch vụ",
     "privacy": "Chính sách bảo mật",
-    "then": "rồi",
+    "then": "sau đó",
     "trial": "{{count}}-{{unit}} dùng thử miễn phí",
     "save": "Tiết kiệm {{percent}}%",
     "availability": {
