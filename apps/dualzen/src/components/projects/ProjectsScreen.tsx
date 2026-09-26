@@ -15,7 +15,16 @@ import { useRouter } from 'expo-router'
 import { CaretDownIcon, CheckCircleIcon, ImageIcon, WarningCircleIcon } from 'phosphor-react-native'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Alert, FlatList, Modal, Platform, Pressable, TextInput, View } from 'react-native'
+import {
+  Alert,
+  FlatList,
+  Modal,
+  Platform,
+  Pressable,
+  TextInput,
+  useWindowDimensions,
+  View,
+} from 'react-native'
 
 import {
   deleteMediaBatch,
@@ -48,6 +57,7 @@ function recordProjectError(cause: unknown, context: string, details?: Record<st
 export function ProjectsScreen() {
   const { t } = useTranslation()
   const router = useRouter()
+  const { width: screenWidth } = useWindowDimensions()
   const styles = useThemedStyles(createStyles)
   const { colors, spacing } = useTheme()
   const glassProps = useProjectGlass()
@@ -300,7 +310,12 @@ export function ProjectsScreen() {
                 name: project.name ?? t('projects.default'),
               })}
               style={styles.projectTrigger}>
-              <Text numberOfLines={1} variant="title" weight="bold" style={styles.projectTitle}>
+              <Text
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                variant="title"
+                weight="bold"
+                style={[styles.projectTitle, { maxWidth: screenWidth * 0.56 }]}>
                 {project.name ?? t('projects.default')}
               </Text>
               <CaretDownIcon
@@ -530,14 +545,15 @@ const createStyles = createThemedStyles((theme) => ({
     paddingHorizontal: theme.spacing.lg,
     paddingVertical: theme.spacing.md,
   },
-  projectMenu: { flexShrink: 1, maxWidth: '70%' },
+  projectMenu: { width: '76%', flexShrink: 1, minWidth: 0 },
   projectTrigger: {
+    width: '100%',
     minHeight: theme.spacing['5xl'],
     flexDirection: 'row',
     alignItems: 'center',
     gap: theme.spacing.sm,
   },
-  projectTitle: { flexShrink: 1 },
+  projectTitle: { flexShrink: 1, minWidth: 0 },
   filter: {
     paddingHorizontal: theme.spacing.lg,
     paddingBottom: theme.spacing.md,

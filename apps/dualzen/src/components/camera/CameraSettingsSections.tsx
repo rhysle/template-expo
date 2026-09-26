@@ -212,8 +212,7 @@ export function CameraSettingsSections({ recorder }: { recorder: CaptureControll
           ? t('camera.selfie')
           : t('camera.wide')
 
-  const pairLabel = (pair: (typeof recorder.pairs)[number], index: number) =>
-    `${t('camera.pair', { number: index + 1 })} · ${pair.map(lensLabel).join(' / ')}`
+  const pairLabel = (pair: (typeof recorder.pairs)[number]) => pair.map(lensLabel).join(' / ')
 
   const availableLenses = recorder.devices.filter(
     (device) =>
@@ -277,10 +276,10 @@ export function CameraSettingsSections({ recorder }: { recorder: CaptureControll
           {settings.mode === 'dual' && selectedPair && (
             <MenuOptionRow
               label={t('camera.cameraPair')}
-              value={pairLabel(selectedPair, settings.pairIndex)}
+              value={pairLabel(selectedPair)}
               actions={recorder.pairs.map((pair, index) => ({
                 id: String(index),
-                label: pairLabel(pair, index),
+                label: pairLabel(pair),
                 selected: index === settings.pairIndex,
               }))}
               onSelect={(pairIndex) => updateSharedSettings({ pairIndex: Number(pairIndex) })}

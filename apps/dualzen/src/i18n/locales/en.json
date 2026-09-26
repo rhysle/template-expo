@@ -255,7 +255,6 @@
     "ultraWide": "Ultra-wide",
     "telephoto": "Telephoto",
     "selfie": "Selfie",
-    "pair": "Camera pair {{number}}",
     "cameraPair": "Camera pair",
     "stabilizationUnavailable": "Stabilization is unavailable with this camera and recording configuration.",
     "sections": {

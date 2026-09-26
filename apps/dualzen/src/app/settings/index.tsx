@@ -12,6 +12,7 @@ import { useShareApp } from '@shared/core/utils/useShareApp'
 import * as Clipboard from 'expo-clipboard'
 import Constants from 'expo-constants'
 import { useRouter } from 'expo-router'
+import { Stack } from 'expo-router/stack'
 import * as WebBrowser from 'expo-web-browser'
 import {
   ArrowSquareOutIcon,
@@ -26,7 +27,7 @@ import {
   StarIcon,
 } from 'phosphor-react-native'
 import { useTranslation } from 'react-i18next'
-import { ScrollView, View } from 'react-native'
+import { Platform, ScrollView, View } from 'react-native'
 
 import { CameraSettingsSections } from '@/components/camera/CameraSettingsSections'
 import { MediaStorageSection } from '@/components/settings/MediaStorageSection'
@@ -86,6 +87,15 @@ export default function SettingsScreen() {
 
   return (
     <View style={commonStyles.container}>
+      {Platform.OS === 'ios' && (
+        <Stack.Toolbar placement="right">
+          <Stack.Toolbar.Button
+            accessibilityLabel={t('common.close')}
+            icon="xmark"
+            onPress={() => router.back()}
+          />
+        </Stack.Toolbar>
+      )}
       <ScrollView
         style={commonStyles.container}
         contentContainerStyle={[styles.container, { paddingBottom: theme.spacing['3xl'] }]}
