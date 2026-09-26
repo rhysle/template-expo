@@ -597,10 +597,10 @@ const createStyles = createThemedStyles((theme) => ({
     right: 0,
     bottom: 0,
     left: 0,
-    borderWidth: 3,
-    borderColor: theme.colors.primary.main,
+    borderWidth: 2,
+    borderColor: theme.colors.border.default,
     borderRadius: theme.borderRadius.sm,
-    backgroundColor: withAlpha(theme.colors.primary.main, 0.18),
+    backgroundColor: withAlpha(theme.colors.background.subtle, 0.5),
   },
   tileBadge: {
     position: 'absolute',
