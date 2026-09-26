@@ -63,6 +63,17 @@ function captureEventParams(mediaType: CaptureMediaType, settings: RecordingSett
   }
 }
 
+function captureDropBucket(count: number) {
+  if (count === 0) return 'none'
+  if (count < 5) return 'few'
+  if (count < 30) return 'some'
+  return 'many'
+}
+
+function bufferPressure(result: NativeRecordingResult) {
+  return (result.pixelBufferDiagnostics?.thresholdDropCount ?? 0) > 0 ? 'present' : 'none'
+}
+
 function errorMessage(cause: unknown) {
   if (cause instanceof Error) return cause.message
   return String(cause ?? '')
@@ -133,6 +144,33 @@ function reportCaptureFailure(
     })
   }
   return reason
+}
+
+function recordingFailureDetails(result: NativeRecordingResult, settings: RecordingSettings) {
+  const pixelBufferDiagnostics = result.pixelBufferDiagnostics
+  return {
+    output_count: result.outputs.length,
+    ready_output_count: result.outputs.filter((item) => item.ready).length,
+    output_dimensions: result.outputs
+      .map((item) => `${item.kind}:${item.width}x${item.height}`)
+      .join(','),
+    duration_seconds: result.duration,
+    frame_count: result.frames,
+    dropped_frame_count: result.dropped,
+    writer_statuses: result.writerStatuses?.join(',') ?? 'unavailable',
+    audio_sample_counts: result.audioSampleCounts?.join(',') ?? 'unavailable',
+    camera_position: settings.front ? 'front' : 'back',
+    resolution: settings.longEdge,
+    fps: settings.fps,
+    hdr: settings.hdr,
+    container: settings.container,
+    stabilization: settings.stabilization,
+    buffer_allocation_failure_count: pixelBufferDiagnostics?.allocationFailureCount ?? 0,
+    buffer_threshold_drop_count: pixelBufferDiagnostics?.thresholdDropCount ?? 0,
+    buffer_last_cv_return: pixelBufferDiagnostics?.lastStatusCode ?? 'unavailable',
+    buffer_last_cv_return_name: pixelBufferDiagnostics?.lastStatusName ?? 'unavailable',
+    buffer_last_output: pixelBufferDiagnostics?.lastOutput ?? 'unavailable',
+  }
 }
 
 function sameSource(left: RecorderStats['source0'], right: RecorderStats['source0']) {
@@ -646,10 +684,7 @@ export function useCaptureController(active: boolean, retained: boolean) {
                 meta.settings,
                 'processing',
                 recordingFailureReason(result.reason, 'processing_failed'),
-                {
-                  ready_output_count: video.outputs.filter((item) => item.ready).length,
-                  output_count: video.outputs.length,
-                }
+                recordingFailureDetails(result, meta.settings)
               )
               showCaptureNotice('partialSave')
             }
@@ -658,6 +693,8 @@ export function useCaptureController(active: boolean, retained: boolean) {
               result: completeCapture ? 'complete' : 'partial',
               output_count: video.outputs.filter((item) => item.ready).length,
               duration_seconds: Math.max(0, Math.round(video.duration)),
+              frame_drop_bucket: captureDropBucket(result.dropped),
+              buffer_pressure: bufferPressure(result),
               stop_reason: recordingStopReason(result.reason),
             })
             outcomeTracked = true
@@ -683,25 +720,14 @@ export function useCaptureController(active: boolean, retained: boolean) {
               meta.settings,
               'processing',
               recordingFailureReason(result.reason, 'processing_failed'),
-              {
-                output_count: result.outputs.length,
-                duration_seconds: result.duration,
-                frame_count: result.frames,
-                dropped_frame_count: result.dropped,
-                writer_statuses: result.writerStatuses?.join(',') ?? 'unavailable',
-                audio_sample_counts: result.audioSampleCounts?.join(',') ?? 'unavailable',
-                camera_position: meta.settings.front ? 'front' : 'back',
-                resolution: meta.settings.longEdge,
-                fps: meta.settings.fps,
-                hdr: meta.settings.hdr,
-                container: meta.settings.container,
-                stabilization: meta.settings.stabilization,
-              }
+              recordingFailureDetails(result, meta.settings)
             )
             trackEvent(AnalyticsAppEvents.CAPTURE_FAILED, {
               ...captureEventParams('video', meta.settings),
               stage: 'processing',
               reason,
+              frame_drop_bucket: captureDropBucket(result.dropped),
+              buffer_pressure: bufferPressure(result),
             })
             outcomeTracked = true
             setError(cause)

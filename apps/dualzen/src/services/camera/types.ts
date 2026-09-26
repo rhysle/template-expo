@@ -140,6 +140,13 @@ export interface NativeRecordingResult {
   dropped: number
   writerStatuses?: number[]
   audioSampleCounts?: number[]
+  pixelBufferDiagnostics?: {
+    allocationFailureCount: number
+    thresholdDropCount: number
+    lastStatusCode?: number
+    lastStatusName?: string
+    lastOutput?: OutputKind
+  }
 }
 export interface NativePhotoResult {
   outputs: PhotoOutput[]

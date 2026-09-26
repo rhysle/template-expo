@@ -9,6 +9,25 @@ struct CaptureError: LocalizedError {
   var errorDescription: String? { message }
 }
 
+private let maxPixelBufferPressureDuration = 2.0
+
+private func pixelBufferAllocationStatusName(_ status: CVReturn) -> String {
+  switch status {
+  case kCVReturnWouldExceedAllocationThreshold: return "would_exceed_allocation_threshold"
+  case kCVReturnPoolAllocationFailed: return "pool_allocation_failed"
+  default: return "other"
+  }
+}
+
+private struct PixelBufferAllocationError: LocalizedError {
+  let status: CVReturn
+  let output: String
+
+  var errorDescription: String? {
+    "Video buffer allocation failed for \(output) (\(pixelBufferAllocationStatusName(status)), CVReturn \(Int(status)))"
+  }
+}
+
 // All recording and audio callbacks share this serial queue. No per-frame JS traffic.
 final class DualEngine: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
   static let shared = DualEngine()
@@ -36,6 +55,11 @@ final class DualEngine: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
   private var failure: String?
   private var recordedFrames = 0
   private var droppedFrames = 0
+  private var pixelBufferAllocationFailureCount = 0
+  private var pixelBufferThresholdDropCount = 0
+  private var lastPixelBufferAllocationStatus: CVReturn?
+  private var lastPixelBufferAllocationOutput: String?
+  private var firstPixelBufferThresholdPTS: CMTime?
   // UIKit access is confined to the main queue. Request time before backgrounding.
   private var backgroundTask: UIBackgroundTaskIdentifier = .invalid
 
@@ -175,6 +199,9 @@ final class DualEngine: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
           }
         }
       }
+      pixelBufferAllocationFailureCount = 0; pixelBufferThresholdDropCount = 0
+      lastPixelBufferAllocationStatus = nil; lastPixelBufferAllocationOutput = nil
+      firstPixelBufferThresholdPTS = nil
       timer = poll; poll.resume()
     }
   }
@@ -257,10 +284,49 @@ final class DualEngine: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
       guard appendAudio(audio) else { return }
     }
     guard pts > lastPTS else { return }
-    guard sinks.allSatisfy({ $0.video.isReadyForMoreMediaData }) else { droppedFrames += 1; return }
+    guard sinks.allSatisfy({ $0.video.isReadyForMoreMediaData }) else {
+      droppedFrames += 1; firstPixelBufferThresholdPTS = nil; return
+    }
+    var buffers: [CVPixelBuffer] = []
     do {
-      for (index, sink) in sinks.enumerated() { try sink.append(frames[index].0, pts: pts, context: context) }
-      lastPTS = pts; recordedFrames += 1
+      // Allocate the paired outputs before rendering or appending either one.
+      for sink in sinks { buffers.append(try sink.makeBuffer()) }
+    } catch let error as PixelBufferAllocationError {
+      pixelBufferAllocationFailureCount += 1
+      lastPixelBufferAllocationStatus = error.status
+      lastPixelBufferAllocationOutput = error.output
+      if error.status == kCVReturnWouldExceedAllocationThreshold {
+        // The pool is applying backpressure. Drop the entire synchronized frame
+        // pair before either writer receives it, then let the next frame retry.
+        pixelBufferThresholdDropCount += 1
+        droppedFrames += 1
+        buffers.removeAll()
+        if let firstPTS = firstPixelBufferThresholdPTS {
+          let elapsed = CMTimeGetSeconds(pts - firstPTS)
+          if elapsed.isFinite && elapsed >= maxPixelBufferPressureDuration {
+            failure = "Video buffer pool exhausted for 2 seconds: " + error.localizedDescription
+            finish(reason: "encoder", completion: nil)
+            return
+          }
+        } else {
+          firstPixelBufferThresholdPTS = pts
+        }
+        return
+      }
+      failure = error.localizedDescription
+      finish(reason: "encoder", completion: nil)
+      return
+    } catch {
+      failure = error.localizedDescription
+      finish(reason: "encoder", completion: nil)
+      return
+    }
+
+    do {
+      for (index, sink) in sinks.enumerated() {
+        try sink.append(frames[index].0, to: buffers[index], pts: pts, context: context)
+      }
+      lastPTS = pts; recordedFrames += 1; firstPixelBufferThresholdPTS = nil
     } catch { failure = error.localizedDescription; finish(reason: "encoder", completion: nil) }
   }
   func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
@@ -349,6 +415,18 @@ final class DualEngine: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
         "outputs": outputs, "reason": reason, "frames": self.recordedFrames, "dropped": self.droppedFrames,
         "writerStatuses": captured.map { $0.writer.status.rawValue },
         "audioSampleCounts": captured.map { $0.audioSamples }]
+      var pixelBufferDiagnostics: [String: Any] = [
+        "allocationFailureCount": self.pixelBufferAllocationFailureCount,
+        "thresholdDropCount": self.pixelBufferThresholdDropCount,
+      ]
+      if let status = self.lastPixelBufferAllocationStatus {
+        pixelBufferDiagnostics["lastStatusCode"] = Int(status)
+        pixelBufferDiagnostics["lastStatusName"] = pixelBufferAllocationStatusName(status)
+      }
+      if let output = self.lastPixelBufferAllocationOutput {
+        pixelBufferDiagnostics["lastOutput"] = output
+      }
+      result["pixelBufferDiagnostics"] = pixelBufferDiagnostics
       if let failure = self.failure { result["error"] = failure }
       // Save finalized originals natively before emitting the JS event. The JS
       // runtime may already be suspended when filming stops in the background.
@@ -435,12 +513,17 @@ private final class VideoSink {
     guard writer.canAdd(video), writer.canAdd(audio) else { throw CaptureError(message: "Cannot attach video/audio encoders") }
     writer.add(video); writer.add(audio)
   }
-  func append(_ image: CIImage, pts: CMTime, context: CIContext) throws {
+  func makeBuffer() throws -> CVPixelBuffer {
     guard let pool = adaptor.pixelBufferPool else { throw CaptureError(message: "Video buffer pool unavailable") }
     var buffer: CVPixelBuffer?
     let status = CVPixelBufferPoolCreatePixelBufferWithAuxAttributes(nil, pool,
       [kCVPixelBufferPoolAllocationThresholdKey as String: 4] as CFDictionary, &buffer)
-    guard status == kCVReturnSuccess, let buffer else { throw CaptureError(message: "Video buffer limit exceeded") }
+    guard status == kCVReturnSuccess, let buffer else {
+      throw PixelBufferAllocationError(status: status, output: portrait ? "portrait" : "landscape")
+    }
+    return buffer
+  }
+  func append(_ image: CIImage, to buffer: CVPixelBuffer, pts: CMTime, context: CIContext) throws {
     let rect = DualEngine.crop(image.extent.size, portrait: portrait, position: position)
     let cropped = image.cropped(to: rect).transformed(by: CGAffineTransform(translationX: -rect.minX, y: -rect.minY))
       .transformed(by: CGAffineTransform(scaleX: size.width / rect.width, y: size.height / rect.height))
