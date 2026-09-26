@@ -1,0 +1,4 @@
+interface:
+  display_name: "Translate App Locales"
+  short_description: "Translate app locale files for release"
+  default_prompt: "Use $translate-locales to translate every supported locale for the app currently being prepared for release."
