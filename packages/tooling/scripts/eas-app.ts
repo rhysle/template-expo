@@ -13,7 +13,10 @@ const appRelative = path.relative(repoRoot, appRoot)
 const args = process.argv.slice(2)
 if (!['build', 'build:inspect'].includes(args[0]))
   throw new Error('eas-app supports build and build:inspect only')
-const stage = fs.mkdtempSync(path.join(os.tmpdir(), 'rhysle-eas-'))
+// macOS resolves /var/... temp paths to /private/var/..., including in child
+// process.cwd(). EAS computes projectRootDirectory from that cwd and
+// EAS_PROJECT_ROOT, so both must use the same canonical path.
+const stage = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'rhysle-eas-')))
 try {
   const paths = execFileSync(
     'git',
