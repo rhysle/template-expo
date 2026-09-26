@@ -11,6 +11,7 @@ import {
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
   ReduceMotion,
+  type SharedValue,
   useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue,
@@ -33,7 +34,9 @@ const THUMB_SPRING_CONFIG = { damping: 16, mass: 0.6, stiffness: 260 }
 export interface SliderProps {
   value: number
   onValueChange: (value: number) => void
-  onValueChangeFinished?: () => void
+  onValueChangeFinished?: (value: number) => void
+  /** Updates on the UI thread during gestures; onValueChange still handles accessibility actions. */
+  liveValue?: SharedValue<number>
   min?: number
   max?: number
   step?: number
@@ -66,6 +69,7 @@ export const Slider = ({
   value,
   onValueChange,
   onValueChangeFinished,
+  liveValue,
   min,
   max,
   step,
@@ -143,13 +147,17 @@ export const Slider = ({
       const nextValue = clamp(steppedValue, safeMin, safeMax)
 
       progress.value = (nextValue - safeMin) / range
-      scheduleOnRN(onValueChangeHandler.value.callback, nextValue)
+      if (liveValue) {
+        liveValue.value = nextValue
+      } else {
+        scheduleOnRN(onValueChangeHandler.value.callback, nextValue)
+      }
     }
 
     const finishValueChange = () => {
       'worklet'
       if (onValueChangeFinishedHandler.value.callback) {
-        scheduleOnRN(onValueChangeFinishedHandler.value.callback)
+        scheduleOnRN(onValueChangeFinishedHandler.value.callback, safeMin + progress.value * range)
       }
     }
 
@@ -186,6 +194,7 @@ export const Slider = ({
     disabled,
     isPressed,
     isRTL,
+    liveValue,
     onValueChangeFinishedHandler,
     onValueChangeHandler,
     progress,
@@ -233,7 +242,8 @@ export const Slider = ({
     const nextValue = clamp(normalizedValue + adjustment * direction, safeMin, safeMax)
 
     onValueChange(nextValue)
-    onValueChangeFinished?.()
+    if (liveValue) liveValue.value = nextValue
+    onValueChangeFinished?.(nextValue)
   }
 
   return (

@@ -33,6 +33,7 @@ export function CameraStage({
   bottomInset,
   switching,
   switchProgress,
+  portraitCropPosition,
   landscapeGuidePosition,
   children,
 }: {
@@ -43,6 +44,7 @@ export function CameraStage({
   bottomInset: number
   switching: boolean
   switchProgress: SharedValue<number>
+  portraitCropPosition: SharedValue<number>
   landscapeGuidePosition: SharedValue<number>
   children?: ReactNode
 }) {
@@ -342,6 +344,7 @@ export function CameraStage({
               <CameraPreview
                 {...previewProps}
                 kind="portrait"
+                cropPosition={portraitCropPosition}
                 width={previewWidth}
                 height={previewHeight}
                 guideOpacity={guideOpacity}
@@ -360,6 +363,7 @@ export function CameraStage({
               <CameraPreview
                 {...previewProps}
                 kind="landscape"
+                cropPosition={landscapeGuidePosition}
                 width={previewWidth}
                 height={landscapeHeight}
                 embedded

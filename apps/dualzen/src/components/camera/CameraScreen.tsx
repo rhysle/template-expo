@@ -196,7 +196,11 @@ export function CameraScreen({
   const [sessionTransitionVisible, setSessionTransitionVisible] = useState(false)
   const [toolbarHeight, setToolbarHeight] = useState<number>(theme.spacing['5xl'])
   const sessionSwitchProgress = useSharedValue(0)
+  const portraitCropPosition = useSharedValue(settings.portraitPosition)
   const landscapeGuidePosition = useSharedValue(settings.landscapePosition)
+  useEffect(() => {
+    portraitCropPosition.set(settings.portraitPosition)
+  }, [portraitCropPosition, settings.portraitPosition])
   useEffect(() => {
     landscapeGuidePosition.set(settings.landscapePosition)
   }, [landscapeGuidePosition, settings.landscapePosition])
@@ -507,6 +511,7 @@ export function CameraScreen({
           bottomInset={immersive || landscape ? 0 : theme.spacing['7xl'] + theme.spacing.sm * 2}
           switching={transitionSwitching}
           switchProgress={transitionProgress}
+          portraitCropPosition={portraitCropPosition}
           landscapeGuidePosition={landscapeGuidePosition}
         />
         <View style={[styles.panel, landscape && styles.panelLandscape]}>
@@ -661,7 +666,7 @@ export function CameraScreen({
           />
           <FramingControl
             landscape={landscape}
-            deferLandscapeChange={layout === 'guide'}
+            portraitCropPosition={portraitCropPosition}
             landscapeGuidePosition={landscapeGuidePosition}
           />
         </>

@@ -4,6 +4,7 @@ import { View } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
   type SharedValue,
+  useAnimatedProps,
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
@@ -21,12 +22,14 @@ import { FocusReticle } from './FocusReticle'
 
 const GUIDE_CORNER_STROKE_WIDTH = 2
 const GUIDE_CORNER_OFFSET = -(GUIDE_CORNER_STROKE_WIDTH / 2)
+const AnimatedDualRecorderPreview = Animated.createAnimatedComponent(DualRecorderPreview)
 
 export type FocusPoint = { id: number; kind: OutputKind; x: number; y: number }
 
 export function CameraPreview({
   recorder,
   kind,
+  cropPosition,
   width,
   height,
   focusPoint,
@@ -44,6 +47,7 @@ export function CameraPreview({
 }: {
   recorder: CaptureController
   kind: OutputKind
+  cropPosition: SharedValue<number>
   width: number
   height: number
   focusPoint: FocusPoint | null
@@ -177,14 +181,16 @@ export function CameraPreview({
       ? Math.max(0, height - guideFrame.height) * guidePosition.value
       : guideFrame.top,
   }))
+  const previewProps = useAnimatedProps(() => ({ cropPosition: cropPosition.value }))
   return (
     <GestureDetector gesture={gestures}>
       <View
         collapsable={false}
         accessibilityHint={meteringEnabled ? t('camera.focusHint') : undefined}
         style={[styles.preview, { width, height }, embedded && styles.embedded]}>
-        <DualRecorderPreview
+        <AnimatedDualRecorderPreview
           style={styles.fill}
+          animatedProps={previewProps}
           channel={settings.mode === 'single' ? 0 : kind === 'portrait' ? 1 : 2}
           portrait={kind === 'portrait'}
           cropPosition={

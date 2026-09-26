@@ -6,6 +6,7 @@ import {
 } from '@shared/core/components/base'
 import type { StyleProp, ViewStyle } from 'react-native'
 import { Platform } from 'react-native'
+import type { SharedValue } from 'react-native-reanimated'
 
 interface CameraOptionSegmentedOption<T extends string> {
   value: T
@@ -48,7 +49,8 @@ export const CameraOptionSegmentedControl = <T extends string>({
 interface CameraOptionSliderProps {
   value: number
   onValueChange: (value: number) => void
-  onValueChangeFinished?: () => void
+  onValueChangeFinished?: (value?: number) => void
+  liveValue?: SharedValue<number>
   min?: number
   max?: number
   step?: number
@@ -61,6 +63,7 @@ export const CameraOptionSlider = ({
   value,
   onValueChange,
   onValueChangeFinished,
+  liveValue,
   min,
   max,
   step,
@@ -84,6 +87,7 @@ export const CameraOptionSlider = ({
       value={value}
       onValueChange={onValueChange}
       onValueChangeFinished={onValueChangeFinished}
+      liveValue={liveValue}
       min={min}
       max={max}
       step={step}

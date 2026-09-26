@@ -2,7 +2,7 @@ import { withAlpha } from '@shared/core/utils/color'
 import { BlurView } from 'expo-blur'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyleSheet, View } from 'react-native'
+import { Platform, StyleSheet, View } from 'react-native'
 import type { SharedValue } from 'react-native-reanimated'
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
 
@@ -14,11 +14,11 @@ import { CameraOptionSegmentedControl, CameraOptionSlider } from './CameraOption
 
 export function FramingControl({
   landscape,
-  deferLandscapeChange,
+  portraitCropPosition,
   landscapeGuidePosition,
 }: {
   landscape: boolean
-  deferLandscapeChange: boolean
+  portraitCropPosition: SharedValue<number>
   landscapeGuidePosition: SharedValue<number>
 }) {
   const { t } = useTranslation()
@@ -28,26 +28,28 @@ export function FramingControl({
   const [kind, setKind] = useState<OutputKind>('portrait')
   const storedValue = kind === 'portrait' ? settings.portraitPosition : settings.landscapePosition
   const [sliderValue, setSliderValue] = useState(storedValue)
-  const pendingLandscapeValue = useRef<number | null>(null)
+  const pendingPosition = useRef<{ kind: OutputKind; value: number } | null>(null)
   useEffect(() => {
     setSliderValue(storedValue)
   }, [storedValue])
   const changePosition = (value: number) => {
-    setSliderValue(value)
-    if (kind === 'landscape' && deferLandscapeChange) {
-      pendingLandscapeValue.current = value
+    pendingPosition.current = { kind, value }
+    if (Platform.OS === 'ios') setSliderValue(value)
+    if (kind === 'landscape') {
       landscapeGuidePosition.set(value)
-      return
+    } else {
+      portraitCropPosition.set(value)
     }
-    updateSharedSettings(
-      kind === 'portrait' ? { portraitPosition: value } : { landscapePosition: value }
-    )
   }
-  const finishPositionChange = () => {
-    const value = pendingLandscapeValue.current
-    if (value === null) return
-    pendingLandscapeValue.current = null
-    updateSharedSettings({ landscapePosition: value })
+  const finishPositionChange = (value?: number) => {
+    const pending = value === undefined ? pendingPosition.current : { kind, value }
+    if (!pending) return
+    pendingPosition.current = null
+    updateSharedSettings(
+      pending.kind === 'portrait'
+        ? { portraitPosition: pending.value }
+        : { landscapePosition: pending.value }
+    )
   }
   const label = t('camera.crop', { kind: t(`camera.${kind}`) })
   return (
@@ -78,6 +80,7 @@ export function FramingControl({
           accessibilityLabel={label}
           disabled={phase !== 'idle'}
           value={sliderValue}
+          liveValue={kind === 'portrait' ? portraitCropPosition : landscapeGuidePosition}
           onValueChange={changePosition}
           onValueChangeFinished={finishPositionChange}
         />
